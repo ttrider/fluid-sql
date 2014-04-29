@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TTRider.FluidSql.FluidExtensions" Collapsed="true">
+    <Position X="68.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IoAABGDAAQAACgAAAQRNAAABACFIQEAoQaEAGUUAgCM=</HashCode>
+      <FileName>FluidExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Join" Collapsed="true">
+    <Position X="66.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAIA=</HashCode>
+      <FileName>Join.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Order" Collapsed="true">
+    <Position X="68.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Order.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Parameter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MBAwWAAAAAAkAAgAyAIiAKRABECACLQBAEAACAAoESE=</HashCode>
+      <FileName>Parameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TTRider.FluidSql.ParameterSet" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAAAAAAAAAABAQAAgABAQAAAAAAAAAAAAAAABQIAA=</HashCode>
+      <FileName>ParameterSet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TTRider.FluidSql.Scalar" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Scalar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.SelectStatement" Collapsed="true">
+    <Position X="7.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoAAAACAAAAACAAAAAAIAAAAAAEMAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>SelectStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Snippet" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Snippet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Sql" Collapsed="true">
+    <Position X="66.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQEIAGgRIAAAAAAAAAAAAAYAAAAABAAAgAAAQgAAIAA=</HashCode>
+      <FileName>Sql.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Token" Collapsed="true">
+    <Position X="33.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Token.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Top" Collapsed="true">
+    <Position X="70" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAIAgCAAAAAA=</HashCode>
+      <FileName>Top.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.CorrelationStatement" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Union.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Union" Collapsed="true">
+    <Position X="5.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Union.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Intersect" Collapsed="true">
+    <Position X="7.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Union.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Except" Collapsed="true">
+    <Position X="10" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Union.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Name" Collapsed="true">
+    <Position X="46" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Name.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.BinaryToken" Collapsed="true">
+    <Position X="30.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.IsEqualsToken" Collapsed="true">
+    <Position X="21.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.NotEqualToken" Collapsed="true">
+    <Position X="28" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.LessToken" Collapsed="true">
+    <Position X="34.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.LessOrEqualToken" Collapsed="true">
+    <Position X="41.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.GreaterToken" Collapsed="true">
+    <Position X="16.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.GreaterOrEqualToken" Collapsed="true">
+    <Position X="23.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.AndToken" Collapsed="true">
+    <Position X="30.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.OrToken" Collapsed="true">
+    <Position X="37" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.PlusToken" Collapsed="true">
+    <Position X="43.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.MinusToken" Collapsed="true">
+    <Position X="19" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.DivideToken" Collapsed="true">
+    <Position X="25.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.ModuleToken" Collapsed="true">
+    <Position X="32.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.MultiplyToken" Collapsed="true">
+    <Position X="39.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.UnaryToken" Collapsed="true">
+    <Position X="58.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.GroupToken" Collapsed="true">
+    <Position X="55" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.NotToken" Collapsed="true">
+    <Position X="57.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.IsNullToken" Collapsed="true">
+    <Position X="59.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.IsNotNullToken" Collapsed="true">
+    <Position X="61.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.BetweenToken" Collapsed="true">
+    <Position X="52.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.InToken" Collapsed="true">
+    <Position X="48.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.NotInToken" Collapsed="true">
+    <Position X="50.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BinaryToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.Function" Collapsed="true">
+    <Position X="64" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Function.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.BeginTransactionStatement" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BeginTransactionStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.CommitTransactionStatement" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CommitTransactionStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.DeclareStatement" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="66.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAA=</HashCode>
+      <FileName>DeclareStatement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TTRider.FluidSql.IfStatement" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="70" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAACAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IfStatement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TTRider.FluidSql.RecordsetStatement" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RecordsetStatement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TTRider.FluidSql.RollbackTransactionStatement" Collapsed="true">
+    <Position X="5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RollbackTransactionStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.SaveTransactionStatement" Collapsed="true">
+    <Position X="7.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SaveTransactionStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TTRider.FluidSql.StatementsStatement" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="68.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>StatementsStatement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TTRider.FluidSql.TransactionStatement" Collapsed="true">
+    <Position X="3.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TransactionStatement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="TTRider.FluidSql.IStatement" Collapsed="true">
+    <Position X="66.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IStatement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="TTRider.FluidSql.Direction" Collapsed="true">
+    <Position X="66.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Direction.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TTRider.FluidSql.Joins" Collapsed="true">
+    <Position X="68.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAIAAAIAAAAAAAAAAAAEAAAAACAAAAAAAA=</HashCode>
+      <FileName>Join.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TTRider.FluidSql.TokenType" Collapsed="true">
+    <Position X="70" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Token.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
