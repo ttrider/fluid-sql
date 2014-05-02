@@ -45,8 +45,12 @@
     <Compile Include="BeginTransactionStatement.cs" />
     <Compile Include="BinaryToken.cs" />
     <Compile Include="CommitTransactionStatement.cs" />
+    <Compile Include="CreateTableStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DeclareStatement.cs" />
     <Compile Include="Direction.cs" />
+    <Compile Include="DropTableStatement.cs" />
     <Compile Include="FluidExtensions.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="IfStatement.cs" />

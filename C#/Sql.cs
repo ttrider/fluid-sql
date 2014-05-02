@@ -9,7 +9,8 @@ namespace TTRider.FluidSql
 {
     public class Sql
     {
-        static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|((?<name>[^\.]*)\.?)", RegexOptions.Compiled);
+        private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|((?<name>[^\.]*)\.?)",
+            RegexOptions.Compiled);
 
         internal static IEnumerable<string> GetParts(string name)
         {
@@ -28,10 +29,7 @@ namespace TTRider.FluidSql
 
         public static SelectStatement Select
         {
-            get
-            {
-                return new SelectStatement();
-            }
+            get { return new SelectStatement(); }
         }
 
 
@@ -43,6 +41,7 @@ namespace TTRider.FluidSql
                 Description = description
             };
         }
+
         public static CommitTransactionStatement CommitTransaction(Name name = null)
         {
             return new CommitTransactionStatement
@@ -51,6 +50,7 @@ namespace TTRider.FluidSql
             };
 
         }
+
         public static RollbackTransactionStatement RollbackTransaction(Name name = null)
         {
             return new RollbackTransactionStatement
@@ -58,6 +58,7 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+
         public static SaveTransactionStatement SaveTransaction(Name name = null)
         {
             return new SaveTransactionStatement
@@ -74,6 +75,7 @@ namespace TTRider.FluidSql
                 Description = description
             };
         }
+
         public static CommitTransactionStatement CommitTransaction(Parameter parameter)
         {
             return new CommitTransactionStatement
@@ -82,6 +84,7 @@ namespace TTRider.FluidSql
             };
 
         }
+
         public static RollbackTransactionStatement RollbackTransaction(Parameter parameter)
         {
             return new RollbackTransactionStatement
@@ -89,6 +92,7 @@ namespace TTRider.FluidSql
                 Parameter = parameter
             };
         }
+
         public static SaveTransactionStatement SaveTransaction(Parameter parameter)
         {
             return new SaveTransactionStatement
@@ -101,6 +105,16 @@ namespace TTRider.FluidSql
         {
             var statement = new StatementsStatement();
             statement.Statements.AddRange(statements);
+            return statement;
+        }
+
+        public static StatementsStatement Statements(IEnumerable<IStatement> statements)
+        {
+            var statement = new StatementsStatement();
+            if (statements != null)
+            {
+                statement.Statements.AddRange(statements);
+            }
             return statement;
         }
 
@@ -121,7 +135,16 @@ namespace TTRider.FluidSql
             };
         }
 
-        #endregion Statements
+        public static DropTableStatement DropTable(Name name, bool checkExists = false)
+        {
+            return new DropTableStatement { Name = name, CheckExists = checkExists };
+        }
+        //public static CreateTableStatement CreateTable(Name name)
+        //{
+        //    return new CreateTableStatement { Name = name };
+        //}
+
+    #endregion Statements
         public static Name Star(string source = null)
         {
             var name = new Name();
@@ -146,10 +169,30 @@ namespace TTRider.FluidSql
             return mpn;
         }
 
-        public static Snippet Snippet(string value)
+        public static Snippet Snippet(string value, params Parameter[] parameters)
         {
-            return new Snippet { Value = value };
+            var val = new Snippet { Value = value };
+
+            foreach (var p  in parameters)
+            {
+                val.Parameters.Add(p);
+            }
+            return val;
         }
+        public static Snippet Snippet(string value, IEnumerable<Parameter> parameters)
+        {
+            var val = new Snippet { Value = value };
+
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    val.Parameters.Add(p);
+                }
+            }
+            return val;
+        }
+
         public static Scalar Scalar(object value)
         {
             return new Scalar { Value = value };
@@ -162,6 +205,18 @@ namespace TTRider.FluidSql
                 Name = name
             };
             f.Arguments.AddRange(arguments);
+            return f;
+        }
+        public static Function Function(string name, IEnumerable<Token> arguments)
+        {
+            var f = new Function
+            {
+                Name = name
+            };
+            if (arguments != null)
+            {
+                f.Arguments.AddRange(arguments);
+            }
             return f;
         }
 

@@ -407,6 +407,38 @@ namespace FluidSqlTests
             Assert.AreEqual("IF  EXISTS((SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name))\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;\r\n", command.CommandText);
         }
 
+
+        [TestMethod]
+        public void DropTable()
+        {
+            var statement = Sql.DropTable(Sql.Name("some.table"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DROP TABLE [some].[table];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropTableExists()
+        {
+            var statement = Sql.DropTable(Sql.Name("some.table"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID(N'[some].[table]',N'U') IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
+        }
+        //[TestMethod]
+        //public void CreateTable()
+        //{
+        //    var statement = Sql.CreateTable(Sql.Name("some.table"));
+
+        //    var command = Utilities.GetCommand(statement);
+
+        //    Assert.IsNotNull(command);
+        //    Assert.AreEqual("CREATE TABLE [some].[table] ();", command.CommandText);
+        //}
     }
 }
 

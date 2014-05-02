@@ -2,6 +2,7 @@
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -56,6 +57,14 @@ namespace TTRider.FluidSql
             statement.Output.AddRange(columns);
             return statement;
         }
+        public static SelectStatement Output(this SelectStatement statement, IEnumerable<Token> columns)
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns);
+            }
+            return statement;
+        }
 
         public static SelectStatement Into(this SelectStatement statement, Name target)
         {
@@ -70,9 +79,25 @@ namespace TTRider.FluidSql
             statement.GroupBy.AddRange(columns);
             return statement;
         }
+        public static SelectStatement GroupBy(this SelectStatement statement, IEnumerable<Name> columns)
+        {
+            if (columns != null)
+            {
+                statement.GroupBy.AddRange(columns);
+            }
+            return statement;
+        }
         public static SelectStatement GroupBy(this SelectStatement statement, params string[] columns)
         {
             statement.GroupBy.AddRange(columns.Select(name => Sql.Name(name)));
+            return statement;
+        }
+        public static SelectStatement GroupBy(this SelectStatement statement, IEnumerable<string> columns)
+        {
+            if (columns != null)
+            {
+                statement.GroupBy.AddRange(columns.Select(name => Sql.Name(name)));
+            }
             return statement;
         }
         public static SelectStatement OrderBy(this SelectStatement statement, Name column, Direction direction = Direction.Asc)
@@ -88,6 +113,14 @@ namespace TTRider.FluidSql
         public static SelectStatement OrderBy(this SelectStatement statement, params Order[] columns)
         {
             statement.OrderBy.AddRange(columns);
+            return statement;
+        }
+        public static SelectStatement OrderBy(this SelectStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
+            {
+                statement.OrderBy.AddRange(columns);
+            }
             return statement;
         }
         public static SelectStatement From(this SelectStatement statement, string name, string alias = null)
@@ -266,9 +299,25 @@ namespace TTRider.FluidSql
             statement.Then.Statements.AddRange(statements);
             return statement;
         }
+        public static IfStatement Then(this IfStatement statement, IEnumerable<IStatement> statements)
+        {
+            statement.Then = new StatementsStatement();
+            if (statements != null)
+            {
+                statement.Then.Statements.AddRange(statements);
+            }
+            return statement;
+        }
         public static IfStatement Else(this IfStatement statement, params IStatement[] statements)
         {
             statement.Else = new StatementsStatement();
+            statement.Else.Statements.AddRange(statements);
+            return statement;
+        }
+        public static IfStatement Else(this IfStatement statement, IEnumerable<IStatement> statements)
+        {
+            statement.Else = new StatementsStatement();
+            if (statements!=null)
             statement.Else.Statements.AddRange(statements);
             return statement;
         }

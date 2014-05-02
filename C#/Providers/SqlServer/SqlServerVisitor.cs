@@ -132,7 +132,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 {typeof (DeclareStatement), VisitDeclareStatement},
                 {typeof (IfStatement), VisitIfStatement},
-                
+
+                {typeof (DropTableStatement), VisitDropTableStatement},
+                //{typeof (CreateTableStatement), VisitCreateTableStatement},
             };            
 
         public static VisitorState Compile(IStatement statement)
@@ -364,6 +366,33 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
             }
         }
+
+
+        private static void VisitDropTableStatement(IStatement statement, VisitorState state)
+        {
+            var s = (DropTableStatement)statement;
+
+            if (s.CheckExists)
+            {
+                state.Buffer.Append("IF OBJECT_ID(N'");
+                state.Buffer.Append(s.Name.FullName);
+                state.Buffer.Append("',N'U') IS NOT NULL ");
+            }
+
+            state.Buffer.Append("DROP TABLE ");
+            state.Buffer.Append(s.Name.FullName);
+            state.Buffer.Append(";");
+        }
+        //private static void VisitCreateTableStatement(IStatement statement, VisitorState state)
+        //{
+        //    var s = (CreateTableStatement)statement;
+        //    state.Buffer.Append("CREATE TABLE ");
+        //    state.Buffer.Append(s.Name.FullName);
+        //    state.Buffer.Append(" (");
+
+
+        //    state.Buffer.Append(");");
+        //}
 
         #endregion Statements
 
