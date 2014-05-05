@@ -234,7 +234,39 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects];", command.CommandText);
         }
-       
+
+        [TestMethod]
+        public void SelectUnionSelectWrapped()
+        {
+            var statement = Sql.Select.Output(Sql.Star()).From("sys.objects").Union(Sql.Select.Output(Sql.Star()).From("sys.objects")).WrapAsSelect("wrap");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [wrap].* FROM (SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects]) AS [wrap];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectWrapped2()
+        {
+            var statement = Sql.Select.Output(Sql.Name("Name")).From("sys.objects").WrapAsSelect("wrap");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [wrap].[Name] FROM (SELECT [Name] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+        }
+        
+        [TestMethod]
+        public void SelectWrapped3()
+        {
+            var statement = Sql.Select.Output(Sql.Name("Name").As("nm")).From("sys.objects").WrapAsSelect("wrap");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [wrap].[nm] FROM (SELECT [Name] AS [nm] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+        }       
         [TestMethod]
         public void SelectUnionAllSelect()
         {
@@ -279,6 +311,26 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectLike()
+        {
+            var statement = Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects")
+                .Where(
+                    Sql.Name("name").StartsWith(Sql.Scalar("foo"))
+                        .And(
+                            Sql.Name("name").EndsWith(Sql.Scalar("foo")))
+                        .And(
+                            Sql.Name("name").Contains(Sql.Scalar("foo"))));
+
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE 'foo' + '%' AND [name] LIKE '%' + 'foo' AND [name] LIKE '%' + 'foo' + '%';", command.CommandText);
         }
 
         [TestMethod]

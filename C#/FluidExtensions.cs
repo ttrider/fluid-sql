@@ -37,6 +37,12 @@ namespace TTRider.FluidSql
 
             return statement;
         }
+        public static DeleteStatement Top(this DeleteStatement statement, int value, bool percent = false)
+        {
+            statement.Top = new Top(value, percent, false);
+
+            return statement;
+        }
         
 
         public static SelectStatement Distinct(this SelectStatement statement, bool distinct = true)
@@ -58,6 +64,20 @@ namespace TTRider.FluidSql
             return statement;
         }
         public static SelectStatement Output(this SelectStatement statement, IEnumerable<Token> columns)
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static DeleteStatement Output(this DeleteStatement statement, params Token[] columns)
+        {
+            statement.Output.AddRange(columns);
+            return statement;
+        }
+        public static DeleteStatement Output(this DeleteStatement statement, IEnumerable<Token> columns)
         {
             if (columns != null)
             {
@@ -133,21 +153,42 @@ namespace TTRider.FluidSql
             statement.From.Add(token);
             return statement;
         }
-        public static Union Union(this SelectStatement statement, SelectStatement with)
+        public static DeleteStatement From(this DeleteStatement statement, string name, string alias = null)
+        {
+            statement.From = Sql.Name(name).As(alias);
+            return statement;
+        }
+        public static DeleteStatement From(this DeleteStatement statement, Token token)
+        {
+            statement.From = token;
+            return statement;
+        }
+        public static Union Union(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new Union(statement, with);
         }
-        public static Union UnionAll(this SelectStatement statement, SelectStatement with)
+        public static Union UnionAll(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new Union(statement, with, true);
         }
-        public static Except Except(this SelectStatement statement, SelectStatement with)
+        public static Except Except(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new Except(statement, with);
         }
-        public static Intersect Intersect(this SelectStatement statement, SelectStatement with)
+        public static Intersect Intersect(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new Intersect(statement, with);
+        }
+        public static SelectStatement WrapAsSelect(this RecordsetStatement statement, string alias)
+        {
+            return new SelectStatement()
+                .From(statement.As(alias))
+                .Output(statement.Output.Select(
+                column=>!string.IsNullOrWhiteSpace(column.Alias)
+                    ?column.Alias
+                    :((column is Name)?((Name)column).FullName:null))
+                        .Where(name=>!string.IsNullOrWhiteSpace(name))
+                        .Select(name=>Sql.Name(alias, name)));
         }
 
         public static SelectStatement InnerJoin(this SelectStatement statement, Token source, Token on)
@@ -201,6 +242,11 @@ namespace TTRider.FluidSql
         }
 
         public static SelectStatement Where(this SelectStatement statement, Token condition)
+        {
+            statement.Where = condition;
+            return statement;
+        }
+        public static DeleteStatement Where(this DeleteStatement statement, Token condition)
         {
             statement.Where = condition;
             return statement;
@@ -293,6 +339,20 @@ namespace TTRider.FluidSql
             return value;
         }
 
+        public static Token Contains(this Token first, Token second)
+        {
+            return new ContainsToken { First = first, Second = second };
+        }
+        public static Token StartsWith(this Token first, Token second)
+        {
+            return new StartsWithToken { First = first, Second = second };
+        }
+        public static Token EndsWith(this Token first, Token second)
+        {
+            return new EndsWithToken { First = first, Second = second };
+        }
+
+
         public static IfStatement Then(this IfStatement statement, params IStatement[] statements)
         {
             statement.Then = new StatementsStatement();
@@ -322,9 +382,6 @@ namespace TTRider.FluidSql
             return statement;
         }
     }
-
-
-
 
 }
 

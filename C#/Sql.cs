@@ -135,10 +135,17 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static DeleteStatement Delete
+        {
+            get { return new DeleteStatement(); }
+        }
+
+
         public static DropTableStatement DropTable(Name name, bool checkExists = false)
         {
             return new DropTableStatement { Name = name, CheckExists = checkExists };
         }
+
         //public static CreateTableStatement CreateTable(Name name)
         //{
         //    return new CreateTableStatement { Name = name };

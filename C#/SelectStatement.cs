@@ -9,7 +9,6 @@ namespace TTRider.FluidSql
     {
         public SelectStatement()
         {
-            this.Output = new List<Token>();
             this.GroupBy = new List<Name>();
             this.OrderBy = new List<Order>();
             this.From = new List<Token>();
@@ -21,7 +20,6 @@ namespace TTRider.FluidSql
         public bool Distinct { get; set; }
         public Token Where { get; set; }
         public Name Into { get; set; }
-        public List<Token> Output { get; private set; }
         public List<Name> GroupBy { get; private set; }
         public List<Order> OrderBy { get; private set; }
         public List<Join> Joins { get; private set; }

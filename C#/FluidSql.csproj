@@ -49,6 +49,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DeclareStatement.cs" />
+    <Compile Include="DeleteStatement.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="DropTableStatement.cs" />
     <Compile Include="FluidExtensions.cs" />

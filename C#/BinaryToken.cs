@@ -24,6 +24,11 @@ namespace TTRider.FluidSql
     public class DivideToken : BinaryToken { }
     public class ModuleToken : BinaryToken { }
     public class MultiplyToken : BinaryToken { }
+    public class ContainsToken : BinaryToken { }
+    public class StartsWithToken : BinaryToken { }
+    public class EndsWithToken : BinaryToken { }
+
+
     public class UnaryToken : Token
     {
         public Token Token { get; set; }
