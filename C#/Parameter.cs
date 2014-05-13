@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace TTRider.FluidSql
@@ -14,6 +15,7 @@ namespace TTRider.FluidSql
         public byte? Precision { get; set; }
         public byte? Scale { get; set; }
         public int? Length { get; set; }
+        public object DefaultValue { get; set; }
 
         public Parameter(string name, SqlDbType sqlDbType, byte precision, byte scale)
             : this(name, sqlDbType)
@@ -60,6 +62,7 @@ namespace TTRider.FluidSql
 
 
         public static Parameter Any(string name) { return new Parameter(name); }
+        public static Parameter Any(string name, object defaultValue) { return new Parameter(name){DefaultValue = defaultValue}; }
         public static Parameter BigInt(string name) { return new Parameter(name, SqlDbType.BigInt); }
         public static Parameter Binary(string name, int length) { return new Parameter(name, SqlDbType.Binary, length); }
         public static Parameter Bit(string name) { return new Parameter(name, SqlDbType.Bit); }
@@ -92,5 +95,19 @@ namespace TTRider.FluidSql
         public static Parameter Time(string name, int length = 7) { return new Parameter(name, SqlDbType.Time, length); }
         public static Parameter DateTime2(string name, int length = 7) { return new Parameter(name, SqlDbType.DateTime2, length); } //0..7
         public static Parameter DateTimeOffset(string name, int length = 7) { return new Parameter(name, SqlDbType.DateTimeOffset, length); }//0..7
+    }
+
+    public class ParameterEqualityComparer : EqualityComparer<Parameter>
+    {
+        public override bool Equals(Parameter x, Parameter y)
+        {
+            return String.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode(Parameter obj)
+        {
+            if (obj == null) return 0;
+            return obj.GetHashCode();
+        }
     }
 }

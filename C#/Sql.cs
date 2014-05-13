@@ -2,6 +2,7 @@
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
 
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -32,6 +33,7 @@ namespace TTRider.FluidSql
             get { return new SelectStatement(); }
         }
 
+        #region Transaction
 
         public static BeginTransactionStatement BeginTransaction(Name name = null, string description = null)
         {
@@ -100,6 +102,7 @@ namespace TTRider.FluidSql
                 Parameter = parameter
             };
         }
+        #endregion Transaction
 
         public static StatementsStatement Statements(params IStatement[] statements)
         {
@@ -150,6 +153,23 @@ namespace TTRider.FluidSql
         //{
         //    return new CreateTableStatement { Name = name };
         //}
+
+        public static CommentToken Comment(string comment)
+        {
+            return new CommentToken{ Content = Sql.Snippet(comment)};
+        }
+        public static CommentStatement Comment(IStatement statement)
+        {
+            return new CommentStatement { Content = statement };
+        }
+
+        public static InsertStatement Insert
+        {
+            get
+            {
+                return new InsertStatement();
+            }
+        }
 
     #endregion Statements
         public static Name Star(string source = null)

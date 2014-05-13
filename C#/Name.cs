@@ -17,7 +17,6 @@ namespace TTRider.FluidSql
             {
                 return string.Join(".",
                     this.Parts
-                        .SkipWhile(string.IsNullOrWhiteSpace)
                         .Select(item => string.IsNullOrWhiteSpace(item)||(string.Equals(item, "*")) ? item : "[" + item + "]"));
             }
             set
