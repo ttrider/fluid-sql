@@ -19,7 +19,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DELETE TOP 1 FROM [foo].[bar];", command.CommandText);
+            Assert.AreEqual("DELETE TOP (1) FROM [foo].[bar];", command.CommandText);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DELETE TOP 1 PERCENT FROM [foo].[bar];", command.CommandText);
+            Assert.AreEqual("DELETE TOP (1) PERCENT FROM [foo].[bar];", command.CommandText);
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DELETE FROM [foo].[bar] OUTPUT [INSERTED].* , [DELETED].*;", command.CommandText);
+            Assert.AreEqual("DELETE FROM [foo].[bar] OUTPUT [INSERTED].*, [DELETED].*;", command.CommandText);
         }
 
         [TestMethod]

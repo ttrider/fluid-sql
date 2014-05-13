@@ -87,6 +87,33 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
+        public void SelectParam1WithDefault()
+        {
+            var statement = Sql.Select.Output(Parameter.Any("@param1").DefaultValue("Foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT @param1;", command.CommandText);
+
+            var result = command.ExecuteScalar();
+            Assert.AreEqual(result, "Foo");
+        }
+        [TestMethod]
+        public void SelectParam1WithDefault2()
+        {
+            var statement = Sql.Select.Output(Parameter.Any("@param1", "Foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT @param1;", command.CommandText);
+
+            var result = command.ExecuteScalar();
+            Assert.AreEqual(result, "Foo");
+        }
+
+        [TestMethod]
         public void SelectParam1As()
         {
             var statement = Sql.Select.Output(Parameter.Any("@param1").As("p1"));
@@ -110,7 +137,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP 1 1 AS [foo];", command.CommandText);
+            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -121,7 +148,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP 1 1 AS [foo];", command.CommandText);
+            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -132,7 +159,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP 1 PERCENT 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP (1) PERCENT 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -143,7 +170,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP 1 PERCENT WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP (1) PERCENT WITH TIES 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -154,7 +181,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP 1 WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP (1) WITH TIES 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -290,12 +317,27 @@ namespace FluidSqlTests
         [TestMethod]
         public void SelectIntersectSelect()
         {
-            var statement = Sql.Select.Output(Sql.Star()).From("sys.objects").Intersect(Sql.Select.Output(Sql.Star()).From("sys.objects"));
+            var statement = Sql.Select.Output(Sql.Star("First")).From("sys.objects","First").Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"));
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] INTERSECT SELECT * FROM [sys].[objects];", command.CommandText);
+            Assert.AreEqual("SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectIntersectWrapped()
+        {
+            var statement =
+                Sql.Select.Output(Sql.Star("First"))
+                    .From("sys.objects", "First")
+                    .Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"))
+                    .WrapAsSelect("wrap");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [wrap].* FROM (SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second]) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -442,7 +484,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DECLARE @name NVARCHAR(MAX) = (SELECT TOP 1 [name] FROM [sys].[objects]);", command.CommandText);
+            Assert.AreEqual("DECLARE @name NVARCHAR(MAX) = (SELECT TOP (1) [name] FROM [sys].[objects]);", command.CommandText);
         }
 
         [TestMethod]
@@ -472,6 +514,17 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
+        public void CommentOutDropTable()
+        {
+            var statement = Sql.DropTable(Sql.Name("some.table")).CommentOut();
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual(" /* DROP TABLE [some].[table]; */ ", command.CommandText);
+        }
+
+        [TestMethod]
         public void DropTableExists()
         {
             var statement = Sql.DropTable(Sql.Name("some.table"), true);
@@ -491,6 +544,8 @@ namespace FluidSqlTests
         //    Assert.IsNotNull(command);
         //    Assert.AreEqual("CREATE TABLE [some].[table] ();", command.CommandText);
         //}
+
+
     }
 }
 

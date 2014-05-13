@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Insert.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Select.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
