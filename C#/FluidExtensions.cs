@@ -277,6 +277,11 @@ namespace TTRider.FluidSql
             statement.Where = condition;
             return statement;
         }
+        public static CreateIndexStatement Where(this CreateIndexStatement statement, Token condition)
+        {
+            statement.Where = condition;
+            return statement;
+        }
 
         public static Token IsEqual(this Token first, Token second)
         {
@@ -474,6 +479,84 @@ namespace TTRider.FluidSql
             {
                 statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
             }
+            return statement;
+        }
+
+
+
+
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column, Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column, Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, params Order[] columns)
+        {
+            statement.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, string column)
+        {
+            statement.Include.Add(Sql.Name(column));
+            return statement;
+        }
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, params Name[] columns)
+        {
+            statement.Include.AddRange(columns);
+            return statement;
+        }
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, IEnumerable<Name> columns)
+        {
+            if (columns != null)
+            {
+                statement.Include.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateIndexStatement Unique(this CreateIndexStatement statement, bool unique = true)
+        {
+            statement.Unique = unique;
+            return statement;
+        }
+        public static CreateIndexStatement Clustered(this CreateIndexStatement statement, bool clustered = true)
+        {
+            statement.Clustered = clustered;
+            return statement;
+        }
+        public static CreateIndexStatement Nonclustered(this CreateIndexStatement statement, bool nonclustered = true)
+        {
+            statement.Nonclustered = nonclustered;
+            return statement;
+        }
+
+        public static AlterIndexStatement Rebuild(this AlterIndexStatement statement)
+        {
+            statement.Rebuild = true;
+            return statement;
+        }
+        public static AlterIndexStatement Disable(this AlterIndexStatement statement)
+        {
+            statement.Disable = true;
+            return statement;
+        }
+        public static AlterIndexStatement Reorganize(this AlterIndexStatement statement)
+        {
+            statement.Reorganize = true;
             return statement;
         }
 

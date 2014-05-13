@@ -131,9 +131,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (InsertStatement), VisitInsert},
 
                 {typeof (SelectStatement), VisitSelect},
+
                 {typeof (Union), VisitUnion},
                 {typeof (Intersect), VisitIntersect},
                 {typeof (Except), VisitExcept},
+
                 {typeof (BeginTransactionStatement), VisitBeginTransaction},
                 {typeof (CommitTransactionStatement), VisitCommitTransaction},
                 {typeof (RollbackTransactionStatement), VisitRollbackTransaction},
@@ -143,9 +145,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (DeclareStatement), VisitDeclareStatement},
                 {typeof (IfStatement), VisitIfStatement},
 
-                {typeof (DropTableStatement), VisitDropTableStatement},
                 //{typeof (CreateTableStatement), VisitCreateTableStatement},
-
+                {typeof (DropTableStatement), VisitDropTableStatement},
+                
+                {typeof (CreateIndexStatement), VisitCreateIndexStatement},
+                {typeof (AlterIndexStatement), VisitAlterIndexStatement},
+                {typeof (DropIndexStatement), VisitDropIndexStatement},
 
                 {typeof (CommentStatement), VisitCommentStatement},
             };
@@ -288,7 +293,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitInto(insertStatement.Into, state);
 
             VisitTokenSet(" (", ", ", ")", insertStatement.Columns, true, state);
-            
+
             VisitOutput(insertStatement.Output, state, true);
 
             if (insertStatement.DefaultValues)
@@ -473,7 +478,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitCommentStatement(IStatement statement, VisitorState state)
         {
-            var commentStatement = (CommentStatement) statement;
+            var commentStatement = (CommentStatement)statement;
 
             state.Buffer.Append(" /* ");
 
@@ -481,6 +486,150 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Buffer.Append(" */ ");
         }
+
+        private static void VisitCreateIndexStatement(IStatement statement, VisitorState state)
+        {
+            var createIndexStatement = (CreateIndexStatement)statement;
+
+            state.Buffer.Append("CREATE");
+
+            if (createIndexStatement.Unique)
+            {
+                state.Buffer.Append(" UNIQUE");
+            }
+
+            if (createIndexStatement.Clustered.HasValue)
+            {
+                state.Buffer.Append(createIndexStatement.Clustered.Value ? " CLUSTERED" : " UNCLUSTERED");
+            }
+            state.Buffer.Append(" INDEX ");
+
+            VisitToken(createIndexStatement.Name, false, state);
+
+            state.Buffer.Append(" ON ");
+
+            VisitToken(createIndexStatement.On, false, state);
+
+            // columns
+            state.Buffer.Append(" (");
+            state.Buffer.Append(string.Join(", ", createIndexStatement.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+            state.Buffer.Append(")");
+
+            VisitTokenSet(" INCLUDE (", ", ", ")", createIndexStatement.Include, false, state);
+
+            VisitWhere(createIndexStatement.Where, state);
+
+            if (createIndexStatement.With.IsDefined)
+            {
+                state.Buffer.Append(" WITH (");
+
+                VisitWith(createIndexStatement.With.PadIndex, "PAD_INDEX", state);
+
+                VisitWith(createIndexStatement.With.Fillfactor, "FILLFACTOR", state);
+                VisitWith(createIndexStatement.With.SortInTempdb, "SORT_IN_TEMPDB", state);
+                VisitWith(createIndexStatement.With.IgnoreDupKey, "IGNORE_DUP_KEY", state);
+                VisitWith(createIndexStatement.With.StatisticsNorecompute, "STATISTICS_NORECOMPUTE", state);
+                VisitWith(createIndexStatement.With.DropExisting, "DROP_EXISTING", state);
+                VisitWith(createIndexStatement.With.Online, "ONLINE", state);
+                VisitWith(createIndexStatement.With.AllowRowLocks, "ALLOW_ROW_LOCKS", state);
+                VisitWith(createIndexStatement.With.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
+                VisitWith(createIndexStatement.With.MaxDegreeOfParallelism, "MAXDOP", state);
+
+                state.Buffer.Append(" )");
+            }
+        }
+
+        private static void VisitAlterIndexStatement
+            (IStatement statement, VisitorState state)
+        {
+            var alterStatement = (AlterIndexStatement)statement;
+
+            state.Buffer.Append("ALTER INDEX ");
+
+            if (alterStatement.Name == null)
+            {
+                state.Buffer.Append("ALL");
+            }
+            else
+            {
+                VisitToken(alterStatement.Name, false, state);
+            }
+
+            state.Buffer.Append(" ON ");
+
+            VisitToken(alterStatement.On, false, state);
+
+            if (alterStatement.Rebuild)
+            {
+                state.Buffer.Append(" REBUILD");
+
+                //TODO: [PARTITION = ALL]
+                if (alterStatement.RebuildWith.IsDefined)
+                {
+                    state.Buffer.Append(" WITH (");
+
+                    VisitWith(alterStatement.RebuildWith.PadIndex, "PAD_INDEX", state);
+                    VisitWith(alterStatement.RebuildWith.Fillfactor, "FILLFACTOR", state);
+                    VisitWith(alterStatement.RebuildWith.SortInTempdb, "SORT_IN_TEMPDB", state);
+                    VisitWith(alterStatement.RebuildWith.IgnoreDupKey, "IGNORE_DUP_KEY", state);
+                    VisitWith(alterStatement.RebuildWith.StatisticsNorecompute, "STATISTICS_NORECOMPUTE", state);
+                    VisitWith(alterStatement.RebuildWith.DropExisting, "DROP_EXISTING", state);
+                    VisitWith(alterStatement.RebuildWith.Online, "ONLINE", state);
+                    VisitWith(alterStatement.RebuildWith.AllowRowLocks, "ALLOW_ROW_LOCKS", state);
+                    VisitWith(alterStatement.RebuildWith.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
+                    VisitWith(alterStatement.RebuildWith.MaxDegreeOfParallelism, "MAXDOP", state);
+
+                    state.Buffer.Append(" )");
+                }
+            }
+            else if (alterStatement.Disable)
+            {
+                state.Buffer.Append(" DISABLE");
+            }
+            else if (alterStatement.Reorganize)
+            {
+                state.Buffer.Append(" REORGANIZE");
+            }
+            else
+            {
+                VisitWith(alterStatement.Set.AllowRowLocks, "ALLOW_ROW_LOCKS", state);
+                VisitWith(alterStatement.Set.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
+                VisitWith(alterStatement.Set.IgnoreDupKey, "IGNORE_DUP_KEY", state);
+                VisitWith(alterStatement.Set.StatisticsNorecompute, "STATISTICS_NORECOMPUTE", state);
+            }
+
+        }
+
+        private static void VisitDropIndexStatement(IStatement statement, VisitorState state)
+        {
+            var dropIndexStatement = (DropIndexStatement)statement;
+
+            state.Buffer.Append("DROP INDEX ");
+            VisitToken(dropIndexStatement.Name, false, state);
+
+            state.Buffer.Append(" ON ");
+
+            VisitToken(dropIndexStatement.On, false, state);
+
+            if (dropIndexStatement.With.IsDefined)
+            {
+                state.Buffer.Append(" WITH (");
+
+                if (dropIndexStatement.With.Online.HasValue)
+                {
+                    state.Buffer.AppendFormat(" ONLINE = {0}", dropIndexStatement.With.Online.Value ? "ON" : "OFF");
+                }
+                if (dropIndexStatement.With.MaxDegreeOfParallelism.HasValue)
+                {
+                    state.Buffer.AppendFormat(" MAXDOP = {0}", dropIndexStatement.With.MaxDegreeOfParallelism.Value);
+                }
+
+                state.Buffer.Append(" )");
+            }
+
+        }
+
+
 
         #endregion Statements
 
@@ -564,7 +713,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 else if (top.Parameters.Count > 0)
                 {
-                    foreach (var parameter in top.Parameters )
+                    foreach (var parameter in top.Parameters)
                     {
                         state.Parameters.Add(parameter);
                     }
@@ -592,6 +741,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" WHERE ");
                 VisitToken(whereToken, false, state);
             }
+        }
+
+        private static void VisitWith(bool? value, string name, VisitorState state)
+        {
+            if (value.HasValue)
+            {
+                state.Buffer.AppendFormat(" {0} = {1}", name, value.Value ? "ON" : "OFF");
+            }
+
+        }
+        private static void VisitWith(int? value, string name, VisitorState state)
+        {
+            if (value.HasValue)
+            {
+                state.Buffer.AppendFormat(" {0} = {1}", name, value.Value);
+            }
+
         }
         #endregion Select Parts
 

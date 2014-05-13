@@ -2,6 +2,7 @@
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
 
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -156,7 +157,7 @@ namespace TTRider.FluidSql
 
         public static CommentToken Comment(string comment)
         {
-            return new CommentToken{ Content = Sql.Snippet(comment)};
+            return new CommentToken{ Content = Snippet(comment)};
         }
         public static CommentStatement Comment(IStatement statement)
         {
@@ -176,7 +177,7 @@ namespace TTRider.FluidSql
         {
             var name = new Name();
 
-            if (!string.IsNullOrWhiteSpace(source))
+            if (!String.IsNullOrWhiteSpace(source))
             {
                 name.Parts.Add(source);
             }
@@ -261,5 +262,69 @@ namespace TTRider.FluidSql
         {
             return new Order { Column = new Name(column), Direction = direction };
         }
+
+        public static CreateIndexStatement CreateIndex(Name name, Name on = null)
+        {
+            return new CreateIndexStatement
+            {
+                Name = name, 
+                On = on
+            };
+        }
+
+        public static AlterIndexStatement AlterIndex(Name name, Name on = null)
+        {
+            return new AlterIndexStatement
+            {
+                Name = name,
+                On = on
+            };
+        }
+
+        public static DropIndexStatement DropIndex(Name name, Name on = null)
+        {
+            return new DropIndexStatement
+            {
+                Name = name,
+                On = on
+            };
+        }
+
+        public static CreateIndexStatement CreateIndex(string name, string on)
+        {
+            return new CreateIndexStatement
+            {
+                Name = Sql.Name(name),
+                On = Sql.Name(on)
+            };
+        }
+
+        public static AlterIndexStatement AlterIndex(string name, string on)
+        {
+            return new AlterIndexStatement
+            {
+                Name = Sql.Name(name),
+                On = Sql.Name(on)
+            };
+        }
+        public static AlterIndexStatement AlterIndexAll(string on)
+        {
+            return new AlterIndexStatement
+            {
+                Name = null,
+                On = Sql.Name(on)
+            };
+        }
+
+        public static DropIndexStatement DropIndex(string name, string on)
+        {
+            return new DropIndexStatement
+            {
+                Name = Sql.Name(name),
+                On = Sql.Name(on)
+            };
+        }
+
+    
     }
 }

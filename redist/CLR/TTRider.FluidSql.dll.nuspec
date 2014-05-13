@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.7.1</version>
+    <version>0.0.8.0</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      0.0.8
+      * Support for CREATE/ALTER/DROP INDEX
       0.0.7
       * Support for comments
       * Support for INSERT statement
