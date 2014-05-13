@@ -2,15 +2,24 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.4</version>
+    <version>0.0.7.1</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/ttrider/fluid-sql</projectUrl>
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      0.0.7
+      * Support for comments
+      * Support for INSERT statement
+      0.0.6.2
+      * Ability to provide parameter values during statement construction
+      * bug fixes
+      0.0.5
+      * Support for parameters with default values
+      * Bug fix for the empty part in Name ( like [tempdb]..[name])
       0.0.4
       * Support for WrapAsSelect statement
       0.0.3
