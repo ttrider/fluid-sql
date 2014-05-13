@@ -11,23 +11,21 @@ namespace TTRider.FluidSql.Providers
         {
             this.Parameters = new List<Parameter>();
             this.Variables = new List<Parameter>();
+            this.ParameterValues = new List<ParameterValue>();
             this.Buffer = new StringBuilder();
         }
 
         public StringBuilder Buffer { get; private set; }
 
         public List<Parameter> Parameters { get; private set; }
-        public List<Parameter> Variables { get; private set; } 
+        public List<Parameter> Variables { get; private set; }
+        public List<ParameterValue> ParameterValues { get; private set; }
         public string Value 
         {
             get { return this.Buffer.ToString(); }
         }
-       
 
-        internal void AppendParameters(IEnumerable<Parameter> list)
-        {
-            this.Parameters.AddRange(list);
-        }
+        
 
         internal IEnumerable<SqlParameter> GetDbParameters()
         {
@@ -38,6 +36,7 @@ namespace TTRider.FluidSql.Providers
             return this.Parameters
                 .GroupBy(p => p.Name)
                 .Select(pg => pg.FirstOrDefault(p => p.DbType.HasValue) ?? pg.First())
+                .Except(this.Variables, ParameterEqualityComparer.Default)
                 .Select(p =>
                 {
                     var sp = new SqlParameter()
@@ -69,6 +68,15 @@ namespace TTRider.FluidSql.Providers
                         sp.Scale = p.Scale.Value;
                     }
 
+                    var value = this.ParameterValues.FirstOrDefault(pp=>string.Equals(pp.Name,p.Name));
+                    if (value != null && value.Value!=null)
+                    {
+                        sp.Value = value.Value;
+                    }
+                    else if (p.DefaultValue != null)
+                    {
+                        sp.Value = p.DefaultValue;
+                    }
                     return sp;
                 });
 

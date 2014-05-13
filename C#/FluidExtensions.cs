@@ -25,6 +25,12 @@ namespace TTRider.FluidSql
             return parameterCollection;
         }
 
+        public static Parameter DefaultValue(this Parameter parameter, object defaultValue)
+        {
+            parameter.DefaultValue = defaultValue;
+            return parameter;
+        }
+
         public static Token As(this Token token, string alias)
         {
             token.Alias = alias;
@@ -43,7 +49,13 @@ namespace TTRider.FluidSql
 
             return statement;
         }
-        
+
+        public static InsertStatement Top(this InsertStatement statement, int value, bool percent = false)
+        {
+            statement.Top = new Top(value, percent, false);
+
+            return statement;
+        }
 
         public static SelectStatement Distinct(this SelectStatement statement, bool distinct = true)
         {
@@ -72,12 +84,15 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static DeleteStatement Output(this DeleteStatement statement, params Token[] columns)
+        public static T Output<T>(this T statement, params Name[] columns)
+            where T : RecordsetStatement
         {
             statement.Output.AddRange(columns);
             return statement;
         }
-        public static DeleteStatement Output(this DeleteStatement statement, IEnumerable<Token> columns)
+
+        public static T Output<T>(this T statement, IEnumerable<Name> columns)
+            where T : RecordsetStatement
         {
             if (columns != null)
             {
@@ -93,6 +108,12 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static InsertStatement Into(this InsertStatement statement, Name target)
+        {
+            statement.Into = target;
+
+            return statement;
+        }
 
         public static SelectStatement GroupBy(this SelectStatement statement, params Name[] columns)
         {
@@ -163,6 +184,11 @@ namespace TTRider.FluidSql
             statement.From = token;
             return statement;
         }
+        public static InsertStatement From(this InsertStatement statement, RecordsetStatement recordset)
+        {
+            statement.From = recordset;
+            return statement;
+        }
         public static Union Union(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new Union(statement, with);
@@ -185,8 +211,8 @@ namespace TTRider.FluidSql
                 .From(statement.As(alias))
                 .Output(statement.Output.Select(
                 column=>!string.IsNullOrWhiteSpace(column.Alias)
-                    ?column.Alias
-                    :((column is Name)?((Name)column).FullName:null))
+                    ? column.Alias                                          // we should use alias    
+                    :((column is Name)?((Name)column).Parts.Last():null))   // or the LAST PART of the name
                         .Where(name=>!string.IsNullOrWhiteSpace(name))
                         .Select(name=>Sql.Name(alias, name)));
         }
@@ -381,6 +407,76 @@ namespace TTRider.FluidSql
             statement.Else.Statements.AddRange(statements);
             return statement;
         }
+
+        public static CommentStatement CommentOut(this IStatement statement)
+        {
+            return new CommentStatement{Content = statement};
+        }
+        public static CommentToken CommentOut(this Token token)
+        {
+            return new CommentToken { Content = token };
+        }
+
+        public static InsertStatement DefaultValues(this InsertStatement statement, bool useDefaultValues = true)
+        {
+            statement.DefaultValues = useDefaultValues;
+            return statement;
+        }
+        
+        public static InsertStatement Columns(this InsertStatement statement, params Name[] columns)
+        {
+            statement.Columns.AddRange(columns);
+            return statement;
+        }
+        public static InsertStatement Columns(this InsertStatement statement, IEnumerable<Name> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        public static InsertStatement Columns(this InsertStatement statement, params string[] columns)
+        {
+            statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
+            return statement;
+        }
+        public static InsertStatement Columns(this InsertStatement statement, IEnumerable<string> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
+            }
+            return statement;
+        }
+
+        public static InsertStatement Values(this InsertStatement statement, params Token[] values)
+        {
+            statement.Values.Add(values);
+            return statement;
+        }
+        public static InsertStatement Values(this InsertStatement statement, IEnumerable<Token> values)
+        {
+            if (values != null)
+            {
+                statement.Values.Add(values.ToArray());
+            }
+            return statement;
+        }
+        public static InsertStatement Values(this InsertStatement statement, params object[] values)
+        {
+            statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
+            return statement;
+        }
+        public static InsertStatement Values(this InsertStatement statement, IEnumerable<object> values)
+        {
+            if (values != null)
+            {
+                statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
+            }
+            return statement;
+        }
+
     }
 
 }

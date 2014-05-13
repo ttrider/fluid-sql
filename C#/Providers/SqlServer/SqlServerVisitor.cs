@@ -119,12 +119,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (BetweenToken), VisitBetweenToken},
                 {typeof (InToken), VisitInToken},
                 {typeof (NotInToken), VisitNotInToken},
+
+                {typeof (CommentToken), VisitCommentToken},
             };
 
         private static readonly Dictionary<Type, Action<IStatement, VisitorState>> StatementVisitors =
             new Dictionary<Type, Action<IStatement, VisitorState>>()
             {
                 {typeof (DeleteStatement), VisitDelete},
+
+                {typeof (InsertStatement), VisitInsert},
 
                 {typeof (SelectStatement), VisitSelect},
                 {typeof (Union), VisitUnion},
@@ -141,6 +145,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 {typeof (DropTableStatement), VisitDropTableStatement},
                 //{typeof (CreateTableStatement), VisitCreateTableStatement},
+
+
+                {typeof (CommentStatement), VisitCommentStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -149,8 +156,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitStatement(statement, state);
             // we need to make sure that the last non-whitespace character
-            // is ';'
-            for (int i = state.Buffer.Length - 1; i >= 0; i--)
+            // is ';' unless it is */
+            //TODO: need a better code here
+            for (var i = state.Buffer.Length - 1; i >= 0; i--)
             {
                 var ch = state.Buffer[i];
                 if (!Char.IsWhiteSpace(ch))
@@ -159,6 +167,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         break;
                     }
+                    if (ch == '/')
+                    {
+                        if (i > 0 && state.Buffer[i - 1] == '*')
+                        {
+                            break;
+                        }
+                    }
+
                     state.Buffer.Append(";");
                     break;
                 }
@@ -215,15 +231,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" DISTINCT");
             }
 
-            Visit(selectStatement.Top, state);
+            VisitTop(selectStatement.Top, state);
+
             VisitOutput(selectStatement.Output, state, false);
 
-            if (selectStatement.Into != null)
-            {
-                state.Buffer.Append(" INTO ");
-                state.Buffer.Append(selectStatement.Into.FullName);
-
-            }
+            VisitInto(selectStatement.Into, state);
 
             VisitFrom(selectStatement.From, state);
 
@@ -241,19 +253,64 @@ namespace TTRider.FluidSql.Providers.SqlServer
             //HAVING
         }
 
+        private static void VisitInto(Name into, VisitorState state)
+        {
+            if (into != null)
+            {
+                state.Buffer.Append(" INTO ");
+                state.Buffer.Append(into.FullName);
+            }
+        }
+
         static void VisitDelete(IStatement statement, VisitorState state)
         {
             var deleteStatement = (DeleteStatement)statement;
 
             state.Buffer.Append("DELETE");
 
-            Visit(deleteStatement.Top, state);
+            VisitTop(deleteStatement.Top, state);
 
             VisitFrom(deleteStatement.From, state);
 
             VisitOutput(deleteStatement.Output, state, true);
 
             VisitWhere(deleteStatement.Where, state);
+        }
+
+        static void VisitInsert(IStatement statement, VisitorState state)
+        {
+            var insertStatement = (InsertStatement)statement;
+
+            state.Buffer.Append("INSERT");
+
+            VisitTop(insertStatement.Top, state);
+
+            VisitInto(insertStatement.Into, state);
+
+            VisitTokenSet(" (", ", ", ")", insertStatement.Columns, true, state);
+            
+            VisitOutput(insertStatement.Output, state, true);
+
+            if (insertStatement.DefaultValues)
+            {
+                state.Buffer.Append(" DEFAULT VALUES");
+            }
+            else if (insertStatement.Values.Count > 0)
+            {
+                var separator = " VALUES";
+                foreach (var valuesSet in insertStatement.Values)
+                {
+                    state.Buffer.Append(separator);
+                    separator = ",";
+
+                    VisitTokenSet(" (", ", ", ")", valuesSet, false, state);
+                }
+            }
+            else if (insertStatement.From != null)
+            {
+                state.Buffer.Append(" ");
+                VisitStatement(insertStatement.From, state);
+            }
         }
 
 
@@ -387,7 +444,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
-
         private static void VisitDropTableStatement(IStatement statement, VisitorState state)
         {
             var s = (DropTableStatement)statement;
@@ -413,6 +469,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         //    state.Buffer.Append(");");
         //}
+
+
+        private static void VisitCommentStatement(IStatement statement, VisitorState state)
+        {
+            var commentStatement = (CommentStatement) statement;
+
+            state.Buffer.Append(" /* ");
+
+            VisitStatement(commentStatement.Content, state);
+
+            state.Buffer.Append(" */ ");
+        }
 
         #endregion Statements
 
@@ -455,17 +523,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         static void VisitFrom(List<Token> recordsets, VisitorState state)
         {
-            if (recordsets.Count > 0)
-            {
-                var separator = " FROM ";
-                foreach (var recordset in recordsets)
-                {
-                    state.Buffer.Append(separator);
-                    separator = ", ";
-
-                    VisitToken(recordset, true, state);
-                }
-            }
+            VisitTokenSet(" FROM ", ", ", "", recordsets, true, state);
         }
         static void VisitFrom(Token recordset, VisitorState state)
         {
@@ -480,18 +538,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (includeName)
             {
-                if (columns.Count > 0)
-                {
-                    state.Buffer.Append(" OUTPUT");
-                    string separator = " ";
-                    foreach (var column in columns)
-                    {
-                        state.Buffer.Append(separator);
-                        separator = " , ";
-
-                        VisitToken(column, true, state);
-                    }
-                }
+                VisitTokenSet(" OUTPUT ", ", ", "", columns, true, state);
             }
             else
             {
@@ -501,32 +548,29 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 else
                 {
-                    string separator = " ";
-                    foreach (var column in columns)
-                    {
-                        state.Buffer.Append(separator);
-                        separator = " , ";
-
-                        VisitToken(column, true, state);
-                    }
+                    VisitTokenSet(" ", ", ", "", columns, true, state);
                 }
             }
         }
 
-        static void Visit(Top top, VisitorState state)
+        static void VisitTop(Top top, VisitorState state)
         {
             if (top != null)
             {
-                state.Buffer.Append(" TOP ");
+                state.Buffer.Append(" TOP (");
                 if (top.Value.HasValue)
                 {
                     state.Buffer.Append(top.Value.Value);
                 }
                 else if (top.Parameters.Count > 0)
                 {
-                    state.AppendParameters(top.Parameters);
+                    foreach (var parameter in top.Parameters )
+                    {
+                        state.Parameters.Add(parameter);
+                    }
                     state.Buffer.Append(top.Parameters[0].Name);
                 }
+                state.Buffer.Append(")");
 
                 if (top.Percent)
                 {
@@ -564,6 +608,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
 
             state.Parameters.AddRange(token.Parameters);
+            state.ParameterValues.AddRange(token.ParameterValues);
         }
         static void VisitScalarToken(Token token, VisitorState state)
         {
@@ -620,17 +665,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var value = ((Function)token);
             state.Buffer.Append(" ");
             state.Buffer.Append(value.Name);
-            state.Buffer.Append("(");
 
-            var separator = "";
-            foreach (var arg in value.Arguments)
-            {
-                state.Buffer.Append(separator);
-                separator = ", ";
-                VisitToken(arg, false, state);
-            }
-
-            state.Buffer.Append(")");
+            VisitTokenSet("(", ", ", ")", value.Arguments, false, state);
         }
         static void VisitBinaryToken(Token token, VisitorState state, string operation)
         {
@@ -757,37 +793,45 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var value = (InToken)token;
 
             VisitToken(value.Token, false, state);
-
-            if (value.Set.Count > 0)
-            {
-                var separator = " IN (";
-                foreach (var setToken in value.Set)
-                {
-                    state.Buffer.Append(separator);
-                    separator = ", ";
-                    VisitToken(setToken, false, state);
-                }
-                state.Buffer.Append(")");
-            }
+            VisitTokenSet(" IN (", ", ", ")", value.Set, false, state);
         }
         static void VisitNotInToken(Token token, VisitorState state)
         {
             var value = (NotInToken)token;
 
             VisitToken(value.Token, false, state);
+            VisitTokenSet(" NOT IN (", ", ", ")", value.Set, false, state);
+        }
 
-            if (value.Set.Count > 0)
+        private static void VisitTokenSet(string prefix, string separator, string suffix, IEnumerable<Token> tokens,
+            bool includeAlias, VisitorState state)
+        {
+            var enumerator = tokens.GetEnumerator();
+            if (enumerator.MoveNext())
             {
-                var separator = " NOT IN (";
-                foreach (var setToken in value.Set)
+                state.Buffer.Append(prefix);
+                VisitToken(enumerator.Current, includeAlias, state);
+
+                while (enumerator.MoveNext())
                 {
                     state.Buffer.Append(separator);
-                    separator = ", ";
-                    VisitToken(setToken, false, state);
+                    VisitToken(enumerator.Current, includeAlias, state);
                 }
-                state.Buffer.Append(")");
+                state.Buffer.Append(suffix);
             }
         }
+
+        private static void VisitCommentToken(Token token, VisitorState state)
+        {
+            var commentToken = (CommentToken)token;
+
+            state.Buffer.Append(" /* ");
+
+            VisitToken(commentToken.Content, false, state);
+
+            state.Buffer.Append(" */ ");
+        }
+
         #endregion Tokens
     }
 }
