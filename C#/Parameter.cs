@@ -8,39 +8,33 @@ using System.Data;
 
 namespace TTRider.FluidSql
 {
-    public class Parameter : Token, IEquatable<Parameter>
+    public class Parameter : TypedToken, IEquatable<Parameter>
     {
-        public string Name { get; set; }
-        public SqlDbType? DbType { get; set; }
-        public byte? Precision { get; set; }
-        public byte? Scale { get; set; }
-        public int? Length { get; set; }
         public object DefaultValue { get; set; }
 
         public Parameter(string name, SqlDbType sqlDbType, byte precision, byte scale)
-            : this(name, sqlDbType)
+            : base(name, sqlDbType, precision, scale)
         {
-            this.Name = name;
-            this.DbType = sqlDbType;
-            this.Precision = precision;
-            this.Scale = scale;
-        }
-        public Parameter(string name, SqlDbType sqlDbType, int length)
-            : this(name, sqlDbType)
-        {
-            this.Length = length;
-        }
-        public Parameter(string name, SqlDbType sqlDbType)
-            : this(name)
-        {
-            this.DbType = sqlDbType;
-        }
-        public Parameter(string name)
-        {
-            this.Name = name;
-            this.DbType = null;
             this.Parameters.Add(this);
         }
+
+        public Parameter(string name, SqlDbType sqlDbType, int length)
+            : base(name, sqlDbType, length)
+        {
+            this.Parameters.Add(this);
+        }
+
+        public Parameter(string name, SqlDbType sqlDbType)
+            : base(name, sqlDbType)
+        {
+            this.Parameters.Add(this);
+        }
+
+        public Parameter(string name)
+            : base(name)
+        {
+            this.Parameters.Add(this);
+        } 
 
 
         public override bool Equals(object obj)

@@ -57,10 +57,14 @@
     <Compile Include="DropIndexStatement.cs" />
     <Compile Include="DropTableStatement.cs" />
     <Compile Include="FluidExtensions.cs" />
+    <Compile Include="ForeignDefinition.cs" />
+    <Compile Include="ForeignKeyOption.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="ICreateOrAlterIndexOptions.cs" />
+    <Compile Include="IdentityOptions.cs" />
     <Compile Include="IDropIndexOptions.cs" />
     <Compile Include="IfStatement.cs" />
+    <Compile Include="IndexDefinition.cs" />
     <Compile Include="IndexOptions.cs" />
     <Compile Include="InsertStatement.cs" />
     <Compile Include="ISetIndexOptions.cs" />
@@ -85,9 +89,13 @@
     <Compile Include="Snippet.cs" />
     <Compile Include="Sql.cs" />
     <Compile Include="StatementsStatement.cs" />
+    <Compile Include="StringifyStatement.cs" />
+    <Compile Include="StringifyToken.cs" />
+    <Compile Include="TableColumn.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Top.cs" />
     <Compile Include="TransactionStatement.cs" />
+    <Compile Include="TypedToken.cs" />
     <Compile Include="Union.cs" />
   </ItemGroup>
   <ItemGroup>

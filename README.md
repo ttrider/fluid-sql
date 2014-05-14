@@ -4,6 +4,12 @@ fluid-sql
 
 Release Notes
 ==
+0.0.9
+--
+* Support for CREATE TABLE
+* Support for taoke or statement stringify
+* Bug fixes
+
 0.0.8
 --
 * Support for CREATE/ALTER/DROP INDEX

@@ -150,10 +150,14 @@ namespace TTRider.FluidSql
             return new DropTableStatement { Name = name, CheckExists = checkExists };
         }
 
-        //public static CreateTableStatement CreateTable(Name name)
-        //{
-        //    return new CreateTableStatement { Name = name };
-        //}
+        public static CreateTableStatement CreateTable(Name name, bool checkIfNotExists = false)
+        {
+            return new CreateTableStatement
+            {
+                Name = name,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
 
         public static CommentToken Comment(string comment)
         {

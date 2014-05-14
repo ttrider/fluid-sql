@@ -121,6 +121,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (NotInToken), VisitNotInToken},
 
                 {typeof (CommentToken), VisitCommentToken},
+                {typeof (StringifyToken), VisitStringifyToken},
             };
 
         private static readonly Dictionary<Type, Action<IStatement, VisitorState>> StatementVisitors =
@@ -145,7 +146,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (DeclareStatement), VisitDeclareStatement},
                 {typeof (IfStatement), VisitIfStatement},
 
-                //{typeof (CreateTableStatement), VisitCreateTableStatement},
+                {typeof (CreateTableStatement), VisitCreateTableStatement},
                 {typeof (DropTableStatement), VisitDropTableStatement},
                 
                 {typeof (CreateIndexStatement), VisitCreateIndexStatement},
@@ -153,6 +154,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (DropIndexStatement), VisitDropIndexStatement},
 
                 {typeof (CommentStatement), VisitCommentStatement},
+                {typeof (StringifyStatement), VisitStringifyStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -389,32 +391,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append("DECLARE ");
                 state.Buffer.Append(ss.Variable.Name);
 
-                if (ss.Variable.DbType.HasValue)
-                {
-                    state.Buffer.Append(" ");
-                    state.Buffer.Append(DbTypeStrings[(int)ss.Variable.DbType]);
-                }
-
-                if (ss.Variable.Length.HasValue || ss.Variable.Precision.HasValue || ss.Variable.Scale.HasValue)
-                {
-                    state.Buffer.Append("(");
-                    if (ss.Variable.Length.HasValue)
-                    {
-                        state.Buffer.Append(ss.Variable.Length.Value == -1 ? "MAX" : ss.Variable.Length.Value.ToString());
-                    }
-                    else if (ss.Variable.Precision.HasValue)
-                    {
-                        state.Buffer.Append(ss.Variable.Precision.Value);
-
-                        if (ss.Variable.Scale.HasValue)
-                        {
-                            state.Buffer.Append(",");
-                            state.Buffer.Append(ss.Variable.Scale.Value);
-                        }
-                    }
-
-                    state.Buffer.Append(")");
-                }
+                VisitType(ss.Variable, state);
 
                 if (ss.Initializer != null)
                 {
@@ -422,6 +399,37 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitToken(ss.Initializer, false, state);
                 }
             }
+        }
+
+        private static void VisitType(TypedToken typedToken, VisitorState state)
+        {
+            if (typedToken.DbType.HasValue)
+            {
+                state.Buffer.Append(" ");
+                state.Buffer.Append(DbTypeStrings[(int)typedToken.DbType]);
+            }
+
+            if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
+            {
+                state.Buffer.Append("(");
+                if (typedToken.Length.HasValue)
+                {
+                    state.Buffer.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString());
+                }
+                else if (typedToken.Precision.HasValue)
+                {
+                    state.Buffer.Append(typedToken.Precision.Value);
+
+                    if (typedToken.Scale.HasValue)
+                    {
+                        state.Buffer.Append(",");
+                        state.Buffer.Append(typedToken.Scale.Value);
+                    }
+                }
+
+                state.Buffer.Append(")");
+            }
+
         }
 
         private static void VisitIfStatement(IStatement statement, VisitorState state)
@@ -464,16 +472,86 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append(s.Name.FullName);
             state.Buffer.Append(";");
         }
-        //private static void VisitCreateTableStatement(IStatement statement, VisitorState state)
-        //{
-        //    var s = (CreateTableStatement)statement;
-        //    state.Buffer.Append("CREATE TABLE ");
-        //    state.Buffer.Append(s.Name.FullName);
-        //    state.Buffer.Append(" (");
+
+        private static void VisitCreateTableStatement(IStatement statement, VisitorState state)
+        {
+            var createStatement = (CreateTableStatement)statement;
+
+            if (createStatement.CheckIfNotExists)
+            {
+                state.Buffer.Append("IF OBJECT_ID(N'");
+                state.Buffer.Append(createStatement.Name.FullName);
+                state.Buffer.Append("',N'U') IS NULL ");
+            }
+
+            state.Buffer.Append("CREATE TABLE ");
+            state.Buffer.Append(createStatement.Name.FullName);
+            if (createStatement.AsFiletable)
+            {
+                state.Buffer.Append(" AS FileTable");
+            }
+
+            var separator = " (";
+            foreach (var column in createStatement.Columns)
+            {
+                state.Buffer.Append(separator);
+                separator = ", ";
+
+                state.Buffer.Append("[");
+                state.Buffer.Append(column.Name);
+                state.Buffer.Append("]");
+
+                VisitType(column, state);
+
+                if (column.Sparse)
+                {
+                    state.Buffer.Append(" SPARSE");
+                }
+                if (column.Null.HasValue)
+                {
+                    state.Buffer.Append(column.Null.Value?" NULL":" NOT NULL");
+                }
+                if (column.Identity.On)
+                {
+                    state.Buffer.AppendFormat(" IDENTITY ({0}, {1})", column.Identity.Seed, column.Identity.Increment);
+                }
+                if (column.RowGuid)
+                {
+                    state.Buffer.Append(" ROWGUIDCOL");
+                }
+                if (column.DefaultValue!=null)
+                {
+                    state.Buffer.Append(" DEFAULT (");
+                    VisitToken(column.DefaultValue, false, state);
+                    state.Buffer.Append(" )");
+                }
+            }
+
+            if (createStatement.PrimaryKey != null)
+            {
+                state.Buffer.Append(", CONSTRAINT ");
+                state.Buffer.Append(createStatement.PrimaryKey.Name.FullName);
+                state.Buffer.Append(" PRIMARY KEY (");
+                state.Buffer.Append(string.Join(", ", createStatement.PrimaryKey.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                state.Buffer.Append(" )");
+            }
+
+            foreach (var unique in createStatement.Indecies)
+            {
+                state.Buffer.Append(", CONSTRAINT ");
+                state.Buffer.Append(unique.Name.FullName);
+                state.Buffer.Append(" UNIQUE");
+                if (unique.Clustered.HasValue)
+                {
+                    state.Buffer.Append(unique.Clustered.Value?" CLUSTERED (":" NONCLUSTERED (");    
+                }
+                state.Buffer.Append(string.Join(", ", unique.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                state.Buffer.Append(" )");
+            }
 
 
-        //    state.Buffer.Append(");");
-        //}
+            state.Buffer.Append(");");
+        }
 
 
         private static void VisitCommentStatement(IStatement statement, VisitorState state)
@@ -486,6 +564,26 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Buffer.Append(" */ ");
         }
+
+        private static void VisitStringifyStatement(IStatement statement, VisitorState state)
+        {
+            var commentStatement = (StringifyStatement)statement;
+
+            state.Buffer.Append("N'");
+
+            var startIndex = state.Buffer.Length;
+            VisitStatement(commentStatement.Content, state);
+            var endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+
+            state.Buffer.Append("'");
+        }
+        
 
         private static void VisitCreateIndexStatement(IStatement statement, VisitorState state)
         {
@@ -799,7 +897,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
             else
             {
-                state.Buffer.Append("'" + value + "'");
+                state.Buffer.Append("N'" + value + "'");
             }
         }
         static void VisitStatementToken(Token token, VisitorState state)
@@ -818,8 +916,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         static void VisitParameterToken(Token token, VisitorState state)
         {
-            var value = ((Parameter)token).Name;
-            state.Buffer.Append(value);
+            var value = ((Parameter)token);
+            state.Buffer.Append(value.Name);
         }
         static void VisitSnippetToken(Token token, VisitorState state)
         {
@@ -997,6 +1095,27 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Buffer.Append(" */ ");
         }
+
+        
+        private static void VisitStringifyToken(Token token, VisitorState state)
+        {
+            var strToken = (StringifyToken)token;
+
+            state.Buffer.Append("N'");
+
+            var startIndex = state.Buffer.Length;
+            VisitToken(strToken.Content, false, state);
+            var endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+
+            state.Buffer.Append("'");
+        }
+        
 
         #endregion Tokens
     }

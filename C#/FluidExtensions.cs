@@ -422,6 +422,15 @@ namespace TTRider.FluidSql
             return new CommentToken { Content = token };
         }
 
+        public static StringifyStatement Stringify(this IStatement statement)
+        {
+            return new StringifyStatement { Content = statement };
+        }
+        public static StringifyToken Stringify(this Token token)
+        {
+            return new StringifyToken { Content = token };
+        }
+
         public static InsertStatement DefaultValues(this InsertStatement statement, bool useDefaultValues = true)
         {
             statement.DefaultValues = useDefaultValues;
@@ -560,7 +569,251 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-    }
 
+        public static CreateTableStatement Columns(this CreateTableStatement statement, params TableColumn[] columns)
+        {
+            statement.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement Columns(this CreateTableStatement statement, IEnumerable<TableColumn> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+
+        public static TableColumn Null(this TableColumn column)
+        {
+            column.Null = true;
+            return column;
+        }
+
+        public static TableColumn NotNull(this TableColumn column)
+        {
+            column.Null = false;
+            return column;
+        }
+
+        public static TableColumn Identity(this TableColumn column, int seed = 1, int increment = 1)
+        {
+            column.Identity.On = true;
+            column.Identity.Seed = seed;
+            column.Identity.Increment = increment;
+            return column;
+        }
+
+        public static TableColumn Default(this TableColumn column, object value)
+        {
+            column.DefaultValue = Sql.Scalar(value);
+            return column;
+        }
+
+        public static TableColumn Default(this TableColumn column, Scalar value)
+        {
+            column.DefaultValue = value;
+            return column;
+        }
+
+        public static TableColumn Sparse(this TableColumn column)
+        {
+            column.Sparse = true;
+            return column;
+        }
+
+        public static TableColumn RowGuid(this TableColumn column)
+        {
+            column.RowGuid = true;
+            return column;
+        }
+
+        #region PrimaryKey
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+            statement.PrimaryKey.Name = Sql.Name(name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Name = Sql.Name(name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = Sql.Name(name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = Sql.Name(name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new IndexDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = name;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        #endregion PrimaryKey
+
+        #region IndexOn
+
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, params Order[] columns)
+        {
+            var index = new IndexDefinition {Clustered = false, Name = Sql.Name(name)};
+            index.Columns.AddRange(columns);
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns)
+        {
+            var index = new IndexDefinition {Clustered = false, Name = Sql.Name(name)};
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, params Order[] columns)
+        {
+            var index = new IndexDefinition {Clustered = false, Name = name};
+
+            index.Columns.AddRange(columns);
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
+        {
+            var index = new IndexDefinition {Clustered = false, Name = name};
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, params Order[] columns)
+        {
+            var index = new IndexDefinition {Clustered = clustered, Name = Sql.Name(name)};
+
+            index.Columns.AddRange(columns);
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, IEnumerable<Order> columns)
+        {
+            var index = new IndexDefinition {Clustered = clustered, Name = Sql.Name(name)};
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, params Order[] columns)
+        {
+            var index = new IndexDefinition {Clustered = clustered, Name = name};
+
+            index.Columns.AddRange(columns);
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
+        {
+            var index = new IndexDefinition {Clustered = clustered, Name = name};
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.Indecies.Add(index);
+            return statement;
+        }
+        #endregion IndexOn
+    }
 }
 
