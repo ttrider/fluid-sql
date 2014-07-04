@@ -4,6 +4,19 @@ fluid-sql
 
 Release Notes
 ==
+0.0.11.0
+--
+* Ability to create command that is not connected yet
+
+0.0.10.1
+--
+* Support for Snipper as a statement with potential output
+* bug fixes
+
+0.0.10.0
+--
+* Ability to create command that is not connected yet
+
 0.0.9
 --
 * Support for CREATE TABLE

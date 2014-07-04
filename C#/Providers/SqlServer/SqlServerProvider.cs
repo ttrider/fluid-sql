@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -22,18 +23,44 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state.GetDbParameters();
         }
 
+        [Obsolete]
         public override IDbCommand GetCommand(string connectionString, IStatement statement)
         {
-            var state = SqlServerVisitor.Compile(statement);
+            return this.GetCommand(statement, connectionString);
+        }
+
+        public override IDbConnection GetConnection(string connectionString)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new ArgumentNullException("connectionString");
+            }
 
             var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
-            var connection = new SqlConnection(csb.ConnectionString);
-            connection.Open();
+            return new SqlConnection(csb.ConnectionString);
+        }
 
-            var command = connection.CreateCommand();
 
-            command.Disposed += (s, o) => connection.Close();
+        public override IDbCommand GetCommand(IStatement statement, string connectionString = null)
+        {
+
+            var state = SqlServerVisitor.Compile(statement);
+
+            SqlCommand command;
+            if (!string.IsNullOrWhiteSpace(connectionString))
+            {
+                var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+
+                var connection = new SqlConnection(csb.ConnectionString);
+                connection.Open();
+                command = connection.CreateCommand();
+                command.Disposed += (s, o) => connection.Close();
+            }
+            else
+            {
+                command = new SqlCommand();
+            }
 
             command.CommandTimeout = this.CommandTimeout;
             command.CommandType = CommandType.Text;
@@ -46,11 +73,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return command;
         }
 
-        public async override Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement, CancellationToken token)
+        [Obsolete]
+        public override Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
+            CancellationToken token)
+        {
+            return GetCommandAsync(statement, connectionString, token);
+        }
+
+        public async override Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token)
         {
             var state = SqlServerVisitor.Compile(statement);
 
-            var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
+            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
             var connection = new SqlConnection(csb.ConnectionString);
             await connection.OpenAsync(token);
