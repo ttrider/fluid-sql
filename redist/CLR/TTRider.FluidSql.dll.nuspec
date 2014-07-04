@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.11.0</version>
+    <version>0.0.11.2</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,14 +11,13 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
-      0.0.11.0
+      0.0.11.2
       * Ability to create command that is not connected yet
-      0.0.10.1
       * Support for Snipper as a statement with potential output
       * bug fixes
       0.0.9.0
       * Support for CREATE TABLE
-      * Support for taoke or statement stringify
+      * Support for token and statement stringify
       * Bug fixes
       0.0.8
       * Support for CREATE/ALTER/DROP INDEX
