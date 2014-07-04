@@ -155,6 +155,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 {typeof (CommentStatement), VisitCommentStatement},
                 {typeof (StringifyStatement), VisitStringifyStatement},
+                {typeof (SnippetStatement), VisitSnippetStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -583,7 +584,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Buffer.Append("'");
         }
-        
+
+
+        private static void VisitSnippetStatement(IStatement statement, VisitorState state)
+        {
+            var snippetStatement = (SnippetStatement)statement;
+            state.Buffer.Append(snippetStatement.Value);
+        }
 
         private static void VisitCreateIndexStatement(IStatement statement, VisitorState state)
         {

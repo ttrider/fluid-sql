@@ -225,6 +225,34 @@ namespace TTRider.FluidSql
             return val;
         }
 
+        public static SnippetStatement SnippetStatement(string value, IEnumerable<Parameter> parameters)
+        {
+            var snippetStatement = new SnippetStatement()
+            {
+                Value = value
+            };
+            if (parameters != null)
+            {
+                foreach (Parameter parameter in parameters)
+                    snippetStatement.Parameters.Add(parameter);
+            }
+            return snippetStatement;
+        }
+
+        public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
+        {
+            var snippetStatement = new SnippetStatement()
+            {
+                Value = value
+            };
+            if (parameters != null)
+            {
+                foreach (Parameter parameter in parameters)
+                    snippetStatement.Parameters.Add(parameter);
+            }
+            return snippetStatement;
+        }
+
         public static Scalar Scalar(object value)
         {
             return new Scalar { Value = value };

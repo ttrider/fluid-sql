@@ -585,11 +585,12 @@ namespace TTRider.FluidSql
         }
 
 
-        public static TableColumn Null(this TableColumn column)
+        public static TableColumn Null(this TableColumn column, bool notNull = false)
         {
-            column.Null = true;
+            column.Null = new bool?(!notNull);
             return column;
         }
+
 
         public static TableColumn NotNull(this TableColumn column)
         {
