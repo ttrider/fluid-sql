@@ -4,12 +4,14 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace TTRider.FluidSql.Providers.SqlServer
 {
     public class SqlServerProvider : Provider
     {
+        public int CommandTimeout { get; set; }
+
         public override string GenerateStatement(IStatement statement)
         {
             var state = SqlServerVisitor.Compile(statement);
@@ -73,20 +75,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return command;
         }
 
-        [Obsolete]
-        public override Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
-            CancellationToken token)
-        {
-            return GetCommandAsync(statement, connectionString, token);
-        }
-
-        public async override Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token)
+        
+#if _ASYNC_
+        public async override System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token)
         {
             var state = SqlServerVisitor.Compile(statement);
 
             var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
             var connection = new SqlConnection(csb.ConnectionString);
+
             await connection.OpenAsync(token);
 
             var command = connection.CreateCommand();
@@ -103,7 +101,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             return command;
         }
-
-        public int CommandTimeout { get; set; }
+#endif
+        
     }
 }

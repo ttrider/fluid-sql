@@ -1,12 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql", "FluidSql.csproj", "{E0E66EB2-FC27-4DAE-8FC3-C05870C162E5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSqlTests", "FluidSqlTests\FluidSqlTests.csproj", "{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D5B0C03D-6AA0-40E4-90FB-9E05BCD55949}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
@@ -14,6 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 		..\redist\CLR\TTRider.FluidSql.dll.nuspec = ..\redist\CLR\TTRider.FluidSql.dll.nuspec
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql", "FluidSql\FluidSql.csproj", "{E0E66EB2-FC27-4DAE-8FC3-C05870C162E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.FluidSql", "Tests.FluidSql\Tests.FluidSql.csproj", "{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.v40", "FluidSql\v40\FluidSql.v40.csproj", "{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

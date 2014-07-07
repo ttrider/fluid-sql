@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace TTRider.FluidSql.Providers
 {
@@ -19,12 +19,16 @@ namespace TTRider.FluidSql.Providers
 
         IDbConnection GetConnection(string connectionString);
 
-        [Obsolete]
-        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement, CancellationToken token);
-        [Obsolete]
-        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement);
 
-        Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token);
-        Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString);
+#if _ASYNC_
+        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token);
+
+        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString);
+
+        [Obsolete]
+        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement, CancellationToken token);
+        [Obsolete]
+        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement);
+#endif
     }
 }
