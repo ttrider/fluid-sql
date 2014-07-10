@@ -69,7 +69,7 @@ namespace TTRider.FluidSql
 
             return statement;
         }
-        
+
         public static SelectStatement Output(this SelectStatement statement, params Token[] columns)
         {
             statement.Output.AddRange(columns);
@@ -210,14 +210,15 @@ namespace TTRider.FluidSql
             return new SelectStatement()
                 .From(statement.As(alias))
                 .Output(statement.Output.Select(
-                column=>!string.IsNullOrWhiteSpace(column.Alias)
+                column => !string.IsNullOrWhiteSpace(column.Alias)
                     ? column.Alias                                          // we should use alias    
-                    :((column is Name)?((Name)column).Parts.Last():null))   // or the LAST PART of the name
-                        .Where(name=>!string.IsNullOrWhiteSpace(name))
-                        .Select(name=>Sql.Name(alias, name)));
+                    : ((column is Name) ? ((Name)column).Parts.Last() : null))   // or the LAST PART of the name
+                        .Where(name => !string.IsNullOrWhiteSpace(name))
+                        .Select(name => Sql.Name(alias, name)));
         }
 
-        public static SelectStatement InnerJoin(this SelectStatement statement, Token source, Token on)
+        public static T InnerJoin<T>(this T statement, Token source, Token on)
+            where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
@@ -227,7 +228,8 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
-        public static SelectStatement LeftOuterJoin(this SelectStatement statement, Token source, Token on)
+        public static T LeftOuterJoin<T>(this T statement, Token source, Token on)
+            where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
@@ -237,7 +239,8 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
-        public static SelectStatement RightOuterJoin(this SelectStatement statement, Token source, Token on)
+        public static T RightOuterJoin<T>(this T statement, Token source, Token on)
+            where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
@@ -247,7 +250,8 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
-        public static SelectStatement FullOuterJoin(this SelectStatement statement, Token source, Token on)
+        public static T FullOuterJoin<T>(this T statement, Token source, Token on)
+            where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
@@ -257,7 +261,8 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
-        public static SelectStatement CrossJoin(this SelectStatement statement, Token source)
+        public static T CrossJoin<T>(this T statement, Token source)
+            where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
@@ -285,7 +290,7 @@ namespace TTRider.FluidSql
 
         public static Token IsEqual(this Token first, Token second)
         {
-            return new IsEqualsToken {First = first, Second = second};
+            return new IsEqualsToken { First = first, Second = second };
         }
         public static Token NotEqual(this Token first, Token second)
         {
@@ -347,7 +352,7 @@ namespace TTRider.FluidSql
         }
         public static Token IsNull(this Token token)
         {
-            return new IsNullToken{ Token = token };
+            return new IsNullToken { Token = token };
         }
         public static Token IsNotNull(this Token token)
         {
@@ -359,7 +364,7 @@ namespace TTRider.FluidSql
         }
         public static Token In(this Token token, params Token[] tokens)
         {
-            var value = new InToken {Token = token};
+            var value = new InToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
@@ -408,14 +413,14 @@ namespace TTRider.FluidSql
         public static IfStatement Else(this IfStatement statement, IEnumerable<IStatement> statements)
         {
             statement.Else = new StatementsStatement();
-            if (statements!=null)
-            statement.Else.Statements.AddRange(statements);
+            if (statements != null)
+                statement.Else.Statements.AddRange(statements);
             return statement;
         }
 
         public static CommentStatement CommentOut(this IStatement statement)
         {
-            return new CommentStatement{Content = statement};
+            return new CommentStatement { Content = statement };
         }
         public static CommentToken CommentOut(this Token token)
         {
@@ -436,7 +441,7 @@ namespace TTRider.FluidSql
             statement.DefaultValues = useDefaultValues;
             return statement;
         }
-        
+
         public static InsertStatement Columns(this InsertStatement statement, params Name[] columns)
         {
             statement.Columns.AddRange(columns);
@@ -741,14 +746,14 @@ namespace TTRider.FluidSql
 
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, params Order[] columns)
         {
-            var index = new IndexDefinition {Clustered = false, Name = Sql.Name(name)};
+            var index = new IndexDefinition { Clustered = false, Name = Sql.Name(name) };
             index.Columns.AddRange(columns);
             statement.Indecies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition {Clustered = false, Name = Sql.Name(name)};
+            var index = new IndexDefinition { Clustered = false, Name = Sql.Name(name) };
 
             if (columns != null)
             {
@@ -759,7 +764,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, params Order[] columns)
         {
-            var index = new IndexDefinition {Clustered = false, Name = name};
+            var index = new IndexDefinition { Clustered = false, Name = name };
 
             index.Columns.AddRange(columns);
             statement.Indecies.Add(index);
@@ -767,7 +772,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition {Clustered = false, Name = name};
+            var index = new IndexDefinition { Clustered = false, Name = name };
 
             if (columns != null)
             {
@@ -778,7 +783,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, params Order[] columns)
         {
-            var index = new IndexDefinition {Clustered = clustered, Name = Sql.Name(name)};
+            var index = new IndexDefinition { Clustered = clustered, Name = Sql.Name(name) };
 
             index.Columns.AddRange(columns);
             statement.Indecies.Add(index);
@@ -786,7 +791,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition {Clustered = clustered, Name = Sql.Name(name)};
+            var index = new IndexDefinition { Clustered = clustered, Name = Sql.Name(name) };
 
             if (columns != null)
             {
@@ -797,7 +802,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, params Order[] columns)
         {
-            var index = new IndexDefinition {Clustered = clustered, Name = name};
+            var index = new IndexDefinition { Clustered = clustered, Name = name };
 
             index.Columns.AddRange(columns);
             statement.Indecies.Add(index);
@@ -805,7 +810,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition {Clustered = clustered, Name = name};
+            var index = new IndexDefinition { Clustered = clustered, Name = name };
 
             if (columns != null)
             {

@@ -64,6 +64,7 @@
     <Compile Include="IdentityOptions.cs" />
     <Compile Include="IDropIndexOptions.cs" />
     <Compile Include="IfStatement.cs" />
+    <Compile Include="IJoinStatement.cs" />
     <Compile Include="IndexDefinition.cs" />
     <Compile Include="IndexOptions.cs" />
     <Compile Include="InsertStatement.cs" />

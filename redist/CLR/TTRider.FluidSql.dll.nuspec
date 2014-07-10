@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.11.2</version>
+    <version>0.0.14.0</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,9 +11,13 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      0.0.14.0
+      * Support for DELETE with JOIN
+      0.0.12.1
+      * Support for temporary tables
       0.0.11.2
       * Ability to create command that is not connected yet
-      * Support for Snipper as a statement with potential output
+      * Support for Snippet as a statement with potential output
       * bug fixes
       0.0.9.0
       * Support for CREATE TABLE

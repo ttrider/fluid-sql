@@ -19,6 +19,8 @@ namespace TTRider.FluidSql.Providers
 
         IDbConnection GetConnection(string connectionString);
 
+        Name GetTemporaryTableName(Name name = null);
+
 
 #if _ASYNC_
         System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token);

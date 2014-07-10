@@ -22,6 +22,7 @@ namespace TTRider.FluidSql
         
         public bool CheckIfNotExists { get; set; }
 
+        public bool IsTemporary { get; set; }
 
         //TODO:  [ ON { partition_scheme_name ( partition_column_name ) | filegroup | "default" } ] 
         //TODO:  [ { TEXTIMAGE_ON { filegroup | "default" } ] 

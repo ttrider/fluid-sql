@@ -150,11 +150,31 @@ namespace TTRider.FluidSql
             return new DropTableStatement { Name = name, CheckExists = checkExists };
         }
 
+        public static DropTableStatement DropTemporaryTable(Name name, bool checkExists = false)
+        {
+            return new DropTableStatement
+            {
+                Name = name, 
+                IsTemporary = true,
+                CheckExists = checkExists
+            };
+        }
+
         public static CreateTableStatement CreateTable(Name name, bool checkIfNotExists = false)
         {
             return new CreateTableStatement
             {
                 Name = name,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+
+        public static CreateTableStatement CreateTemporaryTable(Name name, bool checkIfNotExists = false)
+        {
+            return new CreateTableStatement
+            {
+                Name = name,
+                IsTemporary = true,
                 CheckIfNotExists = checkIfNotExists
             };
         }

@@ -4,6 +4,15 @@ fluid-sql
 
 Release Notes
 ==
+
+0.0.14.0
+--
+* Support for DELETE with JOIN
+
+0.0.12.1
+--
+* Support for temporary tables
+
 0.0.11.2
 --
 * Ability to create command that is not connected yet

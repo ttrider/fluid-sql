@@ -75,6 +75,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return command;
         }
 
+        public override Name GetTemporaryTableName(Name name = null)
+        {
+            return SqlServerVisitor.GetTempTableName(name ?? Sql.Name(Guid.NewGuid().ToString("N")));
+        }
         
 #if _ASYNC_
         public async override System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token)

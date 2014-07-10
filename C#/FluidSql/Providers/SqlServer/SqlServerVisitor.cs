@@ -6,14 +6,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
 {
     public static class SqlServerVisitor
     {
-        //static SqlServerVisitor()
-        //{
-        //    // scan for IStatements
-        //    AppDomain.CurrentDomain.GetAssemblies().SelectMany(a=>a.GetTypes()).Where(t=>t.GetInterface("IStatement")!=null)
-
-
-        //}
-
         private const string EqualsVal = " = ";
         private const string NotEqualVal = " <> ";
         private const string LessVal = " < ";
@@ -188,6 +180,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state;
         }
 
+        internal static Name GetTempTableName(Name name)
+        {
+            var namePart = name.Parts.Last();
+
+            if (!namePart.StartsWith("#"))
+            {
+                namePart = "#" + namePart;
+            }
+            return Sql.Name("tempdb", "", namePart);
+        }
+
+
         #region Statements
         static void VisitStatement(IStatement statement, VisitorState state)
         {
@@ -275,11 +279,31 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitTop(deleteStatement.Top, state);
 
-            VisitFrom(deleteStatement.From, state);
+            if (deleteStatement.Joins.Count > 0)
+            {
+                if (!string.IsNullOrWhiteSpace(deleteStatement.From.Alias))
+                {
+                    state.Buffer.Append(" [");
+                    state.Buffer.Append(deleteStatement.From.Alias);
+                    state.Buffer.Append("]");
+                }
 
-            VisitOutput(deleteStatement.Output, state, true);
+                VisitOutput(deleteStatement.Output, state, true);
 
-            VisitWhere(deleteStatement.Where, state);
+                VisitFrom(deleteStatement.From, state);
+
+                VisitJoin(deleteStatement.Joins, state);
+
+                VisitWhere(deleteStatement.Where, state);
+            }
+            else
+            {
+                VisitFrom(deleteStatement.From, state);
+
+                VisitOutput(deleteStatement.Output, state, true);
+
+                VisitWhere(deleteStatement.Where, state);
+            }
         }
 
         static void VisitInsert(IStatement statement, VisitorState state)
@@ -459,15 +483,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var s = (DropTableStatement)statement;
 
+            var tableName = ((s.IsTemporary) ? GetTempTableName(s.Name) : s.Name).FullName;
+
             if (s.CheckExists)
             {
                 state.Buffer.Append("IF OBJECT_ID(N'");
-                state.Buffer.Append(s.Name.FullName);
+                state.Buffer.Append(tableName);
                 state.Buffer.Append("',N'U') IS NOT NULL ");
             }
 
             state.Buffer.Append("DROP TABLE ");
-            state.Buffer.Append(s.Name.FullName);
+            state.Buffer.Append(tableName);
             state.Buffer.Append(";");
         }
 
@@ -475,15 +501,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var createStatement = (CreateTableStatement)statement;
 
+            var tableName = ((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name).FullName;
+
             if (createStatement.CheckIfNotExists)
             {
                 state.Buffer.Append("IF OBJECT_ID(N'");
-                state.Buffer.Append(createStatement.Name.FullName);
+                state.Buffer.Append(tableName);
                 state.Buffer.Append("',N'U') IS NULL ");
             }
 
             state.Buffer.Append("CREATE TABLE ");
-            state.Buffer.Append(createStatement.Name.FullName);
+            state.Buffer.Append(tableName);
             if (createStatement.AsFiletable)
             {
                 state.Buffer.Append(" AS FileTable");
@@ -507,7 +535,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 if (column.Null.HasValue)
                 {
-                    state.Buffer.Append(column.Null.Value?" NULL":" NOT NULL");
+                    state.Buffer.Append(column.Null.Value ? " NULL" : " NOT NULL");
                 }
                 if (column.Identity.On)
                 {
@@ -517,7 +545,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     state.Buffer.Append(" ROWGUIDCOL");
                 }
-                if (column.DefaultValue!=null)
+                if (column.DefaultValue != null)
                 {
                     state.Buffer.Append(" DEFAULT (");
                     VisitToken(column.DefaultValue, false, state);
@@ -541,7 +569,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" UNIQUE");
                 if (unique.Clustered.HasValue)
                 {
-                    state.Buffer.Append(unique.Clustered.Value?" CLUSTERED (":" NONCLUSTERED (");    
+                    state.Buffer.Append(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
                 }
                 state.Buffer.Append(string.Join(", ", unique.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
                 state.Buffer.Append(" )");
@@ -1100,7 +1128,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append(" */ ");
         }
 
-        
+
         private static void VisitStringifyToken(Token token, VisitorState state)
         {
             var strToken = (StringifyToken)token;
@@ -1119,7 +1147,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Buffer.Append("'");
         }
-        
+
 
         #endregion Tokens
     }

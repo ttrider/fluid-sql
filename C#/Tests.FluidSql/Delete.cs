@@ -54,5 +54,25 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("DELETE FROM [foo].[bar] WHERE [f] = [b];", command.CommandText);
         }
+
+
+        [TestMethod]
+        public void DeleteJoin()
+        {
+            var sourceTable = Sql.Name("foo").As("bar");
+
+            var statement = Sql.Delete.From(sourceTable)
+                .InnerJoin(Sql.Name("reftable").As("ref"), Sql.Name("bar","id").IsEqual(Sql.Name("ref", "id")))
+                .Top(5)
+                .Output(Sql.Name("deleted","*"))
+                .Where(Sql.Name("ref","id").NotEqual(Sql.Scalar(10)));
+                
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DELETE TOP (5) [bar] OUTPUT [deleted].* FROM [foo] AS [bar] INNER JOIN [reftable] AS [ref] ON [bar].[id] = [ref].[id] WHERE [ref].[id] <> 10;", command.CommandText);
+        }
+    
     }
 }

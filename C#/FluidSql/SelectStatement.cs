@@ -6,6 +6,7 @@ using System.Collections.Generic;
 namespace TTRider.FluidSql
 {
     public class SelectStatement : RecordsetStatement
+                                 , IJoinStatement
     {
         public SelectStatement()
         {
