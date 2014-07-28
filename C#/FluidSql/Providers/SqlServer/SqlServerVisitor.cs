@@ -188,7 +188,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 namePart = "#" + namePart;
             }
-            return Sql.Name("tempdb", "", namePart);
+            var n = Sql.Name("tempdb");
+            n.Parts.Add("");
+            n.Parts.Add(namePart);
+            return n;
         }
 
 
