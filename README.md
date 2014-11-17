@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+0.0.15.3
+--
+* Fixing Create Table IndexOn.
+* Bug fixes
 
 0.0.14.0
 --

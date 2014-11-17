@@ -511,6 +511,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append("IF OBJECT_ID(N'");
                 state.Buffer.Append(tableName);
                 state.Buffer.Append("',N'U') IS NULL ");
+                state.Buffer.Append(" BEGIN; ");
             }
 
             state.Buffer.Append("CREATE TABLE ");
@@ -565,7 +566,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" )");
             }
 
-            foreach (var unique in createStatement.Indecies)
+            foreach (var unique in createStatement.UniqueConstrains)
             {
                 state.Buffer.Append(", CONSTRAINT ");
                 state.Buffer.Append(unique.Name.FullName);
@@ -580,6 +581,22 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
 
             state.Buffer.Append(");");
+
+            // if indecies are set, create them
+            if (createStatement.Indicies.Count > 0)
+            {
+                foreach (var createIndexStatement in createStatement.Indicies)
+                {
+                    VisitCreateIndexStatement(createIndexStatement, state);
+                }
+            }
+
+
+            if (createStatement.CheckIfNotExists)
+            {
+                state.Buffer.Append(" END;");
+            }
+        
         }
 
 
@@ -633,7 +650,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createIndexStatement.Clustered.HasValue)
             {
-                state.Buffer.Append(createIndexStatement.Clustered.Value ? " CLUSTERED" : " UNCLUSTERED");
+                state.Buffer.Append(createIndexStatement.Clustered.Value ? " CLUSTERED" : " NONCLUSTERED");
             }
             state.Buffer.Append(" INDEX ");
 
@@ -670,6 +687,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 state.Buffer.Append(" )");
             }
+
+            state.Buffer.Append(";");
         }
 
         private static void VisitAlterIndexStatement
