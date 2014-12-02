@@ -259,12 +259,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitGroupBy(selectStatement.GroupBy, state);
 
+            VisitHaving(selectStatement.Having, state);
+            
             VisitOrderBy(selectStatement.OrderBy, state);
 
 
             //WHERE
             //WITH CUBE or WITH ROLLUP
-            //HAVING
         }
 
         private static void VisitInto(Name into, VisitorState state)
@@ -896,6 +897,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(whereToken, false, state);
             }
         }
+
+        private static void VisitHaving(Token whereToken, VisitorState state)
+        {
+            if (whereToken != null)
+            {
+                state.Buffer.Append(" HAVING ");
+                VisitToken(whereToken, false, state);
+            }
+        }
+        
 
         private static void VisitWith(bool? value, string name, VisitorState state)
         {

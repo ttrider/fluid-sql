@@ -20,6 +20,7 @@ namespace TTRider.FluidSql
         public Top Top { get; set; }
         public bool Distinct { get; set; }
         public Token Where { get; set; }
+        public Token Having { get; set; }
         public Name Into { get; set; }
         public List<Name> GroupBy { get; private set; }
         public List<Order> OrderBy { get; private set; }

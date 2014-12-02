@@ -230,6 +230,17 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
+        public void SelectGroupByHaving()
+        {
+            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy(Sql.Name("src", "object_id"), Sql.Name("src", "name")).Having(Sql.Name("src","object_id").IsNull());
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] GROUP BY [src].[object_id], [src].[name] HAVING [src].[object_id] IS NULL;", command.CommandText);
+        }
+
+        [TestMethod]
         public void SelectOrderBy()
         {
             var statement = Sql.Select.Output(Sql.Name("src.object_id")).From("sys.objects", "src").OrderBy(Sql.Name("src", "object_id"), Direction.Asc).OrderBy(Sql.Name("src", "name"), Direction.Desc);

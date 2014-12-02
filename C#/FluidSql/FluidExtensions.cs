@@ -277,6 +277,12 @@ namespace TTRider.FluidSql
             statement.Where = condition;
             return statement;
         }
+        public static SelectStatement Having(this SelectStatement statement, Token condition)
+        {
+            statement.Having = condition;
+            return statement;
+        }
+
         public static DeleteStatement Where(this DeleteStatement statement, Token condition)
         {
             statement.Where = condition;
@@ -372,6 +378,24 @@ namespace TTRider.FluidSql
         {
             var value = new NotInToken { Token = token };
             value.Set.AddRange(tokens);
+            return value;
+        }
+        public static Token In(this Token token, IEnumerable<Token> tokens)
+        {
+            var value = new InToken { Token = token };
+            if (tokens != null)
+            {
+                value.Set.AddRange(tokens);
+            }
+            return value;
+        }
+        public static Token NotIn(this Token token, IEnumerable<Token> tokens)
+        {
+            var value = new NotInToken { Token = token };
+            if (tokens != null)
+            {
+                value.Set.AddRange(tokens);
+            }
             return value;
         }
 
