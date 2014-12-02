@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class IndexDefinition
+    public class ConstrainDefinition
     {
-        public IndexDefinition()
+        public ConstrainDefinition()
         {
             this.Columns = new List<Order>();
         }

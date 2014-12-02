@@ -8,6 +8,10 @@ Release Notes
 --
 * Support for EXISTS and NOT EXISTS
 * bug fixes
+0.0.15.3
+--
+* Fixing Create Table IndexOn.
+* Bug fixes
 
 0.0.14.0
 --

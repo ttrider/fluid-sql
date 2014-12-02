@@ -56,6 +56,7 @@
     <Compile Include="Delete.cs" />
     <Compile Include="Select.cs" />
     <Compile Include="Index.cs" />
+    <Compile Include="Create.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

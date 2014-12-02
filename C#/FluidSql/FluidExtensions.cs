@@ -592,7 +592,7 @@ namespace TTRider.FluidSql
 
         public static TableColumn Null(this TableColumn column, bool notNull = false)
         {
-            column.Null = new bool?(!notNull);
+            column.Null = !notNull;
             return column;
         }
 
@@ -641,7 +641,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
             statement.PrimaryKey.Name = Sql.Name(name);
             statement.PrimaryKey.Columns.AddRange(columns);
@@ -651,7 +651,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Name = Sql.Name(name);
@@ -665,7 +665,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Name = name;
@@ -676,7 +676,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Name = name;
@@ -690,7 +690,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Clustered = clustered;
@@ -702,7 +702,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Clustered = clustered;
@@ -717,7 +717,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Clustered = clustered;
@@ -729,7 +729,7 @@ namespace TTRider.FluidSql
         {
             if (statement.PrimaryKey == null)
             {
-                statement.PrimaryKey = new IndexDefinition();
+                statement.PrimaryKey = new ConstrainDefinition();
             }
 
             statement.PrimaryKey.Clustered = clustered;
@@ -742,82 +742,202 @@ namespace TTRider.FluidSql
         }
         #endregion PrimaryKey
 
+        #region UniqueConstrainOn
+
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = name };
+
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = name };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name, bool clustered, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name(name) };
+
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name, bool clustered, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name(name) };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name, bool clustered, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = name };
+
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = name };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        #endregion UniqueConstrainOn
+
         #region IndexOn
 
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, params Order[] columns)
         {
-            var index = new IndexDefinition { Clustered = false, Name = Sql.Name(name) };
+            var index = new CreateIndexStatement
+            {
+                Clustered = false,
+                Name = Sql.Name(name),
+                On = statement.Name,
+                Unique = false
+            };
             index.Columns.AddRange(columns);
-            statement.Indecies.Add(index);
+            statement.Indicies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition { Clustered = false, Name = Sql.Name(name) };
-
+            var index = new CreateIndexStatement
+            {
+                Clustered = false,
+                Name = Sql.Name(name),
+                On = statement.Name,
+                Unique = false
+            };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
             }
-            statement.Indecies.Add(index);
+            statement.Indicies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, params Order[] columns)
         {
-            var index = new IndexDefinition { Clustered = false, Name = name };
-
+            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
             index.Columns.AddRange(columns);
-            statement.Indecies.Add(index);
+            statement.Indicies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
         {
-            var index = new IndexDefinition { Clustered = false, Name = name };
-
+            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
             }
-            statement.Indecies.Add(index);
+            statement.Indicies.Add(index);
             return statement;
         }
-        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, params Order[] columns)
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns, IEnumerable<string> includeColumns)
         {
-            var index = new IndexDefinition { Clustered = clustered, Name = Sql.Name(name) };
-
-            index.Columns.AddRange(columns);
-            statement.Indecies.Add(index);
-            return statement;
-        }
-        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, bool clustered, IEnumerable<Order> columns)
-        {
-            var index = new IndexDefinition { Clustered = clustered, Name = Sql.Name(name) };
-
+            var index = new CreateIndexStatement
+            {
+                Clustered = false,
+                Name = Sql.Name(name),
+                On = statement.Name,
+                Unique = false
+            };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
             }
-            statement.Indecies.Add(index);
+            if (includeColumns != null)
+            {
+                index.Include.AddRange(includeColumns.Select(ic=>Sql.Name(ic)));
+            }
+            statement.Indicies.Add(index);
             return statement;
         }
-        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, params Order[] columns)
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns, IEnumerable<string> includeColumns)
         {
-            var index = new IndexDefinition { Clustered = clustered, Name = name };
-
-            index.Columns.AddRange(columns);
-            statement.Indecies.Add(index);
-            return statement;
-        }
-        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
-        {
-            var index = new IndexDefinition { Clustered = clustered, Name = name };
-
+            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
             }
-            statement.Indecies.Add(index);
+            if (includeColumns != null)
+            {
+                index.Include.AddRange(includeColumns.Select(ic => Sql.Name(ic)));
+            }
+            statement.Indicies.Add(index);
             return statement;
+
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, string name, IEnumerable<Order> columns, IEnumerable<Name> includeColumns)
+        {
+            var index = new CreateIndexStatement
+            {
+                Clustered = false,
+                Name = Sql.Name(name),
+                On = statement.Name,
+                Unique = false
+            };
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            if (includeColumns != null)
+            {
+                index.Include.AddRange(includeColumns);
+            }
+            statement.Indicies.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns, IEnumerable<Name> includeColumns)
+        {
+            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            if (includeColumns != null)
+            {
+                index.Include.AddRange(includeColumns);
+            }
+            statement.Indicies.Add(index);
+            return statement;
+
         }
         #endregion IndexOn
     }

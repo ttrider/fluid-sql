@@ -7,7 +7,8 @@ namespace TTRider.FluidSql
         public CreateTableStatement()
         {
             this.Columns = new List<TableColumn>();
-            this.Indecies = new List<IndexDefinition>();
+            this.UniqueConstrains = new List<ConstrainDefinition>();
+            this.Indicies = new List<CreateIndexStatement>();
         }
 
         public Name Name { get; set; }
@@ -16,9 +17,11 @@ namespace TTRider.FluidSql
 
         public List<TableColumn> Columns { get; private set; }
 
-        public IndexDefinition PrimaryKey { get; set; }
+        public ConstrainDefinition PrimaryKey { get; set; }
 
-        public List<IndexDefinition> Indecies { get; private set; }
+        public List<ConstrainDefinition> UniqueConstrains { get; private set; }
+
+        public List<CreateIndexStatement> Indicies { get; private set; }
         
         public bool CheckIfNotExists { get; set; }
 
