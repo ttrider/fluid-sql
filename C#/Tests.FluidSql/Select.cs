@@ -534,6 +534,53 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("IF OBJECT_ID(N'[some].[table]',N'U') IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
         }
+
+        [TestMethod]
+        public void IfExists()
+        {
+            var statement = Sql.If(Sql.Exists(Sql.Select.From("sys.objects"))).Then(Sql.Select.Output(Sql.Scalar(1)));
+            
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF  EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfNotExists()
+        {
+            var statement = Sql.If(Sql.Exists(Sql.Select.From("sys.objects")).Not()).Then(Sql.Select.Output(Sql.Scalar(1)));
+
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfNotExists2()
+        {
+            var statement = Sql.If(Sql.NotExists(Sql.Select.From("sys.objects"))).Then(Sql.Select.Output(Sql.Scalar(1)));
+
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfNotExists3()
+        {
+            var statement = Sql.If(Sql.Not(Sql.Exists(Sql.Select.From("sys.objects")))).Then(Sql.Select.Output(Sql.Scalar(1)));
+            
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
         //[TestMethod]
         //public void CreateTable()
         //{

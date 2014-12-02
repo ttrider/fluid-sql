@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.14.2</version>
+    <version>0.0.15.0</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,6 +11,9 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      0.0.16.0
+      * Support for EXISTS and NOT EXISTS
+      * bug fixes
       0.0.14.2
       * Support for DELETE with JOIN
       * bug fixes
@@ -29,21 +32,6 @@
       0.0.7
       * Support for comments
       * Support for INSERT statement
-      0.0.6.2
-      * Ability to provide parameter values during statement construction
-      * bug fixes
-      0.0.5
-      * Support for parameters with default values
-      * Bug fix for the empty part in Name ( like [tempdb]..[name])
-      0.0.4
-      * Support for WrapAsSelect statement
-      0.0.3
-      * Support for DELETE FROM
-      * Support for LIKE
-      0.0.2
-      * Support for IEnumerable parameters complementing params[]
-      * Support for DROP TABLE statement
-      * Support for parameterized Snippets
     </releaseNotes>
     <copyright>Copyright (C) 2014 TTRider, L.L.C.</copyright>
     <tags>SQL</tags>

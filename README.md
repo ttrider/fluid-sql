@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+0.0.16.0
+--
+* Support for EXISTS and NOT EXISTS
+* bug fixes
 
 0.0.14.0
 --

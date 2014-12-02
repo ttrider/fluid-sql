@@ -3,7 +3,6 @@
 // </copyright>
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -247,7 +246,7 @@ namespace TTRider.FluidSql
 
         public static SnippetStatement SnippetStatement(string value, IEnumerable<Parameter> parameters)
         {
-            var snippetStatement = new SnippetStatement()
+            var snippetStatement = new SnippetStatement
             {
                 Value = value
             };
@@ -261,7 +260,7 @@ namespace TTRider.FluidSql
 
         public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
         {
-            var snippetStatement = new SnippetStatement()
+            var snippetStatement = new SnippetStatement
             {
                 Value = value
             };
@@ -304,7 +303,18 @@ namespace TTRider.FluidSql
         {
             return new GroupToken { Token = value };
         }
-
+        public static Token Exists(Token value)
+        {
+            return new ExistsToken { Token = value };
+        }
+        public static Token NotExists(Token value)
+        {
+            return new ExistsToken { Token = value }.Not();
+        }
+        public static Token Not(Token value)
+        {
+            return value.Not();
+        }
 
         public static Order Order(Name column, Direction direction = Direction.Asc)
         {
@@ -346,8 +356,8 @@ namespace TTRider.FluidSql
         {
             return new CreateIndexStatement
             {
-                Name = Sql.Name(name),
-                On = Sql.Name(on)
+                Name = Name(name),
+                On = Name(on)
             };
         }
 
@@ -355,8 +365,8 @@ namespace TTRider.FluidSql
         {
             return new AlterIndexStatement
             {
-                Name = Sql.Name(name),
-                On = Sql.Name(on)
+                Name = Name(name),
+                On = Name(on)
             };
         }
         public static AlterIndexStatement AlterIndexAll(string on)
@@ -364,7 +374,7 @@ namespace TTRider.FluidSql
             return new AlterIndexStatement
             {
                 Name = null,
-                On = Sql.Name(on)
+                On = Name(on)
             };
         }
 
@@ -372,8 +382,8 @@ namespace TTRider.FluidSql
         {
             return new DropIndexStatement
             {
-                Name = Sql.Name(name),
-                On = Sql.Name(on)
+                Name = Name(name),
+                On = Name(on)
             };
         }
 

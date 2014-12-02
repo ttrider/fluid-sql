@@ -104,6 +104,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (NotToken), VisitNotToken},
                 {typeof (IsNullToken), VisitIsNullToken},
                 {typeof (IsNotNullToken), VisitIsNotNullToken},
+                {typeof (ExistsToken), VisitExistsToken},
+                
 
                 {typeof (BetweenToken), VisitBetweenToken},
                 {typeof (InToken), VisitInToken},
@@ -1051,7 +1053,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(value.Second, false, state);
         }
 
-
         static void VisitGroupToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" (");
@@ -1059,6 +1060,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" )");
         }
+
+        static void VisitExistsToken(Token token, VisitorState state)
+        {
+            state.Buffer.Append(" EXISTS (");
+            var value = (ExistsToken)token;
+            VisitToken(value.Token, false, state);
+            state.Buffer.Append(" )");
+        }
+        
+
         static void VisitNotToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" NOT");

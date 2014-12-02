@@ -37,7 +37,7 @@ namespace TTRider.FluidSql
     public class NotToken : UnaryToken { }
     public class IsNullToken : UnaryToken { }
     public class IsNotNullToken : UnaryToken { }
-
+    public class ExistsToken : UnaryToken { }
 
     public class BetweenToken : Token
     {
