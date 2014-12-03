@@ -9,16 +9,35 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private const string EqualsVal = " = ";
         private const string NotEqualVal = " <> ";
         private const string LessVal = " < ";
+        private const string NotLessVal = " !< ";
         private const string LessOrEqualVal = " <= ";
         private const string GreaterVal = " > ";
+        private const string NotGreaterVal = " !> ";
         private const string GreaterOrEqualVal = " >= ";
         private const string AndVal = " AND ";
         private const string OrVal = " OR ";
+        
         private const string PlusVal = " + ";
         private const string MinusVal = " - ";
         private const string DivideVal = " / ";
-        private const string ModuleVal = " % ";
+        private const string ModuloVal = " % ";
         private const string MultiplyVal = " * ";
+
+        private const string BitwiseAndVal = " & ";
+        private const string BitwiseOrVal = " | ";
+        private const string BitwiseXorVal = " ^ ";
+        private const string BitwiseNotVal = " ~ ";
+
+        private const string PlusEqVal = " += ";
+        private const string MinusEqVal = " -= ";
+        private const string DivideEqVal = " /= ";
+        private const string ModuloEqVal = " %= ";
+        private const string MultiplyEqVal = " *= ";
+
+        private const string BitwiseAndEqVal = " &= ";
+        private const string BitwiseOrEqVal = " |= ";
+        private const string BitwiseXorEqVal = " ^= ";
+        private const string BitwiseNotEqVal = " ~= ";
 
         private static readonly string[] DbTypeStrings =
         {
@@ -85,26 +104,36 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (IsEqualsToken), VisitIsEqualsToken},
                 {typeof (NotEqualToken), VisitNotEqualToken},
                 {typeof (LessToken), VisitLessToken},
+                {typeof (NotLessToken), VisitNotLessToken},
                 {typeof (LessOrEqualToken), VisitLessOrEqualToken},
                 {typeof (GreaterToken), VisitGreaterToken},
+                {typeof (NotGreaterToken), VisitNotGreaterToken},
                 {typeof (GreaterOrEqualToken), VisitGreaterOrEqualToken},
                 {typeof (AndToken), VisitAndToken},
                 {typeof (OrToken), VisitOrToken},
+
                 {typeof (PlusToken), VisitPlusToken},
                 {typeof (MinusToken), VisitMinusToken},
                 {typeof (DivideToken), VisitDivideToken},
-                {typeof (ModuleToken), VisitModuleToken},
+                {typeof (ModuloToken), VisitModuloToken},
                 {typeof (MultiplyToken), VisitMultiplyToken},
+                {typeof (BitwiseAndToken),VisitBitwiseAndToken},
+                {typeof (BitwiseOrToken ),VisitBitwiseOrToken },
+                {typeof (BitwiseXorToken),VisitBitwiseXorToken},
+                {typeof (BitwiseNotToken),VisitBitwiseNotToken},
 
                 {typeof (ContainsToken), VisitContainsToken},
                 {typeof (StartsWithToken), VisitStartsWithToken},
                 {typeof (EndsWithToken), VisitEndsWithToken},
-
+                {typeof (LikeToken), VisitLikeToken},
+                
                 {typeof (GroupToken), VisitGroupToken},
                 {typeof (NotToken), VisitNotToken},
                 {typeof (IsNullToken), VisitIsNullToken},
                 {typeof (IsNotNullToken), VisitIsNotNullToken},
                 {typeof (ExistsToken), VisitExistsToken},
+                {typeof (AllToken), VisitAllToken},
+                {typeof (AnyToken), VisitAnyToken},
                 
 
                 {typeof (BetweenToken), VisitBetweenToken},
@@ -260,7 +289,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitGroupBy(selectStatement.GroupBy, state);
 
             VisitHaving(selectStatement.Having, state);
-            
+
             VisitOrderBy(selectStatement.OrderBy, state);
 
 
@@ -599,7 +628,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 state.Buffer.Append(" END;");
             }
-        
+
         }
 
 
@@ -906,7 +935,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(whereToken, false, state);
             }
         }
-        
+
 
         private static void VisitWith(bool? value, string name, VisitorState state)
         {
@@ -1018,6 +1047,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             VisitBinaryToken(token, state, LessVal);
         }
+        static void VisitNotLessToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, NotLessVal);
+        }
         static void VisitLessOrEqualToken(Token token, VisitorState state)
         {
             VisitBinaryToken(token, state, LessOrEqualVal);
@@ -1026,9 +1059,25 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             VisitBinaryToken(token, state, GreaterVal);
         }
+        static void VisitNotGreaterToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, NotGreaterVal);
+        }
         static void VisitGreaterOrEqualToken(Token token, VisitorState state)
         {
             VisitBinaryToken(token, state, GreaterOrEqualVal);
+        }
+        static void VisitAllToken(Token token, VisitorState state)
+        {
+            state.Buffer.Append(" ALL ");
+            var value = (AllToken)token;
+            VisitToken(value.Token, false, state);
+        }
+        static void VisitAnyToken(Token token, VisitorState state)
+        {
+            state.Buffer.Append(" ANY ");
+            var value = (AnyToken)token;
+            VisitToken(value.Token, false, state);
         }
         static void VisitAndToken(Token token, VisitorState state)
         {
@@ -1040,25 +1089,47 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         static void VisitPlusToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, PlusVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? PlusEqVal : PlusVal);
         }
         static void VisitMinusToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, MinusVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MinusEqVal : MinusVal);
         }
         static void VisitDivideToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, DivideVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? DivideEqVal : DivideVal);
         }
-        static void VisitModuleToken(Token token, VisitorState state)
+        static void VisitModuloToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ModuleVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? ModuloEqVal : ModuloVal);
         }
         static void VisitMultiplyToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, MultiplyVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MultiplyEqVal : MultiplyVal);
         }
-
+        private static void VisitBitwiseAndToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseAndEqVal : BitwiseAndVal);
+        }
+        private static void VisitBitwiseOrToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseOrEqVal : BitwiseOrVal);
+        }
+        private static void VisitBitwiseXorToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseXorEqVal : BitwiseXorVal);
+        }
+        private static void VisitBitwiseNotToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseNotEqVal : BitwiseNotVal);
+        }
+        static void VisitLikeToken(Token token, VisitorState state)
+        {
+            var value = (BinaryToken)token;
+            VisitToken(value.First, false, state);
+            state.Buffer.Append(" LIKE ");
+            VisitToken(value.Second, false, state);
+        }
         static void VisitContainsToken(Token token, VisitorState state)
         {
             var value = (BinaryToken)token;
@@ -1093,13 +1164,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         static void VisitExistsToken(Token token, VisitorState state)
         {
-            state.Buffer.Append(" EXISTS (");
+            state.Buffer.Append(" EXISTS ");
             var value = (ExistsToken)token;
             VisitToken(value.Token, false, state);
-            state.Buffer.Append(" )");
         }
-        
-
         static void VisitNotToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" NOT");

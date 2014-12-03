@@ -10,24 +10,36 @@ namespace TTRider.FluidSql
         public Token First { get; set; }
         public Token Second { get; set; }
     }
+    public class BinaryEqualToken : BinaryToken
+    {
+        public bool Equal { get; set; }
+    }
 
     public class IsEqualsToken : BinaryToken { }
     public class NotEqualToken : BinaryToken { }
     public class LessToken : BinaryToken { }
+    public class NotLessToken : BinaryToken { }
     public class LessOrEqualToken : BinaryToken { }
     public class GreaterToken : BinaryToken { }
+    public class NotGreaterToken : BinaryToken { }
     public class GreaterOrEqualToken : BinaryToken { }
     public class AndToken : BinaryToken { }
     public class OrToken : BinaryToken { }
-    public class PlusToken : BinaryToken { }
-    public class MinusToken : BinaryToken { }
-    public class DivideToken : BinaryToken { }
-    public class ModuleToken : BinaryToken { }
-    public class MultiplyToken : BinaryToken { }
+
+    public class PlusToken : BinaryEqualToken { }
+    public class MinusToken : BinaryEqualToken { }
+    public class DivideToken : BinaryEqualToken { }
+    public class BitwiseAndToken : BinaryEqualToken { }
+    public class BitwiseOrToken : BinaryEqualToken { }
+    public class BitwiseXorToken : BinaryEqualToken { }
+    public class BitwiseNotToken : BinaryEqualToken { }
+    public class ModuloToken : BinaryEqualToken { }
+    public class MultiplyToken : BinaryEqualToken { }
+
     public class ContainsToken : BinaryToken { }
     public class StartsWithToken : BinaryToken { }
     public class EndsWithToken : BinaryToken { }
-
+    public class LikeToken : BinaryToken { }
 
     public class UnaryToken : Token
     {
@@ -38,6 +50,8 @@ namespace TTRider.FluidSql
     public class IsNullToken : UnaryToken { }
     public class IsNotNullToken : UnaryToken { }
     public class ExistsToken : UnaryToken { }
+    public class AllToken : UnaryToken { }
+    public class AnyToken : UnaryToken { }
 
     public class BetweenToken : Token
     {
@@ -53,7 +67,7 @@ namespace TTRider.FluidSql
             this.Set = new List<Token>();
         }
         public Token Token { get; set; }
-        public List<Token> Set { get; private set; } 
+        public List<Token> Set { get; private set; }
     };
 
     public class NotInToken : Token

@@ -306,6 +306,10 @@ namespace TTRider.FluidSql
         {
             return new LessToken { First = first, Second = second };
         }
+        public static Token NotLess(this Token first, Token second)
+        {
+            return new NotLessToken { First = first, Second = second };
+        }
         public static Token LessOrEqual(this Token first, Token second)
         {
             return new LessOrEqualToken { First = first, Second = second };
@@ -313,6 +317,10 @@ namespace TTRider.FluidSql
         public static Token Greater(this Token first, Token second)
         {
             return new GreaterToken { First = first, Second = second };
+        }
+        public static Token NotGreater(this Token first, Token second)
+        {
+            return new NotGreaterToken { First = first, Second = second };
         }
         public static Token GreaterOrEqual(this Token first, Token second)
         {
@@ -326,6 +334,45 @@ namespace TTRider.FluidSql
         {
             return new OrToken { First = first, Second = second };
         }
+        public static Token PlusEqual(this Token first, Token second)
+        {
+            return new PlusToken { First = first, Second = second, Equal = true };
+        }
+        public static Token MinusEqual(this Token first, Token second)
+        {
+            return new MinusToken { First = first, Second = second, Equal = true };
+        }
+        public static Token DivideEqual(this Token first, Token second)
+        {
+            return new DivideToken { First = first, Second = second, Equal = true };
+        }
+
+        public static Token BitwiseAndEqual(this Token first, Token second)
+        {
+            return new BitwiseAndToken { First = first, Second = second, Equal = true};
+        }
+        public static Token BitwiseOrEqual(this Token first, Token second)
+        {
+            return new BitwiseOrToken { First = first, Second = second, Equal = true};
+        }
+        public static Token BitwiseXorEqual(this Token first, Token second)
+        {
+            return new BitwiseXorToken { First = first, Second = second, Equal = true};
+        }
+        public static Token BitwiseNotEqual(this Token first, Token second)
+        {
+            return new BitwiseNotToken { First = first, Second = second, Equal = true};
+        }
+
+        public static Token ModuloEqual(this Token first, Token second)
+        {
+            return new ModuloToken { First = first, Second = second, Equal = true };
+        }
+        public static Token MultiplyEqual(this Token first, Token second)
+        {
+            return new MultiplyToken { First = first, Second = second, Equal = true };
+        }
+
         public static Token Plus(this Token first, Token second)
         {
             return new PlusToken { First = first, Second = second };
@@ -338,9 +385,32 @@ namespace TTRider.FluidSql
         {
             return new DivideToken { First = first, Second = second };
         }
+
+        public static Token BitwiseAnd(this Token first, Token second)
+        {
+            return new BitwiseAndToken { First = first, Second = second };
+        }
+        public static Token BitwiseOr(this Token first, Token second)
+        {
+            return new BitwiseOrToken { First = first, Second = second };
+        }
+        public static Token BitwiseXor(this Token first, Token second)
+        {
+            return new BitwiseXorToken { First = first, Second = second };
+        }
+        public static Token BitwiseNot(this Token first, Token second)
+        {
+            return new BitwiseNotToken { First = first, Second = second };
+        }
+
+        [Obsolete]
         public static Token Module(this Token first, Token second)
         {
-            return new ModuleToken { First = first, Second = second };
+            return new ModuloToken { First = first, Second = second };
+        }
+        public static Token Modulo(this Token first, Token second)
+        {
+            return new ModuloToken { First = first, Second = second };
         }
         public static Token Multiply(this Token first, Token second)
         {
@@ -410,6 +480,10 @@ namespace TTRider.FluidSql
         public static Token EndsWith(this Token first, Token second)
         {
             return new EndsWithToken { First = first, Second = second };
+        }
+        public static Token Like(this Token first, Token second)
+        {
+            return new LikeToken { First = first, Second = second };
         }
 
 
@@ -878,14 +952,14 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, params Order[] columns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             index.Columns.AddRange(columns);
             statement.Indicies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
@@ -908,14 +982,14 @@ namespace TTRider.FluidSql
             }
             if (includeColumns != null)
             {
-                index.Include.AddRange(includeColumns.Select(ic=>Sql.Name(ic)));
+                index.Include.AddRange(includeColumns.Select(ic => Sql.Name(ic)));
             }
             statement.Indicies.Add(index);
             return statement;
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns, IEnumerable<string> includeColumns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
@@ -950,7 +1024,7 @@ namespace TTRider.FluidSql
         }
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name, IEnumerable<Order> columns, IEnumerable<Name> includeColumns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);

@@ -15,6 +15,11 @@ namespace TTRider.FluidSql
 
         internal static IEnumerable<string> GetParts(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                yield return string.Empty;
+                yield break;
+            }
             var match = ParseName.Match(name);
             while (match.Success)
             {
@@ -315,6 +320,19 @@ namespace TTRider.FluidSql
         {
             return value.Not();
         }
+        public static Token All(SelectStatement subQuery)
+        {
+            return new AllToken { Token = subQuery };
+        }
+        public static Token Any(SelectStatement subQuery)
+        {
+            return new AnyToken { Token = subQuery };
+        }
+        public static Token Some(SelectStatement subQuery)
+        {
+            return new AnyToken { Token = subQuery };
+        }
+
 
         public static Order Order(Name column, Direction direction = Direction.Asc)
         {

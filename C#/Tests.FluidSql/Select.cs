@@ -12,7 +12,7 @@ namespace FluidSqlTests
             var statement = Sql.Select.Output(Sql.Scalar(1));
 
             var command = Utilities.GetCommand(statement);
-            
+
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT 1;", command.CommandText);
         }
@@ -39,6 +39,26 @@ namespace FluidSqlTests
             Assert.AreEqual("SELECT * FROM [sys].[objects];", command.CommandText);
         }
         [TestMethod]
+        public void SelectSkipSchema()
+        {
+            var statement = Sql.Select.From(Sql.Name("DB", null, "objects"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [DB]..[objects];", command.CommandText);
+        }
+        [TestMethod]
+        public void SelectSkipDbAndSchema()
+        {
+            var statement = Sql.Select.From(Sql.Name("server", null, null, "objects"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [server]...[objects];", command.CommandText);
+        }
+        [TestMethod]
         public void SelectStarFromSysObjectsInto()
         {
             var statement = Sql.Select.From("sys.objects").Into(Sql.Name("#mytable"));
@@ -48,11 +68,11 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * INTO [#mytable] FROM [sys].[objects];", command.CommandText);
         }
-        
+
         [TestMethod]
         public void SelectCountStarFromSysObjects()
         {
-            var statement = Sql.Select.Output(Sql.Function("COUNT",Sql.Star())).From("sys.objects");
+            var statement = Sql.Select.Output(Sql.Function("COUNT", Sql.Star())).From("sys.objects");
 
             var command = Utilities.GetCommand(statement);
 
@@ -232,7 +252,7 @@ namespace FluidSqlTests
         [TestMethod]
         public void SelectGroupByHaving()
         {
-            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy(Sql.Name("src", "object_id"), Sql.Name("src", "name")).Having(Sql.Name("src","object_id").IsNull());
+            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy(Sql.Name("src", "object_id"), Sql.Name("src", "name")).Having(Sql.Name("src", "object_id").IsNull());
 
             var command = Utilities.GetCommand(statement);
 
@@ -294,7 +314,7 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT [wrap].[Name] FROM (SELECT [Name] FROM [sys].[objects]) AS [wrap];", command.CommandText);
         }
-        
+
         [TestMethod]
         public void SelectWrapped3()
         {
@@ -304,7 +324,7 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT [wrap].[nm] FROM (SELECT [Name] AS [nm] FROM [sys].[objects]) AS [wrap];", command.CommandText);
-        }       
+        }
         [TestMethod]
         public void SelectUnionAllSelect()
         {
@@ -328,7 +348,7 @@ namespace FluidSqlTests
         [TestMethod]
         public void SelectIntersectSelect()
         {
-            var statement = Sql.Select.Output(Sql.Star("First")).From("sys.objects","First").Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"));
+            var statement = Sql.Select.Output(Sql.Star("First")).From("sys.objects", "First").Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"));
 
             var command = Utilities.GetCommand(statement);
 
@@ -377,13 +397,15 @@ namespace FluidSqlTests
                         .And(
                             Sql.Name("name").EndsWith(Sql.Scalar("foo")))
                         .And(
-                            Sql.Name("name").Contains(Sql.Scalar("foo"))));
+                            Sql.Name("name").Contains(Sql.Scalar("foo")))
+                        .And(
+                            Sql.Name("name").Like(Sql.Scalar("%foo%"))));
 
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + '%' AND [name] LIKE '%' + N'foo' AND [name] LIKE '%' + N'foo' + '%';", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + '%' AND [name] LIKE '%' + N'foo' AND [name] LIKE '%' + N'foo' + '%' AND [name] LIKE N'%foo%';", command.CommandText);
         }
 
         [TestMethod]
@@ -404,14 +426,18 @@ namespace FluidSqlTests
                             .Minus(Sql.Scalar(1))
                             .Multiply(Sql.Scalar(1))
                             .Divide(Sql.Scalar(1))
-                            .Module(Sql.Scalar(1))
+                            .Modulo(Sql.Scalar(1))
+                            .BitwiseAnd(Sql.Scalar(1))
+                            .BitwiseOr(Sql.Scalar(1))
+                            .BitwiseNot(Sql.Scalar(1))
+                            .BitwiseXor(Sql.Scalar(1))
                         ).Less(Sql.Scalar(1)))));
 
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND  ([object_id] + 1 - 1 * 1 / 1 % 1 ) < 1;", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND  ([object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -429,9 +455,9 @@ namespace FluidSqlTests
         public void BeginRollbackTransactions()
         {
             var statement = Sql.Statements(
-                Sql.BeginTransaction(), 
-                Sql.SaveTransaction(), 
-                Sql.RollbackTransaction(), 
+                Sql.BeginTransaction(),
+                Sql.SaveTransaction(),
+                Sql.RollbackTransaction(),
                 Sql.CommitTransaction());
 
             var command = Utilities.GetCommand(statement);
@@ -444,7 +470,7 @@ namespace FluidSqlTests
         public void BeginRollbackMarkedTransactions()
         {
             var statement = Sql.Statements(
-                Sql.BeginTransaction(Sql.Name("foo"),"marked"),
+                Sql.BeginTransaction(Sql.Name("foo"), "marked"),
                 Sql.SaveTransaction(),
                 Sql.RollbackTransaction(),
                 Sql.CommitTransaction());
@@ -550,12 +576,12 @@ namespace FluidSqlTests
         public void IfExists()
         {
             var statement = Sql.If(Sql.Exists(Sql.Select.From("sys.objects"))).Then(Sql.Select.Output(Sql.Scalar(1)));
-            
+
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
 
         [TestMethod]
@@ -567,7 +593,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
 
         [TestMethod]
@@ -579,18 +605,18 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
 
         [TestMethod]
         public void IfNotExists3()
         {
             var statement = Sql.If(Sql.Not(Sql.Exists(Sql.Select.From("sys.objects")))).Then(Sql.Select.Output(Sql.Scalar(1)));
-            
+
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS ((SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
         //[TestMethod]
         //public void CreateTable()
@@ -603,7 +629,58 @@ namespace FluidSqlTests
         //    Assert.AreEqual("CREATE TABLE [some].[table] ();", command.CommandText);
         //}
 
+        [TestMethod]
+        public void IfSome()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Select.Output(Sql.Scalar(1)));
 
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfAll()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.All(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Select.Output(Sql.Scalar(1)));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ALL (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void SelectOperationEq()
+        {
+            var statement = Sql.Select.Output(Sql.Name("foo").PlusEqual(Sql.Scalar(1))).From("sys.objects"); var command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] += 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").MinusEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] -= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").MultiplyEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] *= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").DivideEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] /= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").ModuloEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] %= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").BitwiseAndEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] &= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").BitwiseOrEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] |= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").BitwiseNotEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] ~= 1 FROM [sys].[objects];", command.CommandText);
+            statement = Sql.Select.Output(Sql.Name("foo").BitwiseXorEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [foo] ^= 1 FROM [sys].[objects];", command.CommandText);
+
+
+
+        }
     }
 }
 
