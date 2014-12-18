@@ -4,6 +4,11 @@ fluid-sql
 
 Release Notes
 ==
+0.0.18.0
+--
+* Support for Table Variables
+* bug fixes
+
 0.0.17.0
 --
 * Support for HAVING

@@ -225,6 +225,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return n;
         }
 
+        internal static string GetTableVariableName(Name name)
+        {
+            var namePart = name.Parts.Last();
+
+            if (!namePart.StartsWith("@"))
+            {
+                namePart = "@" + namePart;
+            }
+            return namePart;
+        }
 
         #region Statements
         static void VisitStatement(IStatement statement, VisitorState state)
@@ -536,22 +546,32 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var createStatement = (CreateTableStatement)statement;
 
-            var tableName = ((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name).FullName;
-
-            if (createStatement.CheckIfNotExists)
+            if (createStatement.IsTableVariable)
             {
-                state.Buffer.Append("IF OBJECT_ID(N'");
+                state.Buffer.Append("DECLARE ");
+                state.Buffer.Append(GetTableVariableName(createStatement.Name));
+                state.Buffer.Append(" TABLE");
+            }
+            else
+            {
+                var tableName = ((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name).FullName;
+
+                if (createStatement.CheckIfNotExists)
+                {
+                    state.Buffer.Append("IF OBJECT_ID(N'");
+                    state.Buffer.Append(tableName);
+                    state.Buffer.Append("',N'U') IS NULL ");
+                    state.Buffer.Append(" BEGIN; ");
+                }
+
+                state.Buffer.Append("CREATE TABLE ");
                 state.Buffer.Append(tableName);
-                state.Buffer.Append("',N'U') IS NULL ");
-                state.Buffer.Append(" BEGIN; ");
+                if (createStatement.AsFiletable)
+                {
+                    state.Buffer.Append(" AS FileTable");
+                }
             }
 
-            state.Buffer.Append("CREATE TABLE ");
-            state.Buffer.Append(tableName);
-            if (createStatement.AsFiletable)
-            {
-                state.Buffer.Append(" AS FileTable");
-            }
 
             var separator = " (";
             foreach (var column in createStatement.Columns)
@@ -591,8 +611,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createStatement.PrimaryKey != null)
             {
-                state.Buffer.Append(", CONSTRAINT ");
-                state.Buffer.Append(createStatement.PrimaryKey.Name.FullName);
+                if (createStatement.IsTableVariable)
+                {
+                    state.Buffer.Append(",");
+                }
+                else
+                {
+                    state.Buffer.Append(", CONSTRAINT ");
+                    state.Buffer.Append(createStatement.PrimaryKey.Name.FullName);
+                }
+
                 state.Buffer.Append(" PRIMARY KEY (");
                 state.Buffer.Append(string.Join(", ", createStatement.PrimaryKey.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
                 state.Buffer.Append(" )");
@@ -600,8 +628,15 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             foreach (var unique in createStatement.UniqueConstrains)
             {
-                state.Buffer.Append(", CONSTRAINT ");
-                state.Buffer.Append(unique.Name.FullName);
+                if (createStatement.IsTableVariable)
+                {
+                    state.Buffer.Append(",");
+                }
+                else
+                {
+                    state.Buffer.Append(", CONSTRAINT ");
+                    state.Buffer.Append(unique.Name.FullName);
+                }
                 state.Buffer.Append(" UNIQUE");
                 if (unique.Clustered.HasValue)
                 {
@@ -615,7 +650,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append(");");
 
             // if indecies are set, create them
-            if (createStatement.Indicies.Count > 0)
+            if (createStatement.Indicies.Count > 0 && !createStatement.IsTableVariable)
             {
                 foreach (var createIndexStatement in createStatement.Indicies)
                 {
@@ -624,7 +659,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
 
 
-            if (createStatement.CheckIfNotExists)
+            if (createStatement.CheckIfNotExists && !createStatement.IsTableVariable)
             {
                 state.Buffer.Append(" END;");
             }
