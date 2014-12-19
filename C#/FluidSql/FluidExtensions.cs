@@ -929,6 +929,57 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+            statement.PrimaryKey.Name = Sql.Name("PK_"+statement.Name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
         #endregion PrimaryKey
 
         #region UniqueConstrainOn
@@ -1000,6 +1051,43 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name, bool clustered, IEnumerable<Order> columns)
         {
             var index = new ConstrainDefinition { Clustered = clustered, Name = name };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name) };
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_"+statement.Name) };
+
+            if (columns != null)
+            {
+                index.Columns.AddRange(columns);
+            }
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered, params Order[] columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
+
+            index.Columns.AddRange(columns);
+            statement.UniqueConstrains.Add(index);
+            return statement;
+        }
+        public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered, IEnumerable<Order> columns)
+        {
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
 
             if (columns != null)
             {

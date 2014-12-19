@@ -91,5 +91,22 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("IF OBJECT_ID(N'[tbl]',N'U') IS NULL  BEGIN; CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ));CREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ([C2] ASC); END;", command.CommandText);
         }
+
+        [TestMethod]
+        public void CreateTableVariable()
+        {
+            var statement = Sql.CreateTableVariable(Sql.Name("tbl"))
+                .Columns(
+                    TableColumn.Int("C1").Identity().NotNull()
+                    , TableColumn.Int("C2").NotNull())
+                .PrimaryKey(new Order() { Column = Sql.Name("C1"), Direction = Direction.Asc })
+                .UniqueConstrainOn("UC_tbl", new Order { Column = Sql.Name("C2") })
+                ;
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DECLARE @tbl TABLE ([C1] INT NOT NULL IDENTITY (1, 1), [C2] INT NOT NULL, PRIMARY KEY ([C1] ASC ), UNIQUE NONCLUSTERED ([C2] ASC ));", command.CommandText);
+        }
     }
 }

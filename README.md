@@ -4,12 +4,18 @@ fluid-sql
 
 Release Notes
 ==
-0.0.18.0
+0.0.19.0
 --
 * Support for SET @variable = value
 * Support for SELECT @variable = value
 * bug fixes
-==
+
+0.0.18.0
+--
+* Support for TABLE variable
+* bug fixes
+
+
 0.0.17.0
 --
 * Support for HAVING

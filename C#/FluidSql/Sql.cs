@@ -183,6 +183,15 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static CreateTableStatement CreateTableVariable(Name name)
+        {
+            return new CreateTableStatement
+            {
+                Name = name,
+                IsTableVariable = true
+            };
+        }
+
         public static CommentToken Comment(string comment)
         {
             return new CommentToken { Content = Snippet(comment) };
