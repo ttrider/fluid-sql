@@ -14,5 +14,6 @@ namespace TTRider.FluidSql
         }
 
         public List<Token> Output { get; private set; }
+        public Name OutputInto { get; set; }
     }
 }

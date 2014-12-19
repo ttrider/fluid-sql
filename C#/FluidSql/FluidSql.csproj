@@ -87,6 +87,7 @@
     <Compile Include="Scalar.cs" />
     <Compile Include="SelectStatement.cs" />
     <Compile Include="Providers\SqlServer\SqlServerProvider.cs" />
+    <Compile Include="SetStatement.cs" />
     <Compile Include="Snippet.cs" />
     <Compile Include="SnippetStatement.cs" />
     <Compile Include="Sql.cs" />

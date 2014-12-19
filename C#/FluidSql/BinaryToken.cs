@@ -40,7 +40,13 @@ namespace TTRider.FluidSql
     public class StartsWithToken : BinaryToken { }
     public class EndsWithToken : BinaryToken { }
     public class LikeToken : BinaryToken { }
-
+    public class AssignToken : BinaryEqualToken 
+    {
+        public AssignToken()
+        {
+            this.Equal = true;
+        }
+    }
     public class UnaryToken : Token
     {
         public Token Token { get; set; }

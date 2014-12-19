@@ -158,7 +158,7 @@ namespace TTRider.FluidSql
         {
             return new DropTableStatement
             {
-                Name = name, 
+                Name = name,
                 IsTemporary = true,
                 CheckExists = checkExists
             };
@@ -185,7 +185,7 @@ namespace TTRider.FluidSql
 
         public static CommentToken Comment(string comment)
         {
-            return new CommentToken{ Content = Snippet(comment)};
+            return new CommentToken { Content = Snippet(comment) };
         }
         public static CommentStatement Comment(IStatement statement)
         {
@@ -200,7 +200,7 @@ namespace TTRider.FluidSql
             }
         }
 
-    #endregion Statements
+        #endregion Statements
         public static Name Star(string source = null)
         {
             var name = new Name();
@@ -229,7 +229,7 @@ namespace TTRider.FluidSql
         {
             var val = new Snippet { Value = value };
 
-            foreach (var p  in parameters)
+            foreach (var p in parameters)
             {
                 val.Parameters.Add(p);
             }
@@ -347,7 +347,7 @@ namespace TTRider.FluidSql
         {
             return new CreateIndexStatement
             {
-                Name = name, 
+                Name = name,
                 On = on
             };
         }
@@ -405,6 +405,153 @@ namespace TTRider.FluidSql
             };
         }
 
-    
+
+
+        public static SetStatement Assign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken {First = target, Second = expression}
+            };
+        }
+
+        public static SetStatement PlusAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement MinusAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement DivideAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement BitwiseAndAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement BitwiseOrAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseXorAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+            };
+        }
+        public static SetStatement BitwiseNotAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement ModuloAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement MultiplyAssign(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement Set(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken {First = target, Second = expression}
+            };
+        }
+
+        public static SetStatement PlusSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement MinusSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement DivideSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement BitwiseAndSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement BitwiseOrSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseXorSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+            };
+        }
+        public static SetStatement BitwiseNotSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement ModuloSet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
+            };
+        }
+        public static SetStatement MultiplySet(Name target, Token expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
     }
 }

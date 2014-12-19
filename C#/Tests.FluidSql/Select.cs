@@ -91,6 +91,71 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
+        public void SelectAssignFooIntoBar()
+        {
+            var statement = Sql.Select.Assign(Sql.Name("@Foo"), Sql.Scalar("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT @Foo = N'bar';", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void SetFooIntoBar()
+        {
+            var statement = Sql.Set(Sql.Name("@Foo"), Sql.Scalar("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET @Foo = N'bar';", command.CommandText);
+        }
+        [TestMethod]
+        public void SetPlus()
+        {
+            var statement = Sql.PlusSet(Sql.Name("@Foo"), Sql.Scalar(10));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET @Foo += 10;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SetMinus()
+        {
+            var statement = Sql.MinusSet(Sql.Name("@Foo"), Sql.Scalar(10));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET @Foo -= 10;", command.CommandText);
+        }
+        [TestMethod]
+        public void SetMultiply()
+        {
+            var statement = Sql.MultiplySet(Sql.Name("@Foo"), Sql.Scalar(10));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET @Foo *= 10;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void AssignFooIntoBar()
+        {
+            var statement = Sql.Assign(Sql.Name("@Foo"), Sql.Scalar("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET @Foo = N'bar';", command.CommandText);
+        }
+
+        [TestMethod]
         public void SelectParam1()
         {
             var statement = Sql.Select.Output(Parameter.Any("@param1"));

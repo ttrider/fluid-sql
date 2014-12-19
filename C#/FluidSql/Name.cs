@@ -17,7 +17,7 @@ namespace TTRider.FluidSql
             {
                 return string.Join(".",
                     this.Parts
-                        .Select(item => string.IsNullOrWhiteSpace(item)||(string.Equals(item, "*")) ? item : "[" + item + "]"));
+                        .Select(item => string.IsNullOrWhiteSpace(item) || string.Equals(item, "*") || item.TrimStart().StartsWith("@") ? item : "[" + item + "]"));
             }
             set
             {

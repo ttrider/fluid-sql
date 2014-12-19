@@ -14,8 +14,10 @@ namespace TTRider.FluidSql
             this.OrderBy = new List<Order>();
             this.From = new List<Token>();
             this.Joins = new List<Join>();
+            this.Assign = new List<BinaryEqualToken>();
         }
 
+        public List<BinaryEqualToken> Assign { get; private set; }
         public List<Token> From { get; set; }
         public Top Top { get; set; }
         public bool Distinct { get; set; }

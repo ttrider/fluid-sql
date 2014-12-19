@@ -81,6 +81,20 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
+        public void InsertColumnsFromOutputInto()
+        {
+            var statement = Sql.Insert.Into(Sql.Name("foo.bar"))
+                .From(Sql.Select.From(Sql.Name("bar.foo")))
+                .Columns(Sql.Name("id"), Sql.Name("value"))
+                .OutputInto(Sql.Name("@t"), Sql.Name("inserted", "id"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) OUTPUT [inserted].[id] INTO @t SELECT * FROM [bar].[foo];", command.CommandText);
+        }
+
+        [TestMethod]
         public void InsertColumnsValues00()
         {
             var statement = Sql.Insert.Into(Sql.Name("foo.bar"))

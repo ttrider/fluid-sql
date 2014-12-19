@@ -84,6 +84,61 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static SelectStatement Assign(this SelectStatement statement, Name target, Token expression)
+        {
+
+            statement.Assign.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
+
+        public static SelectStatement PlusAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new PlusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement MinusAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new MinusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement DivideAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new DivideToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement BitwiseAndAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new BitwiseAndToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement BitwiseOrAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new BitwiseOrToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement BitwiseXorAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new BitwiseXorToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement BitwiseNotAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement ModuloAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new ModuloToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static SelectStatement MultiplyAssign(this SelectStatement statement, Name target, Token expression)
+        {
+            statement.Assign.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+
+
         public static T Output<T>(this T statement, params Name[] columns)
             where T : RecordsetStatement
         {
@@ -98,6 +153,42 @@ namespace TTRider.FluidSql
             {
                 statement.Output.AddRange(columns);
             }
+            return statement;
+        }
+        public static T OutputInto<T>(this T statement, Name target, params Name[] columns)
+            where T : RecordsetStatement
+        {
+            statement.Output.AddRange(columns);
+            statement.OutputInto = target;
+            return statement;
+        }
+
+        public static T OutputInto<T>(this T statement, Name target, IEnumerable<Name> columns)
+            where T : RecordsetStatement
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns);
+            }
+            statement.OutputInto = target;
+            return statement;
+        }
+        public static T OutputInto<T>(this T statement, string target, params Name[] columns)
+            where T : RecordsetStatement
+        {
+            statement.Output.AddRange(columns);
+            statement.OutputInto = Sql.Name(target);
+            return statement;
+        }
+
+        public static T OutputInto<T>(this T statement, string target, IEnumerable<Name> columns)
+            where T : RecordsetStatement
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns);
+            }
+            statement.OutputInto = Sql.Name(target);
             return statement;
         }
 
@@ -349,19 +440,19 @@ namespace TTRider.FluidSql
 
         public static Token BitwiseAndEqual(this Token first, Token second)
         {
-            return new BitwiseAndToken { First = first, Second = second, Equal = true};
+            return new BitwiseAndToken { First = first, Second = second, Equal = true };
         }
         public static Token BitwiseOrEqual(this Token first, Token second)
         {
-            return new BitwiseOrToken { First = first, Second = second, Equal = true};
+            return new BitwiseOrToken { First = first, Second = second, Equal = true };
         }
         public static Token BitwiseXorEqual(this Token first, Token second)
         {
-            return new BitwiseXorToken { First = first, Second = second, Equal = true};
+            return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
         public static Token BitwiseNotEqual(this Token first, Token second)
         {
-            return new BitwiseNotToken { First = first, Second = second, Equal = true};
+            return new BitwiseNotToken { First = first, Second = second, Equal = true };
         }
 
         public static Token ModuloEqual(this Token first, Token second)

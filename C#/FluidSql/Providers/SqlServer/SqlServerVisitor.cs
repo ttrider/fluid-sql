@@ -7,6 +7,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
     public static class SqlServerVisitor
     {
         private const string EqualsVal = " = ";
+        private const string AssignVal = " = ";
         private const string NotEqualVal = " <> ";
         private const string LessVal = " < ";
         private const string NotLessVal = " !< ";
@@ -16,7 +17,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private const string GreaterOrEqualVal = " >= ";
         private const string AndVal = " AND ";
         private const string OrVal = " OR ";
-        
+
         private const string PlusVal = " + ";
         private const string MinusVal = " - ";
         private const string DivideVal = " / ";
@@ -134,6 +135,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (ExistsToken), VisitExistsToken},
                 {typeof (AllToken), VisitAllToken},
                 {typeof (AnyToken), VisitAnyToken},
+                {typeof (AssignToken), VisitAssignToken},
                 
 
                 {typeof (BetweenToken), VisitBetweenToken},
@@ -152,6 +154,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (InsertStatement), VisitInsert},
 
                 {typeof (SelectStatement), VisitSelect},
+
+                {typeof (SetStatement), VisitSet},
 
                 {typeof (Union), VisitUnion},
                 {typeof (Intersect), VisitIntersect},
@@ -263,7 +267,19 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitStatement(intersectStatement.Second, state);
         }
 
-        static void VisitSelect(IStatement statement, VisitorState state)
+        private static void VisitSet(IStatement statement, VisitorState state)
+        {
+            var setStatement = (SetStatement)statement;
+
+            state.Buffer.Append("SET ");
+
+            if (setStatement.Assign != null)
+            {
+                VisitToken(setStatement.Assign, false, state);
+            }
+        }
+
+        private static void VisitSelect(IStatement statement, VisitorState state)
         {
             var selectStatement = (SelectStatement)statement;
 
@@ -276,7 +292,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitTop(selectStatement.Top, state);
 
-            VisitOutput(selectStatement.Output, state, false);
+            // assignments
+            if (selectStatement.Assign.Count > 0)
+            {
+                VisitTokenSet(" ", ", ", "", selectStatement.Assign, false, state);
+            }
+            else
+            {
+                // output columns
+                if (selectStatement.Output.Count == 0)
+                {
+                    state.Buffer.Append(" *");
+                }
+                else
+                {
+                    VisitTokenSet(" ", ", ", "", selectStatement.Output, true, state);
+                }
+            }
 
             VisitInto(selectStatement.Into, state);
 
@@ -323,7 +355,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     state.Buffer.Append("]");
                 }
 
-                VisitOutput(deleteStatement.Output, state, true);
+                VisitOutput(deleteStatement.Output, deleteStatement.OutputInto, state);
 
                 VisitFrom(deleteStatement.From, state);
 
@@ -335,7 +367,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 VisitFrom(deleteStatement.From, state);
 
-                VisitOutput(deleteStatement.Output, state, true);
+                VisitOutput(deleteStatement.Output, deleteStatement.OutputInto, state);
 
                 VisitWhere(deleteStatement.Where, state);
             }
@@ -353,7 +385,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitTokenSet(" (", ", ", ")", insertStatement.Columns, true, state);
 
-            VisitOutput(insertStatement.Output, state, true);
+            VisitOutput(insertStatement.Output, insertStatement.OutputInto, state);
 
             if (insertStatement.DefaultValues)
             {
@@ -867,23 +899,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
-        static void VisitOutput(List<Token> columns, VisitorState state, bool includeName)
+        static void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            if (includeName)
-            {
-                VisitTokenSet(" OUTPUT ", ", ", "", columns, true, state);
-            }
-            else
-            {
-                if (columns.Count == 0)
-                {
-                    state.Buffer.Append(" *");
-                }
-                else
-                {
-                    VisitTokenSet(" ", ", ", "", columns, true, state);
-                }
-            }
+            VisitTokenSet(" OUTPUT ", ", ", outputInto == null ? String.Empty : " INTO " + outputInto.FullName, columns, true, state);
         }
 
         static void VisitTop(Top top, VisitorState state)
@@ -1123,6 +1141,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseNotEqVal : BitwiseNotVal);
         }
+        private static void VisitAssignToken(Token token, VisitorState state)
+        {
+            VisitBinaryToken(token, state, AssignVal);
+        }
+
         static void VisitLikeToken(Token token, VisitorState state)
         {
             var value = (BinaryToken)token;
