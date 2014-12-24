@@ -22,7 +22,8 @@ namespace TTRider.FluidSql
 
         public bool Disable { get; set; }
 
-        public bool Reorganize { get; set; } //TODO:[ PARTITION = partition_number ][ WITH ( LOB_COMPACTION = { ON | OFF } ) ]
+        public bool Reorganize { get; set; }
+        //TODO:[ PARTITION = partition_number ][ WITH ( LOB_COMPACTION = { ON | OFF } ) ]
 
         public ISetIndexOptions Set { get; private set; }
     }

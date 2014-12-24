@@ -4,8 +4,8 @@
 
 namespace TTRider.FluidSql
 {
-    public class SetStatement : Token, IStatement
+    public interface IWhereStatement
     {
-        public BinaryEqualToken Assign { get; set; }
+        Token Where { get; set; }
     }
 }

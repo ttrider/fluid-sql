@@ -9,6 +9,16 @@ namespace TTRider.FluidSql
 {
     public class Name : Token
     {
+        public Name()
+        {
+            this.Parts = new List<string>();
+        }
+
+        public Name(string name)
+        {
+            this.Parts = new List<string>(Sql.GetParts(name));
+        }
+
         public List<string> Parts { get; private set; }
 
         public string FullName
@@ -17,22 +27,18 @@ namespace TTRider.FluidSql
             {
                 return string.Join(".",
                     this.Parts
-                        .Select(item => string.IsNullOrWhiteSpace(item) || string.Equals(item, "*") || item.TrimStart().StartsWith("@") ? item : "[" + item + "]"));
+                        .Select(
+                            item =>
+                                string.IsNullOrWhiteSpace(item) || string.Equals(item, "*") ||
+                                item.TrimStart().StartsWith("@")
+                                    ? item
+                                    : "[" + item + "]"));
             }
             set
             {
                 this.Parts.Clear();
                 this.Parts.AddRange(Sql.GetParts(value));
             }
-        }
-
-        public Name()
-        {
-            this.Parts = new List<string>();
-        }
-        public Name(string name)
-        {
-            this.Parts = new List<string>(Sql.GetParts(name));
         }
     }
 }

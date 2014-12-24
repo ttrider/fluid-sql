@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace TTRider.FluidSql
 {
     public class CreateIndexStatement : IStatement
+        , IWhereStatement
     {
         public CreateIndexStatement()
         {
@@ -26,8 +27,6 @@ namespace TTRider.FluidSql
         public List<Order> Columns { get; private set; }
 
         public List<Name> Include { get; private set; }
-
-        public Token Where { get; set; }
 
         public bool? Nonclustered
         {
@@ -50,6 +49,7 @@ namespace TTRider.FluidSql
         }
 
         public ICreateOrAlterIndexOptions With { get; private set; }
+        public Token Where { get; set; }
 
         //TODO:[ ON { partition_scheme_name ( column_name ) | filegroup_name | default }
 

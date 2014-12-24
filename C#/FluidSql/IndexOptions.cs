@@ -4,7 +4,7 @@
 
 namespace TTRider.FluidSql
 {
-    class IndexOptions : ICreateOrAlterIndexOptions, IDropIndexOptions, ISetIndexOptions
+    internal class IndexOptions : ICreateOrAlterIndexOptions, IDropIndexOptions, ISetIndexOptions
     {
         public bool? Online { get; set; }
         public int? MaxDegreeOfParallelism { get; set; }
@@ -21,7 +21,7 @@ namespace TTRider.FluidSql
         {
             get
             {
-                return this.Online.HasValue || 
+                return this.Online.HasValue ||
                        this.MaxDegreeOfParallelism.HasValue ||
                        this.PadIndex.HasValue ||
                        this.Fillfactor.HasValue ||

@@ -2,10 +2,12 @@
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace TTRider.FluidSql
 {
-    public class SetStatement : Token, IStatement
+    public interface ISetStatement
     {
-        public BinaryEqualToken Assign { get; set; }
+        IList<BinaryEqualToken> Set { get; }
     }
 }

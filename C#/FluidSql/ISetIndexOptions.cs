@@ -12,6 +12,5 @@ namespace TTRider.FluidSql
         bool? AllowPageLocks { get; set; }
 
         bool IsDefined { get; }
-
     }
 }

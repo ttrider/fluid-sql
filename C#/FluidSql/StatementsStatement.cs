@@ -6,14 +6,13 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class StatementsStatement :  IStatement
+    public class StatementsStatement : IStatement
     {
         public StatementsStatement()
         {
             this.Statements = new List<IStatement>();
         }
 
-        public List<IStatement>  Statements { get; private set; } 
-
+        public List<IStatement> Statements { get; private set; }
     }
 }

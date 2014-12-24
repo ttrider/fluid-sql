@@ -8,6 +8,7 @@ namespace TTRider.FluidSql
     {
         public Token Content { get; set; }
     }
+
     public class CommentStatement : IStatement
     {
         public IStatement Content { get; set; }

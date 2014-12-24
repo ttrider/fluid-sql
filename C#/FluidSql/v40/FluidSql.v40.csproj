@@ -63,6 +63,9 @@
     <Compile Include="..\ICreateOrAlterIndexOptions.cs" />
     <Compile Include="..\IdentityOptions.cs" />
     <Compile Include="..\IDropIndexOptions.cs" />
+    <Compile Include="..\IFromStatement.cs">
+      <Link>IFromStatement.cs</Link>
+    </Compile>
     <Compile Include="..\IfStatement.cs" />
     <Compile Include="..\IJoinStatement.cs">
       <Link>IJoinStatement.cs</Link>
@@ -71,7 +74,16 @@
     <Compile Include="..\IndexOptions.cs" />
     <Compile Include="..\InsertStatement.cs" />
     <Compile Include="..\ISetIndexOptions.cs" />
+    <Compile Include="..\ISetStatement.cs">
+      <Link>ISetStatement.cs</Link>
+    </Compile>
     <Compile Include="..\IStatement.cs" />
+    <Compile Include="..\ITopStatement.cs">
+      <Link>ITopStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\IWhereStatement.cs">
+      <Link>IWhereStatement.cs</Link>
+    </Compile>
     <Compile Include="..\Join.cs" />
     <Compile Include="..\Name.cs" />
     <Compile Include="..\Order.cs" />
@@ -104,6 +116,9 @@
     <Compile Include="..\TransactionStatement.cs" />
     <Compile Include="..\TypedToken.cs" />
     <Compile Include="..\Union.cs" />
+    <Compile Include="..\UpdateStatement.cs">
+      <Link>UpdateStatement.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluidSql.cd" />

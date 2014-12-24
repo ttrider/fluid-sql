@@ -22,7 +22,7 @@ namespace TTRider.FluidSql
         public List<ConstrainDefinition> UniqueConstrains { get; private set; }
 
         public List<CreateIndexStatement> Indicies { get; private set; }
-        
+
         public bool CheckIfNotExists { get; set; }
 
         public bool IsTemporary { get; set; }

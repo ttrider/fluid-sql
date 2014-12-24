@@ -9,7 +9,8 @@ namespace TTRider.FluidSql
 {
     public class ParameterSet : ICollection<Parameter>
     {
-        readonly Dictionary<string, Parameter> items = new Dictionary<string, Parameter>(StringComparer.CurrentCultureIgnoreCase);
+        private readonly Dictionary<string, Parameter> items =
+            new Dictionary<string, Parameter>(StringComparer.CurrentCultureIgnoreCase);
 
         public void Add(Parameter item)
         {

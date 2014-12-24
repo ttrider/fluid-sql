@@ -1,6 +1,7 @@
 ﻿// <copyright company="TTRider, L.L.C.">
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
+
 using System;
 using System.Collections.Generic;
 
@@ -8,11 +9,6 @@ namespace TTRider.FluidSql
 {
     public class Top
     {
-        public int? Value { get; set; }
-        public bool Percent { get; set; }
-        public bool WithTies { get; set; }
-
-
         public Top(int value, bool percent, bool withTies)
         {
             this.Parameters = new List<Parameter>();
@@ -21,6 +17,7 @@ namespace TTRider.FluidSql
             this.Percent = percent;
             this.WithTies = withTies;
         }
+
         public Top(string value, bool percent, bool withTies)
         {
             this.Parameters = new List<Parameter>();
@@ -39,6 +36,11 @@ namespace TTRider.FluidSql
             this.Percent = percent;
             this.WithTies = withTies;
         }
+
+        public int? Value { get; set; }
+        public bool Percent { get; set; }
+        public bool WithTies { get; set; }
+
 
         public List<Parameter> Parameters { get; set; }
     }

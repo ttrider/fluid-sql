@@ -4,6 +4,11 @@ fluid-sql
 
 Release Notes
 ==
+0.0.20.0
+--
+* Support for UPDATE statement
+* bug fixes
+
 0.0.19.0
 --
 * Support for SET @variable = value

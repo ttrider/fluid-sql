@@ -18,7 +18,7 @@ namespace TTRider.FluidSql
         public Name References { get; set; }
 
         public List<Order> Columns { get; private set; }
-            
+
         public List<Name> ReferencesColumns { get; private set; }
 
         public bool Unique { get; set; }

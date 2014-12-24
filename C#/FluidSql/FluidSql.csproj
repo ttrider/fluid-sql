@@ -60,9 +60,11 @@
     <Compile Include="ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
     <Compile Include="Function.cs" />
+    <Compile Include="ISetStatement.cs" />
     <Compile Include="ICreateOrAlterIndexOptions.cs" />
     <Compile Include="IdentityOptions.cs" />
     <Compile Include="IDropIndexOptions.cs" />
+    <Compile Include="IFromStatement.cs" />
     <Compile Include="IfStatement.cs" />
     <Compile Include="IJoinStatement.cs" />
     <Compile Include="IndexDefinition.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="InsertStatement.cs" />
     <Compile Include="ISetIndexOptions.cs" />
     <Compile Include="IStatement.cs" />
+    <Compile Include="ITopStatement.cs" />
+    <Compile Include="IWhereStatement.cs" />
     <Compile Include="Join.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Order.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="TransactionStatement.cs" />
     <Compile Include="TypedToken.cs" />
     <Compile Include="Union.cs" />
+    <Compile Include="UpdateStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FluidSql.cd" />

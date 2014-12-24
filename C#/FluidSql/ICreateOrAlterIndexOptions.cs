@@ -16,7 +16,7 @@ namespace TTRider.FluidSql
         bool? AllowPageLocks { get; set; }
         bool? Online { get; set; }
         int? MaxDegreeOfParallelism { get; set; }
-        
+
         bool IsDefined { get; }
     }
 }

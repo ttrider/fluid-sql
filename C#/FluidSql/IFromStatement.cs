@@ -4,8 +4,8 @@
 
 namespace TTRider.FluidSql
 {
-    public class SetStatement : Token, IStatement
+    public interface IFromStatement
     {
-        public BinaryEqualToken Assign { get; set; }
+        Token From { get; set; }
     }
 }

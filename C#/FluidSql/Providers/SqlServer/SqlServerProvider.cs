@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
 
-
 namespace TTRider.FluidSql.Providers.SqlServer
 {
     public class SqlServerProvider : Provider
@@ -38,7 +37,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 throw new ArgumentNullException("connectionString");
             }
 
-            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+            var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
 
             return new SqlConnection(csb.ConnectionString);
         }
@@ -46,13 +45,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         public override IDbCommand GetCommand(IStatement statement, string connectionString = null)
         {
-
             var state = SqlServerVisitor.Compile(statement);
 
             SqlCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+                var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
 
                 var connection = new SqlConnection(csb.ConnectionString);
                 connection.Open();
@@ -79,13 +77,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             return SqlServerVisitor.GetTempTableName(name ?? Sql.Name(Guid.NewGuid().ToString("N")));
         }
-        
+
 #if _ASYNC_
-        public async override System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString, CancellationToken token)
+        public override async System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement,
+            string connectionString, CancellationToken token)
         {
             var state = SqlServerVisitor.Compile(statement);
 
-            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+            var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
 
             var connection = new SqlConnection(csb.ConnectionString);
 
@@ -106,6 +105,5 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return command;
         }
 #endif
-        
     }
 }

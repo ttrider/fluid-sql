@@ -14,6 +14,7 @@ namespace TTRider.FluidSql
             this.Parameters = new ParameterSet();
             this.ParameterValues = new List<ParameterValue>();
         }
+
         public ParameterSet Parameters { get; private set; }
 
         public IList<ParameterValue> ParameterValues { get; private set; }
