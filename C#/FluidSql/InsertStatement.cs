@@ -8,6 +8,7 @@ namespace TTRider.FluidSql
 {
     public class InsertStatement : RecordsetStatement
         , ITopStatement
+        , IIntoStatement
     {
         public InsertStatement()
         {

@@ -32,7 +32,8 @@ namespace TTRider.FluidSql
             return parameter;
         }
 
-        public static Token As(this Token token, string alias)
+        public static T As<T>(this T token, string alias)
+            where T:Token
         {
             token.Alias = alias;
             return token;
@@ -80,6 +81,12 @@ namespace TTRider.FluidSql
             statement.Set.Add(new AssignToken {First = target, Second = expression});
             return statement;
         }
+
+        public static AssignToken SetTo(this Name target, Token expression)
+        {
+            return new AssignToken { First = target, Second = expression };
+        }
+
 
         public static T PlusAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
@@ -199,14 +206,8 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Into(this SelectStatement statement, Name target)
-        {
-            statement.Into = target;
-
-            return statement;
-        }
-
-        public static InsertStatement Into(this InsertStatement statement, Name target)
+        public static T Into<T>(this T statement, Name target)
+            where T : IIntoStatement
         {
             statement.Into = target;
 
@@ -295,6 +296,270 @@ namespace TTRider.FluidSql
             where T : IFromStatement
         {
             statement.From = token;
+            return statement;
+        }
+        public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token)
+        {
+            statement.Using = token;
+            return statement;
+        }
+        public static MergeStatement On(this MergeStatement statement, Token token)
+        {
+            statement.On = token;
+            return statement;
+        }
+
+
+        public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null )
+        {
+            statement.WhenMatched.Add(new WhenMatchedThenDelete
+            {
+                AndCondition = andCondition
+            });
+            return statement;
+        } 
+        public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, IEnumerable<AssignToken> set)
+        {
+            var wm = new WhenMatchedThenUpdateSet();
+
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
+        {
+            var wm = new WhenMatchedThenUpdateSet();
+
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
+        {
+            var wm = new WhenMatchedThenUpdateSet
+            {
+                AndCondition = andCondition
+            };
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, params AssignToken[] set)
+        {
+            var wm = new WhenMatchedThenUpdateSet
+            {
+                AndCondition = andCondition
+            };
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement, Token andCondition = null)
+        {
+            statement.WhenNotMatchedBySource.Add(new WhenMatchedThenDelete
+            {
+                AndCondition = andCondition
+            });
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
+        {
+            var wm = new WhenMatchedThenUpdateSet();
+
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenNotMatchedBySource.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
+        {
+            var wm = new WhenMatchedThenUpdateSet();
+
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+            statement.WhenNotMatchedBySource.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
+        {
+            var wm = new WhenMatchedThenUpdateSet
+            {
+                AndCondition = andCondition
+            };
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+
+            statement.WhenNotMatchedBySource.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
+        {
+            var wm = new WhenMatchedThenUpdateSet
+            {
+                AndCondition = andCondition
+            };
+            if (set != null)
+            {
+                foreach (var columnValue in set)
+                {
+                    wm.Set.Add(columnValue);
+                }
+            }
+
+
+            statement.WhenNotMatchedBySource.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns)
+        {
+            var wm = new WhenNotMatchedThenInsert();
+
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+            statement.WhenNotMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns)
+        {
+            var wm = new WhenNotMatchedThenInsert
+            {
+                AndCondition = andCondition
+            };
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+            statement.WhenNotMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns, IEnumerable<Name> values)
+        {
+            var wm = new WhenNotMatchedThenInsert();
+
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+
+            if (values != null)
+            {
+                foreach (var value in values)
+                {
+                    wm.Values.Add(value);
+                }
+            }
+            statement.WhenNotMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns, IEnumerable<Name> values)
+        {
+            var wm = new WhenNotMatchedThenInsert
+            {
+                AndCondition = andCondition
+            };
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+            if (values != null)
+            {
+                foreach (var value in values)
+                {
+                    wm.Values.Add(value);
+                }
+            }
+
+            statement.WhenNotMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, params Name[] columns)
+        {
+            var wm = new WhenNotMatchedThenInsert();
+
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+            statement.WhenNotMatched.Add(wm);
+            return statement;
+        }
+        public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, params Name[] columns)
+        {
+            var wm = new WhenNotMatchedThenInsert
+            {
+                AndCondition = andCondition
+            };
+            if (columns != null)
+            {
+                foreach (var column in columns)
+                {
+                    wm.Columns.Add(column);
+                }
+            }
+            statement.WhenNotMatched.Add(wm);
             return statement;
         }
 

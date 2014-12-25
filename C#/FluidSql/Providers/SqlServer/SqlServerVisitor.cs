@@ -134,6 +134,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (NotInToken), VisitNotInToken},
                 {typeof (CommentToken), VisitCommentToken},
                 {typeof (StringifyToken), VisitStringifyToken},
+                {typeof (WhenMatchedThenDelete), VisitWhenMatchedThenDelete },
+                {typeof (WhenMatchedThenUpdateSet), VisitWhenMatchedThenUpdateSet },
+                {typeof (WhenNotMatchedThenInsert), VisitWhenNotMatchedThenInsert },
             };
 
         private static readonly Dictionary<Type, Action<IStatement, VisitorState>> StatementVisitors =
@@ -143,6 +146,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (UpdateStatement), VisitUpdate},
                 {typeof (InsertStatement), VisitInsert},
                 {typeof (SelectStatement), VisitSelect},
+                {typeof (MergeStatement), VisitMerge},
                 {typeof (SetStatement), VisitSet},
                 {typeof (Union), VisitUnion},
                 {typeof (Intersect), VisitIntersect},
@@ -272,6 +276,103 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(setStatement.Assign, false, state);
             }
         }
+
+        private static void VisitMerge(IStatement statement, VisitorState state)
+        {
+            var mergeStatement = (MergeStatement)statement;
+
+            state.Buffer.Append("MERGE");
+
+            VisitTop(mergeStatement.Top, state);
+
+            VisitInto(mergeStatement.Into, state);
+
+            if (!string.IsNullOrWhiteSpace(mergeStatement.Into.Alias))
+            {
+                state.Buffer.Append(" AS [");
+                state.Buffer.Append(mergeStatement.Into.Alias);
+                state.Buffer.Append("]");
+            }
+
+            state.Buffer.Append(" USING ");
+            VisitToken(mergeStatement.Using, true, state);
+
+            state.Buffer.Append(" ON ");
+            
+            VisitToken(mergeStatement.On, false, state);
+
+            foreach (var when in mergeStatement.WhenMatched)
+            {
+                state.Buffer.Append(" WHEN MATCHED");
+                if (when.AndCondition != null)
+                {
+                    state.Buffer.Append(" AND");
+                    VisitToken(when.AndCondition, false, state);
+                }
+                state.Buffer.Append(" THEN");
+                
+                VisitToken(when, false, state);
+            }
+
+            foreach (var when in mergeStatement.WhenNotMatched)
+            {
+                state.Buffer.Append(" WHEN NOT MATCHED BY TARGET");
+                if (when.AndCondition != null)
+                {
+                    state.Buffer.Append(" AND");
+                    VisitToken(when.AndCondition, false, state);
+                }
+                state.Buffer.Append(" THEN");
+
+                VisitToken(when, false, state);
+            }
+
+            foreach (var when in mergeStatement.WhenNotMatched)
+            {
+                state.Buffer.Append(" WHEN NOT MATCHED BY SOURCE");
+                if (when.AndCondition != null)
+                {
+                    state.Buffer.Append(" AND ");
+                    VisitToken(when.AndCondition, false, state);
+                }
+                state.Buffer.Append(" THEN");
+
+                VisitToken(when, false, state);
+            }
+
+            VisitOutput(mergeStatement.Output, mergeStatement.OutputInto, state);
+        }
+
+        private static void VisitWhenMatchedThenDelete(Token token, VisitorState state)
+        {
+            var value = (WhenMatchedThenDelete)token;
+            state.Buffer.Append(" DELETE");
+        }
+        private static void VisitWhenMatchedThenUpdateSet(Token token, VisitorState state)
+        {
+            var value = (WhenMatchedThenUpdateSet)token;
+
+            state.Buffer.Append(" UPDATE SET");
+            VisitTokenSet(" ", ", ", "", value.Set, false, state);
+        }
+        private static void VisitWhenNotMatchedThenInsert(Token token, VisitorState state)
+        {
+            var value = (WhenNotMatchedThenInsert)token;
+            state.Buffer.Append(" INSERT");
+            if (value.Columns.Count > 0)
+            {
+                VisitTokenSet(" (", ", ", ")", value.Columns, false, state);
+            }
+            if (value.Values.Count > 0)
+            {
+                VisitTokenSet(" VALUES (", ", ", ")", value.Values, false, state);
+            }
+            else
+            {
+                state.Buffer.Append(" DEFAULT VALUES");
+            }
+        }
+
 
         private static void VisitSelect(IStatement statement, VisitorState state)
         {

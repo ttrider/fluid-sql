@@ -422,6 +422,10 @@ namespace TTRider.FluidSql
         {
             get { return new InsertStatement(); }
         }
+        public static MergeStatement Merge
+        {
+            get { return new MergeStatement(); }
+        }
 
         #region Transaction
 

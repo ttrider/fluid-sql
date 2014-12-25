@@ -40,5 +40,11 @@ namespace TTRider.FluidSql
                 this.Parts.AddRange(Sql.GetParts(value));
             }
         }
+
+        public static implicit operator Name(string value)
+        {
+            return new Name(value);
+        }
+
     }
 }

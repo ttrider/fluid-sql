@@ -60,6 +60,7 @@
     <Compile Include="ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
     <Compile Include="Function.cs" />
+    <Compile Include="IIntoStatement.cs" />
     <Compile Include="ISetStatement.cs" />
     <Compile Include="ICreateOrAlterIndexOptions.cs" />
     <Compile Include="IdentityOptions.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="ITopStatement.cs" />
     <Compile Include="IWhereStatement.cs" />
     <Compile Include="Join.cs" />
+    <Compile Include="MergeStatement.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Parameter.cs" />

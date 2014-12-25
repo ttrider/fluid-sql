@@ -67,6 +67,9 @@
       <Link>IFromStatement.cs</Link>
     </Compile>
     <Compile Include="..\IfStatement.cs" />
+    <Compile Include="..\IIntoStatement.cs">
+      <Link>IIntoStatement.cs</Link>
+    </Compile>
     <Compile Include="..\IJoinStatement.cs">
       <Link>IJoinStatement.cs</Link>
     </Compile>
@@ -85,6 +88,9 @@
       <Link>IWhereStatement.cs</Link>
     </Compile>
     <Compile Include="..\Join.cs" />
+    <Compile Include="..\MergeStatement.cs">
+      <Link>MergeStatement.cs</Link>
+    </Compile>
     <Compile Include="..\Name.cs" />
     <Compile Include="..\Order.cs" />
     <Compile Include="..\Parameter.cs" />
