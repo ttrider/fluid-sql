@@ -319,7 +319,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" WHEN MATCHED");
                 if (when.AndCondition != null)
                 {
-                    state.Buffer.Append(" AND");
+                    state.Buffer.Append(" AND ");
                     VisitToken(when.AndCondition, false, state);
                 }
                 state.Buffer.Append(" THEN");
@@ -1159,7 +1159,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (value == null) return;
 
-            if ((value is Boolean)
+            if (value is DBNull)
+            {
+                state.Buffer.Append("NULL");
+            }
+            else if ((value is Boolean)
                 || (value is SByte)
                 || (value is Byte)
                 || (value is Int16)

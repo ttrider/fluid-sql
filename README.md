@@ -4,7 +4,7 @@ fluid-sql
 
 Release Notes
 ==
-0.0.21.1
+0.0.21.2
 --
 * Support for MERGE statement
 * Debug-time visualizer
