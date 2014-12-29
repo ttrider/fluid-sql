@@ -340,7 +340,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(when, false, state);
             }
 
-            foreach (var when in mergeStatement.WhenNotMatched)
+            foreach (var when in mergeStatement.WhenNotMatchedBySource)
             {
                 state.Buffer.Append(" WHEN NOT MATCHED BY SOURCE");
                 if (when.AndCondition != null)
