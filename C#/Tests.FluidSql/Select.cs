@@ -658,7 +658,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
 
         [TestMethod]
@@ -670,7 +670,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
 
         [TestMethod]
@@ -681,7 +681,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
         }
         //[TestMethod]
         //public void CreateTable()

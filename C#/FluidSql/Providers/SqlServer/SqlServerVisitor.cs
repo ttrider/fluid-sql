@@ -201,6 +201,19 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state;
         }
 
+        internal static VisitorState Compile(Token token)
+        {
+            var statement = token as IStatement;
+            if (statement != null)
+            {
+                return Compile(statement);
+            }
+
+            var state = new VisitorState();
+            VisitToken(token, false, state);
+            return state;
+        }
+
         internal static Name GetTempTableName(Name name)
         {
             var namePart = name.Parts.Last();
@@ -1376,9 +1389,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitNotToken(Token token, VisitorState state)
         {
-            state.Buffer.Append(" NOT");
+            state.Buffer.Append(" NOT (");
             var value = (NotToken) token;
             VisitToken(value.Token, false, state);
+            state.Buffer.Append(" )");
         }
 
         private static void VisitIsNullToken(Token token, VisitorState state)
