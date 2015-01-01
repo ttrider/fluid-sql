@@ -4,9 +4,13 @@
 
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using TTRider.FluidSql.Providers;
+using TTRider.FluidSql.Providers.SqlServer;
 
 namespace TTRider.FluidSql
 {
+    [DebuggerDisplay("T-SQL: {TSql}")]
     public class Token
     {
         public Token()
@@ -20,5 +24,14 @@ namespace TTRider.FluidSql
         public IList<ParameterValue> ParameterValues { get; private set; }
 
         public string Alias { get; set; }
+
+        private string TSql
+        {
+            get
+            {
+                var state = SqlServerVisitor.Compile(this);
+                return state.Buffer.ToString();
+            }
+        }
     }
 }

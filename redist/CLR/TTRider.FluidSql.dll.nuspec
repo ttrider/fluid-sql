@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>0.0.20.0</version>
+    <version>0.0.21.2</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,6 +11,11 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      0.0.21.2
+      --
+      * Support for MERGE statement
+      * Debug-time visualizer
+      * bug fixes
       0.0.20.0
       --
       * Support for UPDATE statement

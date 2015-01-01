@@ -201,6 +201,19 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state;
         }
 
+        internal static VisitorState Compile(Token token)
+        {
+            var statement = token as IStatement;
+            if (statement != null)
+            {
+                return Compile(statement);
+            }
+
+            var state = new VisitorState();
+            VisitToken(token, false, state);
+            return state;
+        }
+
         internal static Name GetTempTableName(Name name)
         {
             var namePart = name.Parts.Last();
@@ -306,7 +319,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" WHEN MATCHED");
                 if (when.AndCondition != null)
                 {
-                    state.Buffer.Append(" AND");
+                    state.Buffer.Append(" AND ");
                     VisitToken(when.AndCondition, false, state);
                 }
                 state.Buffer.Append(" THEN");
@@ -327,7 +340,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(when, false, state);
             }
 
-            foreach (var when in mergeStatement.WhenNotMatched)
+            foreach (var when in mergeStatement.WhenNotMatchedBySource)
             {
                 state.Buffer.Append(" WHEN NOT MATCHED BY SOURCE");
                 if (when.AndCondition != null)
@@ -1146,7 +1159,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (value == null) return;
 
-            if ((value is Boolean)
+            if (value is DBNull)
+            {
+                state.Buffer.Append("NULL");
+            }
+            else if ((value is Boolean)
                 || (value is SByte)
                 || (value is Byte)
                 || (value is Int16)
@@ -1379,7 +1396,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append(" NOT (");
             var value = (NotToken) token;
             VisitToken(value.Token, false, state);
-            state.Buffer.Append(")");
+            state.Buffer.Append(" )");
         }
 
         private static void VisitIsNullToken(Token token, VisitorState state)
