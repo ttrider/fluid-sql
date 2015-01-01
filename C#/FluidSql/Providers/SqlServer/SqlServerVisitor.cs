@@ -1376,9 +1376,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitNotToken(Token token, VisitorState state)
         {
-            state.Buffer.Append(" NOT");
+            state.Buffer.Append(" NOT (");
             var value = (NotToken) token;
             VisitToken(value.Token, false, state);
+            state.Buffer.Append(")");
         }
 
         private static void VisitIsNullToken(Token token, VisitorState state)
