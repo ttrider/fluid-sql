@@ -298,9 +298,16 @@ namespace TTRider.FluidSql
             statement.From = token;
             return statement;
         }
-        public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token)
+        public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token, string alias = null)
         {
             statement.Using = token;
+            statement.Using.Alias = alias;
+            return statement;
+        }
+        public static MergeStatement Using(this MergeStatement statement, Name token, string alias = null)
+        {
+            statement.Using = token;
+            statement.Using.Alias = alias;
             return statement;
         }
         public static MergeStatement On(this MergeStatement statement, Token token)

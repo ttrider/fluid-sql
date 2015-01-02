@@ -4,6 +4,13 @@ fluid-sql
 
 Release Notes
 ==
+0.0.22.0
+--
+* Support for WHILE, BREAK AND CONTINUE
+* Support for GOTO
+* Support for TRY/CATCH
+* bug fixes
+
 0.0.21.2
 --
 * Support for MERGE statement

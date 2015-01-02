@@ -300,15 +300,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitInto(mergeStatement.Into, state);
 
-            if (!string.IsNullOrWhiteSpace(mergeStatement.Into.Alias))
-            {
-                state.Buffer.Append(" AS [");
-                state.Buffer.Append(mergeStatement.Into.Alias);
-                state.Buffer.Append("]");
-            }
+            VisitAlias(mergeStatement.Into, state);
 
             state.Buffer.Append(" USING ");
-            VisitToken(mergeStatement.Using, true, state);
+            VisitToken(mergeStatement.Using, false, state);
+            VisitAlias(mergeStatement.Using, state);
 
             state.Buffer.Append(" ON ");
             
@@ -1142,15 +1138,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             TokenVisitors[token.GetType()](token, state);
 
-            if (includeAlias && !string.IsNullOrWhiteSpace(token.Alias))
+            if (includeAlias)
+            {
+                VisitAlias(token, state);
+            }
+
+            state.Parameters.AddRange(token.Parameters);
+            state.ParameterValues.AddRange(token.ParameterValues);
+        }
+
+        private static void VisitAlias(Token token, VisitorState state)
+        {
+            if (!string.IsNullOrWhiteSpace(token.Alias))
             {
                 state.Buffer.Append(" AS [");
                 state.Buffer.Append(token.Alias);
                 state.Buffer.Append("]");
             }
-
-            state.Parameters.AddRange(token.Parameters);
-            state.ParameterValues.AddRange(token.ParameterValues);
         }
 
         private static void VisitScalarToken(Token token, VisitorState state)
