@@ -45,8 +45,14 @@
     <Compile Include="..\AlterIndexStatement.cs" />
     <Compile Include="..\BeginTransactionStatement.cs" />
     <Compile Include="..\BinaryToken.cs" />
+    <Compile Include="..\BreakStatement.cs">
+      <Link>BreakStatement.cs</Link>
+    </Compile>
     <Compile Include="..\CommentToken.cs" />
     <Compile Include="..\CommitTransactionStatement.cs" />
+    <Compile Include="..\ContinueStatement.cs">
+      <Link>ContinueStatement.cs</Link>
+    </Compile>
     <Compile Include="..\CreateIndexStatement.cs" />
     <Compile Include="..\CreateTableStatement.cs">
       <SubType>Code</SubType>
@@ -60,6 +66,9 @@
     <Compile Include="..\ForeignDefinition.cs" />
     <Compile Include="..\ForeignKeyOption.cs" />
     <Compile Include="..\Function.cs" />
+    <Compile Include="..\GotoStatement.cs">
+      <Link>GotoStatement.cs</Link>
+    </Compile>
     <Compile Include="..\ICreateOrAlterIndexOptions.cs" />
     <Compile Include="..\IdentityOptions.cs" />
     <Compile Include="..\IDropIndexOptions.cs" />
@@ -88,6 +97,9 @@
       <Link>IWhereStatement.cs</Link>
     </Compile>
     <Compile Include="..\Join.cs" />
+    <Compile Include="..\LabelStatement.cs">
+      <Link>LabelStatement.cs</Link>
+    </Compile>
     <Compile Include="..\MergeStatement.cs">
       <Link>MergeStatement.cs</Link>
     </Compile>
@@ -102,6 +114,9 @@
     <Compile Include="..\Providers\SqlServer\SqlServerVisitor.cs" />
     <Compile Include="..\Providers\VisitorState.cs" />
     <Compile Include="..\RecordsetStatement.cs" />
+    <Compile Include="..\ReturnStatement.cs">
+      <Link>ReturnStatement.cs</Link>
+    </Compile>
     <Compile Include="..\RollbackTransactionStatement.cs" />
     <Compile Include="..\SaveTransactionStatement.cs" />
     <Compile Include="..\Scalar.cs" />
@@ -113,17 +128,32 @@
     <Compile Include="..\Snippet.cs" />
     <Compile Include="..\SnippetStatement.cs" />
     <Compile Include="..\Sql.cs" />
+    <Compile Include="..\Sql_Function.cs">
+      <Link>Sql_Function.cs</Link>
+    </Compile>
     <Compile Include="..\StatementsStatement.cs" />
     <Compile Include="..\StringifyStatement.cs" />
     <Compile Include="..\StringifyToken.cs" />
     <Compile Include="..\TableColumn.cs" />
+    <Compile Include="..\ThrowStatement.cs">
+      <Link>ThrowStatement.cs</Link>
+    </Compile>
     <Compile Include="..\Token.cs" />
     <Compile Include="..\Top.cs" />
     <Compile Include="..\TransactionStatement.cs" />
+    <Compile Include="..\TryCatchStatement.cs">
+      <Link>TryCatchStatement.cs</Link>
+    </Compile>
     <Compile Include="..\TypedToken.cs" />
     <Compile Include="..\Union.cs" />
     <Compile Include="..\UpdateStatement.cs">
       <Link>UpdateStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\WaitforStatement.cs">
+      <Link>WaitforStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\WhileStatement.cs">
+      <Link>WhileStatement.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

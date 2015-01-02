@@ -45,8 +45,10 @@
     <Compile Include="AlterIndexStatement.cs" />
     <Compile Include="BeginTransactionStatement.cs" />
     <Compile Include="BinaryToken.cs" />
+    <Compile Include="BreakStatement.cs" />
     <Compile Include="CommentToken.cs" />
     <Compile Include="CommitTransactionStatement.cs" />
+    <Compile Include="ContinueStatement.cs" />
     <Compile Include="CreateIndexStatement.cs" />
     <Compile Include="CreateTableStatement.cs">
       <SubType>Code</SubType>
@@ -60,6 +62,7 @@
     <Compile Include="ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
     <Compile Include="Function.cs" />
+    <Compile Include="GotoStatement.cs" />
     <Compile Include="IIntoStatement.cs" />
     <Compile Include="ISetStatement.cs" />
     <Compile Include="ICreateOrAlterIndexOptions.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="ITopStatement.cs" />
     <Compile Include="IWhereStatement.cs" />
     <Compile Include="Join.cs" />
+    <Compile Include="LabelStatement.cs" />
     <Compile Include="MergeStatement.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="Order.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="Providers\SqlServer\SqlServerVisitor.cs" />
     <Compile Include="Providers\VisitorState.cs" />
     <Compile Include="RecordsetStatement.cs" />
+    <Compile Include="ReturnStatement.cs" />
     <Compile Include="RollbackTransactionStatement.cs" />
     <Compile Include="SaveTransactionStatement.cs" />
     <Compile Include="Scalar.cs" />
@@ -97,16 +102,21 @@
     <Compile Include="Snippet.cs" />
     <Compile Include="SnippetStatement.cs" />
     <Compile Include="Sql.cs" />
+    <Compile Include="Sql_Function.cs" />
     <Compile Include="StatementsStatement.cs" />
     <Compile Include="StringifyStatement.cs" />
     <Compile Include="StringifyToken.cs" />
     <Compile Include="TableColumn.cs" />
+    <Compile Include="ThrowStatement.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Top.cs" />
     <Compile Include="TransactionStatement.cs" />
+    <Compile Include="TryCatchStatement.cs" />
     <Compile Include="TypedToken.cs" />
     <Compile Include="Union.cs" />
     <Compile Include="UpdateStatement.cs" />
+    <Compile Include="WaitforStatement.cs" />
+    <Compile Include="WhileStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FluidSql.cd" />
