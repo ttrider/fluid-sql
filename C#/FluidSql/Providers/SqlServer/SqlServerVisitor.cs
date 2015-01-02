@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace TTRider.FluidSql.Providers.SqlServer
@@ -166,6 +167,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (CommentStatement), VisitCommentStatement},
                 {typeof (StringifyStatement), VisitStringifyStatement},
                 {typeof (SnippetStatement), VisitSnippetStatement},
+                {typeof (BreakStatement), VisitBreakStatement},
+                {typeof (ContinueStatement), VisitContinueStatement},
+                {typeof (GotoStatement), VisitGotoStatement},
+                {typeof (ReturnStatement), VisitReturnStatement},
+                {typeof (ThrowStatement), VisitThrowStatement},
+                {typeof (TryCatchStatement), VisitTryCatchStatement},
+                {typeof (LabelStatement), VisitLabelStatement},
+                {typeof (WaitforDelayStatement), VisitWaitforDelayStatement},
+                {typeof (WaitforTimeStatement), VisitWaitforTimeStatement},
+                {typeof (WhileStatement), VisitWhileStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -173,8 +184,15 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var state = new VisitorState();
 
             VisitStatement(statement, state);
+            EnsureSemicolumn(state);
+
+            return state;
+        }
+
+        private static void EnsureSemicolumn(VisitorState state)
+        {
             // we need to make sure that the last non-whitespace character
-            // is ';' unless it is */
+            // is ';' unless it is */ or :
             //TODO: need a better code here
             for (var i = state.Buffer.Length - 1; i >= 0; i--)
             {
@@ -182,6 +200,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 if (!Char.IsWhiteSpace(ch))
                 {
                     if (ch == ';')
+                    {
+                        break;
+                    }
+                    if (ch == ':')
                     {
                         break;
                     }
@@ -197,8 +219,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     break;
                 }
             }
-
-            return state;
         }
 
         internal static VisitorState Compile(Token token)
@@ -248,7 +268,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitUnion(IStatement statement, VisitorState state)
         {
-            var unionStatement = (Union) statement;
+            var unionStatement = (Union)statement;
 
             VisitStatement(unionStatement.First, state);
 
@@ -260,7 +280,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitExcept(IStatement statement, VisitorState state)
         {
-            var exceptStatement = (Except) statement;
+            var exceptStatement = (Except)statement;
 
             VisitStatement(exceptStatement.First, state);
 
@@ -271,7 +291,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitIntersect(IStatement statement, VisitorState state)
         {
-            var intersectStatement = (Intersect) statement;
+            var intersectStatement = (Intersect)statement;
 
             VisitStatement(intersectStatement.First, state);
             state.Buffer.Append(" INTERSECT ");
@@ -280,7 +300,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitSet(IStatement statement, VisitorState state)
         {
-            var setStatement = (SetStatement) statement;
+            var setStatement = (SetStatement)statement;
 
             state.Buffer.Append("SET ");
 
@@ -311,7 +331,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(mergeStatement.Using, true, state);
 
             state.Buffer.Append(" ON ");
-            
+
             VisitToken(mergeStatement.On, false, state);
 
             foreach (var when in mergeStatement.WhenMatched)
@@ -323,7 +343,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitToken(when.AndCondition, false, state);
                 }
                 state.Buffer.Append(" THEN");
-                
+
                 VisitToken(when, false, state);
             }
 
@@ -358,7 +378,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitWhenMatchedThenDelete(Token token, VisitorState state)
         {
-            var value = (WhenMatchedThenDelete)token;
+            //var value = (WhenMatchedThenDelete)token;
             state.Buffer.Append(" DELETE");
         }
         private static void VisitWhenMatchedThenUpdateSet(Token token, VisitorState state)
@@ -389,7 +409,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitSelect(IStatement statement, VisitorState state)
         {
-            var selectStatement = (SelectStatement) statement;
+            var selectStatement = (SelectStatement)statement;
 
             state.Buffer.Append("SELECT");
 
@@ -448,7 +468,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitDelete(IStatement statement, VisitorState state)
         {
-            var deleteStatement = (DeleteStatement) statement;
+            var deleteStatement = (DeleteStatement)statement;
 
             state.Buffer.Append("DELETE");
 
@@ -483,7 +503,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitUpdate(IStatement statement, VisitorState state)
         {
-            var updateStatement = (UpdateStatement) statement;
+            var updateStatement = (UpdateStatement)statement;
 
             state.Buffer.Append("UPDATE");
 
@@ -507,7 +527,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitInsert(IStatement statement, VisitorState state)
         {
-            var insertStatement = (InsertStatement) statement;
+            var insertStatement = (InsertStatement)statement;
 
             state.Buffer.Append("INSERT");
 
@@ -562,7 +582,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitBeginTransaction(IStatement statement, VisitorState state)
         {
-            var ts = (BeginTransactionStatement) statement;
+            var ts = (BeginTransactionStatement)statement;
             state.Buffer.Append("BEGIN TRANSACTION");
             if (VisitTransactionName(ts, state) && !string.IsNullOrWhiteSpace(ts.Description))
             {
@@ -574,21 +594,21 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitCommitTransaction(IStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement) statement;
+            var ts = (TransactionStatement)statement;
             state.Buffer.Append("COMMIT TRANSACTION");
             VisitTransactionName(ts, state);
         }
 
         private static void VisitRollbackTransaction(IStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement) statement;
+            var ts = (TransactionStatement)statement;
             state.Buffer.Append("ROLLBACK TRANSACTION");
             VisitTransactionName(ts, state);
         }
 
         private static void VisitSaveTransaction(IStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement) statement;
+            var ts = (TransactionStatement)statement;
             state.Buffer.Append("SAVE TRANSACTION");
             VisitTransactionName(ts, state);
         }
@@ -596,17 +616,28 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitStatementsStatement(IStatement statement, VisitorState state)
         {
-            var ss = (StatementsStatement) statement;
+            var ss = (StatementsStatement)statement;
+
+            var last = state.Buffer.Length - 1;
+
+            if (last >= 0 && state.Buffer[last] != '\n')
+            {
+                state.Buffer.Append("\r\n");
+            }
+
+            var separator = string.Empty;
             foreach (var subStatement in ss.Statements)
             {
+                state.Buffer.Append(separator);
+                separator = "\r\n";
                 VisitStatement(subStatement, state);
-                state.Buffer.AppendLine(";");
+                EnsureSemicolumn(state);
             }
         }
 
         private static void VisitDeclareStatement(IStatement statement, VisitorState state)
         {
-            var ss = (DeclareStatement) statement;
+            var ss = (DeclareStatement)statement;
 
             if (ss.Variable != null)
             {
@@ -625,12 +656,107 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
+        private static void VisitBreakStatement(IStatement statement, VisitorState state)
+        {
+            //var stmt = (BreakStatement) statement;
+            state.Buffer.Append("BREAK");
+        }
+        private static void VisitContinueStatement(IStatement statement, VisitorState state)
+        {
+            //var stmt = (ContinueStatement) statement;
+            state.Buffer.Append("CONTINUE");
+        }
+        private static void VisitGotoStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (GotoStatement)statement;
+            state.Buffer.Append("GOTO ");
+            state.Buffer.Append(stmt.Label);
+        }
+        private static void VisitReturnStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (ReturnStatement)statement;
+            state.Buffer.Append("RETURN");
+            if (stmt.ReturnExpression != null)
+            {
+                state.Buffer.Append(" ");
+                VisitToken(stmt.ReturnExpression, false, state);
+            }
+
+        }
+        private static void VisitThrowStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (ThrowStatement)statement;
+            state.Buffer.Append("THROW");
+            if (stmt.ErrorNumber != null && stmt.Message != null && stmt.State != null)
+            {
+                state.Buffer.Append(" ");
+                VisitToken(stmt.ErrorNumber, false, state);
+                state.Buffer.Append(", ");
+                VisitToken(stmt.Message, false, state);
+                state.Buffer.Append(", ");
+                VisitToken(stmt.State, false, state);
+            }
+        }
+
+        private static void VisitTryCatchStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (TryCatchStatement)statement;
+            state.Buffer.Append("BEGIN TRY\r\n");
+            VisitStatement(stmt.TryStatement, state);
+            state.Buffer.Append(";\r\nEND TRY\r\nBEGIN CATCH\r\n");
+            if (stmt.CatchStatement != null)
+            {
+                VisitStatement(stmt.CatchStatement, state);
+                state.Buffer.Append(";\r\nEND CATCH");
+            }
+        }
+
+        private static void VisitLabelStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (LabelStatement)statement;
+            state.Buffer.Append(stmt.Label);
+            state.Buffer.Append(":");
+        }
+
+        private static void VisitWaitforDelayStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (WaitforDelayStatement)statement;
+            state.Append("WAITFOR DELAY N'");
+            state.Buffer.Append(stmt.Delay.ToString("HH:mm:ss"));
+            state.Buffer.Append("'");
+        }
+        private static void VisitWaitforTimeStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (WaitforTimeStatement)statement;
+            state.Append("WAITFOR TIME N'");
+            state.Buffer.Append(stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"));
+            state.Buffer.Append("'");
+        }
+
+        private static void VisitWhileStatement(IStatement statement, VisitorState state)
+        {
+            var stmt = (WhileStatement) statement;
+
+            if (stmt.Condition != null)
+            {
+                state.Buffer.Append("WHILE ");
+                VisitToken(stmt.Condition, false, state);
+
+                if (stmt.Do != null)
+                {
+                    state.Buffer.Append("\r\nBEGIN;\r\n");
+                    VisitStatement(stmt.Do, state);
+                    state.Buffer.Append("\r\nEND;");
+                }
+            }
+        }
+
         private static void VisitType(TypedToken typedToken, VisitorState state)
         {
             if (typedToken.DbType.HasValue)
             {
                 state.Buffer.Append(" ");
-                state.Buffer.Append(DbTypeStrings[(int) typedToken.DbType]);
+                state.Buffer.Append(DbTypeStrings[(int)typedToken.DbType]);
             }
 
             if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
@@ -638,7 +764,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append("(");
                 if (typedToken.Length.HasValue)
                 {
-                    state.Buffer.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString());
+                    state.Buffer.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (typedToken.Precision.HasValue)
                 {
@@ -657,7 +783,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitIfStatement(IStatement statement, VisitorState state)
         {
-            var ifs = (IfStatement) statement;
+            var ifs = (IfStatement)statement;
 
             if (ifs.Condition != null)
             {
@@ -668,13 +794,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     state.Buffer.Append("\r\nBEGIN;\r\n");
                     VisitStatement(ifs.Then, state);
-                    state.Buffer.Append("END;\r\n");
+                    state.Buffer.Append("\r\nEND;");
 
                     if (ifs.Else != null)
                     {
-                        state.Buffer.Append("ELSE\r\nBEGIN;\r\n");
+                        state.Buffer.Append("\r\nELSE\r\nBEGIN;\r\n");
                         VisitStatement(ifs.Else, state);
-                        state.Buffer.Append("END;\r\n");
+                        state.Buffer.Append("\r\nEND;");
                     }
                 }
             }
@@ -682,7 +808,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitDropTableStatement(IStatement statement, VisitorState state)
         {
-            var s = (DropTableStatement) statement;
+            var s = (DropTableStatement)statement;
 
             var tableName = ((s.IsTemporary) ? GetTempTableName(s.Name) : s.Name).FullName;
 
@@ -700,7 +826,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitCreateTableStatement(IStatement statement, VisitorState state)
         {
-            var createStatement = (CreateTableStatement) statement;
+            var createStatement = (CreateTableStatement)statement;
 
             if (createStatement.IsTableVariable)
             {
@@ -829,7 +955,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitCommentStatement(IStatement statement, VisitorState state)
         {
-            var commentStatement = (CommentStatement) statement;
+            var commentStatement = (CommentStatement)statement;
 
             state.Buffer.Append(" /* ");
 
@@ -840,7 +966,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitStringifyStatement(IStatement statement, VisitorState state)
         {
-            var commentStatement = (StringifyStatement) statement;
+            var commentStatement = (StringifyStatement)statement;
 
             state.Buffer.Append("N'");
 
@@ -860,13 +986,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitSnippetStatement(IStatement statement, VisitorState state)
         {
-            var snippetStatement = (SnippetStatement) statement;
+            var snippetStatement = (SnippetStatement)statement;
             state.Buffer.Append(snippetStatement.Value);
         }
 
         private static void VisitCreateIndexStatement(IStatement statement, VisitorState state)
         {
-            var createIndexStatement = (CreateIndexStatement) statement;
+            var createIndexStatement = (CreateIndexStatement)statement;
 
             state.Buffer.Append("CREATE");
 
@@ -923,7 +1049,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private static void VisitAlterIndexStatement
             (IStatement statement, VisitorState state)
         {
-            var alterStatement = (AlterIndexStatement) statement;
+            var alterStatement = (AlterIndexStatement)statement;
 
             state.Buffer.Append("ALTER INDEX ");
 
@@ -982,7 +1108,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitDropIndexStatement(IStatement statement, VisitorState state)
         {
-            var dropIndexStatement = (DropIndexStatement) statement;
+            var dropIndexStatement = (DropIndexStatement)statement;
 
             state.Buffer.Append("DROP INDEX ");
             VisitToken(dropIndexStatement.Name, false, state);
@@ -1018,7 +1144,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 foreach (var join in list)
                 {
-                    state.Buffer.Append(JoinStrings[(int) join.Type]);
+                    state.Buffer.Append(JoinStrings[(int)join.Type]);
                     VisitToken(join.Source, true, state);
 
                     if (join.On != null)
@@ -1155,7 +1281,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitScalarToken(Token token, VisitorState state)
         {
-            var value = ((Scalar) token).Value;
+            var value = ((Scalar)token).Value;
 
             if (value == null) return;
 
@@ -1178,6 +1304,24 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 state.Buffer.Append(value);
             }
+            else if (value is TimeSpan)
+            {
+                state.Buffer.Append("N'");
+                state.Buffer.Append(((TimeSpan)value).ToString("HH:mm:ss"));
+                state.Buffer.Append("'");
+            }
+            else if (value is DateTime)
+            {
+                state.Buffer.Append("N'");
+                state.Buffer.Append(((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Buffer.Append("'");
+            }
+            else if (value is DateTimeOffset)
+            {
+                state.Buffer.Append("N'");
+                state.Buffer.Append(((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Buffer.Append("'");
+            }
             else
             {
                 state.Buffer.Append("N'" + value + "'");
@@ -1186,7 +1330,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitStatementToken(Token token, VisitorState state)
         {
-            var value = ((IStatement) token);
+            var value = ((IStatement)token);
 
             state.Buffer.Append("(");
             VisitStatement(value, state);
@@ -1195,25 +1339,25 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitNameToken(Token token, VisitorState state)
         {
-            var value = ((Name) token).FullName;
+            var value = ((Name)token).FullName;
             state.Buffer.Append(value);
         }
 
         private static void VisitParameterToken(Token token, VisitorState state)
         {
-            var value = ((Parameter) token);
+            var value = ((Parameter)token);
             state.Buffer.Append(value.Name);
         }
 
         private static void VisitSnippetToken(Token token, VisitorState state)
         {
-            var value = ((Snippet) token).Value;
+            var value = ((Snippet)token).Value;
             state.Buffer.Append(value);
         }
 
         private static void VisitFunctionToken(Token token, VisitorState state)
         {
-            var value = ((Function) token);
+            var value = ((Function)token);
             state.Buffer.Append(" ");
             state.Buffer.Append(value.Name);
 
@@ -1222,7 +1366,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitBinaryToken(Token token, VisitorState state, string operation)
         {
-            var value = (BinaryToken) token;
+            var value = (BinaryToken)token;
             VisitToken(value.First, false, state);
             state.Buffer.Append(operation);
             VisitToken(value.Second, false, state);
@@ -1271,14 +1415,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private static void VisitAllToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" ALL ");
-            var value = (AllToken) token;
+            var value = (AllToken)token;
             VisitToken(value.Token, false, state);
         }
 
         private static void VisitAnyToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" ANY ");
-            var value = (AnyToken) token;
+            var value = (AnyToken)token;
             VisitToken(value.Token, false, state);
         }
 
@@ -1294,47 +1438,47 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitPlusToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? PlusEqVal : PlusVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? PlusEqVal : PlusVal);
         }
 
         private static void VisitMinusToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? MinusEqVal : MinusVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MinusEqVal : MinusVal);
         }
 
         private static void VisitDivideToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? DivideEqVal : DivideVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? DivideEqVal : DivideVal);
         }
 
         private static void VisitModuloToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? ModuloEqVal : ModuloVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? ModuloEqVal : ModuloVal);
         }
 
         private static void VisitMultiplyToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? MultiplyEqVal : MultiplyVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MultiplyEqVal : MultiplyVal);
         }
 
         private static void VisitBitwiseAndToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? BitwiseAndEqVal : BitwiseAndVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseAndEqVal : BitwiseAndVal);
         }
 
         private static void VisitBitwiseOrToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? BitwiseOrEqVal : BitwiseOrVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseOrEqVal : BitwiseOrVal);
         }
 
         private static void VisitBitwiseXorToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? BitwiseXorEqVal : BitwiseXorVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseXorEqVal : BitwiseXorVal);
         }
 
         private static void VisitBitwiseNotToken(Token token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken) token).Equal ? BitwiseNotEqVal : BitwiseNotVal);
+            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseNotEqVal : BitwiseNotVal);
         }
 
         private static void VisitAssignToken(Token token, VisitorState state)
@@ -1344,7 +1488,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitLikeToken(Token token, VisitorState state)
         {
-            var value = (BinaryToken) token;
+            var value = (BinaryToken)token;
             VisitToken(value.First, false, state);
             state.Buffer.Append(" LIKE ");
             VisitToken(value.Second, false, state);
@@ -1352,7 +1496,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitContainsToken(Token token, VisitorState state)
         {
-            var value = (BinaryToken) token;
+            var value = (BinaryToken)token;
             VisitToken(value.First, false, state);
             state.Buffer.Append(" LIKE '%' + ");
             VisitToken(value.Second, false, state);
@@ -1361,7 +1505,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitStartsWithToken(Token token, VisitorState state)
         {
-            var value = (BinaryToken) token;
+            var value = (BinaryToken)token;
             VisitToken(value.First, false, state);
             state.Buffer.Append(" LIKE ");
             VisitToken(value.Second, false, state);
@@ -1370,7 +1514,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitEndsWithToken(Token token, VisitorState state)
         {
-            var value = (BinaryToken) token;
+            var value = (BinaryToken)token;
             VisitToken(value.First, false, state);
             state.Buffer.Append(" LIKE '%' + ");
             VisitToken(value.Second, false, state);
@@ -1379,7 +1523,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private static void VisitGroupToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" (");
-            var value = (GroupToken) token;
+            var value = (GroupToken)token;
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" )");
         }
@@ -1387,35 +1531,35 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private static void VisitExistsToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" EXISTS ");
-            var value = (ExistsToken) token;
+            var value = (ExistsToken)token;
             VisitToken(value.Token, false, state);
         }
 
         private static void VisitNotToken(Token token, VisitorState state)
         {
             state.Buffer.Append(" NOT (");
-            var value = (NotToken) token;
+            var value = (NotToken)token;
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" )");
         }
 
         private static void VisitIsNullToken(Token token, VisitorState state)
         {
-            var value = (IsNullToken) token;
+            var value = (IsNullToken)token;
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" IS NULL");
         }
 
         private static void VisitIsNotNullToken(Token token, VisitorState state)
         {
-            var value = (IsNotNullToken) token;
+            var value = (IsNotNullToken)token;
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" IS NOT NULL");
         }
 
         private static void VisitBetweenToken(Token token, VisitorState state)
         {
-            var value = (BetweenToken) token;
+            var value = (BetweenToken)token;
 
             VisitToken(value.Token, false, state);
             state.Buffer.Append(" BETWEEN");
@@ -1426,7 +1570,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitInToken(Token token, VisitorState state)
         {
-            var value = (InToken) token;
+            var value = (InToken)token;
 
             VisitToken(value.Token, false, state);
             VisitTokenSet(" IN (", ", ", ")", value.Set, false, state);
@@ -1434,7 +1578,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitNotInToken(Token token, VisitorState state)
         {
-            var value = (NotInToken) token;
+            var value = (NotInToken)token;
 
             VisitToken(value.Token, false, state);
             VisitTokenSet(" NOT IN (", ", ", ")", value.Set, false, state);
@@ -1460,7 +1604,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitCommentToken(Token token, VisitorState state)
         {
-            var commentToken = (CommentToken) token;
+            var commentToken = (CommentToken)token;
 
             state.Buffer.Append(" /* ");
 
@@ -1472,7 +1616,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitStringifyToken(Token token, VisitorState state)
         {
-            var strToken = (StringifyToken) token;
+            var strToken = (StringifyToken)token;
 
             state.Buffer.Append("N'");
 

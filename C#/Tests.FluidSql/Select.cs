@@ -513,7 +513,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION;\r\nCOMMIT TRANSACTION;\r\n", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
         }
 
         [TestMethod]
@@ -528,7 +528,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION;\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;\r\n", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION;\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
 
         }
         [TestMethod]
@@ -543,7 +543,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK 'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;\r\n", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK 'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
 
         }
         [TestMethod]
@@ -558,7 +558,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION [t];\r\nSAVE TRANSACTION [s];\r\nROLLBACK TRANSACTION [s];\r\nCOMMIT TRANSACTION [t];\r\n", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION [t];\r\nSAVE TRANSACTION [s];\r\nROLLBACK TRANSACTION [s];\r\nCOMMIT TRANSACTION [t];", command.CommandText);
 
         }
 
@@ -574,7 +574,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION @t;\r\nSAVE TRANSACTION @s;\r\nROLLBACK TRANSACTION @s;\r\nCOMMIT TRANSACTION @t;\r\n", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION @t;\r\nSAVE TRANSACTION @s;\r\nROLLBACK TRANSACTION @s;\r\nCOMMIT TRANSACTION @t;", command.CommandText);
 
         }
 
@@ -600,7 +600,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS((SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name))\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  EXISTS((SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name))\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;", command.CommandText);
         }
 
 
@@ -646,7 +646,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -658,7 +658,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -670,7 +670,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -681,7 +681,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
         //[TestMethod]
         //public void CreateTable()
@@ -704,7 +704,60 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfBreak()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Break);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nBREAK;\r\nEND;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfThrow()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Throw(123,"123",1));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, N'123', 1;\r\nEND;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void IfThrow2()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Throw(Sql.Scalar(123), Sql.Name("@fooMsg"), Sql.Scalar(1)));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, @fooMsg, 1;\r\nEND;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void IfContinue()
+        {
+            var statement =
+                Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
+                    .Then(Sql.Continue);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nCONTINUE;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -717,7 +770,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ALL (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\n", command.CommandText);
+            Assert.AreEqual("IF 3 <  ALL (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
 
@@ -745,6 +798,83 @@ namespace FluidSqlTests
 
 
 
+        }
+
+        [TestMethod]
+        public void GotoLabel()
+        {
+            var statement =
+                Sql.Statements(
+                    Sql.Goto("foo"),
+                    Sql.Select.Output(Sql.Scalar(1)),
+                    Sql.Label("foo"),
+                    Sql.Select.Output(Sql.Scalar(2)));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("GOTO foo;\r\nSELECT 1;\r\nfoo:\r\nSELECT 2;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Return()
+        {
+            var statement =
+                Sql.Return();
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("RETURN;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Return2()
+        {
+            var statement =
+                Sql.Return(2);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("RETURN 2;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ReturnVar()
+        {
+            var statement =
+                Sql.Return(Sql.Name("@var"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("RETURN @var;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void TryCatch()
+        {
+            var statement =
+                Sql.Try(Sql.Select.Output(Sql.Scalar(1))).Catch(Sql.Throw());
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("BEGIN TRY\r\nSELECT 1;\r\nEND TRY\r\nBEGIN CATCH\r\nTHROW;\r\nEND CATCH;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void While()
+        {
+            var statement =
+                Sql.While(Sql.Name("@i").Less(Sql.Scalar(10))).Do(Sql.Set("@i", Sql.Name("@i").Plus(Sql.Scalar(1))));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("WHILE @i < 10\r\nBEGIN;\r\nSET @i = @i + 1;\r\nEND;", command.CommandText);
         }
     }
 }

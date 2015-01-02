@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace TTRider.FluidSql
 {
-    public class Sql
+    public partial class Sql
     {
         private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|((?<name>[^\.]*)\.?)",
             RegexOptions.Compiled);
@@ -113,28 +113,6 @@ namespace TTRider.FluidSql
             return new Scalar {Value = value};
         }
 
-        public static Function Function(string name, params Token[] arguments)
-        {
-            var f = new Function
-            {
-                Name = name
-            };
-            f.Arguments.AddRange(arguments);
-            return f;
-        }
-
-        public static Function Function(string name, IEnumerable<Token> arguments)
-        {
-            var f = new Function
-            {
-                Name = name
-            };
-            if (arguments != null)
-            {
-                f.Arguments.AddRange(arguments);
-            }
-            return f;
-        }
 
         public static Token Group(Token value)
         {
@@ -422,6 +400,7 @@ namespace TTRider.FluidSql
         {
             get { return new InsertStatement(); }
         }
+
         public static MergeStatement Merge
         {
             get { return new MergeStatement(); }
@@ -598,6 +577,86 @@ namespace TTRider.FluidSql
         public static CommentStatement Comment(IStatement statement)
         {
             return new CommentStatement {Content = statement};
+        }
+
+        public static BreakStatement Break
+        {
+            get { return new BreakStatement(); }
+        }
+
+        public static ContinueStatement Continue
+        {
+            get { return new ContinueStatement(); }
+        }
+
+        public static GotoStatement Goto(string label)
+        {
+            return new GotoStatement
+            {
+                Label = label
+            };
+        }
+        public static LabelStatement Label(string label)
+        {
+            return new LabelStatement
+            {
+                Label = label
+            };
+        }
+
+
+        public static ReturnStatement Return(int value)
+        {
+            return new ReturnStatement
+            {
+                ReturnExpression = Sql.Scalar(value)
+            };
+        }
+        public static ReturnStatement Return(Token value = null)
+        {
+            return new ReturnStatement
+            {
+                ReturnExpression = value
+            };
+        }
+
+        public static ThrowStatement Throw()
+        {
+            return new ThrowStatement();
+        }
+        public static ThrowStatement Throw(int errorNumber, string message, int state)
+        {
+            return new ThrowStatement
+            {
+                ErrorNumber = Sql.Scalar(errorNumber),
+                Message = Sql.Scalar(message),
+                State = Sql.Scalar(state)
+            };
+        }
+        public static ThrowStatement Throw(Token errorNumber, Token message, Token state)
+        {
+            return new ThrowStatement
+            {
+                ErrorNumber = errorNumber,
+                Message = message,
+                State = state
+            };
+        }
+
+        public static TryCatchStatement Try(IStatement tryStatement)
+        {
+            return new TryCatchStatement
+            {
+                TryStatement = tryStatement
+            };
+        }
+
+        public static WhileStatement While(Token condition)
+        {
+            return new WhileStatement
+            {
+                Condition = condition
+            };
         }
 
         #endregion Statements

@@ -20,7 +20,7 @@ namespace TTRider.FluidSql
 
             if (parameterCollection.Contains(parameterName))
             {
-                ((DbParameter) parameterCollection[parameterName]).Value = value;
+                ((DbParameter)parameterCollection[parameterName]).Value = value;
             }
 
             return parameterCollection;
@@ -33,7 +33,7 @@ namespace TTRider.FluidSql
         }
 
         public static T As<T>(this T token, string alias)
-            where T:Token
+            where T : Token
         {
             token.Alias = alias;
             return token;
@@ -71,14 +71,14 @@ namespace TTRider.FluidSql
         public static T Assign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new AssignToken {First = target, Second = expression});
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
             return statement;
         }
 
         public static T Set<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new AssignToken {First = target, Second = expression});
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
             return statement;
         }
 
@@ -91,63 +91,63 @@ namespace TTRider.FluidSql
         public static T PlusAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new PlusToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new PlusToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T MinusAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new MinusToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new MinusToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T DivideAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new DivideToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new DivideToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T BitwiseAndAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new BitwiseAndToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new BitwiseAndToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T BitwiseOrAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new BitwiseOrToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new BitwiseOrToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T BitwiseXorAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new BitwiseXorToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new BitwiseXorToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T ModuloAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new ModuloToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new ModuloToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
         public static T MultiplyAssign<T>(this T statement, Name target, Token expression)
             where T : ISetStatement
         {
-            statement.Set.Add(new MultiplyToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
 
         public static SelectStatement BitwiseNotAssign(this SelectStatement statement, Name target, Token expression)
         {
-            statement.Set.Add(new BitwiseNotToken {First = target, Second = expression, Equal = true});
+            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
@@ -310,14 +310,14 @@ namespace TTRider.FluidSql
         }
 
 
-        public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null )
+        public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null)
         {
             statement.WhenMatched.Add(new WhenMatchedThenDelete
             {
                 AndCondition = andCondition
             });
             return statement;
-        } 
+        }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
             var wm = new WhenMatchedThenUpdateSet();
@@ -596,7 +596,7 @@ namespace TTRider.FluidSql
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
-                        : ((column is Name) ? ((Name) column).Parts.Last() : null)) // or the LAST PART of the name
+                        : ((column is Name) ? ((Name)column).Parts.Last() : null)) // or the LAST PART of the name
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Select(name => Sql.Name(alias, name)));
         }
@@ -676,333 +676,333 @@ namespace TTRider.FluidSql
 
         public static Token IsEqual(this Token first, Token second)
         {
-            return new IsEqualsToken {First = first, Second = second};
+            return new IsEqualsToken { First = first, Second = second };
         }
 
         public static Token NotEqual(this Token first, Token second)
         {
-            return new NotEqualToken {First = first, Second = second};
+            return new NotEqualToken { First = first, Second = second };
         }
 
         public static Token Less(this Token first, Token second)
         {
-            return new LessToken {First = first, Second = second};
+            return new LessToken { First = first, Second = second };
         }
 
         public static Token NotLess(this Token first, Token second)
         {
-            return new NotLessToken {First = first, Second = second};
+            return new NotLessToken { First = first, Second = second };
         }
 
         public static Token LessOrEqual(this Token first, Token second)
         {
-            return new LessOrEqualToken {First = first, Second = second};
+            return new LessOrEqualToken { First = first, Second = second };
         }
 
         public static Token Greater(this Token first, Token second)
         {
-            return new GreaterToken {First = first, Second = second};
+            return new GreaterToken { First = first, Second = second };
         }
 
         public static Token NotGreater(this Token first, Token second)
         {
-            return new NotGreaterToken {First = first, Second = second};
+            return new NotGreaterToken { First = first, Second = second };
         }
 
         public static Token GreaterOrEqual(this Token first, Token second)
         {
-            return new GreaterOrEqualToken {First = first, Second = second};
+            return new GreaterOrEqualToken { First = first, Second = second };
         }
 
         public static Token And(this Token first, Token second)
         {
-            return new AndToken {First = first, Second = second};
+            return new AndToken { First = first, Second = second };
         }
 
         public static Token Or(this Token first, Token second)
         {
-            return new OrToken {First = first, Second = second};
+            return new OrToken { First = first, Second = second };
         }
 
         public static Token PlusEqual(this Token first, Token second)
         {
-            return new PlusToken {First = first, Second = second, Equal = true};
+            return new PlusToken { First = first, Second = second, Equal = true };
         }
 
         public static Token MinusEqual(this Token first, Token second)
         {
-            return new MinusToken {First = first, Second = second, Equal = true};
+            return new MinusToken { First = first, Second = second, Equal = true };
         }
 
         public static Token DivideEqual(this Token first, Token second)
         {
-            return new DivideToken {First = first, Second = second, Equal = true};
+            return new DivideToken { First = first, Second = second, Equal = true };
         }
 
         public static Token BitwiseAndEqual(this Token first, Token second)
         {
-            return new BitwiseAndToken {First = first, Second = second, Equal = true};
+            return new BitwiseAndToken { First = first, Second = second, Equal = true };
         }
 
         public static Token BitwiseOrEqual(this Token first, Token second)
         {
-            return new BitwiseOrToken {First = first, Second = second, Equal = true};
+            return new BitwiseOrToken { First = first, Second = second, Equal = true };
         }
 
         public static Token BitwiseXorEqual(this Token first, Token second)
         {
-            return new BitwiseXorToken {First = first, Second = second, Equal = true};
+            return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
 
         public static Token BitwiseNotEqual(this Token first, Token second)
         {
-            return new BitwiseNotToken {First = first, Second = second, Equal = true};
+            return new BitwiseNotToken { First = first, Second = second, Equal = true };
         }
 
         public static Token ModuloEqual(this Token first, Token second)
         {
-            return new ModuloToken {First = first, Second = second, Equal = true};
+            return new ModuloToken { First = first, Second = second, Equal = true };
         }
 
         public static Token MultiplyEqual(this Token first, Token second)
         {
-            return new MultiplyToken {First = first, Second = second, Equal = true};
+            return new MultiplyToken { First = first, Second = second, Equal = true };
         }
 
         public static Token Plus(this Token first, Token second)
         {
-            return new PlusToken {First = first, Second = second};
+            return new PlusToken { First = first, Second = second };
         }
 
         public static Token Minus(this Token first, Token second)
         {
-            return new MinusToken {First = first, Second = second};
+            return new MinusToken { First = first, Second = second };
         }
 
         public static Token Divide(this Token first, Token second)
         {
-            return new DivideToken {First = first, Second = second};
+            return new DivideToken { First = first, Second = second };
         }
 
         public static Token BitwiseAnd(this Token first, Token second)
         {
-            return new BitwiseAndToken {First = first, Second = second};
+            return new BitwiseAndToken { First = first, Second = second };
         }
 
         public static Token BitwiseOr(this Token first, Token second)
         {
-            return new BitwiseOrToken {First = first, Second = second};
+            return new BitwiseOrToken { First = first, Second = second };
         }
 
         public static Token BitwiseXor(this Token first, Token second)
         {
-            return new BitwiseXorToken {First = first, Second = second};
+            return new BitwiseXorToken { First = first, Second = second };
         }
 
         public static Token BitwiseNot(this Token first, Token second)
         {
-            return new BitwiseNotToken {First = first, Second = second};
+            return new BitwiseNotToken { First = first, Second = second };
         }
 
         [Obsolete]
         public static Token Module(this Token first, Token second)
         {
-            return new ModuloToken {First = first, Second = second};
+            return new ModuloToken { First = first, Second = second };
         }
 
         public static Token Modulo(this Token first, Token second)
         {
-            return new ModuloToken {First = first, Second = second};
+            return new ModuloToken { First = first, Second = second };
         }
 
         public static Token Multiply(this Token first, Token second)
         {
-            return new MultiplyToken {First = first, Second = second};
+            return new MultiplyToken { First = first, Second = second };
         }
 
 
         public static Token IsEqual(this Token first, string second)
         {
-            return new IsEqualsToken {First = first, Second = Sql.Name(second)};
+            return new IsEqualsToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token NotEqual(this Token first, string second)
         {
-            return new NotEqualToken {First = first, Second = Sql.Name(second)};
+            return new NotEqualToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Less(this Token first, string second)
         {
-            return new LessToken {First = first, Second = Sql.Name(second)};
+            return new LessToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token NotLess(this Token first, string second)
         {
-            return new NotLessToken {First = first, Second = Sql.Name(second)};
+            return new NotLessToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token LessOrEqual(this Token first, string second)
         {
-            return new LessOrEqualToken {First = first, Second = Sql.Name(second)};
+            return new LessOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Greater(this Token first, string second)
         {
-            return new GreaterToken {First = first, Second = Sql.Name(second)};
+            return new GreaterToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token NotGreater(this Token first, string second)
         {
-            return new NotGreaterToken {First = first, Second = Sql.Name(second)};
+            return new NotGreaterToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token GreaterOrEqual(this Token first, string second)
         {
-            return new GreaterOrEqualToken {First = first, Second = Sql.Name(second)};
+            return new GreaterOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token And(this Token first, string second)
         {
-            return new AndToken {First = first, Second = Sql.Name(second)};
+            return new AndToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Or(this Token first, string second)
         {
-            return new OrToken {First = first, Second = Sql.Name(second)};
+            return new OrToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token PlusEqual(this Token first, string second)
         {
-            return new PlusToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new PlusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token MinusEqual(this Token first, string second)
         {
-            return new MinusToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new MinusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token DivideEqual(this Token first, string second)
         {
-            return new DivideToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new DivideToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token BitwiseAndEqual(this Token first, string second)
         {
-            return new BitwiseAndToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new BitwiseAndToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token BitwiseOrEqual(this Token first, string second)
         {
-            return new BitwiseOrToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new BitwiseOrToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token BitwiseXorEqual(this Token first, string second)
         {
-            return new BitwiseXorToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new BitwiseXorToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token BitwiseNotEqual(this Token first, string second)
         {
-            return new BitwiseNotToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token ModuloEqual(this Token first, string second)
         {
-            return new ModuloToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new ModuloToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token MultiplyEqual(this Token first, string second)
         {
-            return new MultiplyToken {First = first, Second = Sql.Name(second), Equal = true};
+            return new MultiplyToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
         public static Token Plus(this Token first, string second)
         {
-            return new PlusToken {First = first, Second = Sql.Name(second)};
+            return new PlusToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Minus(this Token first, string second)
         {
-            return new MinusToken {First = first, Second = Sql.Name(second)};
+            return new MinusToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Divide(this Token first, string second)
         {
-            return new DivideToken {First = first, Second = Sql.Name(second)};
+            return new DivideToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token BitwiseAnd(this Token first, string second)
         {
-            return new BitwiseAndToken {First = first, Second = Sql.Name(second)};
+            return new BitwiseAndToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token BitwiseOr(this Token first, string second)
         {
-            return new BitwiseOrToken {First = first, Second = Sql.Name(second)};
+            return new BitwiseOrToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token BitwiseXor(this Token first, string second)
         {
-            return new BitwiseXorToken {First = first, Second = Sql.Name(second)};
+            return new BitwiseXorToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token BitwiseNot(this Token first, string second)
         {
-            return new BitwiseNotToken {First = first, Second = Sql.Name(second)};
+            return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Modulo(this Token first, string second)
         {
-            return new ModuloToken {First = first, Second = Sql.Name(second)};
+            return new ModuloToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Multiply(this Token first, string second)
         {
-            return new MultiplyToken {First = first, Second = Sql.Name(second)};
+            return new MultiplyToken { First = first, Second = Sql.Name(second) };
         }
 
         public static Token Group(this Token token)
         {
-            return new GroupToken {Token = token};
+            return new GroupToken { Token = token };
         }
 
         public static Token Not(this Token token)
         {
-            return new NotToken {Token = token};
+            return new NotToken { Token = token };
         }
 
         public static Token IsNull(this Token token)
         {
-            return new IsNullToken {Token = token};
+            return new IsNullToken { Token = token };
         }
 
         public static Token IsNotNull(this Token token)
         {
-            return new IsNotNullToken {Token = token};
+            return new IsNotNullToken { Token = token };
         }
 
         public static Token Between(this Token token, Token first, Token second)
         {
-            return new BetweenToken {Token = token, First = first, Second = second};
+            return new BetweenToken { Token = token, First = first, Second = second };
         }
 
         public static Token In(this Token token, params Token[] tokens)
         {
-            var value = new InToken {Token = token};
+            var value = new InToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
         public static Token NotIn(this Token token, params Token[] tokens)
         {
-            var value = new NotInToken {Token = token};
+            var value = new NotInToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
         public static Token In(this Token token, IEnumerable<Token> tokens)
         {
-            var value = new InToken {Token = token};
+            var value = new InToken { Token = token };
             if (tokens != null)
             {
                 value.Set.AddRange(tokens);
@@ -1012,7 +1012,7 @@ namespace TTRider.FluidSql
 
         public static Token NotIn(this Token token, IEnumerable<Token> tokens)
         {
-            var value = new NotInToken {Token = token};
+            var value = new NotInToken { Token = token };
             if (tokens != null)
             {
                 value.Set.AddRange(tokens);
@@ -1022,22 +1022,22 @@ namespace TTRider.FluidSql
 
         public static Token Contains(this Token first, Token second)
         {
-            return new ContainsToken {First = first, Second = second};
+            return new ContainsToken { First = first, Second = second };
         }
 
         public static Token StartsWith(this Token first, Token second)
         {
-            return new StartsWithToken {First = first, Second = second};
+            return new StartsWithToken { First = first, Second = second };
         }
 
         public static Token EndsWith(this Token first, Token second)
         {
-            return new EndsWithToken {First = first, Second = second};
+            return new EndsWithToken { First = first, Second = second };
         }
 
         public static Token Like(this Token first, Token second)
         {
-            return new LikeToken {First = first, Second = second};
+            return new LikeToken { First = first, Second = second };
         }
 
 
@@ -1075,22 +1075,22 @@ namespace TTRider.FluidSql
 
         public static CommentStatement CommentOut(this IStatement statement)
         {
-            return new CommentStatement {Content = statement};
+            return new CommentStatement { Content = statement };
         }
 
         public static CommentToken CommentOut(this Token token)
         {
-            return new CommentToken {Content = token};
+            return new CommentToken { Content = token };
         }
 
         public static StringifyStatement Stringify(this IStatement statement)
         {
-            return new StringifyStatement {Content = statement};
+            return new StringifyStatement { Content = statement };
         }
 
         public static StringifyToken Stringify(this Token token)
         {
-            return new StringifyToken {Content = token};
+            return new StringifyToken { Content = token };
         }
 
         public static InsertStatement DefaultValues(this InsertStatement statement, bool useDefaultValues = true)
@@ -1146,7 +1146,7 @@ namespace TTRider.FluidSql
 
         public static InsertStatement Values(this InsertStatement statement, params object[] values)
         {
-            statement.Values.Add(values.Select(value => (Token) Sql.Scalar(value)).ToArray());
+            statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
             return statement;
         }
 
@@ -1154,7 +1154,7 @@ namespace TTRider.FluidSql
         {
             if (values != null)
             {
-                statement.Values.Add(values.Select(value => (Token) Sql.Scalar(value)).ToArray());
+                statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
             }
             return statement;
         }
@@ -1307,6 +1307,30 @@ namespace TTRider.FluidSql
             column.RowGuid = true;
             return column;
         }
+
+        public static TryCatchStatement Catch(this TryCatchStatement statement, IStatement catchStatement)
+        {
+            statement.CatchStatement = catchStatement;
+            return statement;
+        }
+
+        public static WhileStatement Do(this WhileStatement statement, params IStatement[] statements)
+        {
+            statement.Do = new StatementsStatement();
+            statement.Do.Statements.AddRange(statements);
+            return statement;
+        }
+
+        public static WhileStatement Do(this WhileStatement statement, IEnumerable<IStatement> statements)
+        {
+            statement.Do = new StatementsStatement();
+            if (statements != null)
+            {
+                statement.Do.Statements.AddRange(statements);
+            }
+            return statement;
+        }
+
 
         #region PrimaryKey
 
@@ -1493,7 +1517,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name,
             params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = Sql.Name(name)};
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
             return statement;
@@ -1502,7 +1526,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = Sql.Name(name)};
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
 
             if (columns != null)
             {
@@ -1515,7 +1539,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name,
             params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = name};
+            var index = new ConstrainDefinition { Clustered = false, Name = name };
 
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
@@ -1525,7 +1549,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = name};
+            var index = new ConstrainDefinition { Clustered = false, Name = name };
 
             if (columns != null)
             {
@@ -1538,7 +1562,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name,
             bool clustered, params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = Sql.Name(name)};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name(name) };
 
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
@@ -1548,7 +1572,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, string name,
             bool clustered, IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = Sql.Name(name)};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name(name) };
 
             if (columns != null)
             {
@@ -1561,7 +1585,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name,
             bool clustered, params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = name};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = name };
 
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
@@ -1571,7 +1595,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, Name name,
             bool clustered, IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = name};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = name };
 
             if (columns != null)
             {
@@ -1583,7 +1607,7 @@ namespace TTRider.FluidSql
 
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = Sql.Name("UC_" + statement.Name)};
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name) };
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
             return statement;
@@ -1592,7 +1616,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = false, Name = Sql.Name("UC_" + statement.Name)};
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name) };
 
             if (columns != null)
             {
@@ -1605,7 +1629,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered,
             params Order[] columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = Sql.Name("UC_" + statement.Name)};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
 
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
@@ -1615,7 +1639,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition {Clustered = clustered, Name = Sql.Name("UC_" + statement.Name)};
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
 
             if (columns != null)
             {
@@ -1665,7 +1689,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name,
             params Order[] columns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             index.Columns.AddRange(columns);
             statement.Indicies.Add(index);
             return statement;
@@ -1674,7 +1698,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name,
             IEnumerable<Order> columns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
@@ -1708,7 +1732,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name,
             IEnumerable<Order> columns, IEnumerable<string> includeColumns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
@@ -1746,7 +1770,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement IndexOn(this CreateTableStatement statement, Name name,
             IEnumerable<Order> columns, IEnumerable<Name> includeColumns)
         {
-            var index = new CreateIndexStatement {Clustered = false, Name = name, On = statement.Name, Unique = false};
+            var index = new CreateIndexStatement { Clustered = false, Name = name, On = statement.Name, Unique = false };
             if (columns != null)
             {
                 index.Columns.AddRange(columns);
