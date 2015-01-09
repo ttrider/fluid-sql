@@ -4,7 +4,7 @@ fluid-sql
 
 Release Notes
 ==
-0.0.22.0
+0.0.22.1
 --
 * Support for WHILE, BREAK AND CONTINUE
 * Support for GOTO

@@ -1566,9 +1566,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var value = (BetweenToken)token;
 
             VisitToken(value.Token, false, state);
-            state.Buffer.Append(" BETWEEN");
+            state.Buffer.Append(" BETWEEN ");
             VisitToken(value.First, false, state);
-            state.Buffer.Append(" AND");
+            state.Buffer.Append(" AND ");
             VisitToken(value.Second, false, state);
         }
 
