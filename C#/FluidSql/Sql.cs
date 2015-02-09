@@ -10,8 +10,7 @@ namespace TTRider.FluidSql
 {
     public partial class Sql
     {
-        private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|((?<name>[^\.]*)\.?)",
-            RegexOptions.Compiled);
+        private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|(\`(?<name>[^\`]*)`\.?)|(\""(?<name>[^\""]*)""\.?)|((?<name>[^\.]*)\.?)", RegexOptions.Compiled);
 
         internal static IEnumerable<string> GetParts(string name)
         {
