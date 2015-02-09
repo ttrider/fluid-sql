@@ -236,21 +236,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         internal static Name GetTempTableName(Name name)
         {
-            var namePart = name.Parts.Last();
+            var namePart = name.LastPart;
 
             if (!namePart.StartsWith("#"))
             {
                 namePart = "#" + namePart;
             }
-            var n = Sql.Name("tempdb");
-            n.Parts.Add("");
-            n.Parts.Add(namePart);
-            return n;
+            return Sql.Name("tempdb", "", namePart);
         }
 
         internal static string GetTableVariableName(Name name)
         {
-            var namePart = name.Parts.Last();
+            var namePart = name.LastPart;
 
             if (!namePart.StartsWith("@"))
             {
@@ -458,7 +455,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (into != null)
             {
                 state.Buffer.Append(" INTO ");
-                state.Buffer.Append(into.FullName);
+                state.Buffer.Append(into.GetFullName("[","]"));
             }
         }
 
@@ -563,7 +560,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (statement.Name != null)
             {
                 state.Buffer.Append(" ");
-                state.Buffer.Append(statement.Name.FullName);
+                state.Buffer.Append(statement.Name.GetFullName("[", "]"));
                 return true;
             }
             if (statement.Parameter != null)
@@ -806,7 +803,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var s = (DropTableStatement)statement;
 
-            var tableName = ((s.IsTemporary) ? GetTempTableName(s.Name) : s.Name).FullName;
+            var tableName = ((s.IsTemporary) ? GetTempTableName(s.Name) : s.Name).GetFullName("[", "]");
 
             if (s.CheckExists)
             {
@@ -834,7 +831,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 var tableName =
                     ((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name)
-                        .FullName;
+                        .GetFullName("[", "]");
 
                 if (createStatement.CheckIfNotExists)
                 {
@@ -898,13 +895,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 else
                 {
                     state.Buffer.Append(", CONSTRAINT ");
-                    state.Buffer.Append(createStatement.PrimaryKey.Name.FullName);
+                    state.Buffer.Append(createStatement.PrimaryKey.Name.GetFullName("[", "]"));
                 }
 
                 state.Buffer.Append(" PRIMARY KEY (");
                 state.Buffer.Append(string.Join(", ",
                     createStatement.PrimaryKey.Columns.Select(
-                        n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                        n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
                 state.Buffer.Append(" )");
             }
 
@@ -917,7 +914,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 else
                 {
                     state.Buffer.Append(", CONSTRAINT ");
-                    state.Buffer.Append(unique.Name.FullName);
+                    state.Buffer.Append(unique.Name.GetFullName("[", "]"));
                 }
                 state.Buffer.Append(" UNIQUE");
                 if (unique.Clustered.HasValue)
@@ -925,7 +922,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     state.Buffer.Append(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
                 }
                 state.Buffer.Append(string.Join(", ",
-                    unique.Columns.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                    unique.Columns.Select(n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
                 state.Buffer.Append(" )");
             }
 
@@ -1013,7 +1010,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append(" (");
             state.Buffer.Append(string.Join(", ",
                 createIndexStatement.Columns.Select(
-                    n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                    n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
             state.Buffer.Append(")");
 
             VisitTokenSet(" INCLUDE (", ", ", ")", createIndexStatement.Include, false, state);
@@ -1158,7 +1155,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 state.Buffer.Append(" ORDER BY ");
                 state.Buffer.Append(string.Join(", ",
-                    orderBy.Select(n => n.Column.FullName + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                    orderBy.Select(n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
             }
         }
 
@@ -1167,7 +1164,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (groupBy.Count > 0)
             {
                 state.Buffer.Append(" GROUP BY ");
-                state.Buffer.Append(string.Join(", ", groupBy.Select(n => n.FullName)));
+                state.Buffer.Append(string.Join(", ", groupBy.Select(n => n.GetFullName("[", "]"))));
             }
         }
 
@@ -1187,7 +1184,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            VisitTokenSet(" OUTPUT ", ", ", outputInto == null ? String.Empty : " INTO " + outputInto.FullName, columns,
+            VisitTokenSet(" OUTPUT ", ", ", outputInto == null ? String.Empty : " INTO " + outputInto.GetFullName("[", "]"), columns,
                 true, state);
         }
 
@@ -1343,7 +1340,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitNameToken(Token token, VisitorState state)
         {
-            var value = ((Name)token).FullName;
+            var value = ((Name)token).GetFullName("[", "]");
             state.Buffer.Append(value);
         }
 

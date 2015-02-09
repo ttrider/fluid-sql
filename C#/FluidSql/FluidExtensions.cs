@@ -603,7 +603,7 @@ namespace TTRider.FluidSql
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
-                        : ((column is Name) ? ((Name)column).Parts.Last() : null)) // or the LAST PART of the name
+                        : ((column is Name) ? ((Name)column).LastPart : null)) // or the LAST PART of the name
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Select(name => Sql.Name(alias, name)));
         }

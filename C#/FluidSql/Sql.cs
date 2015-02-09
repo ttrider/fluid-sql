@@ -10,48 +10,14 @@ namespace TTRider.FluidSql
 {
     public partial class Sql
     {
-        private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|(\`(?<name>[^\`]*)`\.?)|(\""(?<name>[^\""]*)""\.?)|((?<name>[^\.]*)\.?)", RegexOptions.Compiled);
-
-        internal static IEnumerable<string> GetParts(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                yield return string.Empty;
-                yield break;
-            }
-            var match = ParseName.Match(name);
-            while (match.Success)
-            {
-                if (match.Length > 0)
-                {
-                    yield return match.Groups["name"].Value;
-                }
-                match = match.NextMatch();
-            }
-        }
-
         public static Name Star(string source = null)
         {
-            var name = new Name();
-
-            if (!String.IsNullOrWhiteSpace(source))
-            {
-                name.Parts.Add(source);
-            }
-            name.Parts.Add("*");
-            return name;
+            return !String.IsNullOrWhiteSpace(source) ? new Name(source, "*") : new Name("*");
         }
 
         public static Name Name(params string[] names)
         {
-            var mpn = new Name();
-
-            foreach (var name in names)
-            {
-                mpn.Parts.AddRange(GetParts(name));
-            }
-
-            return mpn;
+            return new Name(names);
         }
 
         public static Snippet Snippet(string value, params Parameter[] parameters)
