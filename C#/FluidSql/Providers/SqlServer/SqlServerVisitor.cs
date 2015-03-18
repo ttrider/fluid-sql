@@ -177,6 +177,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (WaitforDelayStatement), VisitWaitforDelayStatement},
                 {typeof (WaitforTimeStatement), VisitWaitforTimeStatement},
                 {typeof (WhileStatement), VisitWhileStatement},
+                {typeof (CreateViewStatement), VisitCreateViewStatement},
+                {typeof (AlterViewStatement), VisitAlterViewStatement},
+                {typeof (DropViewStatement), VisitDropViewStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -1126,6 +1129,34 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Buffer.Append(" )");
             }
         }
+
+
+        private static void VisitCreateViewStatement(IStatement statement, VisitorState state)
+        {
+            var createStatement = (CreateViewStatement)statement;
+
+            state.Buffer.Append("CREATE VIEW ");
+            state.Buffer.Append(createStatement.Name.GetFullName("[", "]"));
+            state.Buffer.Append(" AS ");
+            VisitStatement(createStatement.DefinitionQuery, state);
+        }
+
+        private static void VisitDropViewStatement(IStatement statement, VisitorState state)
+        {
+            var dropStatement = (DropViewStatement)statement;
+            state.Buffer.Append("DROP VIEW ");
+            state.Buffer.Append(dropStatement.Name.GetFullName("[", "]"));
+        }
+
+        private static void VisitAlterViewStatement(IStatement statement, VisitorState state)
+        {
+            var alterStatement = (AlterViewStatement)statement;
+            state.Buffer.Append("ALTER VIEW ");
+            state.Buffer.Append(alterStatement.Name.GetFullName("[", "]"));
+            state.Buffer.Append(" AS ");
+            VisitStatement(alterStatement.DefinitionStatement, state);
+        }
+
 
         #endregion Statements
 

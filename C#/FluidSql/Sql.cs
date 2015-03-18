@@ -189,6 +189,7 @@ namespace TTRider.FluidSql
         }
 
 
+
         public static SetStatement Assign(Name target, Token expression)
         {
             return new SetStatement
@@ -532,6 +533,29 @@ namespace TTRider.FluidSql
                 Name = name,
                 IsTableVariable = true
             };
+        }
+
+        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement)
+        {
+            return new CreateViewStatement
+            {
+                Name = name,
+                DefinitionQuery = definitionStatement,
+            };
+        }
+
+        public static AlterViewStatement AlterView(Name name, IStatement definitionStatement)
+        {
+            return new AlterViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement
+            };
+        }
+
+        public static DropViewStatement DropView(Name name)
+        {
+            return new DropViewStatement { Name = name};
         }
 
         public static CommentToken Comment(string comment)

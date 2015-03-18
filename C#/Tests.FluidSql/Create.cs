@@ -108,5 +108,38 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("DECLARE @tbl TABLE ([C1] INT NOT NULL IDENTITY (1, 1), [C2] INT NOT NULL, PRIMARY KEY ([C1] ASC ), UNIQUE NONCLUSTERED ([C2] ASC ));", command.CommandText);
         }
+
+        [TestMethod]
+        public void CreateView()
+        {
+            var statement = Sql.CreateView(Sql.Name("foo"), Sql.Select.From("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("CREATE VIEW [foo] AS SELECT * FROM [bar];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void AlertView()
+        {
+            var statement = Sql.AlterView(Sql.Name("foo"), Sql.Select.From("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("ALTER VIEW [foo] AS SELECT * FROM [bar];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropView()
+        {
+            var statement = Sql.DropView(Sql.Name("foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DROP VIEW [foo];", command.CommandText);
+        }
     }
 }

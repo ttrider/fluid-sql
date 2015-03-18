@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlterIndexStatement.cs" />
+    <Compile Include="AlterViewStatement.cs" />
     <Compile Include="BeginTransactionStatement.cs" />
     <Compile Include="BinaryToken.cs" />
     <Compile Include="BreakStatement.cs" />
@@ -53,11 +54,13 @@
     <Compile Include="CreateTableStatement.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CreateViewStatement.cs" />
     <Compile Include="DeclareStatement.cs" />
     <Compile Include="DeleteStatement.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="DropIndexStatement.cs" />
     <Compile Include="DropTableStatement.cs" />
+    <Compile Include="DropViewStatement.cs" />
     <Compile Include="FluidExtensions.cs" />
     <Compile Include="ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
