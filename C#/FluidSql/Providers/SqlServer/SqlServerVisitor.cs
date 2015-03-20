@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TTRider.FluidSql.Providers.SqlServer
 {
-    public static class SqlServerVisitor
+    public class SqlServerVisitor : Visitor
     {
         private const string EqualsVal = " = ";
         private const string AssignVal = " = ";
@@ -41,7 +41,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
         private const string BitwiseXorEqVal = " ^= ";
         private const string BitwiseNotEqVal = " ~= ";
 
-        private static readonly string[] DbTypeStrings =
+
+        private readonly string[] DbTypeStrings =
         {
             "BIGINT", //BigInt = 0,
             "BINARY", //Binary = 1,      ()
@@ -77,7 +78,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         };
 
 
-        private static readonly string[] JoinStrings =
+        private readonly string[] JoinStrings =
         {
             " INNER JOIN ", //Inner = 0,
             " LEFT OUTER JOIN ", //LeftOuter = 1,
@@ -87,114 +88,116 @@ namespace TTRider.FluidSql.Providers.SqlServer
         };
 
 
-        private static readonly Dictionary<Type, Action<Token, VisitorState>> TokenVisitors =
-            new Dictionary<Type, Action<Token, VisitorState>>
+        private static readonly Dictionary<Type, Action<SqlServerVisitor, Token, VisitorState>> TokenVisitors =
+            new Dictionary<Type, Action<SqlServerVisitor, Token, VisitorState>>
             {
-                {typeof (SelectStatement), VisitStatementToken},
-                {typeof (Union), VisitStatementToken},
-                {typeof (Intersect), VisitStatementToken},
-                {typeof (Except), VisitStatementToken},
-                {typeof (Scalar), VisitScalarToken},
-                {typeof (Name), VisitNameToken},
-                {typeof (Parameter), VisitParameterToken},
-                {typeof (Snippet), VisitSnippetToken},
-                {typeof (Function), VisitFunctionToken},
-                {typeof (IsEqualsToken), VisitIsEqualsToken},
-                {typeof (NotEqualToken), VisitNotEqualToken},
-                {typeof (LessToken), VisitLessToken},
-                {typeof (NotLessToken), VisitNotLessToken},
-                {typeof (LessOrEqualToken), VisitLessOrEqualToken},
-                {typeof (GreaterToken), VisitGreaterToken},
-                {typeof (NotGreaterToken), VisitNotGreaterToken},
-                {typeof (GreaterOrEqualToken), VisitGreaterOrEqualToken},
-                {typeof (AndToken), VisitAndToken},
-                {typeof (OrToken), VisitOrToken},
-                {typeof (PlusToken), VisitPlusToken},
-                {typeof (MinusToken), VisitMinusToken},
-                {typeof (DivideToken), VisitDivideToken},
-                {typeof (ModuloToken), VisitModuloToken},
-                {typeof (MultiplyToken), VisitMultiplyToken},
-                {typeof (BitwiseAndToken), VisitBitwiseAndToken},
-                {typeof (BitwiseOrToken), VisitBitwiseOrToken},
-                {typeof (BitwiseXorToken), VisitBitwiseXorToken},
-                {typeof (BitwiseNotToken), VisitBitwiseNotToken},
-                {typeof (ContainsToken), VisitContainsToken},
-                {typeof (StartsWithToken), VisitStartsWithToken},
-                {typeof (EndsWithToken), VisitEndsWithToken},
-                {typeof (LikeToken), VisitLikeToken},
-                {typeof (GroupToken), VisitGroupToken},
-                {typeof (NotToken), VisitNotToken},
-                {typeof (IsNullToken), VisitIsNullToken},
-                {typeof (IsNotNullToken), VisitIsNotNullToken},
-                {typeof (ExistsToken), VisitExistsToken},
-                {typeof (AllToken), VisitAllToken},
-                {typeof (AnyToken), VisitAnyToken},
-                {typeof (AssignToken), VisitAssignToken},
-                {typeof (BetweenToken), VisitBetweenToken},
-                {typeof (InToken), VisitInToken},
-                {typeof (NotInToken), VisitNotInToken},
-                {typeof (CommentToken), VisitCommentToken},
-                {typeof (StringifyToken), VisitStringifyToken},
-                {typeof (WhenMatchedThenDelete), VisitWhenMatchedThenDelete },
-                {typeof (WhenMatchedThenUpdateSet), VisitWhenMatchedThenUpdateSet },
-                {typeof (WhenNotMatchedThenInsert), VisitWhenNotMatchedThenInsert },
+                {typeof (SelectStatement), (v,t,s)=>v.VisitStatementToken((IStatement)t, s)},
+                {typeof (Union),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
+                {typeof (Intersect),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
+                {typeof (Except),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
+                {typeof (Scalar),(v,t,s)=>v.VisitScalarToken((Scalar)t,s)},
+                {typeof (Name),(v,t,s)=>v.VisitNameToken((Name)t,s)},
+                {typeof (Parameter),(v,t,s)=>v.VisitParameterToken((Parameter)t,s)},
+                {typeof (Snippet),(v,t,s)=>v.VisitSnippetToken((Snippet)t,s)},
+                {typeof (Function),(v,t,s)=>v.VisitFunctionToken((Function)t,s)},
+                {typeof (IsEqualsToken),(v,t,s)=>v.VisitIsEqualsToken((IsEqualsToken)t,s)},
+                {typeof (NotEqualToken),(v,t,s)=>v.VisitNotEqualToken((NotEqualToken)t,s)},
+                {typeof (LessToken),(v,t,s)=>v.VisitLessToken((LessToken)t,s)},
+                {typeof (NotLessToken),(v,t,s)=>v.VisitNotLessToken((NotLessToken)t,s)},
+                {typeof (LessOrEqualToken),(v,t,s)=>v.VisitLessOrEqualToken((LessOrEqualToken)t,s)},
+                {typeof (GreaterToken),(v,t,s)=>v.VisitGreaterToken((GreaterToken)t,s)},
+                {typeof (NotGreaterToken),(v,t,s)=>v.VisitNotGreaterToken((NotGreaterToken)t,s)},
+                {typeof (GreaterOrEqualToken),(v,t,s)=>v.VisitGreaterOrEqualToken((GreaterOrEqualToken)t,s)},
+                {typeof (AndToken),(v,t,s)=>v.VisitAndToken((AndToken)t,s)},
+                {typeof (OrToken),(v,t,s)=>v.VisitOrToken((OrToken)t,s)},
+                {typeof (PlusToken),(v,t,s)=>v.VisitPlusToken((PlusToken)t,s)},
+                {typeof (MinusToken),(v,t,s)=>v.VisitMinusToken((MinusToken)t,s)},
+                {typeof (DivideToken),(v,t,s)=>v.VisitDivideToken((DivideToken)t,s)},
+                {typeof (ModuloToken),(v,t,s)=>v.VisitModuloToken((ModuloToken)t,s)},
+                {typeof (MultiplyToken),(v,t,s)=>v.VisitMultiplyToken((MultiplyToken)t,s)},
+                {typeof (BitwiseAndToken),(v,t,s)=>v.VisitBitwiseAndToken((BitwiseAndToken)t,s)},
+                {typeof (BitwiseOrToken),(v,t,s)=>v.VisitBitwiseOrToken((BitwiseOrToken)t,s)},
+                {typeof (BitwiseXorToken),(v,t,s)=>v.VisitBitwiseXorToken((BitwiseXorToken)t,s)},
+                {typeof (BitwiseNotToken),(v,t,s)=>v.VisitBitwiseNotToken((BitwiseNotToken)t,s)},
+                {typeof (ContainsToken),(v,t,s)=>v.VisitContainsToken((ContainsToken)t,s)},
+                {typeof (StartsWithToken),(v,t,s)=>v.VisitStartsWithToken((StartsWithToken)t,s)},
+                {typeof (EndsWithToken),(v,t,s)=>v.VisitEndsWithToken((EndsWithToken)t,s)},
+                {typeof (LikeToken),(v,t,s)=>v.VisitLikeToken((LikeToken)t,s)},
+                {typeof (GroupToken),(v,t,s)=>v.VisitGroupToken((GroupToken)t,s)},
+                {typeof (NotToken),(v,t,s)=>v.VisitNotToken((NotToken)t,s)},
+                {typeof (IsNullToken),(v,t,s)=>v.VisitIsNullToken((IsNullToken)t,s)},
+                {typeof (IsNotNullToken),(v,t,s)=>v.VisitIsNotNullToken((IsNotNullToken)t,s)},
+                {typeof (ExistsToken),(v,t,s)=>v.VisitExistsToken((ExistsToken)t,s)},
+                {typeof (AllToken),(v,t,s)=>v.VisitAllToken((AllToken)t,s)},
+                {typeof (AnyToken),(v,t,s)=>v.VisitAnyToken((AnyToken)t,s)},
+                {typeof (AssignToken),(v,t,s)=>v.VisitAssignToken((AssignToken)t,s)},
+                {typeof (BetweenToken),(v,t,s)=>v.VisitBetweenToken((BetweenToken)t,s)},
+                {typeof (InToken),(v,t,s)=>v.VisitInToken((InToken)t,s)},
+                {typeof (NotInToken),(v,t,s)=>v.VisitNotInToken((NotInToken)t,s)},
+                {typeof (CommentToken),(v,t,s)=>v.VisitCommentToken((CommentToken)t,s)},
+                {typeof (StringifyToken),(v,t,s)=>v.VisitStringifyToken((StringifyToken)t,s)},
+                {typeof (WhenMatchedThenDelete),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedThenDelete)t,s)},
+                {typeof (WhenMatchedThenUpdateSet),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedThenUpdateSet)t,s)},
+                {typeof (WhenNotMatchedThenInsert),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedThenInsert)t,s)},
             };
 
-        private static readonly Dictionary<Type, Action<IStatement, VisitorState>> StatementVisitors =
-            new Dictionary<Type, Action<IStatement, VisitorState>>
+        private static readonly Dictionary<Type, Action<SqlServerVisitor, IStatement, VisitorState>> StatementVisitors =
+            new Dictionary<Type, Action<SqlServerVisitor, IStatement, VisitorState>>
             {
-                {typeof (DeleteStatement), VisitDelete},
-                {typeof (UpdateStatement), VisitUpdate},
-                {typeof (InsertStatement), VisitInsert},
-                {typeof (SelectStatement), VisitSelect},
-                {typeof (MergeStatement), VisitMerge},
-                {typeof (SetStatement), VisitSet},
-                {typeof (Union), VisitUnion},
-                {typeof (Intersect), VisitIntersect},
-                {typeof (Except), VisitExcept},
-                {typeof (BeginTransactionStatement), VisitBeginTransaction},
-                {typeof (CommitTransactionStatement), VisitCommitTransaction},
-                {typeof (RollbackTransactionStatement), VisitRollbackTransaction},
-                {typeof (StatementsStatement), VisitStatementsStatement},
-                {typeof (SaveTransactionStatement), VisitSaveTransaction},
-                {typeof (DeclareStatement), VisitDeclareStatement},
-                {typeof (IfStatement), VisitIfStatement},
-                {typeof (CreateTableStatement), VisitCreateTableStatement},
-                {typeof (DropTableStatement), VisitDropTableStatement},
-                {typeof (CreateIndexStatement), VisitCreateIndexStatement},
-                {typeof (AlterIndexStatement), VisitAlterIndexStatement},
-                {typeof (DropIndexStatement), VisitDropIndexStatement},
-                {typeof (CommentStatement), VisitCommentStatement},
-                {typeof (StringifyStatement), VisitStringifyStatement},
-                {typeof (SnippetStatement), VisitSnippetStatement},
-                {typeof (BreakStatement), VisitBreakStatement},
-                {typeof (ContinueStatement), VisitContinueStatement},
-                {typeof (GotoStatement), VisitGotoStatement},
-                {typeof (ReturnStatement), VisitReturnStatement},
-                {typeof (ThrowStatement), VisitThrowStatement},
-                {typeof (TryCatchStatement), VisitTryCatchStatement},
-                {typeof (LabelStatement), VisitLabelStatement},
-                {typeof (WaitforDelayStatement), VisitWaitforDelayStatement},
-                {typeof (WaitforTimeStatement), VisitWaitforTimeStatement},
-                {typeof (WhileStatement), VisitWhileStatement},
-                {typeof (CreateViewStatement), VisitCreateViewStatement},
-                {typeof (CreateOrAlterViewStatement), VisitCreateOrAlterViewStatement},
-                {typeof (AlterViewStatement), VisitAlterViewStatement},
-                {typeof (DropViewStatement), VisitDropViewStatement},
-                {typeof (ExecuteStatement), VisitExecuteStatement},
+                {typeof (DeleteStatement), (v,stm,s)=>v.VisitDelete((DeleteStatement)stm, s)},
+                {typeof (UpdateStatement), (v,stm,s)=>v.VisitUpdate((UpdateStatement)stm, s)},
+                {typeof (InsertStatement), (v,stm,s)=>v.VisitInsert((InsertStatement)stm,s)},
+                {typeof (SelectStatement), (v,stm,s)=>v.VisitSelect((SelectStatement)stm,s)},
+                {typeof (MergeStatement),(v,stm,s)=>v. VisitMerge((MergeStatement)stm,s)},
+                {typeof (SetStatement), (v,stm,s)=>v.VisitSet((SetStatement)stm,s)},
+                {typeof (Union), (v,stm,s)=>v.VisitUnion((Union)stm,s)},
+                {typeof (Intersect), (v,stm,s)=>v.VisitIntersect((Intersect)stm,s)},
+                {typeof (Except), (v,stm,s)=>v.VisitExcept((Except)stm,s)},
+                {typeof (BeginTransactionStatement), (v,stm,s)=>v.VisitBeginTransaction((BeginTransactionStatement)stm,s)},
+                {typeof (CommitTransactionStatement), (v,stm,s)=>v.VisitCommitTransaction((CommitTransactionStatement)stm,s)},
+                {typeof (RollbackTransactionStatement), (v,stm,s)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm,s)},
+                {typeof (StatementsStatement), (v,stm,s)=>v.VisitStatementsStatement((StatementsStatement)stm,s)},
+                {typeof (SaveTransactionStatement), (v,stm,s)=>v.VisitSaveTransaction((SaveTransactionStatement)stm,s)},
+                {typeof (DeclareStatement), (v,stm,s)=>v.VisitDeclareStatement((DeclareStatement)stm,s)},
+                {typeof (IfStatement), (v,stm,s)=>v.VisitIfStatement((IfStatement)stm,s)},
+                {typeof (CreateTableStatement), (v,stm,s)=>v.VisitCreateTableStatement((CreateTableStatement)stm,s)},
+                {typeof (DropTableStatement), (v,stm,s)=>v.VisitDropTableStatement((DropTableStatement)stm,s)},
+                {typeof (CreateIndexStatement), (v,stm,s)=>v.VisitCreateIndexStatement((CreateIndexStatement)stm,s)},
+                {typeof (AlterIndexStatement), (v,stm,s)=>v.VisitAlterIndexStatement((AlterIndexStatement)stm,s)},
+                {typeof (DropIndexStatement), (v,stm,s)=>v.VisitDropIndexStatement((DropIndexStatement)stm,s)},
+                {typeof (CommentStatement), (v,stm,s)=>v.VisitCommentStatement((CommentStatement)stm,s)},
+                {typeof (StringifyStatement), (v,stm,s)=>v.VisitStringifyStatement((StringifyStatement)stm,s)},
+                {typeof (SnippetStatement), (v,stm,s)=>v.VisitSnippetStatement((SnippetStatement)stm,s)},
+                {typeof (BreakStatement), (v,stm,s)=>v.VisitBreakStatement((BreakStatement)stm,s)},
+                {typeof (ContinueStatement), (v,stm,s)=>v.VisitContinueStatement((ContinueStatement)stm,s)},
+                {typeof (GotoStatement), (v,stm,s)=>v.VisitGotoStatement((GotoStatement)stm,s)},
+                {typeof (ReturnStatement), (v,stm,s)=>v.VisitReturnStatement((ReturnStatement)stm,s)},
+                {typeof (ThrowStatement), (v,stm,s)=>v.VisitThrowStatement((ThrowStatement)stm,s)},
+                {typeof (TryCatchStatement), (v,stm,s)=>v.VisitTryCatchStatement((TryCatchStatement)stm,s)},
+                {typeof (LabelStatement), (v,stm,s)=>v.VisitLabelStatement((LabelStatement)stm,s)},
+                {typeof (WaitforDelayStatement), (v,stm,s)=>v.VisitWaitforDelayStatement((WaitforDelayStatement)stm,s)},
+                {typeof (WaitforTimeStatement), (v,stm,s)=>v.VisitWaitforTimeStatement((WaitforTimeStatement)stm,s)},
+                {typeof (WhileStatement), (v,stm,s)=>v.VisitWhileStatement((WhileStatement)stm,s)},
+                {typeof (CreateViewStatement), (v,stm,s)=>v.VisitCreateViewStatement((CreateViewStatement)stm,s)},
+                {typeof (CreateOrAlterViewStatement), (v,stm,s)=>v.VisitCreateOrAlterViewStatement((CreateOrAlterViewStatement)stm,s)},
+                {typeof (AlterViewStatement), (v,stm,s)=>v.VisitAlterViewStatement((AlterViewStatement)stm,s)},
+                {typeof (DropViewStatement), (v,stm,s)=>v.VisitDropViewStatement((DropViewStatement)stm,s)},
+                {typeof (ExecuteStatement), (v,stm,s)=>v.VisitExecuteStatement((ExecuteStatement)stm,s)},
             };
 
         public static VisitorState Compile(IStatement statement)
         {
             var state = new VisitorState();
 
-            VisitStatement(statement, state);
-            EnsureSemicolumn(state);
+            var visitor = new SqlServerVisitor();
+
+            visitor.VisitStatement(statement, state);
+            visitor.EnsureSemicolumn(state);
 
             return state;
         }
 
-        private static void EnsureSemicolumn(VisitorState state)
+        private void EnsureSemicolumn(VisitorState state)
         {
             // we need to make sure that the last non-whitespace character
             // is ';' unless it is */ or :
@@ -220,7 +223,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                         }
                     }
 
-                    state.Buffer.Append(";");
+                    state.Append(";");
                     break;
                 }
             }
@@ -235,7 +238,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
 
             var state = new VisitorState();
-            VisitToken(token, false, state);
+            var visitor = new SqlServerVisitor();
+            visitor.VisitToken(token, state, false);
             return state;
         }
 
@@ -261,257 +265,281 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return namePart;
         }
 
+        private void Stringify(IStatement statement, VisitorState state)
+        {
+            Stringify(s => VisitStatement(statement, s), state);
+        }
+
+        private void Stringify(Action<VisitorState> fragment, VisitorState state)
+        {
+            state.Append("N'");
+
+            var startIndex = state.Buffer.Length;
+            fragment(state);
+            var endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+
+            state.Append("'");
+        }
+
+        private string ResolveName(Name name)
+        {
+            return name.GetFullName("[", "]");
+        }
+
+        private void VisitType(TypedToken typedToken, VisitorState state)
+        {
+            if (typedToken.DbType.HasValue)
+            {
+                state.Append(" ");
+                state.Append(DbTypeStrings[(int)typedToken.DbType]);
+            }
+
+            if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
+            {
+                state.Append("(");
+                if (typedToken.Length.HasValue)
+                {
+                    state.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
+                }
+                else if (typedToken.Precision.HasValue)
+                {
+                    state.Append(typedToken.Precision.Value);
+
+                    if (typedToken.Scale.HasValue)
+                    {
+                        state.Append(",");
+                        state.Append(typedToken.Scale.Value);
+                    }
+                }
+
+                state.Append(")");
+            }
+        }
+
+
         #region Statements
 
-        private static void VisitStatement(IStatement statement, VisitorState state)
+        private void VisitStatement(IStatement statement, VisitorState state)
         {
-            StatementVisitors[statement.GetType()](statement, state);
+            StatementVisitors[statement.GetType()](this, statement, state);
         }
 
-        private static void VisitUnion(IStatement statement, VisitorState state)
+        private void VisitUnion(Union statement, VisitorState state)
         {
-            var unionStatement = (Union)statement;
+            VisitStatement(statement.First, state);
 
-            VisitStatement(unionStatement.First, state);
+            state.Append((statement.All ? " UNION ALL " : " UNION "));
 
-            state.Buffer.Append((unionStatement.All ? " UNION ALL " : " UNION "));
-
-            VisitStatement(unionStatement.Second, state);
+            VisitStatement(statement.Second, state);
         }
-
-
-        private static void VisitExcept(IStatement statement, VisitorState state)
+        private void VisitExcept(Except statement, VisitorState state)
         {
-            var exceptStatement = (Except)statement;
+            VisitStatement(statement.First, state);
 
-            VisitStatement(exceptStatement.First, state);
+            state.Append(" EXCEPT ");
 
-            state.Buffer.Append(" EXCEPT ");
-
-            VisitStatement(exceptStatement.Second, state);
+            VisitStatement(statement.Second, state);
         }
-
-        private static void VisitIntersect(IStatement statement, VisitorState state)
+        private void VisitIntersect(Intersect statement, VisitorState state)
         {
-            var intersectStatement = (Intersect)statement;
-
-            VisitStatement(intersectStatement.First, state);
-            state.Buffer.Append(" INTERSECT ");
-            VisitStatement(intersectStatement.Second, state);
+            VisitStatement(statement.First, state);
+            state.Append(" INTERSECT ");
+            VisitStatement(statement.Second, state);
         }
-
-        private static void VisitSet(IStatement statement, VisitorState state)
+        private void VisitSet(SetStatement statement, VisitorState state)
         {
-            var setStatement = (SetStatement)statement;
+            state.Append("SET ");
 
-            state.Buffer.Append("SET ");
-
-            if (setStatement.Assign != null)
+            if (statement.Assign != null)
             {
-                VisitToken(setStatement.Assign, false, state);
+                VisitToken(statement.Assign, state, false);
             }
         }
-
-        private static void VisitMerge(IStatement statement, VisitorState state)
+        private void VisitMerge(MergeStatement statement, VisitorState state)
         {
-            var mergeStatement = (MergeStatement)statement;
+            state.Append("MERGE");
 
-            state.Buffer.Append("MERGE");
+            VisitTop(statement.Top, state);
 
-            VisitTop(mergeStatement.Top, state);
+            VisitInto(statement.Into, state);
 
-            VisitInto(mergeStatement.Into, state);
+            VisitAlias(statement.Into, state);
 
-            VisitAlias(mergeStatement.Into, state);
+            state.Append(" USING ");
+            VisitToken(statement.Using, state, false);
+            VisitAlias(statement.Using, state);
 
-            state.Buffer.Append(" USING ");
-            VisitToken(mergeStatement.Using, false, state);
-            VisitAlias(mergeStatement.Using, state);
+            state.Append(" ON ");
 
-            state.Buffer.Append(" ON ");
+            VisitToken(statement.On, state, false);
 
-            VisitToken(mergeStatement.On, false, state);
-
-            foreach (var when in mergeStatement.WhenMatched)
+            foreach (var when in statement.WhenMatched)
             {
-                state.Buffer.Append(" WHEN MATCHED");
+                state.Append(" WHEN MATCHED");
                 if (when.AndCondition != null)
                 {
-                    state.Buffer.Append(" AND ");
-                    VisitToken(when.AndCondition, false, state);
+                    state.Append(" AND ");
+                    VisitToken(when.AndCondition, state, false);
                 }
-                state.Buffer.Append(" THEN");
+                state.Append(" THEN");
 
-                VisitToken(when, false, state);
+                VisitToken(when, state, false);
             }
 
-            foreach (var when in mergeStatement.WhenNotMatched)
+            foreach (var when in statement.WhenNotMatched)
             {
-                state.Buffer.Append(" WHEN NOT MATCHED BY TARGET");
+                state.Append(" WHEN NOT MATCHED BY TARGET");
                 if (when.AndCondition != null)
                 {
-                    state.Buffer.Append(" AND");
-                    VisitToken(when.AndCondition, false, state);
+                    state.Append(" AND");
+                    VisitToken(when.AndCondition, state, false);
                 }
-                state.Buffer.Append(" THEN");
+                state.Append(" THEN");
 
-                VisitToken(when, false, state);
+                VisitToken(when, state, false);
             }
 
-            foreach (var when in mergeStatement.WhenNotMatchedBySource)
+            foreach (var when in statement.WhenNotMatchedBySource)
             {
-                state.Buffer.Append(" WHEN NOT MATCHED BY SOURCE");
+                state.Append(" WHEN NOT MATCHED BY SOURCE");
                 if (when.AndCondition != null)
                 {
-                    state.Buffer.Append(" AND ");
-                    VisitToken(when.AndCondition, false, state);
+                    state.Append(" AND ");
+                    VisitToken(when.AndCondition, state, false);
                 }
-                state.Buffer.Append(" THEN");
+                state.Append(" THEN");
 
-                VisitToken(when, false, state);
+                VisitToken(when, state, false);
             }
 
-            VisitOutput(mergeStatement.Output, mergeStatement.OutputInto, state);
+            VisitOutput(statement.Output, statement.OutputInto, state);
         }
 
-        private static void VisitWhenMatchedThenDelete(Token token, VisitorState state)
+        private void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
         {
-            //var value = (WhenMatchedThenDelete)token;
-            state.Buffer.Append(" DELETE");
+            state.Append(" DELETE");
         }
-        private static void VisitWhenMatchedThenUpdateSet(Token token, VisitorState state)
+        private void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
         {
-            var value = (WhenMatchedThenUpdateSet)token;
-
-            state.Buffer.Append(" UPDATE SET");
-            VisitTokenSet(" ", ", ", "", value.Set, false, state);
+            state.Append(" UPDATE SET");
+            VisitTokenSet(token.Set, state, " ", ", ", "", false);
         }
-        private static void VisitWhenNotMatchedThenInsert(Token token, VisitorState state)
+        private void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
         {
-            var value = (WhenNotMatchedThenInsert)token;
-            state.Buffer.Append(" INSERT");
-            if (value.Columns.Count > 0)
+            state.Append(" INSERT");
+            if (token.Columns.Count > 0)
             {
-                VisitTokenSet(" (", ", ", ")", value.Columns, false, state);
+                VisitTokenSet(token.Columns, state, " (", ", ", ")", false);
             }
-            if (value.Values.Count > 0)
+            if (token.Values.Count > 0)
             {
-                VisitTokenSet(" VALUES (", ", ", ")", value.Values, false, state);
+                VisitTokenSet(token.Values, state, " VALUES (", ", ", ")", false);
             }
             else
             {
-                state.Buffer.Append(" DEFAULT VALUES");
+                state.Append(" DEFAULT VALUES");
             }
         }
 
-
-        private static void VisitSelect(IStatement statement, VisitorState state)
+        private void VisitSelect(SelectStatement statement, VisitorState state)
         {
-            var selectStatement = (SelectStatement)statement;
+            state.Append("SELECT");
 
-            state.Buffer.Append("SELECT");
-
-            if (selectStatement.Distinct)
+            if (statement.Distinct)
             {
-                state.Buffer.Append(" DISTINCT");
+                state.Append(" DISTINCT");
             }
 
-            VisitTop(selectStatement.Top, state);
+            VisitTop(statement.Top, state);
 
             // assignments
-            if (selectStatement.Set.Count > 0)
+            if (statement.Set.Count > 0)
             {
-                VisitTokenSet(" ", ", ", "", selectStatement.Set, false, state);
+                VisitTokenSet(statement.Set, state, " ", ", ", "", false);
             }
             else
             {
                 // output columns
-                if (selectStatement.Output.Count == 0)
+                if (statement.Output.Count == 0)
                 {
-                    state.Buffer.Append(" *");
+                    state.Append(" *");
                 }
                 else
                 {
-                    VisitTokenSet(" ", ", ", "", selectStatement.Output, true, state);
+                    VisitTokenSet(statement.Output, state, " ", ", ", "", true);
                 }
             }
 
-            VisitInto(selectStatement.Into, state);
+            VisitInto(statement.Into, state);
 
-            VisitFrom(selectStatement.From, state);
+            VisitFrom(statement.From, state);
 
-            VisitJoin(selectStatement.Joins, state);
+            VisitJoin(statement.Joins, state);
 
-            VisitWhere(selectStatement.Where, state);
+            VisitWhere(statement.Where, state);
 
-            VisitGroupBy(selectStatement.GroupBy, state);
+            VisitGroupBy(statement.GroupBy, state);
 
-            VisitHaving(selectStatement.Having, state);
+            VisitHaving(statement.Having, state);
 
-            VisitOrderBy(selectStatement.OrderBy, state);
+            VisitOrderBy(statement.OrderBy, state);
 
 
             //WHERE
             //WITH CUBE or WITH ROLLUP
         }
-
-        private static void VisitInto(Name into, VisitorState state)
+        private void VisitInto(Name into, VisitorState state)
         {
             if (into != null)
             {
-                state.Buffer.Append(" INTO ");
-                state.Buffer.Append(into.GetFullName("[", "]"));
+                state.Append(Sym._INTO_);
+                state.Append(ResolveName(into));
             }
         }
-
-        private static void VisitDelete(IStatement statement, VisitorState state)
+        private void VisitDelete(DeleteStatement statement, VisitorState state)
         {
-            var deleteStatement = (DeleteStatement)statement;
+            state.Append(Sym.DELETE);
 
-            state.Buffer.Append("DELETE");
+            VisitTop(statement.Top, state);
 
-            VisitTop(deleteStatement.Top, state);
-
-            if (deleteStatement.Joins.Count > 0)
+            if (statement.Joins.Count > 0)
             {
-                if (!string.IsNullOrWhiteSpace(deleteStatement.From.Alias))
-                {
-                    state.Buffer.Append(" [");
-                    state.Buffer.Append(deleteStatement.From.Alias);
-                    state.Buffer.Append("]");
-                }
+                VisitAlias(statement.From, state, Sym._osp);
 
-                VisitOutput(deleteStatement.Output, deleteStatement.OutputInto, state);
+                VisitOutput(statement.Output, statement.OutputInto, state);
 
-                VisitFrom(deleteStatement.From, state);
+                VisitFrom(statement.From, state);
 
-                VisitJoin(deleteStatement.Joins, state);
+                VisitJoin(statement.Joins, state);
 
-                VisitWhere(deleteStatement.Where, state);
+                VisitWhere(statement.Where, state);
             }
             else
             {
-                VisitFrom(deleteStatement.From, state);
+                VisitFrom(statement.From, state);
 
-                VisitOutput(deleteStatement.Output, deleteStatement.OutputInto, state);
+                VisitOutput(statement.Output, statement.OutputInto, state);
 
-                VisitWhere(deleteStatement.Where, state);
+                VisitWhere(statement.Where, state);
             }
         }
-
-        private static void VisitUpdate(IStatement statement, VisitorState state)
+        private void VisitUpdate(UpdateStatement updateStatement, VisitorState state)
         {
-            var updateStatement = (UpdateStatement)statement;
-
-            state.Buffer.Append("UPDATE");
+            state.Append("UPDATE");
 
             VisitTop(updateStatement.Top, state);
 
-            state.Buffer.Append(" ");
-            VisitToken(updateStatement.Target, true, state);
+            state.Append(" ");
+            VisitToken(updateStatement.Target, state, true);
 
-            state.Buffer.Append(" SET");
-            VisitTokenSet(" ", ", ", "", updateStatement.Set, false, state);
+            state.Append(" SET");
+            VisitTokenSet(updateStatement.Set, state, " ", ", ", "", false);
 
             VisitOutput(updateStatement.Output, updateStatement.OutputInto, state);
 
@@ -521,336 +549,261 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitWhere(updateStatement.Where, state);
         }
-
-
-        private static void VisitInsert(IStatement statement, VisitorState state)
+        private void VisitInsert(InsertStatement insertStatement, VisitorState state)
         {
-            var insertStatement = (InsertStatement)statement;
-
-            state.Buffer.Append("INSERT");
+            state.Append("INSERT");
 
             VisitTop(insertStatement.Top, state);
 
             VisitInto(insertStatement.Into, state);
 
-            VisitTokenSet(" (", ", ", ")", insertStatement.Columns, true, state);
+            VisitTokenSet(insertStatement.Columns, state, " (", ", ", ")", true);
 
             VisitOutput(insertStatement.Output, insertStatement.OutputInto, state);
 
             if (insertStatement.DefaultValues)
             {
-                state.Buffer.Append(" DEFAULT VALUES");
+                state.Append(" DEFAULT VALUES");
             }
             else if (insertStatement.Values.Count > 0)
             {
                 var separator = " VALUES";
                 foreach (var valuesSet in insertStatement.Values)
                 {
-                    state.Buffer.Append(separator);
+                    state.Append(separator);
                     separator = ",";
 
-                    VisitTokenSet(" (", ", ", ")", valuesSet, false, state);
+                    VisitTokenSet(valuesSet, state, " (", ", ", ")", false);
                 }
             }
             else if (insertStatement.From != null)
             {
-                state.Buffer.Append(" ");
+                state.Append(" ");
                 VisitStatement(insertStatement.From, state);
             }
         }
-
-
-        private static bool VisitTransactionName(TransactionStatement statement, VisitorState state)
+        private bool VisitTransactionName(TransactionStatement statement, VisitorState state)
         {
             if (statement.Name != null)
             {
-                state.Buffer.Append(" ");
-                state.Buffer.Append(statement.Name.GetFullName("[", "]"));
+                state.Append(Sym.SPACE);
+                state.Append(ResolveName(statement.Name));
                 return true;
             }
             if (statement.Parameter != null)
             {
-                state.Buffer.Append(" ");
-                state.Buffer.Append(statement.Parameter.Name);
+                state.Append(Sym.SPACE);
+                state.Append(statement.Parameter.Name);
                 state.Parameters.Add(statement.Parameter);
                 return true;
             }
             return false;
         }
-
-        private static void VisitBeginTransaction(IStatement statement, VisitorState state)
+        private void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
         {
-            var ts = (BeginTransactionStatement)statement;
-            state.Buffer.Append("BEGIN TRANSACTION");
-            if (VisitTransactionName(ts, state) && !string.IsNullOrWhiteSpace(ts.Description))
+            state.Append("BEGIN TRANSACTION");
+            if (VisitTransactionName(statement, state) && !string.IsNullOrWhiteSpace(statement.Description))
             {
-                state.Buffer.Append(" WITH MARK '");
-                state.Buffer.Append(ts.Description);
-                state.Buffer.Append("'");
+                state.Append(" WITH MARK '");
+                state.Append(statement.Description);
+                state.Append("'");
             }
         }
-
-        private static void VisitCommitTransaction(IStatement statement, VisitorState state)
+        private void VisitCommitTransaction(TransactionStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement)statement;
-            state.Buffer.Append("COMMIT TRANSACTION");
-            VisitTransactionName(ts, state);
+            state.Append("COMMIT TRANSACTION");
+            VisitTransactionName(statement, state);
         }
-
-        private static void VisitRollbackTransaction(IStatement statement, VisitorState state)
+        private void VisitRollbackTransaction(TransactionStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement)statement;
-            state.Buffer.Append("ROLLBACK TRANSACTION");
-            VisitTransactionName(ts, state);
+            state.Append("ROLLBACK TRANSACTION");
+            VisitTransactionName(statement, state);
         }
-
-        private static void VisitSaveTransaction(IStatement statement, VisitorState state)
+        private void VisitSaveTransaction(TransactionStatement statement, VisitorState state)
         {
-            var ts = (TransactionStatement)statement;
-            state.Buffer.Append("SAVE TRANSACTION");
-            VisitTransactionName(ts, state);
+            state.Append("SAVE TRANSACTION");
+            VisitTransactionName(statement, state);
         }
-
-
-        private static void VisitStatementsStatement(IStatement statement, VisitorState state)
+        private void VisitStatementsStatement(StatementsStatement statement, VisitorState state)
         {
-            var ss = (StatementsStatement)statement;
-
             var last = state.Buffer.Length - 1;
 
             if (last >= 0 && state.Buffer[last] != '\n')
             {
-                state.Buffer.Append("\r\n");
+                state.Append("\r\n");
             }
 
             var separator = string.Empty;
-            foreach (var subStatement in ss.Statements)
+            foreach (var subStatement in statement.Statements)
             {
-                state.Buffer.Append(separator);
+                state.Append(separator);
                 separator = "\r\n";
                 VisitStatement(subStatement, state);
                 EnsureSemicolumn(state);
             }
         }
-
-        private static void VisitDeclareStatement(IStatement statement, VisitorState state)
+        private void VisitDeclareStatement(DeclareStatement statement, VisitorState state)
         {
-            var ss = (DeclareStatement)statement;
-
-            if (ss.Variable != null)
+            if (statement.Variable != null)
             {
-                state.Variables.Add(ss.Variable);
+                state.Variables.Add(statement.Variable);
 
-                state.Buffer.Append("DECLARE ");
-                state.Buffer.Append(ss.Variable.Name);
+                state.Append("DECLARE ");
+                state.Append(statement.Variable.Name);
 
-                VisitType(ss.Variable, state);
+                VisitType(statement.Variable, state);
 
-                if (ss.Initializer != null)
+                if (statement.Initializer != null)
                 {
-                    state.Buffer.Append(" = ");
-                    VisitToken(ss.Initializer, false, state);
+                    state.Append(" = ");
+                    VisitToken(statement.Initializer, state, false);
                 }
             }
         }
 
-        private static void VisitBreakStatement(IStatement statement, VisitorState state)
+        // ReSharper disable once UnusedParameter.Local
+        private void VisitBreakStatement(BreakStatement statement, VisitorState state)
         {
-            //var stmt = (BreakStatement) statement;
-            state.Buffer.Append("BREAK");
+            state.Append("BREAK");
         }
-        private static void VisitContinueStatement(IStatement statement, VisitorState state)
+        private void VisitContinueStatement(ContinueStatement statement, VisitorState state)
         {
-            //var stmt = (ContinueStatement) statement;
-            state.Buffer.Append("CONTINUE");
+            state.Append("CONTINUE");
         }
-        private static void VisitGotoStatement(IStatement statement, VisitorState state)
+        private void VisitGotoStatement(GotoStatement statement, VisitorState state)
         {
-            var stmt = (GotoStatement)statement;
-            state.Buffer.Append("GOTO ");
-            state.Buffer.Append(stmt.Label);
+            state.Append("GOTO ");
+            state.Append(statement.Label);
         }
-        private static void VisitReturnStatement(IStatement statement, VisitorState state)
+        private void VisitReturnStatement(ReturnStatement statement, VisitorState state)
         {
-            var stmt = (ReturnStatement)statement;
-            state.Buffer.Append("RETURN");
-            if (stmt.ReturnExpression != null)
+            state.Append("RETURN");
+            if (statement.ReturnExpression != null)
             {
-                state.Buffer.Append(" ");
-                VisitToken(stmt.ReturnExpression, false, state);
+                state.Append(" ");
+                VisitToken(statement.ReturnExpression, state, false);
             }
 
         }
-        private static void VisitThrowStatement(IStatement statement, VisitorState state)
+        private void VisitThrowStatement(ThrowStatement statement, VisitorState state)
         {
-            var stmt = (ThrowStatement)statement;
-            state.Buffer.Append("THROW");
-            if (stmt.ErrorNumber != null && stmt.Message != null && stmt.State != null)
+            state.Append("THROW");
+            if (statement.ErrorNumber != null && statement.Message != null && statement.State != null)
             {
-                state.Buffer.Append(" ");
-                VisitToken(stmt.ErrorNumber, false, state);
-                state.Buffer.Append(", ");
-                VisitToken(stmt.Message, false, state);
-                state.Buffer.Append(", ");
-                VisitToken(stmt.State, false, state);
+                state.Append(" ");
+                VisitToken(statement.ErrorNumber, state, false);
+                state.Append(", ");
+                VisitToken(statement.Message, state, false);
+                state.Append(", ");
+                VisitToken(statement.State, state, false);
             }
         }
-
-        private static void VisitTryCatchStatement(IStatement statement, VisitorState state)
+        private void VisitTryCatchStatement(TryCatchStatement stmt, VisitorState state)
         {
-            var stmt = (TryCatchStatement)statement;
-            state.Buffer.Append("BEGIN TRY\r\n");
+            state.Append("BEGIN TRY\r\n");
             VisitStatement(stmt.TryStatement, state);
-            state.Buffer.Append(";\r\nEND TRY\r\nBEGIN CATCH\r\n");
+            state.Append(";\r\nEND TRY\r\nBEGIN CATCH\r\n");
             if (stmt.CatchStatement != null)
             {
                 VisitStatement(stmt.CatchStatement, state);
-                state.Buffer.Append(";\r\nEND CATCH");
+                state.Append(";\r\nEND CATCH");
             }
         }
-
-        private static void VisitLabelStatement(IStatement statement, VisitorState state)
+        private void VisitLabelStatement(LabelStatement stmt, VisitorState state)
         {
-            var stmt = (LabelStatement)statement;
-            state.Buffer.Append(stmt.Label);
-            state.Buffer.Append(":");
+            state.Append(stmt.Label);
+            state.Append(":");
         }
-
-        private static void VisitWaitforDelayStatement(IStatement statement, VisitorState state)
+        private void VisitWaitforDelayStatement(WaitforDelayStatement stmt, VisitorState state)
         {
-            var stmt = (WaitforDelayStatement)statement;
             state.Append("WAITFOR DELAY N'");
-            state.Buffer.Append(stmt.Delay.ToString("HH:mm:ss"));
-            state.Buffer.Append("'");
+            state.Append(stmt.Delay.ToString("HH:mm:ss"));
+            state.Append("'");
         }
-        private static void VisitWaitforTimeStatement(IStatement statement, VisitorState state)
+        private void VisitWaitforTimeStatement(WaitforTimeStatement stmt, VisitorState state)
         {
-            var stmt = (WaitforTimeStatement)statement;
             state.Append("WAITFOR TIME N'");
-            state.Buffer.Append(stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"));
-            state.Buffer.Append("'");
+            state.Append(stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"));
+            state.Append("'");
         }
-
-        private static void VisitWhileStatement(IStatement statement, VisitorState state)
+        private void VisitWhileStatement(WhileStatement stmt, VisitorState state)
         {
-            var stmt = (WhileStatement)statement;
-
             if (stmt.Condition != null)
             {
-                state.Buffer.Append("WHILE ");
-                VisitToken(stmt.Condition, false, state);
+                state.Append("WHILE ");
+                VisitToken(stmt.Condition, state, false);
 
                 if (stmt.Do != null)
                 {
-                    state.Buffer.Append("\r\nBEGIN;\r\n");
+                    state.Append("\r\nBEGIN;\r\n");
                     VisitStatement(stmt.Do, state);
-                    state.Buffer.Append("\r\nEND;");
+                    state.Append("\r\nEND;");
                 }
             }
         }
-
-        private static void VisitType(TypedToken typedToken, VisitorState state)
+        private void VisitIfStatement(IfStatement ifs, VisitorState state)
         {
-            if (typedToken.DbType.HasValue)
-            {
-                state.Buffer.Append(" ");
-                state.Buffer.Append(DbTypeStrings[(int)typedToken.DbType]);
-            }
-
-            if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
-            {
-                state.Buffer.Append("(");
-                if (typedToken.Length.HasValue)
-                {
-                    state.Buffer.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (typedToken.Precision.HasValue)
-                {
-                    state.Buffer.Append(typedToken.Precision.Value);
-
-                    if (typedToken.Scale.HasValue)
-                    {
-                        state.Buffer.Append(",");
-                        state.Buffer.Append(typedToken.Scale.Value);
-                    }
-                }
-
-                state.Buffer.Append(")");
-            }
-        }
-
-        private static void VisitIfStatement(IStatement statement, VisitorState state)
-        {
-            var ifs = (IfStatement)statement;
-
             if (ifs.Condition != null)
             {
-                state.Buffer.Append("IF ");
-                VisitToken(ifs.Condition, false, state);
+                state.Append("IF ");
+                VisitToken(ifs.Condition, state, false);
 
                 if (ifs.Then != null)
                 {
-                    state.Buffer.Append("\r\nBEGIN;\r\n");
+                    state.Append("\r\nBEGIN;\r\n");
                     VisitStatement(ifs.Then, state);
-                    state.Buffer.Append("\r\nEND;");
+                    state.Append("\r\nEND;");
 
                     if (ifs.Else != null)
                     {
-                        state.Buffer.Append("\r\nELSE\r\nBEGIN;\r\n");
+                        state.Append("\r\nELSE\r\nBEGIN;\r\n");
                         VisitStatement(ifs.Else, state);
-                        state.Buffer.Append("\r\nEND;");
+                        state.Append("\r\nEND;");
                     }
                 }
             }
         }
-
-        private static void VisitDropTableStatement(IStatement statement, VisitorState state)
+        private void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
         {
-            var s = (DropTableStatement)statement;
+            var tableName = ResolveName((statement.IsTemporary) ? GetTempTableName(statement.Name) : statement.Name);
 
-            var tableName = ((s.IsTemporary) ? GetTempTableName(s.Name) : s.Name).GetFullName("[", "]");
-
-            if (s.CheckExists)
+            if (statement.CheckExists)
             {
-                state.Buffer.Append("IF OBJECT_ID(N'");
-                state.Buffer.Append(tableName);
-                state.Buffer.Append("',N'U') IS NOT NULL ");
+                state.Append("IF OBJECT_ID(N'");
+                state.Append(tableName);
+                state.Append("',N'U') IS NOT NULL ");
             }
 
-            state.Buffer.Append("DROP TABLE ");
-            state.Buffer.Append(tableName);
-            state.Buffer.Append(";");
+            state.Append("DROP TABLE ");
+            state.Append(tableName);
+            state.Append(";");
         }
-
-        private static void VisitCreateTableStatement(IStatement statement, VisitorState state)
+        private void VisitCreateTableStatement(CreateTableStatement createStatement, VisitorState state)
         {
-            var createStatement = (CreateTableStatement)statement;
-
             if (createStatement.IsTableVariable)
             {
-                state.Buffer.Append("DECLARE ");
-                state.Buffer.Append(GetTableVariableName(createStatement.Name));
-                state.Buffer.Append(" TABLE");
+                state.Append("DECLARE ");
+                state.Append(GetTableVariableName(createStatement.Name));
+                state.Append(" TABLE");
             }
             else
             {
                 var tableName =
-                    ((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name)
-                        .GetFullName("[", "]");
+                    ResolveName((createStatement.IsTemporary) ? GetTempTableName(createStatement.Name) : createStatement.Name);
 
                 if (createStatement.CheckIfNotExists)
                 {
-                    state.Buffer.Append("IF OBJECT_ID(N'");
-                    state.Buffer.Append(tableName);
-                    state.Buffer.Append("',N'U') IS NULL ");
-                    state.Buffer.Append(" BEGIN; ");
+                    state.Append("IF OBJECT_ID(N'");
+                    state.Append(tableName);
+                    state.Append("',N'U') IS NULL ");
+                    state.Append(" BEGIN; ");
                 }
 
-                state.Buffer.Append("CREATE TABLE ");
-                state.Buffer.Append(tableName);
+                state.Append("CREATE TABLE ");
+                state.Append(tableName);
                 if (createStatement.AsFiletable)
                 {
-                    state.Buffer.Append(" AS FileTable");
+                    state.Append(" AS FileTable");
                 }
             }
 
@@ -858,36 +811,41 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var separator = " (";
             foreach (var column in createStatement.Columns)
             {
-                state.Buffer.Append(separator);
+                state.Append(separator);
                 separator = ", ";
 
-                state.Buffer.Append("[");
-                state.Buffer.Append(column.Name);
-                state.Buffer.Append("]");
+                state.Append("[");
+                state.Append(column.Name);
+                state.Append("]");
 
                 VisitType(column, state);
 
                 if (column.Sparse)
                 {
-                    state.Buffer.Append(" SPARSE");
+                    state.Append(" SPARSE");
                 }
                 if (column.Null.HasValue)
                 {
-                    state.Buffer.Append(column.Null.Value ? " NULL" : " NOT NULL");
+                    state.Append(column.Null.Value ? " NULL" : " NOT NULL");
                 }
                 if (column.Identity.On)
                 {
-                    state.Buffer.AppendFormat(" IDENTITY ({0}, {1})", column.Identity.Seed, column.Identity.Increment);
+                    state.Append(Sym._IDENTITY_);
+                    state.Append(Sym.op);
+                    state.Append(column.Identity.Seed);
+                    state.Append(Sym.COMMA_);
+                    state.Append(column.Identity.Increment);
+                    state.Append(Sym.cp);
                 }
                 if (column.RowGuid)
                 {
-                    state.Buffer.Append(" ROWGUIDCOL");
+                    state.Append(" ROWGUIDCOL");
                 }
                 if (column.DefaultValue != null)
                 {
-                    state.Buffer.Append(" DEFAULT (");
-                    VisitToken(column.DefaultValue, false, state);
-                    state.Buffer.Append(" )");
+                    state.Append(" DEFAULT (");
+                    VisitToken(column.DefaultValue, state, false);
+                    state.Append(" )");
                 }
             }
 
@@ -895,44 +853,44 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 if (createStatement.IsTableVariable)
                 {
-                    state.Buffer.Append(",");
+                    state.Append(",");
                 }
                 else
                 {
-                    state.Buffer.Append(", CONSTRAINT ");
-                    state.Buffer.Append(createStatement.PrimaryKey.Name.GetFullName("[", "]"));
+                    state.Append(", CONSTRAINT ");
+                    state.Append(ResolveName(createStatement.PrimaryKey.Name));
                 }
 
-                state.Buffer.Append(" PRIMARY KEY (");
-                state.Buffer.Append(string.Join(", ",
+                state.Append(" PRIMARY KEY (");
+                state.Append(string.Join(", ",
                     createStatement.PrimaryKey.Columns.Select(
-                        n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
-                state.Buffer.Append(" )");
+                        n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                state.Append(" )");
             }
 
             foreach (var unique in createStatement.UniqueConstrains)
             {
                 if (createStatement.IsTableVariable)
                 {
-                    state.Buffer.Append(",");
+                    state.Append(",");
                 }
                 else
                 {
-                    state.Buffer.Append(", CONSTRAINT ");
-                    state.Buffer.Append(unique.Name.GetFullName("[", "]"));
+                    state.Append(", CONSTRAINT ");
+                    state.Append(ResolveName(unique.Name));
                 }
-                state.Buffer.Append(" UNIQUE");
+                state.Append(" UNIQUE");
                 if (unique.Clustered.HasValue)
                 {
-                    state.Buffer.Append(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
+                    state.Append(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
                 }
-                state.Buffer.Append(string.Join(", ",
-                    unique.Columns.Select(n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
-                state.Buffer.Append(" )");
+                state.Append(string.Join(", ",
+                    unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                state.Append(" )");
             }
 
 
-            state.Buffer.Append(");");
+            state.Append(");");
 
             // if indecies are set, create them
             if (createStatement.Indicies.Count > 0 && !createStatement.IsTableVariable)
@@ -946,104 +904,64 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createStatement.CheckIfNotExists && !createStatement.IsTableVariable)
             {
-                state.Buffer.Append(" END;");
+                state.Append(" END;");
             }
         }
-
-
-        private static void VisitCommentStatement(IStatement statement, VisitorState state)
+        private void VisitCommentStatement(CommentStatement statement, VisitorState state)
         {
-            var commentStatement = (CommentStatement)statement;
-
-            state.Buffer.Append(" /* ");
-
-            VisitStatement(commentStatement.Content, state);
-
-            state.Buffer.Append(" */ ");
+            state.Append(" /* ");
+            VisitStatement(statement.Content, state);
+            state.Append(" */ ");
         }
-
-        private static void VisitStringifyStatement(IStatement statement, VisitorState state)
+        private void VisitStringifyStatement(StringifyStatement statement, VisitorState state)
         {
-            var commentStatement = (StringifyStatement)statement;
-
-            state.Buffer.Append("N'");
-
-            var startIndex = state.Buffer.Length;
-            VisitStatement(commentStatement.Content, state);
-            var endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
-            {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
-
-            state.Buffer.Append("'");
+            this.Stringify(statement.Content, state);
         }
-
-        private static void VisitExecuteStatement(IStatement statement, VisitorState state)
+        private void VisitExecuteStatement(ExecuteStatement statement, VisitorState state)
         {
-            var execStatement = (ExecuteStatement)statement;
-
-            state.Buffer.Append("EXEC (N'");
-            var startIndex = state.Buffer.Length;
-
-            VisitStatement(execStatement.Target, state);
-            var endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
-            {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
-
-            state.Buffer.Append("');");
+            state.Append("EXEC (");
+            this.Stringify(statement.Target, state);
+            state.Append(");");
         }
-
-
-        private static void VisitSnippetStatement(IStatement statement, VisitorState state)
+        private void VisitSnippetStatement(SnippetStatement statement, VisitorState state)
         {
-            var snippetStatement = (SnippetStatement)statement;
-            state.Buffer.Append(snippetStatement.Value);
+            state.Append(statement.Value);
         }
-
-        private static void VisitCreateIndexStatement(IStatement statement, VisitorState state)
+        private void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement, VisitorState state)
         {
-            var createIndexStatement = (CreateIndexStatement)statement;
-
-            state.Buffer.Append("CREATE");
+            state.Append("CREATE");
 
             if (createIndexStatement.Unique)
             {
-                state.Buffer.Append(" UNIQUE");
+                state.Append(" UNIQUE");
             }
 
             if (createIndexStatement.Clustered.HasValue)
             {
-                state.Buffer.Append(createIndexStatement.Clustered.Value ? " CLUSTERED" : " NONCLUSTERED");
+                state.Append(createIndexStatement.Clustered.Value ? " CLUSTERED" : " NONCLUSTERED");
             }
-            state.Buffer.Append(" INDEX ");
+            state.Append(" INDEX ");
 
-            VisitToken(createIndexStatement.Name, false, state);
+            VisitToken(createIndexStatement.Name, state, false);
 
-            state.Buffer.Append(" ON ");
+            state.Append(" ON ");
 
-            VisitToken(createIndexStatement.On, false, state);
+            VisitToken(createIndexStatement.On, state, false);
 
             // columns
-            state.Buffer.Append(" (");
-            state.Buffer.Append(string.Join(", ",
+            state.Append(" (");
+            state.Append(string.Join(", ",
                 createIndexStatement.Columns.Select(
-                    n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
-            state.Buffer.Append(")");
+                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+            state.Append(")");
 
-            VisitTokenSet(" INCLUDE (", ", ", ")", createIndexStatement.Include, false, state);
+            VisitTokenSet(createIndexStatement.Include, state, " INCLUDE (", ", ", ")", false);
 
             VisitWhere(createIndexStatement.Where, state);
 
             if (createIndexStatement.With.IsDefined)
             {
-                state.Buffer.Append(" WITH (");
+                state.Append(" WITH (");
 
                 VisitWith(createIndexStatement.With.PadIndex, "PAD_INDEX", state);
 
@@ -1057,40 +975,36 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWith(createIndexStatement.With.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
                 VisitWith(createIndexStatement.With.MaxDegreeOfParallelism, "MAXDOP", state);
 
-                state.Buffer.Append(" )");
+                state.Append(" )");
             }
 
-            state.Buffer.Append(";");
+            state.Append(";");
         }
-
-        private static void VisitAlterIndexStatement
-            (IStatement statement, VisitorState state)
+        private void VisitAlterIndexStatement(AlterIndexStatement alterStatement, VisitorState state)
         {
-            var alterStatement = (AlterIndexStatement)statement;
-
-            state.Buffer.Append("ALTER INDEX ");
+            state.Append("ALTER INDEX ");
 
             if (alterStatement.Name == null)
             {
-                state.Buffer.Append("ALL");
+                state.Append("ALL");
             }
             else
             {
-                VisitToken(alterStatement.Name, false, state);
+                VisitToken(alterStatement.Name, state, false);
             }
 
-            state.Buffer.Append(" ON ");
+            state.Append(" ON ");
 
-            VisitToken(alterStatement.On, false, state);
+            VisitToken(alterStatement.On, state, false);
 
             if (alterStatement.Rebuild)
             {
-                state.Buffer.Append(" REBUILD");
+                state.Append(" REBUILD");
 
                 //TODO: [PARTITION = ALL]
                 if (alterStatement.RebuildWith.IsDefined)
                 {
-                    state.Buffer.Append(" WITH (");
+                    state.Append(" WITH (");
 
                     VisitWith(alterStatement.RebuildWith.PadIndex, "PAD_INDEX", state);
                     VisitWith(alterStatement.RebuildWith.Fillfactor, "FILLFACTOR", state);
@@ -1103,16 +1017,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitWith(alterStatement.RebuildWith.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
                     VisitWith(alterStatement.RebuildWith.MaxDegreeOfParallelism, "MAXDOP", state);
 
-                    state.Buffer.Append(" )");
+                    state.Append(" )");
                 }
             }
             else if (alterStatement.Disable)
             {
-                state.Buffer.Append(" DISABLE");
+                state.Append(" DISABLE");
             }
             else if (alterStatement.Reorganize)
             {
-                state.Buffer.Append(" REORGANIZE");
+                state.Append(" REORGANIZE");
             }
             else
             {
@@ -1122,157 +1036,124 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWith(alterStatement.Set.StatisticsNorecompute, "STATISTICS_NORECOMPUTE", state);
             }
         }
-
-        private static void VisitDropIndexStatement(IStatement statement, VisitorState state)
+        private void VisitDropIndexStatement(DropIndexStatement dropIndexStatement, VisitorState state)
         {
-            var dropIndexStatement = (DropIndexStatement)statement;
+            state.Append(Sym.DROP_INDEX_);
+            VisitToken(dropIndexStatement.Name, state);
 
-            state.Buffer.Append("DROP INDEX ");
-            VisitToken(dropIndexStatement.Name, false, state);
+            state.Append(Sym._ON_);
 
-            state.Buffer.Append(" ON ");
-
-            VisitToken(dropIndexStatement.On, false, state);
+            VisitToken(dropIndexStatement.On, state);
 
             if (dropIndexStatement.With.IsDefined)
             {
-                state.Buffer.Append(" WITH (");
+                state.Append(Sym._WITH);
+                state.Append(Sym._op);
 
                 if (dropIndexStatement.With.Online.HasValue)
                 {
-                    state.Buffer.AppendFormat(" ONLINE = {0}", dropIndexStatement.With.Online.Value ? "ON" : "OFF");
+                    state.Append(Sym._ONLINE);
+                    state.Append(AssignVal);
+                    state.Append(dropIndexStatement.With.Online.Value ? Sym.ON : Sym.OFF);
                 }
                 if (dropIndexStatement.With.MaxDegreeOfParallelism.HasValue)
                 {
-                    state.Buffer.AppendFormat(" MAXDOP = {0}", dropIndexStatement.With.MaxDegreeOfParallelism.Value);
+                    state.Append(Sym._MAXDOP);
+                    state.Append(AssignVal);
+                    state.Append(dropIndexStatement.With.MaxDegreeOfParallelism.Value);
                 }
 
-                state.Buffer.Append(" )");
+                state.Append(Sym._cp);
             }
         }
-
-
-        private static void VisitCreateViewStatement(IStatement statement, VisitorState state)
+        private void VisitCreateViewStatement(CreateViewStatement createStatement, VisitorState state)
         {
-            var createStatement = (CreateViewStatement)statement;
-
-            var viewName = createStatement.Name.GetFullName("[", "]");
+            var viewName = ResolveName(createStatement.Name);
 
             if (createStatement.CheckIfNotExists)
             {
-                state.Buffer.Append("IF OBJECT_ID(N'");
-                state.Buffer.Append(viewName);
-                state.Buffer.Append("') IS NULL EXEC (N'");
+                state.Append("IF OBJECT_ID(N'");
+                state.Append(viewName);
+                state.Append("') IS NULL EXEC (");
 
-                var startIndex = state.Buffer.Length;
-
-                state.Buffer.Append("CREATE VIEW ");
-                state.Buffer.Append(viewName);
-                state.Buffer.Append(" AS ");
-                VisitStatement(createStatement.DefinitionQuery, state);
-
-                var endIndex = state.Buffer.Length;
-
-                // replace all "'" characters with "''"
-                if (endIndex > startIndex)
+                Stringify(s =>
                 {
-                    state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-                }
-
-                state.Buffer.Append("');");
+                    s.Buffer.Append(Sym.CREATE_VIEW_);
+                    s.Buffer.Append(viewName);
+                    s.Buffer.Append(Sym._AS_);
+                    VisitStatement(createStatement.DefinitionQuery, state);
+                }, state);
+                state.Append(Sym.cpsc);
             }
             else
             {
-                state.Buffer.Append("CREATE VIEW ");
-                state.Buffer.Append(viewName);
-                state.Buffer.Append(" AS ");
+                state.Append(Sym.CREATE_VIEW_);
+                state.Append(viewName);
+                state.Append(Sym._AS_);
                 VisitStatement(createStatement.DefinitionQuery, state);
             }
         }
-        private static void VisitCreateOrAlterViewStatement(IStatement statement, VisitorState state)
+        private void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement createStatement, VisitorState state)
         {
-            var createStatement = (CreateOrAlterViewStatement)statement;
+            var viewName = ResolveName(createStatement.Name);
 
-            var viewName = createStatement.Name.GetFullName("[", "]");
+            state.Append("IF OBJECT_ID(N'");
+            state.Append(viewName);
+            state.Append("') IS NULL EXEC (");
 
-            state.Buffer.Append("IF OBJECT_ID(N'");
-            state.Buffer.Append(viewName);
-            state.Buffer.Append("') IS NULL EXEC (N'");
-
-            var startIndex = state.Buffer.Length;
-
-            state.Buffer.Append("CREATE VIEW ");
-            state.Buffer.Append(viewName);
-            state.Buffer.Append(" AS ");
-            VisitStatement(createStatement.DefinitionQuery, state);
-
-            var endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
+            Stringify(s =>
             {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
+                s.Buffer.Append(Sym.CREATE_VIEW_);
+                s.Buffer.Append(viewName);
+                s.Buffer.Append(Sym._AS_);
+                VisitStatement(createStatement.DefinitionQuery, s);
+            }, state);
 
-            state.Buffer.Append("'); ELSE EXEC (N'");
+            state.Append("); ELSE EXEC (");
 
-            startIndex = state.Buffer.Length;
-
-            state.Buffer.Append("ALTER VIEW ");
-            state.Buffer.Append(viewName);
-            state.Buffer.Append(" AS ");
-            VisitStatement(createStatement.DefinitionQuery, state);
-
-            endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
+            Stringify(s =>
             {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
-            state.Buffer.Append("');");
+                s.Buffer.Append(Sym.ALTER_VIEW_);
+                s.Buffer.Append(viewName);
+                s.Buffer.Append(Sym._AS_);
+                VisitStatement(createStatement.DefinitionQuery, s);
+            }, state);
+
+            state.Append(Sym.cpsc);
         }
 
-        private static void VisitDropViewStatement(IStatement statement, VisitorState state)
+        private void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
         {
-            var dropStatement = (DropViewStatement)statement;
-            var viewName = dropStatement.Name.GetFullName("[", "]");
+            var viewName = ResolveName(statement.Name);
 
-            if (dropStatement.CheckExists)
+            if (statement.CheckExists)
             {
-                state.Buffer.Append("IF OBJECT_ID(N'");
-                state.Buffer.Append(viewName);
-                state.Buffer.Append("') IS NOT NULL EXEC (N'");
+                state.Append("IF OBJECT_ID(N'");
+                state.Append(viewName);
+                state.Append("') IS NOT NULL EXEC (");
 
-                var startIndex = state.Buffer.Length;
-
-                state.Buffer.Append("DROP VIEW ");
-                state.Buffer.Append(viewName);
-                state.Buffer.Append(";");
-                var endIndex = state.Buffer.Length;
-
-                // replace all "'" characters with "''"
-                if (endIndex > startIndex)
+                Stringify(s =>
                 {
-                    state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-                }
+                    s.Buffer.Append(Sym.DROP_VIEW_);
+                    s.Buffer.Append(viewName);
+                    s.Buffer.Append(Sym.sc);
+                }, state);
 
-                state.Buffer.Append("');");
+                state.Append(Sym.cpsc);
             }
             else
             {
-                state.Buffer.Append("DROP VIEW ");
-                state.Buffer.Append(dropStatement.Name.GetFullName("[", "]"));
+                state.Append(Sym.DROP_VIEW_);
+                state.Append(ResolveName(statement.Name));
             }
         }
 
-        private static void VisitAlterViewStatement(IStatement statement, VisitorState state)
+        private void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
         {
-            var alterStatement = (AlterViewStatement)statement;
-            state.Buffer.Append("ALTER VIEW ");
-            state.Buffer.Append(alterStatement.Name.GetFullName("[", "]"));
-            state.Buffer.Append(" AS ");
-            VisitStatement(alterStatement.DefinitionStatement, state);
+            state.Append(Sym.ALTER_VIEW_);
+            state.Append(ResolveName(statement.Name));
+            state.Append(Sym._AS_);
+            VisitStatement(statement.DefinitionStatement, state);
         }
 
 
@@ -1280,71 +1161,70 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #region Select Parts
 
-        private static void VisitJoin(List<Join> list, VisitorState state)
+        private void VisitJoin(ICollection<Join> list, VisitorState state)
         {
             if (list.Count > 0)
             {
                 foreach (var join in list)
                 {
-                    state.Buffer.Append(JoinStrings[(int)join.Type]);
-                    VisitToken(join.Source, true, state);
+                    state.Append(JoinStrings[(int)join.Type]);
+                    VisitToken(@join.Source, state, true);
 
                     if (join.On != null)
                     {
-                        state.Buffer.Append(" ON ");
-                        VisitToken(join.On, false, state);
+                        state.Append(Sym._ON_);
+                        VisitToken(@join.On, state);
                     }
                 }
             }
         }
 
-        private static void VisitOrderBy(List<Order> orderBy, VisitorState state)
+        private void VisitOrderBy(ICollection<Order> orderBy, VisitorState state)
         {
             if (orderBy.Count > 0)
             {
-                state.Buffer.Append(" ORDER BY ");
-                state.Buffer.Append(string.Join(", ",
-                    orderBy.Select(n => n.Column.GetFullName("[", "]") + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
+                state.Append(Sym._ORDER_BY_);
+                state.Append(string.Join(Sym.COMMA_,
+                    orderBy.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
             }
         }
 
-        private static void VisitGroupBy(List<Name> groupBy, VisitorState state)
+        private void VisitGroupBy(ICollection<Name> groupBy, VisitorState state)
         {
             if (groupBy.Count > 0)
             {
-                state.Buffer.Append(" GROUP BY ");
-                state.Buffer.Append(string.Join(", ", groupBy.Select(n => n.GetFullName("[", "]"))));
+                state.Append(Sym._GROUP_BY_);
+                state.Append(string.Join(Sym.COMMA_, groupBy.Select(n => ResolveName(n))));
             }
         }
 
-        private static void VisitFrom(List<Token> recordsets, VisitorState state)
+        private void VisitFrom(IEnumerable<Token> recordsets, VisitorState state)
         {
-            VisitTokenSet(" FROM ", ", ", "", recordsets, true, state);
+            VisitTokenSet(recordsets, state, Sym._FROM_, Sym.COMMA_, String.Empty, true);
         }
 
-        private static void VisitFrom(Token recordset, VisitorState state)
+        private void VisitFrom(Token recordset, VisitorState state)
         {
             if (recordset != null)
             {
-                state.Buffer.Append(" FROM ");
-                VisitToken(recordset, true, state);
+                state.Append(Sym._FROM_);
+                VisitToken(recordset, state, true);
             }
         }
 
-        private static void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
+        private void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            VisitTokenSet(" OUTPUT ", ", ", outputInto == null ? String.Empty : " INTO " + outputInto.GetFullName("[", "]"), columns,
-                true, state);
+            VisitTokenSet(columns, state, Sym._OUTPUT_, Sym.COMMA_, outputInto == null ? String.Empty : Sym._INTO_ + ResolveName(outputInto), true);
         }
 
-        private static void VisitTop(Top top, VisitorState state)
+        private void VisitTop(Top top, VisitorState state)
         {
             if (top != null)
             {
-                state.Buffer.Append(" TOP (");
+                state.Append(Sym._TOP_op);
                 if (top.Value.HasValue)
                 {
-                    state.Buffer.Append(top.Value.Value);
+                    state.Append(top.Value.Value);
                 }
                 else if (top.Parameters.Count > 0)
                 {
@@ -1352,53 +1232,58 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         state.Parameters.Add(parameter);
                     }
-                    state.Buffer.Append(top.Parameters[0].Name);
+                    state.Append(top.Parameters[0].Name);
                 }
-                state.Buffer.Append(")");
+                state.Append(")");
 
                 if (top.Percent)
                 {
-                    state.Buffer.Append(" PERCENT");
+                    state.Append(Sym._PERCENT);
                 }
                 if (top.WithTies)
                 {
-                    state.Buffer.Append(" WITH TIES");
+                    state.Append(Sym._WITH_TIES);
                 }
             }
         }
 
-        private static void VisitWhere(Token whereToken, VisitorState state)
+        private void VisitWhere(Token whereToken, VisitorState state)
         {
             if (whereToken != null)
             {
-                state.Buffer.Append(" WHERE ");
-                VisitToken(whereToken, false, state);
+                state.Append(Sym._WHERE_);
+                VisitToken(whereToken, state);
             }
         }
 
-        private static void VisitHaving(Token whereToken, VisitorState state)
+        private void VisitHaving(Token whereToken, VisitorState state)
         {
             if (whereToken != null)
             {
-                state.Buffer.Append(" HAVING ");
-                VisitToken(whereToken, false, state);
+                state.Append(Sym._HAVING_);
+                VisitToken(whereToken, state);
             }
         }
 
-
-        private static void VisitWith(bool? value, string name, VisitorState state)
+        private void VisitWith(bool? value, string name, VisitorState state)
         {
             if (value.HasValue)
             {
-                state.Buffer.AppendFormat(" {0} = {1}", name, value.Value ? "ON" : "OFF");
+                state.Append(Sym.SPACE);
+                state.Append(name);
+                state.Append(AssignVal);
+                state.Append(value.Value ? Sym.ON : Sym.OFF);
             }
         }
 
-        private static void VisitWith(int? value, string name, VisitorState state)
+        private void VisitWith(int? value, string name, VisitorState state)
         {
             if (value.HasValue)
             {
-                state.Buffer.AppendFormat(" {0} = {1}", name, value.Value);
+                state.Append(Sym.SPACE);
+                state.Append(name);
+                state.Append(AssignVal);
+                state.Append(value.Value);
             }
         }
 
@@ -1406,9 +1291,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #region Tokens
 
-        private static void VisitToken(Token token, bool includeAlias, VisitorState state)
+        private void VisitToken(Token token, VisitorState state, bool includeAlias = false)
         {
-            TokenVisitors[token.GetType()](token, state);
+            // todo check for statement
+            TokenVisitors[token.GetType()](this, token, state);
 
             if (includeAlias)
             {
@@ -1419,25 +1305,24 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.ParameterValues.AddRange(token.ParameterValues);
         }
 
-        private static void VisitAlias(Token token, VisitorState state)
+        private void VisitAlias(Token token, VisitorState state, string open = Sym._AS_osp)
         {
             if (!string.IsNullOrWhiteSpace(token.Alias))
             {
-                state.Buffer.Append(" AS [");
-                state.Buffer.Append(token.Alias);
-                state.Buffer.Append("]");
+                state.Append(open);
+                state.Append(token.Alias);
+                state.Append(Sym.csp);
             }
         }
 
-        private static void VisitScalarToken(Token token, VisitorState state)
+        private void VisitScalarToken(Scalar token, VisitorState state)
         {
-            var value = ((Scalar)token).Value;
-
+            var value = token.Value;
             if (value == null) return;
 
             if (value is DBNull)
             {
-                state.Buffer.Append("NULL");
+                state.Append(Sym.NULL);
             }
             else if ((value is Boolean)
                 || (value is SByte)
@@ -1452,335 +1337,293 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 || (value is Double)
                 || (value is Decimal))
             {
-                state.Buffer.Append(value);
+                state.Append(value);
             }
             else if (value is TimeSpan)
             {
-                state.Buffer.Append("N'");
-                state.Buffer.Append(((TimeSpan)value).ToString("HH:mm:ss"));
-                state.Buffer.Append("'");
+                state.Append("N'");
+                state.Append(((TimeSpan)value).ToString("HH:mm:ss"));
+                state.Append("'");
             }
             else if (value is DateTime)
             {
-                state.Buffer.Append("N'");
-                state.Buffer.Append(((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
-                state.Buffer.Append("'");
+                state.Append("N'");
+                state.Append(((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Append("'");
             }
             else if (value is DateTimeOffset)
             {
-                state.Buffer.Append("N'");
-                state.Buffer.Append(((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"));
-                state.Buffer.Append("'");
+                state.Append("N'");
+                state.Append(((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Append("'");
             }
             else
             {
-                state.Buffer.Append("N'" + value + "'");
+                state.Append("N'" + value + "'");
             }
         }
 
-        private static void VisitStatementToken(Token token, VisitorState state)
+        private void VisitStatementToken(IStatement token, VisitorState state)
         {
-            var value = ((IStatement)token);
-
-            state.Buffer.Append("(");
-            VisitStatement(value, state);
-            state.Buffer.Append(")");
+            state.Append(Sym.op);
+            VisitStatement(token, state);
+            state.Append(Sym.cp);
         }
 
-        private static void VisitNameToken(Token token, VisitorState state)
+        private void VisitNameToken(Name token, VisitorState state)
         {
-            var value = ((Name)token).GetFullName("[", "]");
-            state.Buffer.Append(value);
+            state.Append(ResolveName(token));
         }
 
-        private static void VisitParameterToken(Token token, VisitorState state)
+        private void VisitParameterToken(Parameter token, VisitorState state)
         {
-            var value = ((Parameter)token);
-            state.Buffer.Append(value.Name);
+            state.Append(token.Name);
         }
 
-        private static void VisitSnippetToken(Token token, VisitorState state)
+        private void VisitSnippetToken(Snippet token, VisitorState state)
         {
-            var value = ((Snippet)token).Value;
-            state.Buffer.Append(value);
+            state.Append(token.Value);
         }
 
-        private static void VisitFunctionToken(Token token, VisitorState state)
+        private void VisitFunctionToken(Function token, VisitorState state)
         {
-            var value = ((Function)token);
-            state.Buffer.Append(" ");
-            state.Buffer.Append(value.Name);
+            state.Append(Sym.SPACE);
+            state.Append(token.Name);
 
-            VisitTokenSet("(", ", ", ")", value.Arguments, false, state);
+            VisitTokenSet(token.Arguments, state, Sym.op, Sym.COMMA_, Sym.cp);
         }
 
-        private static void VisitBinaryToken(Token token, VisitorState state, string operation)
+        private void VisitBinaryToken(BinaryToken token, VisitorState state, string operation)
         {
-            var value = (BinaryToken)token;
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(operation);
-            VisitToken(value.Second, false, state);
+            VisitToken(token.First, state, false);
+            state.Append(operation);
+            VisitToken(token.Second, state, false);
         }
 
-        private static void VisitIsEqualsToken(Token token, VisitorState state)
+        private void VisitIsEqualsToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, EqualsVal);
         }
 
-        private static void VisitNotEqualToken(Token token, VisitorState state)
+        private void VisitNotEqualToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, NotEqualVal);
         }
 
-        private static void VisitLessToken(Token token, VisitorState state)
+        private void VisitLessToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, LessVal);
         }
 
-        private static void VisitNotLessToken(Token token, VisitorState state)
+        private void VisitNotLessToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, NotLessVal);
         }
 
-        private static void VisitLessOrEqualToken(Token token, VisitorState state)
+        private void VisitLessOrEqualToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, LessOrEqualVal);
         }
 
-        private static void VisitGreaterToken(Token token, VisitorState state)
+        private void VisitGreaterToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, GreaterVal);
         }
 
-        private static void VisitNotGreaterToken(Token token, VisitorState state)
+        private void VisitNotGreaterToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, NotGreaterVal);
         }
 
-        private static void VisitGreaterOrEqualToken(Token token, VisitorState state)
+        private void VisitGreaterOrEqualToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, GreaterOrEqualVal);
         }
 
-        private static void VisitAllToken(Token token, VisitorState state)
+        private void VisitAllToken(AllToken token, VisitorState state)
         {
-            state.Buffer.Append(" ALL ");
-            var value = (AllToken)token;
-            VisitToken(value.Token, false, state);
+            state.Append(Sym._ALL_);
+            VisitToken(token.Token, state);
         }
 
-        private static void VisitAnyToken(Token token, VisitorState state)
+        private void VisitAnyToken(AnyToken token, VisitorState state)
         {
-            state.Buffer.Append(" ANY ");
-            var value = (AnyToken)token;
-            VisitToken(value.Token, false, state);
+            state.Append(Sym._ANY_);
+            VisitToken(token.Token, state);
         }
 
-        private static void VisitAndToken(Token token, VisitorState state)
+        private void VisitAndToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, AndVal);
         }
 
-        private static void VisitOrToken(Token token, VisitorState state)
+        private void VisitOrToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, OrVal);
         }
 
-        private static void VisitPlusToken(Token token, VisitorState state)
+        private void VisitPlusToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? PlusEqVal : PlusVal);
+            VisitBinaryToken(token, state, token.Equal ? PlusEqVal : PlusVal);
         }
 
-        private static void VisitMinusToken(Token token, VisitorState state)
+        private void VisitMinusToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MinusEqVal : MinusVal);
+            VisitBinaryToken(token, state, token.Equal ? MinusEqVal : MinusVal);
         }
 
-        private static void VisitDivideToken(Token token, VisitorState state)
+        private void VisitDivideToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? DivideEqVal : DivideVal);
+            VisitBinaryToken(token, state, token.Equal ? DivideEqVal : DivideVal);
         }
 
-        private static void VisitModuloToken(Token token, VisitorState state)
+        private void VisitModuloToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? ModuloEqVal : ModuloVal);
+            VisitBinaryToken(token, state, token.Equal ? ModuloEqVal : ModuloVal);
         }
 
-        private static void VisitMultiplyToken(Token token, VisitorState state)
+        private void VisitMultiplyToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? MultiplyEqVal : MultiplyVal);
+            VisitBinaryToken(token, state, token.Equal ? MultiplyEqVal : MultiplyVal);
         }
 
-        private static void VisitBitwiseAndToken(Token token, VisitorState state)
+        private void VisitBitwiseAndToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseAndEqVal : BitwiseAndVal);
+            VisitBinaryToken(token, state, token.Equal ? BitwiseAndEqVal : BitwiseAndVal);
         }
 
-        private static void VisitBitwiseOrToken(Token token, VisitorState state)
+        private void VisitBitwiseOrToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseOrEqVal : BitwiseOrVal);
+            VisitBinaryToken(token, state, token.Equal ? BitwiseOrEqVal : BitwiseOrVal);
         }
 
-        private static void VisitBitwiseXorToken(Token token, VisitorState state)
+        private void VisitBitwiseXorToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseXorEqVal : BitwiseXorVal);
+            VisitBinaryToken(token, state, token.Equal ? BitwiseXorEqVal : BitwiseXorVal);
         }
 
-        private static void VisitBitwiseNotToken(Token token, VisitorState state)
+        private void VisitBitwiseNotToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, ((BinaryEqualToken)token).Equal ? BitwiseNotEqVal : BitwiseNotVal);
+            VisitBinaryToken(token, state, token.Equal ? BitwiseNotEqVal : BitwiseNotVal);
         }
 
-        private static void VisitAssignToken(Token token, VisitorState state)
+        private void VisitAssignToken(BinaryToken token, VisitorState state)
         {
             VisitBinaryToken(token, state, AssignVal);
         }
 
-        private static void VisitLikeToken(Token token, VisitorState state)
+        private void VisitLikeToken(BinaryToken token, VisitorState state)
         {
-            var value = (BinaryToken)token;
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(" LIKE ");
-            VisitToken(value.Second, false, state);
+            VisitToken(token.First, state);
+            state.Append(Sym._LIKE_);
+            VisitToken(token.Second, state);
         }
 
-        private static void VisitContainsToken(Token token, VisitorState state)
+        private void VisitContainsToken(BinaryToken token, VisitorState state)
         {
-            var value = (BinaryToken)token;
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(" LIKE '%' + ");
-            VisitToken(value.Second, false, state);
-            state.Buffer.Append(" + '%'");
+            VisitToken(token.First, state, false);
+            state.Append(" LIKE '%' + ");
+            VisitToken(token.Second, state, false);
+            state.Append(" + '%'");
         }
 
-        private static void VisitStartsWithToken(Token token, VisitorState state)
+        private void VisitStartsWithToken(BinaryToken token, VisitorState state)
         {
-            var value = (BinaryToken)token;
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(" LIKE ");
-            VisitToken(value.Second, false, state);
-            state.Buffer.Append(" + '%'");
+            VisitToken(token.First, state, false);
+            state.Append(Sym._LIKE_);
+            VisitToken(token.Second, state, false);
+            state.Append(" + '%'");
         }
 
-        private static void VisitEndsWithToken(Token token, VisitorState state)
+        private void VisitEndsWithToken(BinaryToken token, VisitorState state)
         {
-            var value = (BinaryToken)token;
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(" LIKE '%' + ");
-            VisitToken(value.Second, false, state);
+            VisitToken(token.First, state, false);
+            state.Append(" LIKE '%' + ");
+            VisitToken(token.Second, state, false);
         }
 
-        private static void VisitGroupToken(Token token, VisitorState state)
+        private void VisitGroupToken(GroupToken token, VisitorState state)
         {
-            state.Buffer.Append(" (");
-            var value = (GroupToken)token;
-            VisitToken(value.Token, false, state);
-            state.Buffer.Append(" )");
+            state.Append(Sym._op);
+            VisitToken(token.Token, state, false);
+            state.Append(Sym._cp);
         }
 
-        private static void VisitExistsToken(Token token, VisitorState state)
+        private void VisitExistsToken(ExistsToken token, VisitorState state)
         {
-            state.Buffer.Append(" EXISTS ");
-            var value = (ExistsToken)token;
-            VisitToken(value.Token, false, state);
+            state.Append(Sym._EXISTS_);
+            VisitToken(token.Token, state);
         }
 
-        private static void VisitNotToken(Token token, VisitorState state)
+        private void VisitNotToken(NotToken token, VisitorState state)
         {
-            state.Buffer.Append(" NOT (");
-            var value = (NotToken)token;
-            VisitToken(value.Token, false, state);
-            state.Buffer.Append(" )");
+            state.Append(Sym._NOT_op);
+            VisitToken(token.Token, state);
+            state.Append(Sym._cp);
         }
 
-        private static void VisitIsNullToken(Token token, VisitorState state)
+        private void VisitIsNullToken(IsNullToken token, VisitorState state)
         {
-            var value = (IsNullToken)token;
-            VisitToken(value.Token, false, state);
-            state.Buffer.Append(" IS NULL");
+            VisitToken(token.Token, state);
+            state.Append(Sym._IS_NULL);
         }
 
-        private static void VisitIsNotNullToken(Token token, VisitorState state)
+        private void VisitIsNotNullToken(IsNotNullToken token, VisitorState state)
         {
-            var value = (IsNotNullToken)token;
-            VisitToken(value.Token, false, state);
-            state.Buffer.Append(" IS NOT NULL");
+            VisitToken(token.Token, state, false);
+            state.Append(Sym._IS_NOT_NULL);
         }
 
-        private static void VisitBetweenToken(Token token, VisitorState state)
+        private void VisitBetweenToken(BetweenToken token, VisitorState state)
         {
-            var value = (BetweenToken)token;
-
-            VisitToken(value.Token, false, state);
-            state.Buffer.Append(" BETWEEN ");
-            VisitToken(value.First, false, state);
-            state.Buffer.Append(" AND ");
-            VisitToken(value.Second, false, state);
+            VisitToken(token.Token, state);
+            state.Append(Sym._BETWEEN_);
+            VisitToken(token.First, state);
+            state.Append(Sym._AND_);
+            VisitToken(token.Second, state);
         }
 
-        private static void VisitInToken(Token token, VisitorState state)
+        private void VisitInToken(InToken token, VisitorState state)
         {
-            var value = (InToken)token;
-
-            VisitToken(value.Token, false, state);
-            VisitTokenSet(" IN (", ", ", ")", value.Set, false, state);
+            VisitToken(token.Token, state);
+            VisitTokenSet(token.Set, state, Sym._IN_op, Sym.COMMA_, Sym.cp);
         }
 
-        private static void VisitNotInToken(Token token, VisitorState state)
+        private void VisitNotInToken(NotInToken token, VisitorState state)
         {
-            var value = (NotInToken)token;
-
-            VisitToken(value.Token, false, state);
-            VisitTokenSet(" NOT IN (", ", ", ")", value.Set, false, state);
+            VisitToken(token.Token, state);
+            VisitTokenSet(token.Set, state, Sym._NOT_IN_op, Sym.COMMA_, Sym.cp);
         }
 
-        private static void VisitTokenSet(string prefix, string separator, string suffix, IEnumerable<Token> tokens,
-            bool includeAlias, VisitorState state)
+        private void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, string prefix, string separator, string suffix, bool includeAlias = false)
         {
             var enumerator = tokens.GetEnumerator();
             if (enumerator.MoveNext())
             {
-                state.Buffer.Append(prefix);
-                VisitToken(enumerator.Current, includeAlias, state);
+                state.Append(prefix);
+                VisitToken(enumerator.Current, state, includeAlias);
 
                 while (enumerator.MoveNext())
                 {
-                    state.Buffer.Append(separator);
-                    VisitToken(enumerator.Current, includeAlias, state);
+                    state.Append(separator);
+                    VisitToken(enumerator.Current, state, includeAlias);
                 }
-                state.Buffer.Append(suffix);
+                state.Append(suffix);
             }
         }
 
-        private static void VisitCommentToken(Token token, VisitorState state)
+        private void VisitCommentToken(CommentToken token, VisitorState state)
         {
-            var commentToken = (CommentToken)token;
+            state.Append(" /* ");
 
-            state.Buffer.Append(" /* ");
+            VisitToken(token.Content, state);
 
-            VisitToken(commentToken.Content, false, state);
-
-            state.Buffer.Append(" */ ");
+            state.Append(" */ ");
         }
 
-
-        private static void VisitStringifyToken(Token token, VisitorState state)
+        private void VisitStringifyToken(StringifyToken token, VisitorState state)
         {
-            var strToken = (StringifyToken)token;
-
-            state.Buffer.Append("N'");
-
-            var startIndex = state.Buffer.Length;
-            VisitToken(strToken.Content, false, state);
-            var endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
-            {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
-
-            state.Buffer.Append("'");
+            Stringify(s => VisitToken(token.Content, s), state);
         }
 
         #endregion Tokens

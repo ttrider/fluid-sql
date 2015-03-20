@@ -34,6 +34,14 @@ namespace TTRider.FluidSql.Providers
         {
             this.Buffer.Append(value);
         }
+        internal void Append(int value)
+        {
+            this.Buffer.Append(value);
+        }
+        internal void Append(object value)
+        {
+            this.Buffer.Append(value);
+        }
 
         internal IEnumerable<SqlParameter> GetDbParameters()
         {

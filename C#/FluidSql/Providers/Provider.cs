@@ -41,10 +41,4 @@ namespace TTRider.FluidSql.Providers
         }
 #endif
     }
-
-
-    public static class Visitor
-    {
-        
-    }
 }

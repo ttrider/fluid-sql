@@ -124,6 +124,9 @@
     <Compile Include="..\Properties\AssemblyInfo.cs" />
     <Compile Include="..\Providers\Provider.cs" />
     <Compile Include="..\Providers\SqlServer\SqlServerVisitor.cs" />
+    <Compile Include="..\Providers\Visitor.cs">
+      <Link>Visitor.cs</Link>
+    </Compile>
     <Compile Include="..\Providers\VisitorState.cs" />
     <Compile Include="..\RecordsetStatement.cs" />
     <Compile Include="..\ReturnStatement.cs">
