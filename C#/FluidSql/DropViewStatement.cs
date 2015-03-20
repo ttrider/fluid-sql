@@ -7,5 +7,6 @@ namespace TTRider.FluidSql
     public class DropViewStatement : IStatement
     {
         public Name Name { get; set; }
+        public bool CheckExists { get; set; }
     }
 }

@@ -71,6 +71,9 @@
     <Compile Include="..\DropViewStatement.cs">
       <Link>DropViewStatement.cs</Link>
     </Compile>
+    <Compile Include="..\ExecuteStatement.cs">
+      <Link>ExecuteStatement.cs</Link>
+    </Compile>
     <Compile Include="..\FluidExtensions.cs" />
     <Compile Include="..\ForeignDefinition.cs" />
     <Compile Include="..\ForeignKeyOption.cs" />

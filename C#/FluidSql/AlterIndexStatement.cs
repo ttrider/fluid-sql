@@ -4,7 +4,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class AlterIndexStatement : IStatement
+    public class AlterIndexStatement : Token, IStatement
     {
         public AlterIndexStatement()
         {

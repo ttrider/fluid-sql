@@ -178,8 +178,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (WaitforTimeStatement), VisitWaitforTimeStatement},
                 {typeof (WhileStatement), VisitWhileStatement},
                 {typeof (CreateViewStatement), VisitCreateViewStatement},
+                {typeof (CreateOrAlterViewStatement), VisitCreateOrAlterViewStatement},
                 {typeof (AlterViewStatement), VisitAlterViewStatement},
                 {typeof (DropViewStatement), VisitDropViewStatement},
+                {typeof (ExecuteStatement), VisitExecuteStatement},
             };
 
         public static VisitorState Compile(IStatement statement)
@@ -458,7 +460,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (into != null)
             {
                 state.Buffer.Append(" INTO ");
-                state.Buffer.Append(into.GetFullName("[","]"));
+                state.Buffer.Append(into.GetFullName("[", "]"));
             }
         }
 
@@ -731,7 +733,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private static void VisitWhileStatement(IStatement statement, VisitorState state)
         {
-            var stmt = (WhileStatement) statement;
+            var stmt = (WhileStatement)statement;
 
             if (stmt.Condition != null)
             {
@@ -979,6 +981,25 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Buffer.Append("'");
         }
 
+        private static void VisitExecuteStatement(IStatement statement, VisitorState state)
+        {
+            var execStatement = (ExecuteStatement)statement;
+
+            state.Buffer.Append("EXEC (N'");
+            var startIndex = state.Buffer.Length;
+
+            VisitStatement(execStatement.Target, state);
+            var endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+
+            state.Buffer.Append("');");
+        }
+
 
         private static void VisitSnippetStatement(IStatement statement, VisitorState state)
         {
@@ -1135,17 +1156,114 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var createStatement = (CreateViewStatement)statement;
 
+            var viewName = createStatement.Name.GetFullName("[", "]");
+
+            if (createStatement.CheckIfNotExists)
+            {
+                state.Buffer.Append("IF OBJECT_ID(N'");
+                state.Buffer.Append(viewName);
+                state.Buffer.Append("') IS NULL EXEC (N'");
+
+                var startIndex = state.Buffer.Length;
+
+                state.Buffer.Append("CREATE VIEW ");
+                state.Buffer.Append(viewName);
+                state.Buffer.Append(" AS ");
+                VisitStatement(createStatement.DefinitionQuery, state);
+
+                var endIndex = state.Buffer.Length;
+
+                // replace all "'" characters with "''"
+                if (endIndex > startIndex)
+                {
+                    state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+                }
+
+                state.Buffer.Append("');");
+            }
+            else
+            {
+                state.Buffer.Append("CREATE VIEW ");
+                state.Buffer.Append(viewName);
+                state.Buffer.Append(" AS ");
+                VisitStatement(createStatement.DefinitionQuery, state);
+            }
+        }
+        private static void VisitCreateOrAlterViewStatement(IStatement statement, VisitorState state)
+        {
+            var createStatement = (CreateOrAlterViewStatement)statement;
+
+            var viewName = createStatement.Name.GetFullName("[", "]");
+
+            state.Buffer.Append("IF OBJECT_ID(N'");
+            state.Buffer.Append(viewName);
+            state.Buffer.Append("') IS NULL EXEC (N'");
+
+            var startIndex = state.Buffer.Length;
+
             state.Buffer.Append("CREATE VIEW ");
-            state.Buffer.Append(createStatement.Name.GetFullName("[", "]"));
+            state.Buffer.Append(viewName);
             state.Buffer.Append(" AS ");
             VisitStatement(createStatement.DefinitionQuery, state);
+
+            var endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+
+            state.Buffer.Append("'); ELSE EXEC (N'");
+
+            startIndex = state.Buffer.Length;
+
+            state.Buffer.Append("ALTER VIEW ");
+            state.Buffer.Append(viewName);
+            state.Buffer.Append(" AS ");
+            VisitStatement(createStatement.DefinitionQuery, state);
+
+            endIndex = state.Buffer.Length;
+
+            // replace all "'" characters with "''"
+            if (endIndex > startIndex)
+            {
+                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+            }
+            state.Buffer.Append("');");
         }
 
         private static void VisitDropViewStatement(IStatement statement, VisitorState state)
         {
             var dropStatement = (DropViewStatement)statement;
-            state.Buffer.Append("DROP VIEW ");
-            state.Buffer.Append(dropStatement.Name.GetFullName("[", "]"));
+            var viewName = dropStatement.Name.GetFullName("[", "]");
+
+            if (dropStatement.CheckExists)
+            {
+                state.Buffer.Append("IF OBJECT_ID(N'");
+                state.Buffer.Append(viewName);
+                state.Buffer.Append("') IS NOT NULL EXEC (N'");
+
+                var startIndex = state.Buffer.Length;
+
+                state.Buffer.Append("DROP VIEW ");
+                state.Buffer.Append(viewName);
+                state.Buffer.Append(";");
+                var endIndex = state.Buffer.Length;
+
+                // replace all "'" characters with "''"
+                if (endIndex > startIndex)
+                {
+                    state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
+                }
+
+                state.Buffer.Append("');");
+            }
+            else
+            {
+                state.Buffer.Append("DROP VIEW ");
+                state.Buffer.Append(dropStatement.Name.GetFullName("[", "]"));
+            }
         }
 
         private static void VisitAlterViewStatement(IStatement statement, VisitorState state)

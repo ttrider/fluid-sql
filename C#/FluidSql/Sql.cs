@@ -352,6 +352,22 @@ namespace TTRider.FluidSql
 
         #region Statements
 
+        public static ExecuteStatement Execute(string statement)
+        {
+            return new ExecuteStatement
+            {
+                Target = Sql.SnippetStatement(statement)
+            };
+        }
+        public static ExecuteStatement Execute(IStatement statement)
+        {
+            return new ExecuteStatement
+            {
+                Target = statement
+            };
+        }
+
+
         public static SelectStatement Select
         {
             get { return new SelectStatement(); }
@@ -535,14 +551,25 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement)
+        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
         {
             return new CreateViewStatement
             {
                 Name = name,
                 DefinitionQuery = definitionStatement,
+                CheckIfNotExists = checkIfNotExists
             };
         }
+
+        public static CreateOrAlterViewStatement CreateOrAlterView(Name name, IStatement definitionStatement)
+        {
+            return new CreateOrAlterViewStatement
+            {
+                Name = name,
+                DefinitionQuery = definitionStatement,
+            };
+        }
+
 
         public static AlterViewStatement AlterView(Name name, IStatement definitionStatement)
         {
@@ -553,9 +580,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static DropViewStatement DropView(Name name)
+        public static DropViewStatement DropView(Name name, bool checkExists = false)
         {
-            return new DropViewStatement { Name = name};
+            return new DropViewStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
         }
 
         public static CommentToken Comment(string comment)
@@ -649,5 +680,6 @@ namespace TTRider.FluidSql
         }
 
         #endregion Statements
+
     }
 }

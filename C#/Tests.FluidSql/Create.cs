@@ -141,5 +141,38 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("DROP VIEW [foo];", command.CommandText);
         }
+
+
+        [TestMethod]
+        public void CreateViewIfNotExists()
+        {
+            var statement  = Sql.CreateView(Sql.Name("foo"), Sql.Select.From("bar"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID(N'[foo]') IS NULL EXEC (N'CREATE VIEW [foo] AS SELECT * FROM [bar]');", command.CommandText);
+        }
+        [TestMethod]
+        public void CreateOrAlterView()
+        {
+            var statement = Sql.CreateOrAlterView(Sql.Name("foo"), Sql.Select.From("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID(N'[foo]') IS NULL EXEC (N'CREATE VIEW [foo] AS SELECT * FROM [bar]'); ELSE EXEC (N'ALTER VIEW [foo] AS SELECT * FROM [bar]');", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropViewIfExists()
+        {
+            var statement = Sql.DropView(Sql.Name("foo"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID(N'[foo]') IS NOT NULL EXEC (N'DROP VIEW [foo];');", command.CommandText);
+        }
     }
 }

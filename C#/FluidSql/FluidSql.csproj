@@ -61,6 +61,7 @@
     <Compile Include="DropIndexStatement.cs" />
     <Compile Include="DropTableStatement.cs" />
     <Compile Include="DropViewStatement.cs" />
+    <Compile Include="ExecuteStatement.cs" />
     <Compile Include="FluidExtensions.cs" />
     <Compile Include="ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
