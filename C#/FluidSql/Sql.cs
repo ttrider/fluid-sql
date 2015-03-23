@@ -151,6 +151,23 @@ namespace TTRider.FluidSql
                 On = on
             };
         }
+        public static DropIndexStatement DropIndex(Name name, Name on, bool checkExists)
+        {
+            return new DropIndexStatement
+            {
+                Name = name,
+                On = on,
+                CheckExists = checkExists
+            };
+        }
+        public static DropIndexStatement DropIndex(Name name, bool checkExists)
+        {
+            return new DropIndexStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
+        }
 
         public static CreateIndexStatement CreateIndex(string name, string on)
         {
@@ -161,34 +178,31 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static AlterIndexStatement AlterIndex(string name, string on)
-        {
-            return new AlterIndexStatement
-            {
-                Name = Name(name),
-                On = Name(on)
-            };
-        }
-
-        public static AlterIndexStatement AlterIndexAll(string on)
+        public static AlterIndexStatement AlterIndexAll(Name on)
         {
             return new AlterIndexStatement
             {
                 Name = null,
-                On = Name(on)
+                On = on
             };
         }
-
-        public static DropIndexStatement DropIndex(string name, string on)
+        public static AlterIndexStatement Reindex(Name on)
         {
-            return new DropIndexStatement
+            return new AlterIndexStatement
             {
-                Name = Name(name),
-                On = Name(on)
-            };
+                Name = null,
+                On = on
+            }.Rebuild();
         }
 
-
+        public static AlterIndexStatement Reindex(Name name, Name on)
+        {
+            return new AlterIndexStatement
+            {
+                Name = name,
+                On = on
+            }.Rebuild();
+        }
 
         public static SetStatement Assign(Name target, Token expression)
         {
@@ -556,7 +570,17 @@ namespace TTRider.FluidSql
             return new CreateViewStatement
             {
                 Name = name,
-                DefinitionQuery = definitionStatement,
+                DefinitionStatement = definitionStatement,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+        public static CreateViewStatement CreateTemporaryView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
+        {
+            return new CreateViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement,
+                IsTemporary = true,
                 CheckIfNotExists = checkIfNotExists
             };
         }
@@ -566,7 +590,7 @@ namespace TTRider.FluidSql
             return new CreateOrAlterViewStatement
             {
                 Name = name,
-                DefinitionQuery = definitionStatement,
+                DefinitionStatement = definitionStatement,
             };
         }
 

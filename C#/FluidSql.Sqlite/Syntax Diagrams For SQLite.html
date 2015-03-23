@@ -1,0 +1,499 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0054)https://www.sqlite.org/syntaxdiagrams.html#vacuum-stmt -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Syntax Diagrams For SQLite</title>
+    <style type="text/css">
+        body {
+            margin: auto;
+            font-family: Verdana, sans-serif;
+            padding: 8px 1%;
+        }
+
+        section.done {
+            opacity: 0.3;
+        }
+
+        section.partial{
+            opacity: 0.8;
+            background: #f0f0e0;
+        }
+
+        a {
+            color: #044a64;
+        }
+
+            a:visited {
+                color: #734559;
+            }
+
+        .logo {
+            position: absolute;
+            margin: 3px;
+        }
+
+        .tagline {
+            float: right;
+            text-align: right;
+            font-style: italic;
+            width: 300px;
+            margin: 12px;
+            margin-top: 58px;
+        }
+
+        .menubar {
+            clear: both;
+            border-radius: 8px;
+            background: #044a64;
+            padding: 0px;
+            margin: 0px;
+            cell-spacing: 0px;
+        }
+
+        .toolbar {
+            text-align: center;
+            line-height: 1.6em;
+            margin: 0;
+            padding: 0px 8px;
+        }
+
+            .toolbar a {
+                color: white;
+                text-decoration: none;
+                padding: 6px 12px;
+            }
+
+                .toolbar a:visited {
+                    color: white;
+                }
+
+                .toolbar a:hover {
+                    color: #044a64;
+                    background: white;
+                }
+
+        .content {
+            margin: 5%;
+        }
+
+            .content dt {
+                font-weight: bold;
+            }
+
+            .content dd {
+                margin-bottom: 25px;
+                margin-left: 20%;
+            }
+
+            .content ul {
+                padding: 0px;
+                padding-left: 15px;
+                margin: 0px;
+            }
+
+        /* Things for "fancyformat" documents start here. */
+        .fancy img + p {
+            font-style: italic;
+        }
+
+        .fancy .codeblock i {
+            color: darkblue;
+        }
+
+        .fancy h1, .fancy h2, .fancy h3, .fancy h4 {
+            font-weight: normal;
+            color: #044a64;
+        }
+
+        .fancy h2 {
+            margin-left: 10px;
+        }
+
+        .fancy h3 {
+            margin-left: 20px;
+        }
+
+        .fancy h4 {
+            margin-left: 30px;
+        }
+
+        .fancy th {
+            white-space: nowrap;
+            text-align: left;
+            border-bottom: solid 1px #444;
+        }
+
+        .fancy th, .fancy td {
+            padding: 0.2em 1ex;
+            vertical-align: top;
+        }
+
+        .fancy #toc a {
+            color: darkblue;
+            text-decoration: none;
+        }
+
+        .fancy .todo {
+            color: #AA3333;
+            font-style: italic;
+        }
+
+            .fancy .todo:before {
+                content: 'TODO:';
+            }
+
+        .fancy p.todo {
+            border: solid #AA3333 1px;
+            padding: 1ex;
+        }
+
+        .fancy img {
+            display: block;
+        }
+
+        .fancy :link:hover, .fancy :visited:hover {
+            background: wheat;
+        }
+
+        .fancy p, .fancy ul, .fancy ol {
+            margin: 1em 5ex;
+        }
+
+        .fancy li p {
+            margin: 1em 0;
+        }
+        /* End of "fancyformat" specific rules. */
+    </style>
+
+</head>
+<body>
+    <div>
+        <section class="partial">
+            <a name="sql-stmt-list"></a><h4>sql-stmt-list:</h4><blockquote>
+                <img src="./Syntax Diagrams For SQLite_files/sql-stmt-list.gif"><br><br><br><br>
+                References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+                See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang.html">lang.html</a>
+            </blockquote>
+        </section>
+
+        <a name="sql-stmt"></a><h4>sql-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/sql-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt-list">sql-stmt-list</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#alter-table-stmt">alter-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#analyze-stmt">analyze-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#attach-stmt">attach-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#begin-stmt">begin-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#commit-stmt">commit-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-index-stmt">create-index-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-table-stmt">create-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-view-stmt">create-view-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-virtual-table-stmt">create-virtual-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#detach-stmt">detach-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#drop-index-stmt">drop-index-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#drop-table-stmt">drop-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#drop-trigger-stmt">drop-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#drop-view-stmt">drop-view-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#pragma-stmt">pragma-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#reindex-stmt">reindex-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#release-stmt">release-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#rollback-stmt">rollback-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#savepoint-stmt">savepoint-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt-limited">update-stmt-limited</a>&nbsp;&nbsp; <a href="./Syntax Diagrams For SQLite_files/Syntax Diagrams For SQLite.html">vacuum-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang.html">lang.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_explain.html">lang_explain.html</a>
+        </blockquote>
+        <a name="alter-table-stmt"></a><h4>alter-table-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/alter-table-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-def">column-def</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>
+        </blockquote>
+        <a name="analyze-stmt"></a><h4>analyze-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/analyze-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_analyze.html">lang_analyze.html</a>
+        </blockquote>
+        <a name="attach-stmt"></a><h4>attach-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/attach-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>
+        </blockquote>
+        <a name="begin-stmt"></a><h4>begin-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/begin-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_transaction.html">lang_transaction.html</a>
+        </blockquote>
+        <a name="commit-stmt"></a><h4>commit-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/commit-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_transaction.html">lang_transaction.html</a>
+        </blockquote>
+        <a name="rollback-stmt"></a><h4>rollback-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/rollback-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_savepoint.html">lang_savepoint.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_transaction.html">lang_transaction.html</a>
+        </blockquote>
+        <a name="savepoint-stmt"></a><h4>savepoint-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/savepoint-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_savepoint.html">lang_savepoint.html</a>
+        </blockquote>
+        <a name="release-stmt"></a><h4>release-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/release-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_savepoint.html">lang_savepoint.html</a>
+        </blockquote>
+        <a name="create-index-stmt"></a><h4>create-index-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/create-index-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#indexed-column">indexed-column</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="indexed-column"></a><h4>indexed-column:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/indexed-column.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-index-stmt">create-index-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-constraint">table-constraint</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="create-table-stmt"></a><h4>create-table-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/create-table-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-def">column-def</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-constraint">table-constraint</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>
+        </blockquote>
+        <a name="column-def"></a><h4>column-def:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/column-def.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#alter-table-stmt">alter-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-table-stmt">create-table-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#type-name">type-name</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
+        </blockquote>
+        <a name="type-name"></a><h4>type-name:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/type-name.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-def">column-def</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#signed-number">signed-number</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="column-constraint"></a><h4>column-constraint:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/column-constraint.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-def">column-def</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#conflict-clause">conflict-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#foreign-key-clause">foreign-key-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#literal-value">literal-value</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#signed-number">signed-number</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
+        </blockquote>
+        <a name="signed-number"></a><h4>signed-number:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/signed-number.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#pragma-value">pragma-value</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#type-name">type-name</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/pragma.html#syntax">pragma.html#syntax</a>
+        </blockquote>
+        <a name="table-constraint"></a><h4>table-constraint:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/table-constraint.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-table-stmt">create-table-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#conflict-clause">conflict-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#foreign-key-clause">foreign-key-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#indexed-column">indexed-column</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html#primkeyconst">lang_createtable.html#primkeyconst</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
+        </blockquote>
+        <a name="foreign-key-clause"></a><h4>foreign-key-clause:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/foreign-key-clause.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-constraint">table-constraint</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>
+        </blockquote>
+        <a name="conflict-clause"></a><h4>conflict-clause:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/conflict-clause.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-constraint">table-constraint</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_conflict.html">lang_conflict.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html#notnullconst">lang_createtable.html#notnullconst</a>
+        </blockquote>
+        <a name="create-trigger-stmt"></a><h4>create-trigger-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/create-trigger-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt">update-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>
+        </blockquote>
+        <a name="create-view-stmt"></a><h4>create-view-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/create-view-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>
+        </blockquote>
+        <a name="create-virtual-table-stmt"></a><h4>create-virtual-table-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/create-virtual-table-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createvtab.html">lang_createvtab.html</a>
+        </blockquote>
+        <a name="with-clause"></a><h4>with-clause:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/with-clause.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt-limited">update-stmt-limited</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#cte-table-name">cte-table-name</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>
+        </blockquote>
+        <a name="cte-table-name"></a><h4>cte-table-name:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/cte-table-name.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#recursive-cte">recursive-cte</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html#recursivecte">lang_with.html#recursivecte</a>
+        </blockquote>
+        <a name="recursive-cte"></a><h4>recursive-cte:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/recursive-cte.gif"><br><br><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#cte-table-name">cte-table-name</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html#recursivecte">lang_with.html#recursivecte</a>
+        </blockquote>
+        <a name="common-table-expression"></a><h4>common-table-expression:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/common-table-expression.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#simple-select-stmt">simple-select-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="delete-stmt"></a><h4>delete-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/delete-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>
+        </blockquote>
+        <a name="delete-stmt-limited"></a><h4>delete-stmt-limited:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/delete-stmt-limited.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>
+        </blockquote>
+        <a name="detach-stmt"></a><h4>detach-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/detach-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_detach.html">lang_detach.html</a>
+        </blockquote>
+        <a name="drop-index-stmt"></a><h4>drop-index-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/drop-index-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_dropindex.html">lang_dropindex.html</a>
+        </blockquote>
+        <a name="drop-table-stmt"></a><h4>drop-table-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/drop-table-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_droptable.html">lang_droptable.html</a>
+        </blockquote>
+        <a name="drop-trigger-stmt"></a><h4>drop-trigger-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/drop-trigger-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_droptrigger.html">lang_droptrigger.html</a>
+        </blockquote>
+        <a name="drop-view-stmt"></a><h4>drop-view-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/drop-view-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_dropview.html">lang_dropview.html</a>
+        </blockquote>
+        <a name="expr"></a><h4>expr:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/expr.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#attach-stmt">attach-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-index-stmt">create-index-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#result-column">result-column</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#simple-select-stmt">simple-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-constraint">table-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt-limited">update-stmt-limited</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#literal-value">literal-value</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#raise-function">raise-function</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#type-name">type-name</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="raise-function"></a><h4>raise-function:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/raise-function.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html#raise">lang_createtrigger.html#raise</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="literal-value"></a><h4>literal-value:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/literal-value.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="numeric-literal"></a><h4>numeric-literal:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/numeric-literal.gif"><br><br><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html#litvalue">lang_expr.html#litvalue</a>
+        </blockquote>
+        <a name="insert-stmt"></a><h4>insert-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/insert-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>
+        </blockquote>
+        <a name="pragma-stmt"></a><h4>pragma-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/pragma-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#pragma-value">pragma-value</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/pragma.html#syntax">pragma.html#syntax</a>
+        </blockquote>
+        <a name="pragma-value"></a><h4>pragma-value:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/pragma-value.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#pragma-stmt">pragma-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#signed-number">signed-number</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/pragma.html#syntax">pragma.html#syntax</a>
+        </blockquote>
+        <a name="reindex-stmt"></a><h4>reindex-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/reindex-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_reindex.html">lang_reindex.html</a>
+        </blockquote>
+        <a name="select-stmt"></a><h4>select-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/select-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-table-stmt">create-table-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-view-stmt">create-view-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-or-subquery">table-or-subquery</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-operator">compound-operator</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#result-column">result-column</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-or-subquery">table-or-subquery</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html#recursivecte">lang_with.html#recursivecte</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="join-clause"></a><h4>join-clause:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/join-clause.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-or-subquery">table-or-subquery</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-operator">join-operator</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-or-subquery">table-or-subquery</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="select-core"></a><h4>select-core:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/select-core.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#simple-select-stmt">simple-select-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#result-column">result-column</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#table-or-subquery">table-or-subquery</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>
+        </blockquote>
+        <a name="factored-select-stmt"></a><h4>factored-select-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/factored-select-stmt.gif"><br><br><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-operator">compound-operator</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>
+        </blockquote>
+        <a name="simple-select-stmt"></a><h4>simple-select-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/simple-select-stmt.gif"><br><br><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>
+        </blockquote>
+        <a name="compound-select-stmt"></a><h4>compound-select-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/compound-select-stmt.gif"><br><br><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>
+        </blockquote>
+        <a name="table-or-subquery"></a><h4>table-or-subquery:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/table-or-subquery.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="result-column"></a><h4>result-column:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/result-column.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-core">select-core</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="join-operator"></a><h4>join-operator:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/join-operator.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#fromclause">lang_select.html#fromclause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="join-constraint"></a><h4>join-constraint:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/join-constraint.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#join-clause">join-clause</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#fromclause">lang_select.html#fromclause</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="ordering-term"></a><h4>ordering-term:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/ordering-term.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#simple-select-stmt">simple-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt-limited">update-stmt-limited</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="compound-operator"></a><h4>compound-operator:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/compound-operator.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#select-stmt">select-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_with.html#recursivecte">lang_with.html#recursivecte</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/partialindex.html">partialindex.html</a>
+        </blockquote>
+        <a name="update-stmt"></a><h4>update-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/update-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>
+        </blockquote>
+        <a name="update-stmt-limited"></a><h4>update-stmt-limited:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/update-stmt-limited.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            References:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#expr">expr</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#with-clause">with-clause</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>
+        </blockquote>
+        <a name="qualified-table-name"></a><h4>qualified-table-name:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/qualified-table-name.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#update-stmt-limited">update-stmt-limited</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_indexedby.html">lang_indexedby.html</a>&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_update.html">lang_update.html</a>
+        </blockquote>
+        <a name="vacuum-stmt"></a><h4>vacuum-stmt:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/vacuum-stmt.gif"><br><br>
+            Used by:&nbsp;&nbsp; <a href="https://www.sqlite.org/syntaxdiagrams.html#sql-stmt">sql-stmt</a><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_vacuum.html">lang_vacuum.html</a>
+        </blockquote>
+        <a name="comment-syntax"></a><h4>comment-syntax:</h4><blockquote>
+            <img src="./Syntax Diagrams For SQLite_files/comment-syntax.gif"><br><br><br><br>
+            See also:&nbsp;&nbsp; <a href="https://www.sqlite.org/lang_comment.html">lang_comment.html</a>
+        </blockquote>
+
+    </div>
+</body>
+</html>

@@ -27,10 +27,14 @@ namespace TTRider.FluidSql
         public bool Sparse { get; set; }
 
         public bool? Null { get; set; }
+        public OnConflict? NullConflict { get; set; }
 
         public bool RowGuid { get; set; }
 
         public IdentityOptions Identity { get; private set; }
+        
+        public Direction? PrimaryKeyDirection { get; set; }
+        public OnConflict? PrimaryKeyConflict { get; set; }
 
         //public static TableColumn Any(string name) { return new TableColumn(name); }
         //public static TableColumn Any(string name, object defaultValue) { return new TableColumn(name) { DefaultValue = defaultValue }; }

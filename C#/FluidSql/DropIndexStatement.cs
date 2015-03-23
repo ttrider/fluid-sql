@@ -16,5 +16,6 @@ namespace TTRider.FluidSql
         public Name On { get; set; }
 
         public IDropIndexOptions With { get; private set; }
+        public bool CheckExists { get; set; }
     }
 }

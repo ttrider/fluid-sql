@@ -8,5 +8,7 @@ namespace TTRider.FluidSql
     {
         public Name Name { get; set; }
         public IStatement DefinitionStatement { get; set; }
+
+        public bool IsTemporary;
     }
 }

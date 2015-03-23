@@ -70,6 +70,10 @@ namespace TTRider.FluidSql
         {
             get { return this.parts.LastOrDefault(); }
         }
+        public string FirstPart
+        {
+            get { return this.parts.FirstOrDefault(); }
+        }
 
 
         public string GetFullName(string openQuote = null, string closeQuote = null)

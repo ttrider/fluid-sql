@@ -26,24 +26,24 @@ namespace TTRider.FluidSql.Providers
             get { return this.Buffer.ToString(); }
         }
 
-        internal void AppendLine()
+        public void AppendLine()
         {
             this.Buffer.AppendLine();
         }
-        internal void Append(string value)
+        public void Append(string value)
         {
             this.Buffer.Append(value);
         }
-        internal void Append(int value)
+        public void Append(int value)
         {
             this.Buffer.Append(value);
         }
-        internal void Append(object value)
+        public void Append(object value)
         {
             this.Buffer.Append(value);
         }
 
-        internal IEnumerable<SqlParameter> GetDbParameters()
+        public IEnumerable<SqlParameter> GetDbParameters()
         {
             // we have a list of parameters, some of them are duplicates
             // some contain type, some not

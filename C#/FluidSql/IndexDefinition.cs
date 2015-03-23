@@ -20,5 +20,6 @@ namespace TTRider.FluidSql
         public bool Unique { get; set; }
 
         public bool? Clustered { get; set; }
+        public OnConflict? Conflict { get; set; }
     }
 }

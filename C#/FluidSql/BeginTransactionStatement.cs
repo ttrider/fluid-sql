@@ -7,5 +7,14 @@ namespace TTRider.FluidSql
     public class BeginTransactionStatement : TransactionStatement
     {
         public string Description { get; set; }
+
+        public TransactionType? Type { get; set; }
+    }
+
+    public enum TransactionType
+    {
+        Deferred, 
+        Immediate, 
+        Exclusive
     }
 }

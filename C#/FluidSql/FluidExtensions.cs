@@ -1275,11 +1275,22 @@ namespace TTRider.FluidSql
             column.Null = !notNull;
             return column;
         }
-
+        public static TableColumn Null(this TableColumn column, OnConflict onConflict, bool notNull = false)
+        {
+            column.Null = !notNull;
+            column.NullConflict = onConflict;
+            return column;
+        }
 
         public static TableColumn NotNull(this TableColumn column)
         {
             column.Null = false;
+            return column;
+        }
+        public static TableColumn NotNull(this TableColumn column, OnConflict onConflict)
+        {
+            column.Null = false;
+            column.NullConflict = onConflict;
             return column;
         }
 
@@ -1288,6 +1299,24 @@ namespace TTRider.FluidSql
             column.Identity.On = true;
             column.Identity.Seed = seed;
             column.Identity.Increment = increment;
+            return column;
+        }
+        public static TableColumn AutoIncrement(this TableColumn column)
+        {
+            column.Identity.On = true;
+            column.Identity.Seed = 1;
+            column.Identity.Increment = 1;
+            return column;
+        }
+        public static TableColumn PrimaryKey(this TableColumn column, Direction direction = Direction.Asc)
+        {
+            column.PrimaryKeyDirection = direction;
+            return column;
+        }
+        public static TableColumn PrimaryKey(this TableColumn column, OnConflict onConflict, Direction direction = Direction.Asc)
+        {
+            column.PrimaryKeyDirection = direction;
+            column.PrimaryKeyConflict = onConflict;
             return column;
         }
 
@@ -1341,34 +1370,6 @@ namespace TTRider.FluidSql
 
         #region PrimaryKey
 
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name,
-            params Order[] columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-            statement.PrimaryKey.Name = Sql.Name(name);
-            statement.PrimaryKey.Columns.AddRange(columns);
-            return statement;
-        }
-
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name,
-            IEnumerable<Order> columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-
-            statement.PrimaryKey.Name = Sql.Name(name);
-            if (columns != null)
-            {
-                statement.PrimaryKey.Columns.AddRange(columns);
-            }
-            return statement;
-        }
-
         public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name,
             params Order[] columns)
         {
@@ -1398,36 +1399,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered,
-            params Order[] columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
 
-            statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name(name);
-            statement.PrimaryKey.Columns.AddRange(columns);
-            return statement;
-        }
-
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered,
-            IEnumerable<Order> columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-
-            statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name(name);
-            if (columns != null)
-            {
-                statement.PrimaryKey.Columns.AddRange(columns);
-            }
-            return statement;
-        }
 
         public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered,
             params Order[] columns)
@@ -1517,6 +1489,132 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, OnConflict onConflict,
+            params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, OnConflict onConflict,
+            IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Conflict = onConflict;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered, OnConflict onConflict,
+            params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered,
+             OnConflict onConflict, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = name;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, OnConflict onConflict, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, OnConflict onConflict, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Conflict = onConflict;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered,
+           OnConflict onConflict, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered, OnConflict onConflict,
+            IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
         #endregion PrimaryKey
 
         #region UniqueConstrainOn
@@ -1800,6 +1898,12 @@ namespace TTRider.FluidSql
 
             return statement;
         }
+        public static SelectStatement Top(this SelectStatement statement, string value, bool percent, bool withTies = false)
+        {
+            statement.Top = new Top(value, percent, withTies);
+
+            return statement;
+        }
 
         public static T Top<T>(this T statement, int value, bool percent = false)
             where T : ITopStatement
@@ -1808,7 +1912,31 @@ namespace TTRider.FluidSql
 
             return statement;
         }
+        public static T Top<T>(this T statement, string value, bool percent = false)
+            where T : ITopStatement
+        {
+            statement.Top = new Top(value, percent, false);
 
+            return statement;
+        }
+
+        public static SelectStatement Limit(this SelectStatement statement, int value)
+        {
+            statement.Top = new Top(value, false, false);
+
+            return statement;
+        }
+
+        public static SelectStatement Offset(this SelectStatement statement, int value)
+        {
+            statement.Offset = new Scalar(){Value = value};
+            return statement;
+        }
+        public static SelectStatement FetchNext(this SelectStatement statement, int value)
+        {
+            statement.Top = new Top(value, false, false);
+            return statement;
+        }
         #endregion Top
     }
 }

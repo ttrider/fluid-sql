@@ -32,4 +32,15 @@ namespace TTRider.FluidSql
         Asc,
         Desc
     }
+
+    public enum OnConflict
+    {
+        Rollback,
+        Abort,
+        Fail,
+        Ignore,
+        Replace
+    }
+
+
 }

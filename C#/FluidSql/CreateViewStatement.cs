@@ -9,16 +9,17 @@ namespace TTRider.FluidSql
     {
         public Name Name { get; set; }
 
-        public IStatement DefinitionQuery { get; set; }
+        public IStatement DefinitionStatement { get; set; }
 
         public bool CheckIfNotExists { get; set; }
+        public bool IsTemporary { get; set; }
     }
 
     public class CreateOrAlterViewStatement : IStatement
     {
         public Name Name { get; set; }
 
-        public IStatement DefinitionQuery { get; set; }
-
+        public IStatement DefinitionStatement { get; set; }
+        public bool IsTemporary { get; set; }
     }
 }

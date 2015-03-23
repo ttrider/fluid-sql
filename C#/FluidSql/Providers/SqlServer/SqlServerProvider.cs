@@ -24,12 +24,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state.GetDbParameters();
         }
 
-        [Obsolete]
-        public override IDbCommand GetCommand(string connectionString, IStatement statement)
-        {
-            return this.GetCommand(statement, connectionString);
-        }
-
         public override IDbConnection GetConnection(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))

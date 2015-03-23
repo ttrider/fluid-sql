@@ -32,5 +32,7 @@ namespace TTRider.FluidSql
         public IList<BinaryEqualToken> Set { get; private set; }
         public Top Top { get; set; }
         public Token Where { get; set; }
+
+        public Token Offset { get; set; }
     }
 }

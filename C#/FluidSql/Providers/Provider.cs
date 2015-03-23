@@ -11,9 +11,6 @@ namespace TTRider.FluidSql.Providers
         public abstract string GenerateStatement(IStatement statement);
         public abstract IEnumerable<DbParameter> GetParameters(IStatement statement);
 
-        [Obsolete]
-        public abstract IDbCommand GetCommand(string connectionString, IStatement statement);
-
         public abstract IDbCommand GetCommand(IStatement statement, string connectionString = null);
 
         public abstract IDbConnection GetConnection(string connectionString);
