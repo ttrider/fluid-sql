@@ -420,8 +420,22 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+        public static CommitTransactionStatement ReleaseToSavepoint(Name name)
+        {
+            return new CommitTransactionStatement
+            {
+                Name = name
+            };
+        }
 
         public static RollbackTransactionStatement RollbackTransaction(Name name = null)
+        {
+            return new RollbackTransactionStatement
+            {
+                Name = name
+            };
+        }
+        public static RollbackTransactionStatement RollbackToSavepoint(Name name)
         {
             return new RollbackTransactionStatement
             {
@@ -436,6 +450,21 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+        public static SaveTransactionStatement SaveTransaction(Parameter parameter)
+        {
+            return new SaveTransactionStatement
+            {
+                Parameter = parameter
+            };
+        }
+        public static SaveTransactionStatement Savepoint(Name name = null)
+        {
+            return new SaveTransactionStatement
+            {
+                Name = name
+            };
+        }
+
 
         public static BeginTransactionStatement BeginTransaction(Parameter parameter, string description = null)
         {
@@ -462,13 +491,6 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SaveTransactionStatement SaveTransaction(Parameter parameter)
-        {
-            return new SaveTransactionStatement
-            {
-                Parameter = parameter
-            };
-        }
 
         #endregion Transaction
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -7,15 +8,19 @@ namespace TTRider.FluidSql.Providers
 {
     public class VisitorState
     {
+        string stringifyPrefix;
+        string stringifySuffix;
+        StringBuilder buffer;
+
         public VisitorState()
         {
             this.Parameters = new List<Parameter>();
             this.Variables = new List<Parameter>();
             this.ParameterValues = new List<ParameterValue>();
-            this.Buffer = new StringBuilder();
+            this.buffer = new StringBuilder();
         }
 
-        public StringBuilder Buffer { get; private set; }
+        
 
         public List<Parameter> Parameters { get; private set; }
         public List<Parameter> Variables { get; private set; }
@@ -23,24 +28,112 @@ namespace TTRider.FluidSql.Providers
 
         public string Value
         {
-            get { return this.Buffer.ToString(); }
+            get { return this.buffer.ToString(); }
         }
 
-        public void AppendLine()
+        public void WriteBeginStringify(string prefix, string suffix = null)
         {
-            this.Buffer.AppendLine();
+            if (string.IsNullOrWhiteSpace(prefix)) throw new ArgumentNullException("prefix");
+            if (string.IsNullOrWhiteSpace(suffix)) suffix = prefix;
+
+            if (string.IsNullOrWhiteSpace(this.stringifyPrefix) || string.IsNullOrWhiteSpace(this.stringifySuffix))
+            {
+                this.Write(prefix);
+                this.stringifyPrefix = prefix;
+                this.stringifySuffix = suffix;
+            }
         }
-        public void Append(string value)
+        public void WriteEndStringify()
         {
-            this.Buffer.Append(value);
+            if (string.IsNullOrWhiteSpace(this.stringifyPrefix) || string.IsNullOrWhiteSpace(this.stringifySuffix))
+            {
+                return;
+            }
+            var suffix = this.stringifySuffix;
+            this.stringifySuffix = null;
+            this.stringifyPrefix = null;
+            Write(suffix);
         }
-        public void Append(int value)
+
+
+        public void Write(string value, params string[] values)
         {
-            this.Buffer.Append(value);
+            if (value == null) return;
+
+            // special threatment of COMMA and CRLF
+            if (buffer.Length != 0 && value != "," && value != "\r\n")
+            {
+                this.buffer.Append(" ");
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.stringifySuffix))
+            {
+                this.buffer.Append(value.Replace(this.stringifySuffix, this.stringifySuffix + this.stringifySuffix));
+                foreach (var valItem in values)
+                {
+                    this.buffer.Append(valItem.Replace(this.stringifySuffix, this.stringifySuffix + this.stringifySuffix));
+                }
+            }
+            else
+            {
+                this.buffer.Append(value);
+                foreach (var valItem in values)
+                {
+                    this.buffer.Append(valItem);
+                }
+            }
         }
-        public void Append(object value)
+
+
+        /// <summary>
+        /// Ensures that statement has proper terminating character (;)  
+        /// </summary>
+        public void WriteStatementTerminator()
         {
-            this.Buffer.Append(value);
+            // we need to make sure that the last non-whitespace character
+            // is ';' unless it is */ or :
+            //TODO: need a better code here
+            for (var i = this.buffer.Length - 1; i >= 0; i--)
+            {
+                var ch = this.buffer[i];
+                if (!Char.IsWhiteSpace(ch))
+                {
+                    if (ch == ';')
+                    {
+                        break;
+                    }
+                    if (ch == ':')
+                    {
+                        break;
+                    }
+                    if (ch == '/')
+                    {
+                        if (i > 0 && this.buffer[i - 1] == '*')
+                        {
+                            break;
+                        }
+                    }
+
+                    this.buffer.Append(";");
+                    break;
+                }
+            }
+        }
+
+        public void WriteCRLF(bool ifNotExists = false)
+        {
+            if (ifNotExists)
+            {
+                var last = this.buffer.Length - 1;
+                if (last >= 0 && this.buffer[last] != '\n')
+                {
+                    this.Write("\r\n");
+                }
+            }
+            else
+            {
+                this.Write("\r\n");
+            }
         }
 
         public IEnumerable<SqlParameter> GetDbParameters()

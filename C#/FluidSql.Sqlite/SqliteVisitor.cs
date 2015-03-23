@@ -96,6 +96,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 //{typeof (WhenMatchedThenDelete),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedThenDelete)t,s)},
                 //{typeof (WhenMatchedThenUpdateSet),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedThenUpdateSet)t,s)},
                 //{typeof (WhenNotMatchedThenInsert),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedThenInsert)t,s)},
+                {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
             };
 
         private static readonly Dictionary<Type, Action<SqliteVisitor, IStatement, VisitorState>> StatementVisitors =
@@ -111,10 +112,10 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 {typeof (Intersect), (v,stm,s)=>v.VisitIntersect((Intersect)stm,s)},
                 {typeof (Except), (v,stm,s)=>v.VisitExcept((Except)stm,s)},
                 {typeof (BeginTransactionStatement), (v,stm,s)=>v.VisitBeginTransaction((BeginTransactionStatement)stm,s)},
-                //{typeof (CommitTransactionStatement), (v,stm,s)=>v.VisitCommitTransaction((CommitTransactionStatement)stm,s)},
-                //{typeof (RollbackTransactionStatement), (v,stm,s)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm,s)},
-                //{typeof (StatementsStatement), (v,stm,s)=>v.VisitStatementsStatement((StatementsStatement)stm,s)},
-                //{typeof (SaveTransactionStatement), (v,stm,s)=>v.VisitSaveTransaction((SaveTransactionStatement)stm,s)},
+                {typeof (CommitTransactionStatement), (v,stm,s)=>v.VisitCommitTransaction((CommitTransactionStatement)stm,s)},
+                {typeof (RollbackTransactionStatement), (v,stm,s)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm,s)},
+                {typeof (StatementsStatement), (v,stm,s)=>v.VisitStatementsStatement((StatementsStatement)stm,s)},
+                {typeof (SaveTransactionStatement), (v,stm,s)=>v.VisitSaveTransaction((SaveTransactionStatement)stm,s)},
                 //{typeof (DeclareStatement), (v,stm,s)=>v.VisitDeclareStatement((DeclareStatement)stm,s)},
                 //{typeof (IfStatement), (v,stm,s)=>v.VisitIfStatement((IfStatement)stm,s)},
                 {typeof (CreateTableStatement), (v,stm,s)=>v.VisitCreateTableStatement((CreateTableStatement)stm,s)},
@@ -150,8 +151,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             var visitor = new SqliteVisitor();
 
             visitor.VisitStatement(statement, state);
-            visitor.EnsureSemicolumn(state);
-
+            state.WriteStatementTerminator();
             return state;
         }
 
@@ -170,7 +170,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 throw new NotImplementedException("join "+join+" is not implemented on SQLite");
             }
-            state.Append(JoinStrings[(int)join]);
+            state.Write(JoinStrings[(int)join]);
         }
 
 
@@ -178,24 +178,27 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (typedToken.DbType.HasValue)
             {
-                state.Append(Sym.SPACE);
-                state.Append(DbTypeStrings[(int)typedToken.DbType]);
+                state.Write(Sym.SPACE);
+                state.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }
 
         protected override void VisitToken(Token token, VisitorState state, bool includeAlias = false)
         {
-            // todo check for statement
             if (!TokenVisitors.ContainsKey(token.GetType()))
             {
-                throw new NotImplementedException("Token " + token.GetType().Name+" is not implemented");
+                throw new NotImplementedException("Token " + token.GetType().Name + " is not implemented");
             }
-            
+            // todo check for statement
             TokenVisitors[token.GetType()](this, token, state);
 
             if (includeAlias)
             {
-                VisitAlias(token, state);
+                if (!string.IsNullOrWhiteSpace(token.Alias))
+                {
+                    state.Write(Sym.AS);
+                    state.Write(this.OpenQuote, token.Alias, this.CloseQuote);
+                }
             }
 
             state.Parameters.AddRange(token.Parameters);

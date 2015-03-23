@@ -69,7 +69,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT  COUNT(*) FROM \"sys\".\"objects\";", text); return statement;
+            Assert.AreEqual("SELECT COUNT( * ) FROM \"sys\".\"objects\";", text); return statement;
         }
          [TestMethod]
         public IStatement SelectFoo()
@@ -255,7 +255,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT \"wrap\".* FROM (SELECT * FROM \"sys\".\"objects\" UNION SELECT * FROM \"sys\".\"objects\") AS \"wrap\";", text); return statement;
+            Assert.AreEqual("SELECT \"wrap\".* FROM ( SELECT * FROM \"sys\".\"objects\" UNION SELECT * FROM \"sys\".\"objects\" ) AS \"wrap\";", text); return statement;
         }
 
          [TestMethod]
@@ -266,7 +266,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT \"wrap\".\"Name\" FROM (SELECT \"Name\" FROM \"sys\".\"objects\") AS \"wrap\";", text); return statement;
+            Assert.AreEqual("SELECT \"wrap\".\"Name\" FROM ( SELECT \"Name\" FROM \"sys\".\"objects\" ) AS \"wrap\";", text); return statement;
         }
 
          [TestMethod]
@@ -277,7 +277,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT \"wrap\".\"nm\" FROM (SELECT \"Name\" AS \"nm\" FROM \"sys\".\"objects\") AS \"wrap\";", text); return statement;
+            Assert.AreEqual("SELECT \"wrap\".\"nm\" FROM ( SELECT \"Name\" AS \"nm\" FROM \"sys\".\"objects\" ) AS \"wrap\";", text); return statement;
         }
          [TestMethod]
         public IStatement SelectUnionAllSelect()
@@ -322,7 +322,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT \"wrap\".* FROM (SELECT \"First\".* FROM \"sys\".\"objects\" AS \"First\" INTERSECT SELECT \"Second\".* FROM \"sys\".\"objects\" AS \"Second\") AS \"wrap\";", text); return statement;
+            Assert.AreEqual("SELECT \"wrap\".* FROM ( SELECT \"First\".* FROM \"sys\".\"objects\" AS \"First\" INTERSECT SELECT \"Second\".* FROM \"sys\".\"objects\" AS \"Second\" ) AS \"wrap\";", text); return statement;
         }
 
          [TestMethod]

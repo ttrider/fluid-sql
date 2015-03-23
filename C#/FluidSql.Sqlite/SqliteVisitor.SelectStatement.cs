@@ -13,26 +13,26 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (statement.Into != null)
             {
-                state.Append(Sym.CREATE_TABLE_);
+                state.Write(Sym.CREATE_TABLE);
                 VisitNameToken(statement.Into, state);
-                state.Append(Sym._AS_);
+                state.Write(Sym.AS);
             }
 
-            state.Append(Sym.SELECT);
+            state.Write(Sym.SELECT);
 
             if (statement.Distinct)
             {
-                state.Append(Sym._DISTINCT);
+                state.Write(Sym.DISTINCT);
             }
 
             // output columns
             if (statement.Output.Count == 0)
             {
-                state.Append(" *");
+                state.Write(Sym.asterisk);
             }
             else
             {
-                VisitTokenSet(statement.Output, state, Sym.SPACE, Sym.COMMA_, String.Empty, true);
+                VisitTokenSet(statement.Output, state, null, Sym.COMMA, null, true);
             }
 
 
@@ -50,10 +50,10 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             if (statement.Top != null)
             {
-                state.Append(Sym._LIMIT_);
+                state.Write(Sym.LIMIT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Append(statement.Top.Value.Value);
+                    state.Write(statement.Top.Value.Value.ToString());
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {
@@ -61,13 +61,13 @@ namespace TTRider.FluidSql.Providers.Sqlite
                     {
                         state.Parameters.Add(parameter);
                     }
-                    state.Append(statement.Top.Parameters[0].Name);
+                    state.Write(statement.Top.Parameters[0].Name);
                 }
             }
 
             if (statement.Offset != null)
             {
-                state.Append(Sym._OFFSET_);
+                state.Write(Sym.OFFSET);
                 VisitToken(statement.Offset, state);
             }
         }

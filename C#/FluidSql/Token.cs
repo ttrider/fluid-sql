@@ -30,7 +30,7 @@ namespace TTRider.FluidSql
             get
             {
                 var state = SqlServerVisitor.Compile(this);
-                return state.Buffer.ToString();
+                return state.Value;
             }
         }
     }

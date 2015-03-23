@@ -11,50 +11,48 @@ namespace TTRider.FluidSql.Providers.Sqlite
     {
         private void VisitCreateTableStatement(CreateTableStatement statement, VisitorState state)
         {
-            state.Append(statement.IsTableVariable || statement.IsTemporary ? Sym.CREATE_TEMP_TABLE_ : Sym.CREATE_TABLE_);
+            state.Write(statement.IsTableVariable || statement.IsTemporary ? Sym.CREATE_TEMP_TABLE : Sym.CREATE_TABLE);
 
             if (statement.CheckIfNotExists)
             {
-                state.Append(Sym.IF_NOT_EXISTS_);
+                state.Write(Sym.IF_NOT_EXISTS);
             }
 
-            state.Append(ResolveName(statement.Name));
+            state.Write(ResolveName(statement.Name));
 
             var separator = " (";
             foreach (var column in statement.Columns)
             {
-                state.Append(separator);
+                state.Write(separator);
                 separator = ", ";
 
-                state.Append("\"");
-                state.Append(column.Name);
-                state.Append("\"");
+                state.Write("\"", column.Name, "\"");
 
                 VisitType(column, state);
 
                 if (column.PrimaryKeyDirection.HasValue)
                 {
-                    state.Append(Sym._PRIMARY_KEY);
-                    state.Append(column.PrimaryKeyDirection.Value == Direction.Asc ? Sym._ASC : Sym._DESC);
+                    state.Write(Sym._PRIMARY_KEY);
+                    state.Write(column.PrimaryKeyDirection.Value == Direction.Asc ? Sym.ASC : Sym.DESC);
                     VisitConflict(column.PrimaryKeyConflict, state);
 
                     if (column.Identity.On)
                     {
-                        state.Append(Sym._AUTOINCREMENT);
+                        state.Write(Sym.AUTOINCREMENT);
                     }
                 }
 
                 if (column.Null.HasValue)
                 {
-                    state.Append(column.Null.Value ? Sym._NULL : Sym._NOT_NULL);
+                    state.Write(column.Null.Value ? Sym._NULL : Sym._NOT_NULL);
                     VisitConflict(column.NullConflict, state);
                 }
 
                 if (column.DefaultValue != null)
                 {
-                    state.Append(Sym._DEFAULT_op);
+                    state.Write(Sym._DEFAULT_op);
                     VisitToken(column.DefaultValue, state);
-                    state.Append(Sym._cp);
+                    state.Write(Sym._cp);
                 }
             }
 
@@ -62,34 +60,34 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 if (statement.PrimaryKey.Name != null)
                 {
-                    state.Append(Sym.COMMA_);
-                    state.Append(Sym.CONSTRAINT_);
-                    state.Append(ResolveName(statement.PrimaryKey.Name));
+                    state.Write(Sym.COMMA);
+                    state.Write(Sym.CONSTRAINT_);
+                    state.Write(ResolveName(statement.PrimaryKey.Name));
                 }
-                state.Append(Sym._PRIMARY_KEY);
-                state.Append(Sym._op);
-                state.Append(string.Join(Sym.COMMA_,
+                state.Write(Sym._PRIMARY_KEY);
+                state.Write(Sym._op);
+                state.Write(string.Join(Sym.COMMA,
                     statement.PrimaryKey.Columns.Select(
-                        n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
-                state.Append(Sym._cp);
+                        n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
+                state.Write(Sym._cp);
 
                 VisitConflict(statement.PrimaryKey.Conflict, state);
             }
 
             foreach (var unique in statement.UniqueConstrains)
             {
-                state.Append(Sym.COMMA_);
-                state.Append(Sym.CONSTRAINT_);
-                state.Append(ResolveName(unique.Name));
-                state.Append(Sym._UNIQUE);
-                state.Append(string.Join(Sym.COMMA_,
-                    unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
-                state.Append(Sym._cp);
+                state.Write(Sym.COMMA);
+                state.Write(Sym.CONSTRAINT_);
+                state.Write(ResolveName(unique.Name));
+                state.Write(Sym._UNIQUE);
+                state.Write(string.Join(Sym.COMMA,
+                    unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
+                state.Write(Sym._cp);
                 VisitConflict(unique.Conflict, state);
             }
 
 
-            state.Append(Sym.cpsc);
+            state.Write(Sym.cpsc);
 
             // if indecies are set, create them
             if (statement.Indicies.Count > 0)
@@ -104,53 +102,53 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         private void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
         {
-            state.Append(Sym.DROP_TABLE_);
+            state.Write(Sym.DROP_TABLE);
             if (statement.CheckExists)
             {
-                state.Append(Sym.IF_EXISTS_);
+                state.Write(Sym.IF_EXISTS);
             }
-            state.Append(ResolveName(statement.Name));
+            state.Write(ResolveName(statement.Name));
         }
 
         private void VisitCreateIndexStatement(CreateIndexStatement statement, VisitorState state)
         {
-            state.Append(Sym.CREATE);
+            state.Write(Sym.CREATE);
 
             if (statement.Unique)
             {
-                state.Append(Sym._UNIQUE);
+                state.Write(Sym._UNIQUE);
             }
 
-            state.Append(Sym._INDEX_);
+            state.Write(Sym.INDEX);
 
             if (statement.CheckIfNotExists)
             {
-                state.Append(Sym.IF_NOT_EXISTS_);
+                state.Write(Sym.IF_NOT_EXISTS);
             }
 
             VisitToken(statement.Name, state);
 
-            state.Append(Sym._ON_);
+            state.Write(Sym.ON);
 
             VisitToken(statement.On, state);
 
             // columns
-            state.Append(Sym._op);
-            state.Append(string.Join(Sym.COMMA_,
+            state.Write(Sym._op);
+            state.Write(string.Join(Sym.COMMA,
                 statement.Columns.Select(
-                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
-            state.Append(Sym.cp);
+                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
+            state.Write(Sym.cp);
 
             VisitWhere(statement.Where, state);
 
-            state.Append(Sym.sc);
+            state.Write(Sym.sc);
         }
 
         private void VisitAlterIndexStatement(AlterIndexStatement statement, VisitorState state)
         {
             if (statement.Rebuild)
             {
-                state.Append(Sym.REINDEX_);
+                state.Write(Sym.REINDEX);
 
                 if (statement.Name == null)
                 {
@@ -166,11 +164,11 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         private void VisitDropIndexStatement(DropIndexStatement statement, VisitorState state)
         {
-            state.Append(Sym.DROP_INDEX_);
+            state.Write(Sym.DROP_INDEX);
 
             if (statement.CheckExists)
             {
-                state.Append(Sym.IF_EXISTS_);
+                state.Write(Sym.IF_EXISTS);
             }
 
             if (statement.On != null)
@@ -187,51 +185,51 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         private void VisitCreateViewStatement(CreateViewStatement statement, VisitorState state)
         {
-            state.Append(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW_ : Sym.CREATE_VIEW_);
+            state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
             if (statement.CheckIfNotExists)
             {
-                state.Append(Sym.IF_NOT_EXISTS_);
+                state.Write(Sym.IF_NOT_EXISTS);
             }
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym._AS_);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
 
         private void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
         {
-            state.Append(Sym.DROP_VIEW_);
-            state.Append(Sym.IF_EXISTS_);
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym.sc);
-            state.Append(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW_ : Sym.CREATE_VIEW_);
+            state.Write(Sym.DROP_VIEW);
+            state.Write(Sym.IF_EXISTS);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.sc);
+            state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym._AS_);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
 
         private void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement, VisitorState state)
         {
-            state.Append(Sym.DROP_VIEW_);
-            state.Append(Sym.IF_EXISTS_);
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym.sc);
+            state.Write(Sym.DROP_VIEW);
+            state.Write(Sym.IF_EXISTS);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.sc);
 
-            state.Append(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW_ : Sym.CREATE_VIEW_);
+            state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym._AS_);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
         private void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
         {
-            state.Append(Sym.DROP_VIEW_);
+            state.Write(Sym.DROP_VIEW);
             if (statement.CheckExists)
             {
-                state.Append(Sym.IF_EXISTS_);
+                state.Write(Sym.IF_EXISTS);
             }
-            state.Append(ResolveName(statement.Name));
+            state.Write(ResolveName(statement.Name));
         }
 
 
@@ -242,19 +240,49 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 switch (statement.Type.Value)
                 {
                     case TransactionType.Deferred:
-                        state.Append(Sym.BEGIN_TRANSACTION);
+                        state.Write(Sym.BEGIN_TRANSACTION);
                         break;
                     case TransactionType.Immediate:
-                        state.Append(Sym.BEGIN_TRANSACTION);
+                        state.Write(Sym.BEGIN_TRANSACTION);
                         break;
                     case TransactionType.Exclusive:
-                        state.Append(Sym.BEGIN_TRANSACTION);
+                        state.Write(Sym.BEGIN_TRANSACTION);
                         break;
                 }
             }
             else
             {
-                state.Append(Sym.BEGIN_TRANSACTION);
+                state.Write(Sym.BEGIN_TRANSACTION);
+            }
+        }
+
+        private void VisitSaveTransaction(TransactionStatement statement, VisitorState state)
+        {
+            state.Write(Sym.SAVEPOINT_);
+            VisitTransactionName(statement, state);
+        }
+
+        private void VisitRollbackTransaction(TransactionStatement statement, VisitorState state)
+        {
+            state.Write("ROLLBACK TRANSACTION");
+
+            if (statement.Name != null || statement.Parameter != null)
+            {
+                state.Write(" TO SAVEPOINT");
+                VisitTransactionName(statement, state);
+            }
+        }
+
+        private void VisitCommitTransaction(TransactionStatement statement, VisitorState state)
+        {
+            if (statement.Name != null || statement.Parameter != null)
+            {
+                state.Write("RELEASE SAVEPOINT ");
+                VisitTransactionName(statement, state);
+            }
+            else
+            {
+                state.Write("COMMIT TRANSACTION");
             }
         }
 

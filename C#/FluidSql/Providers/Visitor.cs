@@ -14,38 +14,6 @@ namespace TTRider.FluidSql.Providers
         protected abstract void VisitToken(Token token, VisitorState state, bool includeAlias = false);
         protected abstract void VisitJoinType(Joins join, VisitorState state);
 
-        protected virtual void EnsureSemicolumn(VisitorState state)
-        {
-            // we need to make sure that the last non-whitespace character
-            // is ';' unless it is */ or :
-            //TODO: need a better code here
-            for (var i = state.Buffer.Length - 1; i >= 0; i--)
-            {
-                var ch = state.Buffer[i];
-                if (!Char.IsWhiteSpace(ch))
-                {
-                    if (ch == ';')
-                    {
-                        break;
-                    }
-                    if (ch == ':')
-                    {
-                        break;
-                    }
-                    if (ch == '/')
-                    {
-                        if (i > 0 && state.Buffer[i - 1] == '*')
-                        {
-                            break;
-                        }
-                    }
-
-                    state.Append(";");
-                    break;
-                }
-            }
-        }
-
         protected virtual string ResolveName(Name name)
         {
             return name.GetFullName(this.OpenQuote, this.CloseQuote);
@@ -55,23 +23,23 @@ namespace TTRider.FluidSql.Providers
         {
             if (conflict.HasValue)
             {
-                state.Append(Sym._ON_CONFLICT);
+                state.Write(Sym.ON_CONFLICT);
                 switch (conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Append(Sym._ABORT);
+                        state.Write(Sym._ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Append(Sym._FAIL);
+                        state.Write(Sym._FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Append(Sym._IGNORE);
+                        state.Write(Sym._IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Append(Sym._REPLACE);
+                        state.Write(Sym._REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Append(Sym._ROLLBACK);
+                        state.Write(Sym._ROLLBACK);
                         break;
                 }
 
@@ -79,6 +47,35 @@ namespace TTRider.FluidSql.Providers
 
         }
 
+        protected virtual bool VisitTransactionName(TransactionStatement statement, VisitorState state)
+        {
+            if (statement.Name != null)
+            {
+                state.Write(Sym.SPACE);
+                state.Write(ResolveName(statement.Name));
+                return true;
+            }
+            if (statement.Parameter != null)
+            {
+                state.Write(Sym.SPACE);
+                state.Write(statement.Parameter.Name);
+                state.Parameters.Add(statement.Parameter);
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual void VisitStatementsStatement(StatementsStatement statement, VisitorState state)
+        {
+            bool first = true;
+            foreach (var subStatement in statement.Statements)
+            {
+                state.WriteCRLF(first);
+                first = false;
+                VisitStatement(subStatement, state);
+                state.WriteStatementTerminator();
+            }
+        }
 
 
         protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, string prefix, string separator, string suffix, bool includeAlias = false)
@@ -86,28 +83,18 @@ namespace TTRider.FluidSql.Providers
             var enumerator = tokens.GetEnumerator();
             if (enumerator.MoveNext())
             {
-                state.Append(prefix);
+                state.Write(prefix);
                 VisitToken(enumerator.Current, state, includeAlias);
 
                 while (enumerator.MoveNext())
                 {
-                    state.Append(separator);
+                    state.Write(separator);
                     VisitToken(enumerator.Current, state, includeAlias);
                 }
-                state.Append(suffix);
+                state.Write(suffix);
             }
         }
 
-        protected virtual void VisitAlias(Token token, VisitorState state, string prefix = Sym._AS_)
-        {
-            if (!string.IsNullOrWhiteSpace(token.Alias))
-            {
-                state.Append(prefix);
-                state.Append(this.OpenQuote);
-                state.Append(token.Alias);
-                state.Append(this.CloseQuote);
-            }
-        }
         protected virtual void VisitScalarToken(Scalar token, VisitorState state, string openQuote, string closeQuote)
         {
             var value = token.Value;
@@ -115,7 +102,7 @@ namespace TTRider.FluidSql.Providers
 
             if (value is DBNull)
             {
-                state.Append(Sym.NULL);
+                state.Write(Sym.NULL);
             }
             else if ((value is Boolean)
                 || (value is SByte)
@@ -130,74 +117,73 @@ namespace TTRider.FluidSql.Providers
                 || (value is Double)
                 || (value is Decimal))
             {
-                state.Append(value);
+                state.Write(value.ToString());
             }
             else if (value is TimeSpan)
             {
-                state.Append(openQuote);
-                state.Append(((TimeSpan)value).ToString("HH:mm:ss"));
-                state.Append(closeQuote);
+                state.Write(openQuote);
+                state.Write(((TimeSpan)value).ToString("HH:mm:ss"));
+                state.Write(closeQuote);
             }
             else if (value is DateTime)
             {
-                state.Append(openQuote);
-                state.Append(((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
-                state.Append(closeQuote);
+                state.Write(openQuote);
+                state.Write(((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Write(closeQuote);
             }
             else if (value is DateTimeOffset)
             {
-                state.Append(openQuote);
-                state.Append(((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"));
-                state.Append(closeQuote);
+                state.Write(openQuote);
+                state.Write(((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                state.Write(closeQuote);
             }
             else
             {
-                state.Append(openQuote + value + closeQuote);
+                state.Write(openQuote + value + closeQuote);
             }
         }
 
         protected virtual void VisitStatementToken(IStatement token, VisitorState state)
         {
-            state.Append(Sym.op);
+            state.Write(Sym.op);
             VisitStatement(token, state);
-            state.Append(Sym.cp);
+            state.Write(Sym.cp);
         }
 
         protected virtual void VisitWhere(Token whereToken, VisitorState state)
         {
             if (whereToken != null)
             {
-                state.Append(Sym._WHERE_);
+                state.Write(Sym._WHERE_);
                 VisitToken(whereToken, state);
             }
         }
         protected virtual void VisitNameToken(Name token, VisitorState state)
         {
-            state.Append(ResolveName(token));
+            state.Write(ResolveName(token));
         }
 
         protected virtual void VisitParameterToken(Parameter token, VisitorState state)
         {
-            state.Append(token.Name);
+            state.Write(token.Name);
         }
 
         protected virtual void VisitSnippetToken(Snippet token, VisitorState state)
         {
-            state.Append(token.Value);
+            state.Write(token.Value);
         }
 
         protected virtual void VisitFunctionToken(Function token, VisitorState state)
         {
-            state.Append(Sym.SPACE);
-            state.Append(token.Name);
-
-            VisitTokenSet(token.Arguments, state, Sym.op, Sym.COMMA_, Sym.cp);
+            state.Write(token.Name, Sym.op);
+            VisitTokenSet(token.Arguments, state, null, Sym.COMMA, null);
+            state.Write(Sym.cp);
         }
 
         protected virtual void VisitBinaryToken(BinaryToken token, VisitorState state, string operation)
         {
             VisitToken(token.First, state, false);
-            state.Append(operation);
+            state.Write(operation);
             VisitToken(token.Second, state, false);
         }
 
@@ -243,13 +229,13 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitAllToken(AllToken token, VisitorState state)
         {
-            state.Append(Sym._ALL_);
+            state.Write(Sym.ALL);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitAnyToken(AnyToken token, VisitorState state)
         {
-            state.Append(Sym._ANY_);
+            state.Write(Sym.ANY);
             VisitToken(token.Token, state);
         }
 
@@ -316,92 +302,92 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitLikeToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Append(Sym._LIKE_);
+            state.Write(Sym._LIKE_);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitContainsToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Append(" LIKE '%' + ");
+            state.Write(" LIKE '%' + ");
             VisitToken(token.Second, state, false);
-            state.Append(" + '%'");
+            state.Write(" + '%'");
         }
 
         protected virtual void VisitStartsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Append(Sym._LIKE_);
+            state.Write(Sym._LIKE_);
             VisitToken(token.Second, state, false);
-            state.Append(" + '%'");
+            state.Write(" + '%'");
         }
 
         protected virtual void VisitEndsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Append(" LIKE '%' + ");
+            state.Write(" LIKE '%' + ");
             VisitToken(token.Second, state, false);
         }
 
         protected virtual void VisitGroupToken(GroupToken token, VisitorState state)
         {
-            state.Append(Sym._op);
+            state.Write(Sym._op);
             VisitToken(token.Token, state, false);
-            state.Append(Sym._cp);
+            state.Write(Sym._cp);
         }
 
         protected virtual void VisitExistsToken(ExistsToken token, VisitorState state)
         {
-            state.Append(Sym._EXISTS_);
+            state.Write(Sym._EXISTS_);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitNotToken(NotToken token, VisitorState state)
         {
-            state.Append(Sym._NOT_op);
+            state.Write(Sym._NOT_op);
             VisitToken(token.Token, state);
-            state.Append(Sym._cp);
+            state.Write(Sym._cp);
         }
 
         protected virtual void VisitIsNullToken(IsNullToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            state.Append(Sym._IS_NULL);
+            state.Write(Sym.IS_NULL);
         }
 
         protected virtual void VisitIsNotNullToken(IsNotNullToken token, VisitorState state)
         {
             VisitToken(token.Token, state, false);
-            state.Append(Sym._IS_NOT_NULL);
+            state.Write(Sym.IS_NOT_NULL);
         }
 
         protected virtual void VisitBetweenToken(BetweenToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            state.Append(Sym._BETWEEN_);
+            state.Write(Sym.BETWEEN);
             VisitToken(token.First, state);
-            state.Append(Sym._AND_);
+            state.Write(Sym.AND);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitInToken(InToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym._IN_op, Sym.COMMA_, Sym.cp);
+            VisitTokenSet(token.Set, state, Sym._IN_op, Sym.COMMA, Sym.cp);
         }
 
         protected virtual void VisitNotInToken(NotInToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym._NOT_IN_op, Sym.COMMA_, Sym.cp);
+            VisitTokenSet(token.Set, state, Sym._NOT_IN_op, Sym.COMMA, Sym.cp);
         }
         protected virtual void VisitCommentToken(CommentToken token, VisitorState state)
         {
-            state.Append(" /* ");
+            state.Write(" /* ");
 
             VisitToken(token.Content, state);
 
-            state.Append(" */ ");
+            state.Write(" */ ");
         }
 
 
@@ -411,19 +397,19 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitCommentStatement(CommentStatement statement, VisitorState state)
         {
-            state.Append(" /* ");
+            state.Write(" /* ");
             VisitStatement(statement.Content, state);
-            state.Append(" */ ");
+            state.Write(" */ ");
         }
         protected virtual void VisitSnippetStatement(SnippetStatement statement, VisitorState state)
         {
-            state.Append(statement.Value);
+            state.Write(statement.Value);
         }
         protected virtual void VisitUnion(Union statement, VisitorState state)
         {
             VisitStatement(statement.First, state);
 
-            state.Append((statement.All ? Sym._UNION_ALL_: Sym._UNION_));
+            state.Write((statement.All ? Sym.UNION_ALL: Sym.UNION));
 
             VisitStatement(statement.Second, state);
         }
@@ -431,26 +417,26 @@ namespace TTRider.FluidSql.Providers
         {
             VisitStatement(statement.First, state);
 
-            state.Append(Sym._EXCEPT_);
+            state.Write(Sym.EXCEPT);
 
             VisitStatement(statement.Second, state);
         }
         protected virtual void VisitIntersect(Intersect statement, VisitorState state)
         {
             VisitStatement(statement.First, state);
-            state.Append(Sym._INTERSECT_);
+            state.Write(Sym.INTERSECT);
             VisitStatement(statement.Second, state);
         }
         protected virtual void VisitFrom(IEnumerable<Token> recordsets, VisitorState state)
         {
-            VisitTokenSet(recordsets, state, Sym._FROM_, Sym.COMMA_, String.Empty, true);
+            VisitTokenSet(recordsets, state, Sym.FROM, Sym.COMMA, null, true);
         }
 
         protected virtual void VisitFrom(Token recordset, VisitorState state)
         {
             if (recordset != null)
             {
-                state.Append(Sym._FROM_);
+                state.Write(Sym.FROM);
                 VisitToken(recordset, state, true);
             }
         }
@@ -466,7 +452,7 @@ namespace TTRider.FluidSql.Providers
 
                     if (join.On != null)
                     {
-                        state.Append(Sym._ON_);
+                        state.Write(Sym.ON);
                         VisitToken(@join.On, state);
                     }
                 }
@@ -475,79 +461,78 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitGroupBy(ICollection<Name> groupBy, VisitorState state)
         {
-            if (groupBy.Count > 0)
-            {
-                state.Append(Sym._GROUP_BY_);
-                state.Append(string.Join(Sym.COMMA_, groupBy.Select(ResolveName)));
-            }
+            VisitTokenSet(groupBy, state, Sym.GROUP_BY, Sym.COMMA, null);
         }
 
         protected virtual void VisitHaving(Token whereToken, VisitorState state)
         {
             if (whereToken != null)
             {
-                state.Append(Sym._HAVING_);
+                state.Write(Sym.HAVING);
                 VisitToken(whereToken, state);
             }
         }
+
+        protected virtual void VisitOrderToken(Order orderToken, VisitorState state)
+        {
+            VisitNameToken(orderToken.Column, state);
+            state.Write(orderToken.Direction == Direction.Asc ? Sym.ASC : Sym.DESC);
+        }
+
+
         protected virtual void VisitOrderBy(ICollection<Order> orderBy, VisitorState state)
         {
-            if (orderBy.Count > 0)
-            {
-                state.Append(Sym._ORDER_BY_);
-                state.Append(string.Join(Sym.COMMA_,
-                    orderBy.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
-            }
+            VisitTokenSet(orderBy, state, Sym.ORDER_BY, Sym.COMMA, null);
         }
 
 
 
         protected readonly string[] JoinStrings =
         {
-            " INNER JOIN ", //Inner = 0,
-            " LEFT OUTER JOIN ", //LeftOuter = 1,
-            " RIGHT OUTER JOIN ", //RightOuter = 2,
-            " FULL OUTER JOIN ", //FullOuter = 3,
-            " CROSS JOIN " //Cross = 4,
+            "INNER JOIN", //Inner = 0,
+            "LEFT OUTER JOIN", //LeftOuter = 1,
+            "RIGHT OUTER JOIN", //RightOuter = 2,
+            "FULL OUTER JOIN", //FullOuter = 3,
+            "CROSS JOIN" //Cross = 4,
         };
 
         protected class Sym
         {
-            public const string _ALL_ = " ALL ";
-            public const string _AND_ = " AND ";
-            public const string _ANY_ = " ANY ";
-            public const string _AUTOINCREMENT = " AUTOINCREMENT";
-            public const string _AS_ = " AS ";
-            public const string _AS_osp = " AS [";
-            public const string _ASC = " ASC";
-            public const string _BETWEEN_ = " BETWEEN ";
+            public const string ALL = "ALL";
+            public const string AND = "AND";
+            public const string ANY = "ANY";
+            public const string AUTOINCREMENT = "AUTOINCREMENT";
+            public const string AS = "AS";
+            public const string AS_osp = "AS [";
+            public const string ASC = "ASC";
+            public const string BETWEEN = "BETWEEN";
             public const string _cp = " )";
             public const string _CLUSTERED = " CLUSTERED";
             public const string _NONCLUSTERED = " NONCLUSTERED";
 
             public const string _INCLUDE_op = " INCLUDE (";
 
-            public const string _DESC = " DESC";
+            public const string DESC = "DESC";
             public const string _DEFAULT_op = " DEFAULT (";
             public const string _EXISTS_ = " EXISTS ";
-            public const string _FROM_ = " FROM ";
-            public const string _GROUP_BY_ = " GROUP BY ";
-            public const string _HAVING_ = " HAVING ";
-            public const string _IDENTITY_ = " IDENTITY ";
+            public const string FROM = "FROM";
+            public const string GROUP_BY = "GROUP BY";
+            public const string HAVING = "HAVING";
+            public const string IDENTITY = "IDENTITY";
             public const string _IN_op = " IN (";
-            public const string _INTO_ = " INTO ";
-            public const string _IS_NOT_NULL = " IS NOT NULL";
-            public const string _IS_NULL = " IS NULL";
+            public const string INTO = "INTO";
+            public const string IS_NOT_NULL = "IS NOT NULL";
+            public const string IS_NULL = "IS NULL";
             public const string _LIKE_ = " LIKE ";
             public const string _MAXDOP = " MAXDOP";
             public const string _NOT_IN_op = " NOT IN (";
             public const string _NOT_op = " NOT (";
             public const string _NOT_NULL = " NOT NULL";
 
-            public const string _INTERSECT_ = " INTERSECT ";
-            public const string _EXCEPT_ = " EXCEPT ";
-            public const string _UNION_ = " UNION ";
-            public const string _UNION_ALL_ = " UNION ALL ";
+            public const string INTERSECT = "INTERSECT";
+            public const string EXCEPT = "EXCEPT";
+            public const string UNION = "UNION";
+            public const string UNION_ALL = "UNION ALL";
             
 
             public const string _NULL = " NULL";
@@ -559,13 +544,12 @@ namespace TTRider.FluidSql.Providers
             public const string _REPLACE = " REPLACE";
             public const string _ROLLBACK = " ROLLBACK";
 
-            public const string _ON_ = " ON ";
-            public const string _ON_CONFLICT = " ON CONFLICT";
+            public const string ON_CONFLICT = "ON CONFLICT";
 
 
             public const string _ONLINE = " ONLINE";
             public const string _op = " (";
-            public const string _ORDER_BY_ = " ORDER BY ";
+            public const string ORDER_BY = "ORDER BY";
             public const string _osp = " [";
             public const string _OUTPUT_ = " OUTPUT ";
             public const string _PERCENT = " PERCENT";
@@ -576,8 +560,8 @@ namespace TTRider.FluidSql.Providers
             public const string _WITH_ = " WITH ";
             public const string _WITH = " WITH";
             public const string _WITH_TIES = " WITH TIES";
-            public const string ALTER_VIEW_ = "ALTER VIEW ";
-            public const string COMMA_ = ", ";
+            public const string ALTER_VIEW = "ALTER VIEW";
+            public const string COMMA = ",";
             public const string cp = ")";
             public const string cpsc = ");";
 
@@ -585,26 +569,26 @@ namespace TTRider.FluidSql.Providers
             public const string _UNIQUE = " UNIQUE";
 
             public const string CREATE = "CREATE";
-            public const string CREATE_TEMP_TABLE_ = "CREATE TEMPORARY TABLE ";
-            public const string CREATE_TABLE_ = "CREATE TABLE ";
-            public const string CREATE_VIEW_ = "CREATE VIEW ";
-            public const string CREATE_TEMPORARY_VIEW_ = "CREATE TEMPORARY VIEW ";
+            public const string CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE";
+            public const string CREATE_TABLE = "CREATE TABLE";
+            public const string CREATE_VIEW = "CREATE VIEW";
+            public const string CREATE_TEMPORARY_VIEW = "CREATE TEMPORARY VIEW";
             public const string csp = "]";
             public const string DELETE = "DELETE";
-            public const string DROP_INDEX_ = "DROP INDEX ";
-            public const string DROP_VIEW_ = "DROP VIEW ";
-            public const string DROP_TABLE_ = "DROP TABLE ";
+            public const string DROP_INDEX = "DROP INDEX";
+            public const string DROP_VIEW = "DROP VIEW";
+            public const string DROP_TABLE = "DROP TABLE";
 
-            public const string IF_NOT_EXISTS_ = "IF NOT EXISTS ";
-            public const string IF_EXISTS_ = "IF EXISTS ";
+            public const string IF_NOT_EXISTS = "IF NOT EXISTS";
+            public const string IF_EXISTS = "IF EXISTS";
 
-            public const string REINDEX_ = "REINDEX ";
-            public const string _LIMIT_ = " LIMIT ";
+            public const string REINDEX = "REINDEX";
+            public const string LIMIT = "LIMIT";
 
-            public const string _OFFSET_ = " OFFSET ";
-            public const string _ROWS = " ROWS";
-            public const string _FETCH_NEXT_ = " FETCH NEXT ";
-            public const string _ROWS_ONLY = " ROWS ONLY";
+            public const string OFFSET = "OFFSET";
+            public const string ROWS = "ROWS";
+            public const string FETCH_NEXT = "FETCH NEXT";
+            public const string ROWS_ONLY = "ROWS ONLY";
 
             public const string BEGIN_TRANSACTION = "BEGIN TRANSACTION";
             public const string BEGIN_IMMIDIATE_TRANSACTION = "BEGIN IMMIDIATE TRANSACTION";
@@ -612,7 +596,7 @@ namespace TTRider.FluidSql.Providers
             public const string BEGIN_EXCLUSIVE_TRANSACTION = "BEGIN EXCLUSIVE TRANSACTION";
             
 
-            public const string _INDEX_ = " INDEX ";
+            public const string INDEX = "INDEX";
 
             public const string NULL = "NULL";
             public const string OFF = "OFF";
@@ -622,9 +606,11 @@ namespace TTRider.FluidSql.Providers
             public const string sc = ";";
             public const string SPACE = " ";
             public const string SELECT = "SELECT";
-            public const string _DISTINCT = " DISTINCT";
-            
+            public const string DISTINCT = "DISTINCT";
 
+            public const string SAVEPOINT_ = "SAVEPOINT";
+
+            public const string asterisk = "*";
 
             public const string EqualsVal = " = ";
             public const string AssignVal = " = ";

@@ -97,6 +97,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {typeof (WhenMatchedThenDelete),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedThenDelete)t,s)},
                 {typeof (WhenMatchedThenUpdateSet),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedThenUpdateSet)t,s)},
                 {typeof (WhenNotMatchedThenInsert),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedThenInsert)t,s)},
+                {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
+
+                
             };
 
         private static readonly Dictionary<Type, Action<SqlServerVisitor, IStatement, VisitorState>> StatementVisitors =
@@ -150,7 +153,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var visitor = new SqlServerVisitor();
 
             visitor.VisitStatement(statement, state);
-            visitor.EnsureSemicolumn(state);
+            state.WriteStatementTerminator();
 
             return state;
         }
@@ -199,19 +202,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private void Stringify(Action<VisitorState> fragment, VisitorState state)
         {
-            state.Append("N'");
-
-            var startIndex = state.Buffer.Length;
+            state.WriteBeginStringify("N'", "'");
             fragment(state);
-            var endIndex = state.Buffer.Length;
-
-            // replace all "'" characters with "''"
-            if (endIndex > startIndex)
-            {
-                state.Buffer.Replace("'", "''", startIndex, endIndex - startIndex);
-            }
-
-            state.Append("'");
+            state.WriteEndStringify();
         }
 
         protected override string CloseQuote
@@ -229,29 +222,29 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (typedToken.DbType.HasValue)
             {
-                state.Append(" ");
-                state.Append(DbTypeStrings[(int)typedToken.DbType]);
+                state.Write(" ");
+                state.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
 
             if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
             {
-                state.Append("(");
+                state.Write("(");
                 if (typedToken.Length.HasValue)
                 {
-                    state.Append(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
+                    state.Write(typedToken.Length.Value == -1 ? "MAX" : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (typedToken.Precision.HasValue)
                 {
-                    state.Append(typedToken.Precision.Value);
+                    state.Write(typedToken.Precision.Value.ToString());
 
                     if (typedToken.Scale.HasValue)
                     {
-                        state.Append(",");
-                        state.Append(typedToken.Scale.Value);
+                        state.Write(",");
+                        state.Write(typedToken.Scale.Value.ToString());
                     }
                 }
 
-                state.Append(")");
+                state.Write(")");
             }
         }
 
@@ -264,12 +257,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         protected override void VisitJoinType(Joins join, VisitorState state)
         {
-            state.Append(JoinStrings[(int)join]);
+            state.Write(JoinStrings[(int)join]);
         }
 
         private void VisitSet(SetStatement statement, VisitorState state)
         {
-            state.Append("SET ");
+            state.Write("SET ");
 
             if (statement.Assign != null)
             {
@@ -278,57 +271,65 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitMerge(MergeStatement statement, VisitorState state)
         {
-            state.Append("MERGE");
+            state.Write("MERGE");
 
             VisitTop(statement.Top, state);
 
             VisitInto(statement.Into, state);
 
-            VisitAlias(statement.Into, state);
+            if (!string.IsNullOrWhiteSpace(statement.Into.Alias))
+            {
+                state.Write(Sym.AS);
+                state.Write(this.OpenQuote, statement.Into.Alias, this.CloseQuote);
+            }
 
-            state.Append(" USING ");
-            VisitToken(statement.Using, state, false);
-            VisitAlias(statement.Using, state);
+            state.Write(" USING ");
+            VisitToken(statement.Using, state);
+            if (!string.IsNullOrWhiteSpace(statement.Using.Alias))
+            {
+                state.Write(Sym.AS);
+                state.Write(this.OpenQuote, statement.Using.Alias, this.CloseQuote);
+            }
 
-            state.Append(" ON ");
+            state.Write(" ON ");
 
             VisitToken(statement.On, state, false);
 
             foreach (var when in statement.WhenMatched)
             {
-                state.Append(" WHEN MATCHED");
+                state.Write(" WHEN MATCHED");
                 if (when.AndCondition != null)
                 {
-                    state.Append(" AND ");
+                    state.Write(" AND ");
                     VisitToken(when.AndCondition, state);
                 }
-                state.Append(" THEN");
+                state.Write(" THEN");
 
                 VisitToken(when, state, false);
             }
 
             foreach (var when in statement.WhenNotMatched)
             {
-                state.Append(" WHEN NOT MATCHED BY TARGET");
+                state.Write(" WHEN NOT MATCHED BY TARGET");
                 if (when.AndCondition != null)
                 {
-                    state.Append(" AND");
+                    state.Write(" AND");
                     VisitToken(when.AndCondition, state);
                 }
-                state.Append(" THEN");
+                state.Write(" THEN");
 
                 VisitToken(when, state, false);
             }
 
             foreach (var when in statement.WhenNotMatchedBySource)
             {
-                state.Append(" WHEN NOT MATCHED BY SOURCE");
+                state.Write(" WHEN NOT MATCHED BY SOURCE");
                 if (when.AndCondition != null)
                 {
-                    state.Append(" AND ");
+                    state.Write(" AND ");
                     VisitToken(when.AndCondition, state);
                 }
-                state.Append(" THEN");
+                state.Write(" THEN");
 
                 VisitToken(when, state, false);
             }
@@ -338,16 +339,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
         {
-            state.Append(" DELETE");
+            state.Write(" DELETE");
         }
         private void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
         {
-            state.Append(" UPDATE SET");
+            state.Write(" UPDATE SET");
             VisitTokenSet(token.Set, state, " ", ", ", "", false);
         }
         private void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
         {
-            state.Append(" INSERT");
+            state.Write(" INSERT");
             if (token.Columns.Count > 0)
             {
                 VisitTokenSet(token.Columns, state, " (", ", ", ")", false);
@@ -358,17 +359,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
             else
             {
-                state.Append(" DEFAULT VALUES");
+                state.Write(" DEFAULT VALUES");
             }
         }
 
         private void VisitSelect(SelectStatement statement, VisitorState state)
         {
-            state.Append(Sym.SELECT);
+            state.Write(Sym.SELECT);
 
             if (statement.Distinct)
             {
-                state.Append(Sym._DISTINCT);
+                state.Write(Sym.DISTINCT);
             }
 
             if (statement.Offset == null)
@@ -379,18 +380,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
             // assignments
             if (statement.Set.Count > 0)
             {
-                VisitTokenSet(statement.Set, state, Sym.SPACE, Sym.COMMA_, String.Empty);
+                VisitTokenSet(statement.Set, state, Sym.SPACE, Sym.COMMA, String.Empty);
             }
             else
             {
                 // output columns
                 if (statement.Output.Count == 0)
                 {
-                    state.Append(" *");
+                    state.Write(" *");
                 }
                 else
                 {
-                    VisitTokenSet(statement.Output, state, Sym.SPACE, Sym.COMMA_, String.Empty, true);
+                    VisitTokenSet(statement.Output, state, Sym.SPACE, Sym.COMMA, String.Empty, true);
                 }
             }
 
@@ -410,13 +411,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (statement.Offset != null)
             {
-                state.Append(Sym._OFFSET_);
+                state.Write(Sym.OFFSET);
                 VisitToken(statement.Offset, state);
-                state.Append(Sym._ROWS);
-                state.Append(Sym._FETCH_NEXT_);
+                state.Write(Sym.ROWS);
+                state.Write(Sym.FETCH_NEXT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Append(statement.Top.Value.Value);
+                    state.Write(statement.Top.Value.Value.ToString());
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {
@@ -424,9 +425,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         state.Parameters.Add(parameter);
                     }
-                    state.Append(statement.Top.Parameters[0].Name);
+                    state.Write(statement.Top.Parameters[0].Name);
                 }
-                state.Append(Sym._ROWS_ONLY);
+                state.Write(Sym.ROWS_ONLY);
             }
 
             //WITH CUBE or WITH ROLLUP
@@ -435,19 +436,22 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (into != null)
             {
-                state.Append(Sym._INTO_);
-                state.Append(ResolveName(into));
+                state.Write(Sym.INTO);
+                state.Write(ResolveName(into));
             }
         }
         private void VisitDelete(DeleteStatement statement, VisitorState state)
         {
-            state.Append(Sym.DELETE);
+            state.Write(Sym.DELETE);
 
             VisitTop(statement.Top, state);
 
             if (statement.Joins.Count > 0)
             {
-                VisitAlias(statement.From, state, " ");
+                if (!string.IsNullOrWhiteSpace(statement.From.Alias))
+                {
+                    state.Write(this.OpenQuote, statement.From.Alias, this.CloseQuote);
+                }
 
                 VisitOutput(statement.Output, statement.OutputInto, state);
 
@@ -468,14 +472,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitUpdate(UpdateStatement updateStatement, VisitorState state)
         {
-            state.Append("UPDATE");
+            state.Write("UPDATE");
 
             VisitTop(updateStatement.Top, state);
 
-            state.Append(" ");
+            state.Write(" ");
             VisitToken(updateStatement.Target, state, true);
 
-            state.Append(" SET");
+            state.Write(" SET");
             VisitTokenSet(updateStatement.Set, state, " ", ", ", "", false);
 
             VisitOutput(updateStatement.Output, updateStatement.OutputInto, state);
@@ -488,7 +492,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitInsert(InsertStatement insertStatement, VisitorState state)
         {
-            state.Append("INSERT");
+            state.Write("INSERT");
 
             VisitTop(insertStatement.Top, state);
 
@@ -500,14 +504,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (insertStatement.DefaultValues)
             {
-                state.Append(" DEFAULT VALUES");
+                state.Write(" DEFAULT VALUES");
             }
             else if (insertStatement.Values.Count > 0)
             {
                 var separator = " VALUES";
                 foreach (var valuesSet in insertStatement.Values)
                 {
-                    state.Append(separator);
+                    state.Write(separator);
                     separator = ",";
 
                     VisitTokenSet(valuesSet, state, " (", ", ", ")", false);
@@ -515,84 +519,51 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
             else if (insertStatement.From != null)
             {
-                state.Append(" ");
+                state.Write(" ");
                 VisitStatement(insertStatement.From, state);
             }
         }
-        private bool VisitTransactionName(TransactionStatement statement, VisitorState state)
-        {
-            if (statement.Name != null)
-            {
-                state.Append(Sym.SPACE);
-                state.Append(ResolveName(statement.Name));
-                return true;
-            }
-            if (statement.Parameter != null)
-            {
-                state.Append(Sym.SPACE);
-                state.Append(statement.Parameter.Name);
-                state.Parameters.Add(statement.Parameter);
-                return true;
-            }
-            return false;
-        }
+        
         private void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
         {
-            state.Append("BEGIN TRANSACTION");
+            state.Write("BEGIN TRANSACTION");
             if (VisitTransactionName(statement, state) && !string.IsNullOrWhiteSpace(statement.Description))
             {
-                state.Append(" WITH MARK '");
-                state.Append(statement.Description);
-                state.Append("'");
+                state.Write(" WITH MARK '");
+                state.Write(statement.Description);
+                state.Write("'");
             }
         }
         private void VisitCommitTransaction(TransactionStatement statement, VisitorState state)
         {
-            state.Append("COMMIT TRANSACTION");
+            state.Write("COMMIT TRANSACTION");
             VisitTransactionName(statement, state);
         }
         private void VisitRollbackTransaction(TransactionStatement statement, VisitorState state)
         {
-            state.Append("ROLLBACK TRANSACTION");
+            state.Write("ROLLBACK TRANSACTION");
             VisitTransactionName(statement, state);
         }
         private void VisitSaveTransaction(TransactionStatement statement, VisitorState state)
         {
-            state.Append("SAVE TRANSACTION");
+            state.Write("SAVE TRANSACTION");
             VisitTransactionName(statement, state);
         }
-        private void VisitStatementsStatement(StatementsStatement statement, VisitorState state)
-        {
-            var last = state.Buffer.Length - 1;
-
-            if (last >= 0 && state.Buffer[last] != '\n')
-            {
-                state.Append("\r\n");
-            }
-
-            var separator = string.Empty;
-            foreach (var subStatement in statement.Statements)
-            {
-                state.Append(separator);
-                separator = "\r\n";
-                VisitStatement(subStatement, state);
-                EnsureSemicolumn(state);
-            }
-        }
+       
         private void VisitDeclareStatement(DeclareStatement statement, VisitorState state)
         {
             if (statement.Variable != null)
             {
                 state.Variables.Add(statement.Variable);
 
-                state.Append("DECLARE ");
-                state.Append(statement.Variable.Name);
+                state.Write("DECLARE ");
+                state.Write(statement.Variable.Name);
 
                 VisitType(statement.Variable, state);
 
                 if (statement.Initializer != null)
                 {
-                    state.Append(" = ");
+                    state.Write(" = ");
                     VisitToken(statement.Initializer, state, false);
                 }
             }
@@ -601,80 +572,80 @@ namespace TTRider.FluidSql.Providers.SqlServer
         // ReSharper disable once UnusedParameter.Local
         private void VisitBreakStatement(BreakStatement statement, VisitorState state)
         {
-            state.Append("BREAK");
+            state.Write("BREAK");
         }
         private void VisitContinueStatement(ContinueStatement statement, VisitorState state)
         {
-            state.Append("CONTINUE");
+            state.Write("CONTINUE");
         }
         private void VisitGotoStatement(GotoStatement statement, VisitorState state)
         {
-            state.Append("GOTO ");
-            state.Append(statement.Label);
+            state.Write("GOTO ");
+            state.Write(statement.Label);
         }
         private void VisitReturnStatement(ReturnStatement statement, VisitorState state)
         {
-            state.Append("RETURN");
+            state.Write("RETURN");
             if (statement.ReturnExpression != null)
             {
-                state.Append(" ");
+                state.Write(" ");
                 VisitToken(statement.ReturnExpression, state);
             }
 
         }
         private void VisitThrowStatement(ThrowStatement statement, VisitorState state)
         {
-            state.Append("THROW");
+            state.Write("THROW");
             if (statement.ErrorNumber != null && statement.Message != null && statement.State != null)
             {
-                state.Append(" ");
+                state.Write(" ");
                 VisitToken(statement.ErrorNumber, state);
-                state.Append(", ");
+                state.Write(", ");
                 VisitToken(statement.Message, state);
-                state.Append(", ");
+                state.Write(", ");
                 VisitToken(statement.State, state);
             }
         }
         private void VisitTryCatchStatement(TryCatchStatement stmt, VisitorState state)
         {
-            state.Append("BEGIN TRY\r\n");
+            state.Write("BEGIN TRY\r\n");
             VisitStatement(stmt.TryStatement, state);
-            state.Append(";\r\nEND TRY\r\nBEGIN CATCH\r\n");
+            state.Write(";\r\nEND TRY\r\nBEGIN CATCH\r\n");
             if (stmt.CatchStatement != null)
             {
                 VisitStatement(stmt.CatchStatement, state);
-                state.Append(";\r\nEND CATCH");
+                state.Write(";\r\nEND CATCH");
             }
         }
         private void VisitLabelStatement(LabelStatement stmt, VisitorState state)
         {
-            state.Append(stmt.Label);
-            state.Append(":");
+            state.Write(stmt.Label);
+            state.Write(":");
         }
         private void VisitWaitforDelayStatement(WaitforDelayStatement stmt, VisitorState state)
         {
-            state.Append("WAITFOR DELAY N'");
-            state.Append(stmt.Delay.ToString("HH:mm:ss"));
-            state.Append("'");
+            state.Write("WAITFOR DELAY N'");
+            state.Write(stmt.Delay.ToString("HH:mm:ss"));
+            state.Write("'");
         }
         private void VisitWaitforTimeStatement(WaitforTimeStatement stmt, VisitorState state)
         {
-            state.Append("WAITFOR TIME N'");
-            state.Append(stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"));
-            state.Append("'");
+            state.Write("WAITFOR TIME N'");
+            state.Write(stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"));
+            state.Write("'");
         }
         private void VisitWhileStatement(WhileStatement stmt, VisitorState state)
         {
             if (stmt.Condition != null)
             {
-                state.Append("WHILE ");
+                state.Write("WHILE ");
                 VisitToken(stmt.Condition, state, false);
 
                 if (stmt.Do != null)
                 {
-                    state.Append("\r\nBEGIN;\r\n");
+                    state.Write("\r\nBEGIN;\r\n");
                     VisitStatement(stmt.Do, state);
-                    state.Append("\r\nEND;");
+                    state.Write("\r\nEND;");
                 }
             }
         }
@@ -682,20 +653,20 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (ifs.Condition != null)
             {
-                state.Append("IF ");
+                state.Write("IF ");
                 VisitToken(ifs.Condition, state, false);
 
                 if (ifs.Then != null)
                 {
-                    state.Append("\r\nBEGIN;\r\n");
+                    state.Write("\r\nBEGIN;\r\n");
                     VisitStatement(ifs.Then, state);
-                    state.Append("\r\nEND;");
+                    state.Write("\r\nEND;");
 
                     if (ifs.Else != null)
                     {
-                        state.Append("\r\nELSE\r\nBEGIN;\r\n");
+                        state.Write("\r\nELSE\r\nBEGIN;\r\n");
                         VisitStatement(ifs.Else, state);
-                        state.Append("\r\nEND;");
+                        state.Write("\r\nEND;");
                     }
                 }
             }
@@ -706,22 +677,22 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (statement.CheckExists)
             {
-                state.Append("IF OBJECT_ID(N'");
-                state.Append(tableName);
-                state.Append("',N'U') IS NOT NULL ");
+                state.Write("IF OBJECT_ID(N'");
+                state.Write(tableName);
+                state.Write("',N'U') IS NOT NULL ");
             }
 
-            state.Append("DROP TABLE ");
-            state.Append(tableName);
-            state.Append(";");
+            state.Write("DROP TABLE ");
+            state.Write(tableName);
+            state.Write(";");
         }
         private void VisitCreateTableStatement(CreateTableStatement createStatement, VisitorState state)
         {
             if (createStatement.IsTableVariable)
             {
-                state.Append("DECLARE ");
-                state.Append(GetTableVariableName(createStatement.Name));
-                state.Append(" TABLE");
+                state.Write("DECLARE ");
+                state.Write(GetTableVariableName(createStatement.Name));
+                state.Write(" TABLE");
             }
             else
             {
@@ -730,17 +701,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 if (createStatement.CheckIfNotExists)
                 {
-                    state.Append("IF OBJECT_ID(N'");
-                    state.Append(tableName);
-                    state.Append("',N'U') IS NULL ");
-                    state.Append(" BEGIN; ");
+                    state.Write("IF OBJECT_ID(N'");
+                    state.Write(tableName);
+                    state.Write("',N'U') IS NULL ");
+                    state.Write(" BEGIN; ");
                 }
 
-                state.Append("CREATE TABLE ");
-                state.Append(tableName);
+                state.Write("CREATE TABLE ");
+                state.Write(tableName);
                 if (createStatement.AsFiletable)
                 {
-                    state.Append(" AS FileTable");
+                    state.Write(" AS FileTable");
                 }
             }
 
@@ -748,41 +719,41 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var separator = " (";
             foreach (var column in createStatement.Columns)
             {
-                state.Append(separator);
+                state.Write(separator);
                 separator = ", ";
 
-                state.Append("[");
-                state.Append(column.Name);
-                state.Append("]");
+                state.Write("[");
+                state.Write(column.Name);
+                state.Write("]");
 
                 VisitType(column, state);
 
                 if (column.Sparse)
                 {
-                    state.Append(" SPARSE");
+                    state.Write(" SPARSE");
                 }
                 if (column.Null.HasValue)
                 {
-                    state.Append(column.Null.Value ? " NULL" : " NOT NULL");
+                    state.Write(column.Null.Value ? " NULL" : " NOT NULL");
                 }
                 if (column.Identity.On)
                 {
-                    state.Append(Sym._IDENTITY_);
-                    state.Append(Sym.op);
-                    state.Append(column.Identity.Seed);
-                    state.Append(Sym.COMMA_);
-                    state.Append(column.Identity.Increment);
-                    state.Append(Sym.cp);
+                    state.Write(Sym.IDENTITY);
+                    state.Write(Sym.op);
+                    state.Write(column.Identity.Seed.ToString());
+                    state.Write(Sym.COMMA);
+                    state.Write(column.Identity.Increment.ToString());
+                    state.Write(Sym.cp);
                 }
                 if (column.RowGuid)
                 {
-                    state.Append(" ROWGUIDCOL");
+                    state.Write(" ROWGUIDCOL");
                 }
                 if (column.DefaultValue != null)
                 {
-                    state.Append(" DEFAULT (");
+                    state.Write(" DEFAULT (");
                     VisitToken(column.DefaultValue, state, false);
-                    state.Append(" )");
+                    state.Write(" )");
                 }
             }
 
@@ -790,44 +761,44 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 if (createStatement.IsTableVariable)
                 {
-                    state.Append(",");
+                    state.Write(",");
                 }
                 else
                 {
-                    state.Append(", CONSTRAINT ");
-                    state.Append(ResolveName(createStatement.PrimaryKey.Name));
+                    state.Write(", CONSTRAINT ");
+                    state.Write(ResolveName(createStatement.PrimaryKey.Name));
                 }
 
-                state.Append(" PRIMARY KEY (");
-                state.Append(string.Join(", ",
+                state.Write(" PRIMARY KEY (");
+                state.Write(string.Join(", ",
                     createStatement.PrimaryKey.Columns.Select(
                         n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
-                state.Append(" )");
+                state.Write(" )");
             }
 
             foreach (var unique in createStatement.UniqueConstrains)
             {
                 if (createStatement.IsTableVariable)
                 {
-                    state.Append(",");
+                    state.Write(",");
                 }
                 else
                 {
-                    state.Append(", CONSTRAINT ");
-                    state.Append(ResolveName(unique.Name));
+                    state.Write(", CONSTRAINT ");
+                    state.Write(ResolveName(unique.Name));
                 }
-                state.Append(" UNIQUE");
+                state.Write(" UNIQUE");
                 if (unique.Clustered.HasValue)
                 {
-                    state.Append(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
+                    state.Write(unique.Clustered.Value ? " CLUSTERED (" : " NONCLUSTERED (");
                 }
-                state.Append(string.Join(", ",
+                state.Write(string.Join(", ",
                     unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? " ASC" : " DESC"))));
-                state.Append(" )");
+                state.Write(" )");
             }
 
 
-            state.Append(");");
+            state.Write(");");
 
             // if indecies are set, create them
             if (createStatement.Indicies.Count > 0 && !createStatement.IsTableVariable)
@@ -841,7 +812,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createStatement.CheckIfNotExists && !createStatement.IsTableVariable)
             {
-                state.Append(" END;");
+                state.Write(" END;");
             }
         }
         
@@ -851,46 +822,46 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitExecuteStatement(ExecuteStatement statement, VisitorState state)
         {
-            state.Append("EXEC (");
+            state.Write("EXEC (");
             this.Stringify(statement.Target, state);
-            state.Append(");");
+            state.Write(");");
         }
         private void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement, VisitorState state)
         {
-            state.Append(Sym.CREATE);
+            state.Write(Sym.CREATE);
 
             if (createIndexStatement.Unique)
             {
-                state.Append(Sym._UNIQUE);
+                state.Write(Sym._UNIQUE);
             }
 
             if (createIndexStatement.Clustered.HasValue)
             {
-                state.Append(createIndexStatement.Clustered.Value ? Sym._CLUSTERED : Sym._NONCLUSTERED);
+                state.Write(createIndexStatement.Clustered.Value ? Sym._CLUSTERED : Sym._NONCLUSTERED);
             }
-            state.Append(Sym._INDEX_);
+            state.Write(Sym.INDEX);
 
             VisitToken(createIndexStatement.Name, state);
 
-            state.Append(Sym._ON_);
+            state.Write(Sym.ON);
 
             VisitToken(createIndexStatement.On, state);
 
             // columns
-            state.Append(Sym._op);
-            state.Append(string.Join(Sym.COMMA_,
+            state.Write(Sym._op);
+            state.Write(string.Join(Sym.COMMA,
                 createIndexStatement.Columns.Select(
-                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym._ASC : Sym._DESC))));
-            state.Append(Sym.cp);
+                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
+            state.Write(Sym.cp);
 
-            VisitTokenSet(createIndexStatement.Include, state, Sym._INCLUDE_op, Sym.COMMA_, Sym.cp);
+            VisitTokenSet(createIndexStatement.Include, state, Sym._INCLUDE_op, Sym.COMMA, Sym.cp);
 
             VisitWhere(createIndexStatement.Where, state);
 
             if (createIndexStatement.With.IsDefined)
             {
-                state.Append(Sym._WITH);
-                state.Append(Sym._op);
+                state.Write(Sym._WITH);
+                state.Write(Sym._op);
 
                 VisitWith(createIndexStatement.With.PadIndex, "PAD_INDEX", state);
 
@@ -904,36 +875,36 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWith(createIndexStatement.With.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
                 VisitWith(createIndexStatement.With.MaxDegreeOfParallelism, "MAXDOP", state);
 
-                state.Append(Sym._cp);
+                state.Write(Sym._cp);
             }
 
-            state.Append(Sym.sc);
+            state.Write(Sym.sc);
         }
         private void VisitAlterIndexStatement(AlterIndexStatement alterStatement, VisitorState state)
         {
-            state.Append("ALTER INDEX ");
+            state.Write("ALTER INDEX ");
 
             if (alterStatement.Name == null)
             {
-                state.Append("ALL");
+                state.Write("ALL");
             }
             else
             {
                 VisitToken(alterStatement.Name, state, false);
             }
 
-            state.Append(" ON ");
+            state.Write(" ON ");
 
             VisitToken(alterStatement.On, state, false);
 
             if (alterStatement.Rebuild)
             {
-                state.Append(" REBUILD");
+                state.Write(" REBUILD");
 
                 //TODO: [PARTITION = ALL]
                 if (alterStatement.RebuildWith.IsDefined)
                 {
-                    state.Append(" WITH (");
+                    state.Write(" WITH (");
 
                     VisitWith(alterStatement.RebuildWith.PadIndex, "PAD_INDEX", state);
                     VisitWith(alterStatement.RebuildWith.Fillfactor, "FILLFACTOR", state);
@@ -946,16 +917,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitWith(alterStatement.RebuildWith.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
                     VisitWith(alterStatement.RebuildWith.MaxDegreeOfParallelism, "MAXDOP", state);
 
-                    state.Append(" )");
+                    state.Write(" )");
                 }
             }
             else if (alterStatement.Disable)
             {
-                state.Append(" DISABLE");
+                state.Write(" DISABLE");
             }
             else if (alterStatement.Reorganize)
             {
-                state.Append(" REORGANIZE");
+                state.Write(" REORGANIZE");
             }
             else
             {
@@ -967,32 +938,32 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitDropIndexStatement(DropIndexStatement dropIndexStatement, VisitorState state)
         {
-            state.Append(Sym.DROP_INDEX_);
+            state.Write(Sym.DROP_INDEX);
             VisitToken(dropIndexStatement.Name, state);
 
-            state.Append(Sym._ON_);
+            state.Write(Sym.ON);
 
             VisitToken(dropIndexStatement.On, state);
 
             if (dropIndexStatement.With.IsDefined)
             {
-                state.Append(Sym._WITH);
-                state.Append(Sym._op);
+                state.Write(Sym._WITH);
+                state.Write(Sym._op);
 
                 if (dropIndexStatement.With.Online.HasValue)
                 {
-                    state.Append(Sym._ONLINE);
-                    state.Append(Sym.AssignVal);
-                    state.Append(dropIndexStatement.With.Online.Value ? Sym.ON : Sym.OFF);
+                    state.Write(Sym._ONLINE);
+                    state.Write(Sym.AssignVal);
+                    state.Write(dropIndexStatement.With.Online.Value ? Sym.ON : Sym.OFF);
                 }
                 if (dropIndexStatement.With.MaxDegreeOfParallelism.HasValue)
                 {
-                    state.Append(Sym._MAXDOP);
-                    state.Append(Sym.AssignVal);
-                    state.Append(dropIndexStatement.With.MaxDegreeOfParallelism.Value);
+                    state.Write(Sym._MAXDOP);
+                    state.Write(Sym.AssignVal);
+                    state.Write(dropIndexStatement.With.MaxDegreeOfParallelism.Value.ToString());
                 }
 
-                state.Append(Sym._cp);
+                state.Write(Sym._cp);
             }
         }
         private void VisitCreateViewStatement(CreateViewStatement createStatement, VisitorState state)
@@ -1001,24 +972,24 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createStatement.CheckIfNotExists)
             {
-                state.Append("IF OBJECT_ID(N'");
-                state.Append(viewName);
-                state.Append("') IS NULL EXEC (");
+                state.Write("IF OBJECT_ID(N'");
+                state.Write(viewName);
+                state.Write("') IS NULL EXEC (");
 
                 Stringify(s =>
                 {
-                    s.Buffer.Append(Sym.CREATE_VIEW_);
-                    s.Buffer.Append(viewName);
-                    s.Buffer.Append(Sym._AS_);
+                    s.Write(Sym.CREATE_VIEW);
+                    s.Write(viewName);
+                    s.Write(Sym.AS);
                     VisitStatement(createStatement.DefinitionStatement, state);
                 }, state);
-                state.Append(Sym.cpsc);
+                state.Write(Sym.cpsc);
             }
             else
             {
-                state.Append(Sym.CREATE_VIEW_);
-                state.Append(viewName);
-                state.Append(Sym._AS_);
+                state.Write(Sym.CREATE_VIEW);
+                state.Write(viewName);
+                state.Write(Sym.AS);
                 VisitStatement(createStatement.DefinitionStatement, state);
             }
         }
@@ -1026,29 +997,29 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var viewName = ResolveName(createStatement.Name);
 
-            state.Append("IF OBJECT_ID(N'");
-            state.Append(viewName);
-            state.Append("') IS NULL EXEC (");
+            state.Write("IF OBJECT_ID(N'");
+            state.Write(viewName);
+            state.Write("') IS NULL EXEC (");
 
             Stringify(s =>
             {
-                s.Buffer.Append(Sym.CREATE_VIEW_);
-                s.Buffer.Append(viewName);
-                s.Buffer.Append(Sym._AS_);
+                s.Write(Sym.CREATE_VIEW);
+                s.Write(viewName);
+                s.Write(Sym.AS);
                 VisitStatement(createStatement.DefinitionStatement, s);
             }, state);
 
-            state.Append("); ELSE EXEC (");
+            state.Write("); ELSE EXEC (");
 
             Stringify(s =>
             {
-                s.Buffer.Append(Sym.ALTER_VIEW_);
-                s.Buffer.Append(viewName);
-                s.Buffer.Append(Sym._AS_);
+                s.Write(Sym.ALTER_VIEW);
+                s.Write(viewName);
+                s.Write(Sym.AS);
                 VisitStatement(createStatement.DefinitionStatement, s);
             }, state);
 
-            state.Append(Sym.cpsc);
+            state.Write(Sym.cpsc);
         }
 
         private void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
@@ -1057,31 +1028,31 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (statement.CheckExists)
             {
-                state.Append("IF OBJECT_ID(N'");
-                state.Append(viewName);
-                state.Append("') IS NOT NULL EXEC (");
+                state.Write("IF OBJECT_ID(N'");
+                state.Write(viewName);
+                state.Write("') IS NOT NULL EXEC (");
 
                 Stringify(s =>
                 {
-                    s.Buffer.Append(Sym.DROP_VIEW_);
-                    s.Buffer.Append(viewName);
-                    s.Buffer.Append(Sym.sc);
+                    s.Write(Sym.DROP_VIEW);
+                    s.Write(viewName);
+                    s.Write(Sym.sc);
                 }, state);
 
-                state.Append(Sym.cpsc);
+                state.Write(Sym.cpsc);
             }
             else
             {
-                state.Append(Sym.DROP_VIEW_);
-                state.Append(ResolveName(statement.Name));
+                state.Write(Sym.DROP_VIEW);
+                state.Write(ResolveName(statement.Name));
             }
         }
 
         private void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
         {
-            state.Append(Sym.ALTER_VIEW_);
-            state.Append(ResolveName(statement.Name));
-            state.Append(Sym._AS_);
+            state.Write(Sym.ALTER_VIEW);
+            state.Write(ResolveName(statement.Name));
+            state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
 
@@ -1096,17 +1067,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            VisitTokenSet(columns, state, Sym._OUTPUT_, Sym.COMMA_, outputInto == null ? String.Empty : Sym._INTO_ + ResolveName(outputInto), true);
+            VisitTokenSet(columns, state, Sym._OUTPUT_, Sym.COMMA, outputInto == null ? String.Empty : Sym.INTO + ResolveName(outputInto), true);
         }
 
         private void VisitTop(Top top, VisitorState state)
         {
             if (top != null)
             {
-                state.Append(Sym._TOP_op);
+                state.Write(Sym._TOP_op);
                 if (top.Value.HasValue)
                 {
-                    state.Append(top.Value.Value);
+                    state.Write(top.Value.Value.ToString());
                 }
                 else if (top.Parameters.Count > 0)
                 {
@@ -1114,17 +1085,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         state.Parameters.Add(parameter);
                     }
-                    state.Append(top.Parameters[0].Name);
+                    state.Write(top.Parameters[0].Name);
                 }
-                state.Append(")");
+                state.Write(")");
 
                 if (top.Percent)
                 {
-                    state.Append(Sym._PERCENT);
+                    state.Write(Sym._PERCENT);
                 }
                 if (top.WithTies)
                 {
-                    state.Append(Sym._WITH_TIES);
+                    state.Write(Sym._WITH_TIES);
                 }
             }
         }
@@ -1136,10 +1107,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (value.HasValue)
             {
-                state.Append(Sym.SPACE);
-                state.Append(name);
-                state.Append(Sym.AssignVal);
-                state.Append(value.Value ? Sym.ON : Sym.OFF);
+                state.Write(Sym.SPACE);
+                state.Write(name);
+                state.Write(Sym.AssignVal);
+                state.Write(value.Value ? Sym.ON : Sym.OFF);
             }
         }
 
@@ -1147,10 +1118,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (value.HasValue)
             {
-                state.Append(Sym.SPACE);
-                state.Append(name);
-                state.Append(Sym.AssignVal);
-                state.Append(value.Value);
+                state.Write(Sym.SPACE);
+                state.Write(name);
+                state.Write(Sym.AssignVal);
+                state.Write(value.Value.ToString());
             }
         }
 
@@ -1165,7 +1136,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (includeAlias)
             {
-                VisitAlias(token, state);
+                if (!string.IsNullOrWhiteSpace(token.Alias))
+                {
+                    state.Write(Sym.AS);
+                    state.Write(this.OpenQuote, token.Alias, this.CloseQuote);
+                }
             }
 
             state.Parameters.AddRange(token.Parameters);
