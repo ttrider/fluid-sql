@@ -131,7 +131,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y  $(TargetDir)*.* $(SolutionDir)..\redist\CLR\Lib\net45
+    <PostBuildEvent>xcopy /Y /I $(TargetDir)*.* $(SolutionDir)..\redist\CLR\Lib\net45
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
