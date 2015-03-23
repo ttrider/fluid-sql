@@ -61,7 +61,7 @@ namespace TTRider.FluidSql.Providers
             if (value == null) return;
 
             // special threatment of COMMA and CRLF
-            if (buffer.Length != 0 && value != "," && value != "\r\n")
+            if (buffer.Length != 0 && value != "," && value != "\r\n" && buffer[buffer.Length-1]!='\n')
             {
                 this.buffer.Append(" ");
             }
@@ -127,12 +127,12 @@ namespace TTRider.FluidSql.Providers
                 var last = this.buffer.Length - 1;
                 if (last >= 0 && this.buffer[last] != '\n')
                 {
-                    this.Write("\r\n");
+                    this.buffer.Append("\r\n");
                 }
             }
             else
             {
-                this.Write("\r\n");
+                this.buffer.Append("\r\n");
             }
         }
 

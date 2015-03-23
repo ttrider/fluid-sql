@@ -391,7 +391,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT * FROM \"sys\".\"objects\" WHERE \"object_id\" IS NOT NULL AND \"object_id\" IS NULL AND  (\"object_id\" + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", text); return statement;
+            Assert.AreEqual("SELECT * FROM \"sys\".\"objects\" WHERE \"object_id\" IS NOT NULL AND \"object_id\" IS NULL AND ( \"object_id\" + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", text); return statement;
         }
 
        
@@ -404,7 +404,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual(" /* DROP TABLE \"some\".\"table\" */ ", text); return statement;
+            Assert.AreEqual("/* DROP TABLE \"some\".\"table\" */", text); return statement;
         }
        
     }

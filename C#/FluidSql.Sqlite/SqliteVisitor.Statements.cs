@@ -20,11 +20,11 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             state.Write(ResolveName(statement.Name));
 
-            var separator = " (";
+            var separator = "(";
             foreach (var column in statement.Columns)
             {
                 state.Write(separator);
-                separator = ", ";
+                separator = ",";
 
                 state.Write("\"", column.Name, "\"");
 
@@ -32,7 +32,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
                 if (column.PrimaryKeyDirection.HasValue)
                 {
-                    state.Write(Sym._PRIMARY_KEY);
+                    state.Write(Sym.PRIMARY_KEY);
                     state.Write(column.PrimaryKeyDirection.Value == Direction.Asc ? Sym.ASC : Sym.DESC);
                     VisitConflict(column.PrimaryKeyConflict, state);
 
@@ -44,15 +44,15 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
                 if (column.Null.HasValue)
                 {
-                    state.Write(column.Null.Value ? Sym._NULL : Sym._NOT_NULL);
+                    state.Write(column.Null.Value ? Sym.NULL : Sym.NOT_NULL);
                     VisitConflict(column.NullConflict, state);
                 }
 
                 if (column.DefaultValue != null)
                 {
-                    state.Write(Sym._DEFAULT_op);
+                    state.Write(Sym.DEFAULT_op);
                     VisitToken(column.DefaultValue, state);
-                    state.Write(Sym._cp);
+                    state.Write(Sym.cp);
                 }
             }
 
@@ -61,28 +61,23 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 if (statement.PrimaryKey.Name != null)
                 {
                     state.Write(Sym.COMMA);
-                    state.Write(Sym.CONSTRAINT_);
+                    state.Write(Sym.CONSTRAINT);
                     state.Write(ResolveName(statement.PrimaryKey.Name));
                 }
-                state.Write(Sym._PRIMARY_KEY);
-                state.Write(Sym._op);
-                state.Write(string.Join(Sym.COMMA,
-                    statement.PrimaryKey.Columns.Select(
-                        n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
-                state.Write(Sym._cp);
-
+                state.Write(Sym.PRIMARY_KEY);
+                VisitTokenSet(statement.PrimaryKey.Columns, state, Sym.op, Sym.COMMA,Sym.cp );
                 VisitConflict(statement.PrimaryKey.Conflict, state);
             }
 
             foreach (var unique in statement.UniqueConstrains)
             {
                 state.Write(Sym.COMMA);
-                state.Write(Sym.CONSTRAINT_);
+                state.Write(Sym.CONSTRAINT);
                 state.Write(ResolveName(unique.Name));
-                state.Write(Sym._UNIQUE);
+                state.Write(Sym.UNIQUE);
+                VisitTokenSet(statement.PrimaryKey.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
                 state.Write(string.Join(Sym.COMMA,
                     unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
-                state.Write(Sym._cp);
                 VisitConflict(unique.Conflict, state);
             }
 
@@ -116,7 +111,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             if (statement.Unique)
             {
-                state.Write(Sym._UNIQUE);
+                state.Write(Sym.UNIQUE);
             }
 
             state.Write(Sym.INDEX);
@@ -133,15 +128,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
             VisitToken(statement.On, state);
 
             // columns
-            state.Write(Sym._op);
-            state.Write(string.Join(Sym.COMMA,
-                statement.Columns.Select(
-                    n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
-            state.Write(Sym.cp);
-
+            VisitTokenSet(statement.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
             VisitWhere(statement.Where, state);
-
-            state.Write(Sym.sc);
         }
 
         private void VisitAlterIndexStatement(AlterIndexStatement statement, VisitorState state)
@@ -201,7 +189,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
             state.Write(Sym.DROP_VIEW);
             state.Write(Sym.IF_EXISTS);
             state.Write(ResolveName(statement.Name));
-            state.Write(Sym.sc);
+            state.WriteStatementTerminator();
+
             state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
             state.Write(ResolveName(statement.Name));
@@ -214,7 +203,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             state.Write(Sym.DROP_VIEW);
             state.Write(Sym.IF_EXISTS);
             state.Write(ResolveName(statement.Name));
-            state.Write(Sym.sc);
+            state.WriteStatementTerminator();
 
             state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 

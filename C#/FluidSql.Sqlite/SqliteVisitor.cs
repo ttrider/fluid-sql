@@ -178,7 +178,6 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (typedToken.DbType.HasValue)
             {
-                state.Write(Sym.SPACE);
                 state.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }

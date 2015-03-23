@@ -27,19 +27,19 @@ namespace TTRider.FluidSql.Providers
                 switch (conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Write(Sym._ABORT);
+                        state.Write(Sym.ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Write(Sym._FAIL);
+                        state.Write(Sym.FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Write(Sym._IGNORE);
+                        state.Write(Sym.IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Write(Sym._REPLACE);
+                        state.Write(Sym.REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Write(Sym._ROLLBACK);
+                        state.Write(Sym.ROLLBACK);
                         break;
                 }
 
@@ -51,13 +51,11 @@ namespace TTRider.FluidSql.Providers
         {
             if (statement.Name != null)
             {
-                state.Write(Sym.SPACE);
                 state.Write(ResolveName(statement.Name));
                 return true;
             }
             if (statement.Parameter != null)
             {
-                state.Write(Sym.SPACE);
                 state.Write(statement.Parameter.Name);
                 state.Parameters.Add(statement.Parameter);
                 return true;
@@ -154,7 +152,7 @@ namespace TTRider.FluidSql.Providers
         {
             if (whereToken != null)
             {
-                state.Write(Sym._WHERE_);
+                state.Write(Sym.WHERE);
                 VisitToken(whereToken, state);
             }
         }
@@ -302,51 +300,51 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitLikeToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Write(Sym._LIKE_);
+            state.Write(Sym.LIKE);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitContainsToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Write(" LIKE '%' + ");
+            state.Write("LIKE '%' +");
             VisitToken(token.Second, state, false);
-            state.Write(" + '%'");
+            state.Write("+ '%'");
         }
 
         protected virtual void VisitStartsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Write(Sym._LIKE_);
+            state.Write(Sym.LIKE);
             VisitToken(token.Second, state, false);
-            state.Write(" + '%'");
+            state.Write("+ '%'");
         }
 
         protected virtual void VisitEndsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state, false);
-            state.Write(" LIKE '%' + ");
+            state.Write("LIKE '%' +");
             VisitToken(token.Second, state, false);
         }
 
         protected virtual void VisitGroupToken(GroupToken token, VisitorState state)
         {
-            state.Write(Sym._op);
+            state.Write(Sym.op);
             VisitToken(token.Token, state, false);
-            state.Write(Sym._cp);
+            state.Write(Sym.cp);
         }
 
         protected virtual void VisitExistsToken(ExistsToken token, VisitorState state)
         {
-            state.Write(Sym._EXISTS_);
+            state.Write(Sym.EXISTS);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitNotToken(NotToken token, VisitorState state)
         {
-            state.Write(Sym._NOT_op);
+            state.Write(Sym.NOT_op);
             VisitToken(token.Token, state);
-            state.Write(Sym._cp);
+            state.Write(Sym.cp);
         }
 
         protected virtual void VisitIsNullToken(IsNullToken token, VisitorState state)
@@ -373,21 +371,21 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitInToken(InToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym._IN_op, Sym.COMMA, Sym.cp);
+            VisitTokenSet(token.Set, state, Sym.IN_op, Sym.COMMA, Sym.cp);
         }
 
         protected virtual void VisitNotInToken(NotInToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym._NOT_IN_op, Sym.COMMA, Sym.cp);
+            VisitTokenSet(token.Set, state, Sym.NOT_IN_op, Sym.COMMA, Sym.cp);
         }
         protected virtual void VisitCommentToken(CommentToken token, VisitorState state)
         {
-            state.Write(" /* ");
+            state.Write("/*");
 
             VisitToken(token.Content, state);
 
-            state.Write(" */ ");
+            state.Write("*/");
         }
 
 
@@ -397,9 +395,9 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitCommentStatement(CommentStatement statement, VisitorState state)
         {
-            state.Write(" /* ");
+            state.Write("/*");
             VisitStatement(statement.Content, state);
-            state.Write(" */ ");
+            state.Write("*/");
         }
         protected virtual void VisitSnippetStatement(SnippetStatement statement, VisitorState state)
         {
@@ -506,67 +504,61 @@ namespace TTRider.FluidSql.Providers
             public const string AS_osp = "AS [";
             public const string ASC = "ASC";
             public const string BETWEEN = "BETWEEN";
-            public const string _cp = " )";
-            public const string _CLUSTERED = " CLUSTERED";
-            public const string _NONCLUSTERED = " NONCLUSTERED";
+            public const string CLUSTERED = "CLUSTERED";
+            public const string NONCLUSTERED = "NONCLUSTERED";
 
-            public const string _INCLUDE_op = " INCLUDE (";
+            public const string INCLUDE_op = "INCLUDE (";
 
             public const string DESC = "DESC";
-            public const string _DEFAULT_op = " DEFAULT (";
-            public const string _EXISTS_ = " EXISTS ";
+            public const string DEFAULT_op = "DEFAULT (";
+            public const string EXISTS = "EXISTS";
             public const string FROM = "FROM";
             public const string GROUP_BY = "GROUP BY";
             public const string HAVING = "HAVING";
             public const string IDENTITY = "IDENTITY";
-            public const string _IN_op = " IN (";
+            public const string IN_op = "IN (";
             public const string INTO = "INTO";
             public const string IS_NOT_NULL = "IS NOT NULL";
             public const string IS_NULL = "IS NULL";
-            public const string _LIKE_ = " LIKE ";
-            public const string _MAXDOP = " MAXDOP";
-            public const string _NOT_IN_op = " NOT IN (";
-            public const string _NOT_op = " NOT (";
-            public const string _NOT_NULL = " NOT NULL";
+            public const string LIKE = "LIKE";
+            public const string MAXDOP = "MAXDOP";
+            public const string NOT_IN_op = "NOT IN (";
+            public const string NOT_op = "NOT (";
+            public const string NOT_NULL = "NOT NULL";
 
             public const string INTERSECT = "INTERSECT";
             public const string EXCEPT = "EXCEPT";
             public const string UNION = "UNION";
             public const string UNION_ALL = "UNION ALL";
-            
-
-            public const string _NULL = " NULL";
 
 
-            public const string _ABORT = " ABORT";
-            public const string _FAIL = " FAIL";
-            public const string _IGNORE = " IGNORE";
-            public const string _REPLACE = " REPLACE";
-            public const string _ROLLBACK = " ROLLBACK";
+            public const string ABORT = "ABORT";
+            public const string FAIL = "FAIL";
+            public const string IGNORE = "IGNORE";
+            public const string REPLACE = "REPLACE";
+            public const string ROLLBACK = "ROLLBACK";
 
             public const string ON_CONFLICT = "ON CONFLICT";
 
 
-            public const string _ONLINE = " ONLINE";
-            public const string _op = " (";
+            public const string ONLINE = "ONLINE";
             public const string ORDER_BY = "ORDER BY";
-            public const string _osp = " [";
-            public const string _OUTPUT_ = " OUTPUT ";
-            public const string _PERCENT = " PERCENT";
-            public const string _PRIMARY_KEY = " PRIMARY KEY";
+            
+            public const string OUTPUT_ = "OUTPUT ";
+            public const string PERCENT = "PERCENT";
+            public const string PRIMARY_KEY = "PRIMARY KEY";
 
-            public const string _TOP_op = " TOP (";
-            public const string _WHERE_ = " WHERE ";
-            public const string _WITH_ = " WITH ";
-            public const string _WITH = " WITH";
-            public const string _WITH_TIES = " WITH TIES";
+            public const string TOP_op = "TOP (";
+            public const string WHERE = "WHERE";
+            public const string WITH = "WITH";
+            public const string WITH_TIES = "WITH TIES";
             public const string ALTER_VIEW = "ALTER VIEW";
             public const string COMMA = ",";
             public const string cp = ")";
             public const string cpsc = ");";
 
-            public const string CONSTRAINT_ = "CONSTRAINT ";
-            public const string _UNIQUE = " UNIQUE";
+            public const string CONSTRAINT = "CONSTRAINT";
+            public const string UNIQUE = "UNIQUE";
 
             public const string CREATE = "CREATE";
             public const string CREATE_TEMP_TABLE = "CREATE TEMPORARY TABLE";
@@ -612,35 +604,35 @@ namespace TTRider.FluidSql.Providers
 
             public const string asterisk = "*";
 
-            public const string EqualsVal = " = ";
-            public const string AssignVal = " = ";
-            public const string NotEqualVal = " <> ";
-            public const string LessVal = " < ";
-            public const string NotLessVal = " !< ";
-            public const string LessOrEqualVal = " <= ";
-            public const string GreaterVal = " > ";
-            public const string NotGreaterVal = " !> ";
-            public const string GreaterOrEqualVal = " >= ";
-            public const string AndVal = " AND ";
-            public const string OrVal = " OR ";
-            public const string PlusVal = " + ";
-            public const string MinusVal = " - ";
-            public const string DivideVal = " / ";
-            public const string ModuloVal = " % ";
-            public const string MultiplyVal = " * ";
-            public const string BitwiseAndVal = " & ";
-            public const string BitwiseOrVal = " | ";
-            public const string BitwiseXorVal = " ^ ";
-            public const string BitwiseNotVal = " ~ ";
-            public const string PlusEqVal = " += ";
-            public const string MinusEqVal = " -= ";
-            public const string DivideEqVal = " /= ";
-            public const string ModuloEqVal = " %= ";
-            public const string MultiplyEqVal = " *= ";
-            public const string BitwiseAndEqVal = " &= ";
-            public const string BitwiseOrEqVal = " |= ";
-            public const string BitwiseXorEqVal = " ^= ";
-            public const string BitwiseNotEqVal = " ~= ";
+            public const string EqualsVal = "=";
+            public const string AssignVal = "=";
+            public const string NotEqualVal = "<>";
+            public const string LessVal = "<";
+            public const string NotLessVal = "!<";
+            public const string LessOrEqualVal = "<=";
+            public const string GreaterVal = ">";
+            public const string NotGreaterVal = "!>";
+            public const string GreaterOrEqualVal = ">=";
+            public const string AndVal = "AND";
+            public const string OrVal = "OR";
+            public const string PlusVal = "+";
+            public const string MinusVal = "-";
+            public const string DivideVal = "/";
+            public const string ModuloVal = "%";
+            public const string MultiplyVal = "*";
+            public const string BitwiseAndVal = "&";
+            public const string BitwiseOrVal = "|";
+            public const string BitwiseXorVal = "^";
+            public const string BitwiseNotVal = "~";
+            public const string PlusEqVal = "+=";
+            public const string MinusEqVal = "-=";
+            public const string DivideEqVal = "/=";
+            public const string ModuloEqVal = "%=";
+            public const string MultiplyEqVal = "*=";
+            public const string BitwiseAndEqVal = "&=";
+            public const string BitwiseOrEqVal = "|=";
+            public const string BitwiseXorEqVal = "^=";
+            public const string BitwiseNotEqVal = "~=";
         }
     }
 }

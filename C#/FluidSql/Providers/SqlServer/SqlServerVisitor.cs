@@ -832,12 +832,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (createIndexStatement.Unique)
             {
-                state.Write(Sym._UNIQUE);
+                state.Write(Sym.UNIQUE);
             }
 
             if (createIndexStatement.Clustered.HasValue)
             {
-                state.Write(createIndexStatement.Clustered.Value ? Sym._CLUSTERED : Sym._NONCLUSTERED);
+                state.Write(createIndexStatement.Clustered.Value ? Sym.CLUSTERED : Sym.NONCLUSTERED);
             }
             state.Write(Sym.INDEX);
 
@@ -848,20 +848,20 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(createIndexStatement.On, state);
 
             // columns
-            state.Write(Sym._op);
+            state.Write(Sym.op);
             state.Write(string.Join(Sym.COMMA,
                 createIndexStatement.Columns.Select(
                     n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
             state.Write(Sym.cp);
 
-            VisitTokenSet(createIndexStatement.Include, state, Sym._INCLUDE_op, Sym.COMMA, Sym.cp);
+            VisitTokenSet(createIndexStatement.Include, state, Sym.INCLUDE_op, Sym.COMMA, Sym.cp);
 
             VisitWhere(createIndexStatement.Where, state);
 
             if (createIndexStatement.With.IsDefined)
             {
-                state.Write(Sym._WITH);
-                state.Write(Sym._op);
+                state.Write(Sym.WITH);
+                state.Write(Sym.op);
 
                 VisitWith(createIndexStatement.With.PadIndex, "PAD_INDEX", state);
 
@@ -875,7 +875,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWith(createIndexStatement.With.AllowPageLocks, "ALLOW_PAGE_LOCKS", state);
                 VisitWith(createIndexStatement.With.MaxDegreeOfParallelism, "MAXDOP", state);
 
-                state.Write(Sym._cp);
+                state.Write(Sym.cp);
             }
 
             state.Write(Sym.sc);
@@ -947,23 +947,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (dropIndexStatement.With.IsDefined)
             {
-                state.Write(Sym._WITH);
-                state.Write(Sym._op);
+                state.Write(Sym.WITH);
+                state.Write(Sym.op);
 
                 if (dropIndexStatement.With.Online.HasValue)
                 {
-                    state.Write(Sym._ONLINE);
+                    state.Write(Sym.ONLINE);
                     state.Write(Sym.AssignVal);
                     state.Write(dropIndexStatement.With.Online.Value ? Sym.ON : Sym.OFF);
                 }
                 if (dropIndexStatement.With.MaxDegreeOfParallelism.HasValue)
                 {
-                    state.Write(Sym._MAXDOP);
+                    state.Write(Sym.MAXDOP);
                     state.Write(Sym.AssignVal);
                     state.Write(dropIndexStatement.With.MaxDegreeOfParallelism.Value.ToString());
                 }
 
-                state.Write(Sym._cp);
+                state.Write(Sym.cp);
             }
         }
         private void VisitCreateViewStatement(CreateViewStatement createStatement, VisitorState state)
@@ -1067,14 +1067,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            VisitTokenSet(columns, state, Sym._OUTPUT_, Sym.COMMA, outputInto == null ? String.Empty : Sym.INTO + ResolveName(outputInto), true);
+            VisitTokenSet(columns, state, Sym.OUTPUT_, Sym.COMMA, outputInto == null ? String.Empty : Sym.INTO + ResolveName(outputInto), true);
         }
 
         private void VisitTop(Top top, VisitorState state)
         {
             if (top != null)
             {
-                state.Write(Sym._TOP_op);
+                state.Write(Sym.TOP_op);
                 if (top.Value.HasValue)
                 {
                     state.Write(top.Value.Value.ToString());
@@ -1091,11 +1091,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 if (top.Percent)
                 {
-                    state.Write(Sym._PERCENT);
+                    state.Write(Sym.PERCENT);
                 }
                 if (top.WithTies)
                 {
-                    state.Write(Sym._WITH_TIES);
+                    state.Write(Sym.WITH_TIES);
                 }
             }
         }
