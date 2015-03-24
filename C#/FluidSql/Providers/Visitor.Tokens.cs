@@ -22,7 +22,7 @@ namespace TTRider.FluidSql.Providers
 
             if (value is DBNull)
             {
-                state.Write(Sym.NULL);
+                state.Write(Symbols.NULL);
             }
             else if ((value is Boolean)
                 || (value is SByte)
@@ -59,9 +59,9 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitStatementToken(IStatement token, VisitorState state)
         {
-            state.Write(Sym.op);
+            state.Write(Symbols.OpenParenthesis);
             VisitStatement(token, state);
-            state.Write(Sym.cp);
+            state.Write(Symbols.CloseParenthesis);
         }
 
         protected virtual void VisitNameToken(Name token, VisitorState state)
@@ -73,7 +73,7 @@ namespace TTRider.FluidSql.Providers
         {
             if (whereToken != null)
             {
-                state.Write(Sym.WHERE);
+                state.Write(Symbols.WHERE);
                 VisitToken(whereToken, state);
             }
         }
@@ -92,9 +92,9 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitFunctionToken(Function token, VisitorState state)
         {
-            state.Write(token.Name, Sym.op);
-            VisitTokenSet(token.Arguments, state, null, Sym.COMMA, null);
-            state.Write(Sym.cp);
+            state.Write(token.Name, Symbols.OpenParenthesis);
+            VisitTokenSet(token.Arguments, state, null, Symbols.Comma, null);
+            state.Write(Symbols.CloseParenthesis);
         }
 
         protected virtual void VisitBinaryToken(BinaryToken token, VisitorState state, string operation)
@@ -106,167 +106,174 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitIsEqualsToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.EqualsVal);
+            VisitBinaryToken(token, state, Symbols.EqualsVal);
         }
 
         protected virtual void VisitNotEqualToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.NotEqualVal);
+            VisitBinaryToken(token, state, Symbols.NotEqualVal);
         }
 
         protected virtual void VisitLessToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.LessVal);
+            VisitBinaryToken(token, state, Symbols.LessVal);
         }
 
         protected virtual void VisitNotLessToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.NotLessVal);
+            VisitBinaryToken(token, state, Symbols.NotLessVal);
         }
 
         protected virtual void VisitLessOrEqualToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.LessOrEqualVal);
+            VisitBinaryToken(token, state, Symbols.LessOrEqualVal);
         }
 
         protected virtual void VisitGreaterToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.GreaterVal);
+            VisitBinaryToken(token, state, Symbols.GreaterVal);
         }
 
         protected virtual void VisitNotGreaterToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.NotGreaterVal);
+            VisitBinaryToken(token, state, Symbols.NotGreaterVal);
         }
 
         protected virtual void VisitGreaterOrEqualToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.GreaterOrEqualVal);
+            VisitBinaryToken(token, state, Symbols.GreaterOrEqualVal);
         }
 
         protected virtual void VisitAllToken(AllToken token, VisitorState state)
         {
-            state.Write(Sym.ALL);
+            state.Write(Symbols.ALL);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitAnyToken(AnyToken token, VisitorState state)
         {
-            state.Write(Sym.ANY);
+            state.Write(Symbols.ANY);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitAndToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.AndVal);
+            VisitBinaryToken(token, state, Symbols.AndVal);
         }
 
         protected virtual void VisitOrToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.OrVal);
+            VisitBinaryToken(token, state, Symbols.OrVal);
         }
 
         protected virtual void VisitPlusToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.PlusEqVal : Sym.PlusVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.PlusEqVal : Symbols.PlusVal);
         }
 
         protected virtual void VisitMinusToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.MinusEqVal : Sym.MinusVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.MinusEqVal : Symbols.MinusVal);
         }
 
         protected virtual void VisitDivideToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.DivideEqVal : Sym.DivideVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.DivideEqVal : Symbols.DivideVal);
         }
 
         protected virtual void VisitModuloToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.ModuloEqVal : Sym.ModuloVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.ModuloEqVal : Symbols.ModuloVal);
         }
 
         protected virtual void VisitMultiplyToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.MultiplyEqVal : Sym.MultiplyVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.MultiplyEqVal : Symbols.MultiplyVal);
         }
 
         protected virtual void VisitBitwiseAndToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.BitwiseAndEqVal : Sym.BitwiseAndVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.BitwiseAndEqVal : Symbols.BitwiseAndVal);
         }
 
         protected virtual void VisitBitwiseOrToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.BitwiseOrEqVal : Sym.BitwiseOrVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.BitwiseOrEqVal : Symbols.BitwiseOrVal);
         }
 
         protected virtual void VisitBitwiseXorToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.BitwiseXorEqVal : Sym.BitwiseXorVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.BitwiseXorEqVal : Symbols.BitwiseXorVal);
         }
 
         protected virtual void VisitBitwiseNotToken(BinaryEqualToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, token.Equal ? Sym.BitwiseNotEqVal : Sym.BitwiseNotVal);
+            VisitBinaryToken(token, state, token.Equal ? Symbols.BitwiseNotEqVal : Symbols.BitwiseNotVal);
         }
 
         protected virtual void VisitAssignToken(BinaryToken token, VisitorState state)
         {
-            VisitBinaryToken(token, state, Sym.AssignVal);
+            VisitBinaryToken(token, state, Symbols.AssignVal);
         }
 
         protected virtual void VisitLikeToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Write(Sym.LIKE);
+            state.Write(Symbols.LIKE);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitExistsToken(ExistsToken token, VisitorState state)
         {
-            state.Write(Sym.EXISTS);
+            state.Write(Symbols.EXISTS);
             VisitToken(token.Token, state);
         }
 
         protected virtual void VisitNotToken(NotToken token, VisitorState state)
         {
-            state.Write(Sym.NOT_op);
+            state.Write(Symbols.NOT);
+            state.Write(Symbols.OpenParenthesis);
             VisitToken(token.Token, state);
-            state.Write(Sym.cp);
+            state.Write(Symbols.CloseParenthesis);
         }
 
         protected virtual void VisitIsNullToken(IsNullToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            state.Write(Sym.IS_NULL);
+            state.Write(Symbols.IS);
+            state.Write(Symbols.NULL);
         }
 
         protected virtual void VisitIsNotNullToken(IsNotNullToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            state.Write(Sym.IS_NOT_NULL);
+            state.Write(Symbols.IS);
+            state.Write(Symbols.NOT);
+            state.Write(Symbols.NULL);
         }
 
         protected virtual void VisitBetweenToken(BetweenToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            state.Write(Sym.BETWEEN);
+            state.Write(Symbols.BETWEEN);
             VisitToken(token.First, state);
-            state.Write(Sym.AND);
+            state.Write(Symbols.AND);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitInToken(InToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym.IN_op, Sym.COMMA, Sym.cp);
+            state.Write(Symbols.IN);
+            VisitTokenSet(token.Set, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
         }
 
         protected virtual void VisitNotInToken(NotInToken token, VisitorState state)
         {
             VisitToken(token.Token, state);
-            VisitTokenSet(token.Set, state, Sym.NOT_IN_op, Sym.COMMA, Sym.cp);
+            state.Write(Symbols.NOT);
+            state.Write(Symbols.IN);
+            VisitTokenSet(token.Set, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
         }
         protected virtual void VisitCommentToken(CommentToken token, VisitorState state)
         {
@@ -276,28 +283,28 @@ namespace TTRider.FluidSql.Providers
         }
         protected virtual void VisitFromToken(IEnumerable<Token> recordsets, VisitorState state)
         {
-            VisitTokenSet(recordsets, state, Sym.FROM, Sym.COMMA, null, true);
+            VisitTokenSet(recordsets, state, Symbols.FROM, Symbols.Comma, null, true);
         }
 
         protected virtual void VisitFromToken(Token recordset, VisitorState state)
         {
             if (recordset != null)
             {
-                state.Write(Sym.FROM);
+                state.Write(Symbols.FROM);
                 VisitToken(recordset, state, true);
             }
         }
 
         protected virtual void VisitGroupByToken(ICollection<Name> groupBy, VisitorState state)
         {
-            VisitTokenSet(groupBy, state, Sym.GROUP_BY, Sym.COMMA, null);
+            VisitTokenSet(groupBy, state, Symbols.GROUP_BY, Symbols.Comma, null);
         }
 
         protected virtual void VisitHavingToken(Token whereToken, VisitorState state)
         {
             if (whereToken != null)
             {
-                state.Write(Sym.HAVING);
+                state.Write(Symbols.HAVING);
                 VisitToken(whereToken, state);
             }
         }
@@ -305,50 +312,50 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitOrderToken(Order orderToken, VisitorState state)
         {
             VisitNameToken(orderToken.Column, state);
-            state.Write(orderToken.Direction == Direction.Asc ? Sym.ASC : Sym.DESC);
+            state.Write(orderToken.Direction == Direction.Asc ? Symbols.ASC : Symbols.DESC);
         }
 
 
         protected virtual void VisitOrderByToken(ICollection<Order> orderBy, VisitorState state)
         {
-            VisitTokenSet(orderBy, state, Sym.ORDER_BY, Sym.COMMA, null);
+            VisitTokenSet(orderBy, state, Symbols.ORDER_BY, Symbols.Comma, null);
         }
 
 
         protected virtual void VisitContainsToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Write(Sym.LIKE);
-            state.Write(this.LiteralOpenQuote, Sym.ModuloVal, this.LiteralCloseQuote);
-            state.Write(Sym.PlusVal);
+            state.Write(Symbols.LIKE);
+            state.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            state.Write(Symbols.PlusVal);
             VisitToken(token.Second, state);
-            state.Write(Sym.PlusVal);
-            state.Write(this.LiteralOpenQuote, Sym.ModuloVal, this.LiteralCloseQuote);
+            state.Write(Symbols.PlusVal);
+            state.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
         }
 
         protected virtual void VisitStartsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Write(Sym.LIKE);
+            state.Write(Symbols.LIKE);
             VisitToken(token.Second, state);
-            state.Write(Sym.PlusVal);
-            state.Write(this.LiteralOpenQuote, Sym.ModuloVal, this.LiteralCloseQuote);
+            state.Write(Symbols.PlusVal);
+            state.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
         }
 
         protected virtual void VisitEndsWithToken(BinaryToken token, VisitorState state)
         {
             VisitToken(token.First, state);
-            state.Write(Sym.LIKE);
-            state.Write(this.LiteralOpenQuote, Sym.ModuloVal, this.LiteralCloseQuote);
-            state.Write(Sym.PlusVal);
+            state.Write(Symbols.LIKE);
+            state.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            state.Write(Symbols.PlusVal);
             VisitToken(token.Second, state);
         }
 
         protected virtual void VisitGroupToken(GroupToken token, VisitorState state)
         {
-            state.Write(Sym.op);
+            state.Write(Symbols.OpenParenthesis);
             VisitToken(token.Token, state);
-            state.Write(Sym.cp);
+            state.Write(Symbols.CloseParenthesis);
         }
 
         protected virtual void VisitJoin(ICollection<Join> list, VisitorState state)
@@ -362,7 +369,7 @@ namespace TTRider.FluidSql.Providers
 
                     if (join.On != null)
                     {
-                        state.Write(Sym.ON);
+                        state.Write(Symbols.ON);
                         VisitToken(@join.On, state);
                     }
                 }

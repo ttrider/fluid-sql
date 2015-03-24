@@ -8,26 +8,27 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (statement.Into != null)
             {
-                state.Write(Sym.CREATE_TABLE);
+                state.Write(Symbols.CREATE);
+                state.Write(Symbols.TABLE);
                 VisitNameToken(statement.Into, state);
-                state.Write(Sym.AS);
+                state.Write(Symbols.AS);
             }
 
-            state.Write(Sym.SELECT);
+            state.Write(Symbols.SELECT);
 
             if (statement.Distinct)
             {
-                state.Write(Sym.DISTINCT);
+                state.Write(Symbols.DISTINCT);
             }
 
             // output columns
             if (statement.Output.Count == 0)
             {
-                state.Write(Sym.asterisk);
+                state.Write(Symbols.Asterisk);
             }
             else
             {
-                VisitTokenSet(statement.Output, state, null, Sym.COMMA, null, true);
+                VisitTokenSet(statement.Output, state, null, Symbols.Comma, null, true);
             }
 
 
@@ -45,7 +46,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             if (statement.Top != null)
             {
-                state.Write(Sym.LIMIT);
+                state.Write(Symbols.LIMIT);
                 if (statement.Top.Value.HasValue)
                 {
                     state.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
@@ -62,7 +63,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             if (statement.Offset != null)
             {
-                state.Write(Sym.OFFSET);
+                state.Write(Symbols.OFFSET);
                 VisitToken(statement.Offset, state);
             }
         }

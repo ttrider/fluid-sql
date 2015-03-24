@@ -151,7 +151,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC ( N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
         }
         [TestMethod]
         public void CreateOrAlterView()
@@ -161,7 +161,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC ( N' CREATE VIEW [foo] AS SELECT * FROM [bar]'  );\r\nELSE EXEC ( N' ALTER VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );\r\nELSE EXEC (N' ALTER VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
         }
 
         [TestMethod]
@@ -172,7 +172,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NOT NULL EXEC ( N' DROP VIEW [foo];' );", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NOT NULL EXEC (N' DROP VIEW [foo];' );", command.CommandText);
         }
     }
 }

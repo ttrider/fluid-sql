@@ -29,7 +29,11 @@ namespace TTRider.FluidSql.Providers
         {
             VisitStatement(statement.First, state);
 
-            state.Write((statement.All ? Sym.UNION_ALL : Sym.UNION));
+            state.Write(Symbols.UNION);
+            if (statement.All)
+            {
+                state.Write(Symbols.ALL);
+            }
 
             VisitStatement(statement.Second, state);
         }
@@ -37,14 +41,14 @@ namespace TTRider.FluidSql.Providers
         {
             VisitStatement(statement.First, state);
 
-            state.Write(Sym.EXCEPT);
+            state.Write(Symbols.EXCEPT);
 
             VisitStatement(statement.Second, state);
         }
         protected virtual void VisitIntersectStatement(IntersectStatement statement, VisitorState state)
         {
             VisitStatement(statement.First, state);
-            state.Write(Sym.INTERSECT);
+            state.Write(Symbols.INTERSECT);
             VisitStatement(statement.Second, state);
         }
 

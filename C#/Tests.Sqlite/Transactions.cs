@@ -33,7 +33,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("BEGIN TRANSACTION;\r\nSAVEPOINT \"foo\";\r\nRELEASE SAVEPOINT  \"foo\";\r\nCOMMIT TRANSACTION;", text); return statement;
+            Assert.AreEqual("BEGIN TRANSACTION;\r\nSAVEPOINT \"foo\";\r\nRELEASE SAVEPOINT \"foo\";\r\nCOMMIT TRANSACTION;", text); return statement;
 
         }
     }

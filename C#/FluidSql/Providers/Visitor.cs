@@ -39,7 +39,7 @@ namespace TTRider.FluidSql.Providers
             {
                 if (!string.IsNullOrWhiteSpace(token.Alias))
                 {
-                    state.Write(Sym.AS);
+                    state.Write(Symbols.AS);
                     state.Write(this.IdentifierOpenQuote, token.Alias, this.IdentifierCloseQuote);
                 }
             }
@@ -63,23 +63,24 @@ namespace TTRider.FluidSql.Providers
         {
             if (conflict.HasValue)
             {
-                state.Write(Sym.ON_CONFLICT);
+                state.Write(Symbols.ON);
+                state.Write(Symbols.CONFLICT);
                 switch (conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Write(Sym.ABORT);
+                        state.Write(Symbols.ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Write(Sym.FAIL);
+                        state.Write(Symbols.FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Write(Sym.IGNORE);
+                        state.Write(Symbols.IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Write(Sym.REPLACE);
+                        state.Write(Symbols.REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Write(Sym.ROLLBACK);
+                        state.Write(Symbols.ROLLBACK);
                         break;
                 }
 
