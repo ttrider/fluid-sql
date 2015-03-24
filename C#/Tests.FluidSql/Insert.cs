@@ -41,7 +41,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT TOP (1) INTO [foo].[bar] SELECT * FROM [bar].[foo];", command.CommandText);
+            Assert.AreEqual("INSERT TOP ( 1 ) INTO [foo].[bar] SELECT * FROM [bar].[foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) SELECT * FROM [bar].[foo];", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) SELECT * FROM [bar].[foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) SELECT * FROM [bar].[foo];", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) SELECT * FROM [bar].[foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) OUTPUT [inserted].[id] INTO @t SELECT * FROM [bar].[foo];", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] INTO @t SELECT * FROM [bar].[foo];", command.CommandText);
         }
 
         [TestMethod]

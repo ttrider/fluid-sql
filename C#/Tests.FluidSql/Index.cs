@@ -19,7 +19,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE INDEX [if] ON [foo].[bar] ([col1] ASC, [col2] DESC) INCLUDE ([col3], [col4]);", command.CommandText);
+            Assert.AreEqual("CREATE INDEX [if] ON [foo].[bar] ( [col1] ASC, [col2] DESC ) INCLUDE ( [col3], [col4] ) ;", command.CommandText);
 
         }
 
@@ -37,7 +37,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [if] ON [foo].[bar] ([col1] ASC, [col2] DESC) INCLUDE ([col3], [col4]);", command.CommandText);
+            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [if] ON [foo].[bar] ( [col1] ASC, [col2] DESC ) INCLUDE ( [col3], [col4] ) ;", command.CommandText);
 
         }
 
@@ -57,7 +57,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [if] ON [foo].[bar] ([col1] ASC, [col2] DESC) INCLUDE ([col3], [col4]) WHERE [col1] >= 123;", command.CommandText);
+            Assert.AreEqual("CREATE UNIQUE CLUSTERED INDEX [if] ON [foo].[bar] ( [col1] ASC, [col2] DESC ) INCLUDE ( [col3], [col4] ) WHERE [col1] >= 123 ;", command.CommandText);
 
         }
 

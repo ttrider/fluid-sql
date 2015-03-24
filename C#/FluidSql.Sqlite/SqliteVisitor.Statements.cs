@@ -81,12 +81,12 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 VisitConflict(unique.Conflict, state);
             }
 
-
-            state.Write(Sym.cpsc);
+            state.Write(Sym.cp);
 
             // if indecies are set, create them
             if (statement.Indicies.Count > 0)
             {
+                state.WriteStatementTerminator();
                 foreach (var createIndexStatement in statement.Indicies)
                 {
                     createIndexStatement.CheckIfNotExists |= statement.CheckIfNotExists;

@@ -407,7 +407,7 @@ namespace TTRider.FluidSql.Providers
         {
             VisitStatement(statement.First, state);
 
-            state.Write((statement.All ? Sym.UNION_ALL: Sym.UNION));
+            state.Write((statement.All ? Sym.UNION_ALL : Sym.UNION));
 
             VisitStatement(statement.Second, state);
         }
@@ -543,8 +543,8 @@ namespace TTRider.FluidSql.Providers
 
             public const string ONLINE = "ONLINE";
             public const string ORDER_BY = "ORDER BY";
-            
-            public const string OUTPUT_ = "OUTPUT ";
+
+            public const string OUTPUT = "OUTPUT";
             public const string PERCENT = "PERCENT";
             public const string PRIMARY_KEY = "PRIMARY KEY";
 
@@ -555,8 +555,7 @@ namespace TTRider.FluidSql.Providers
             public const string ALTER_VIEW = "ALTER VIEW";
             public const string COMMA = ",";
             public const string cp = ")";
-            public const string cpsc = ");";
-
+            
             public const string CONSTRAINT = "CONSTRAINT";
             public const string UNIQUE = "UNIQUE";
 
@@ -586,7 +585,7 @@ namespace TTRider.FluidSql.Providers
             public const string BEGIN_IMMIDIATE_TRANSACTION = "BEGIN IMMIDIATE TRANSACTION";
             public const string BEGIN_DEFERRED_TRANSACTION = "BEGIN DEFERRED TRANSACTION";
             public const string BEGIN_EXCLUSIVE_TRANSACTION = "BEGIN EXCLUSIVE TRANSACTION";
-            
+
 
             public const string INDEX = "INDEX";
 
@@ -601,6 +600,61 @@ namespace TTRider.FluidSql.Providers
             public const string DISTINCT = "DISTINCT";
 
             public const string SAVEPOINT_ = "SAVEPOINT";
+
+            public const string MAX = "MAX";
+            public const string SET = "SET";
+            public const string MERGE = "MERGE";
+            public const string USING = "USING";
+            public const string WHEN_MATCHED = "WHEN MATCHED";
+            public const string WHEN_NOT_MATCHED_BY_TARGET = "WHEN NOT MATCHED BY TARGET";
+            public const string WHEN_NOT_MATCHED_BY_SOURCE = "WHEN NOT MATCHED BY SOURCE";
+            public const string THEN = "THEN";
+            public const string UPDATE_SET = "UPDATE SET";
+            public const string INSERT = "INSERT";
+            public const string VALUES_op = "VALUES (";
+            public const string DEFAULT_VALUES = "DEFAULT VALUES";
+            public const string UPDATE = "UPDATE";
+            public const string VALUES = "VALUES";
+            public const string WITH_MARK = "WITH MARK";
+            public const string COMMIT_TRANSACTION = "COMMIT TRANSACTION";
+            public const string ROLLBACK_TRANSACTION = "ROLLBACK TRANSACTION";
+            public const string SAVE_TRANSACTION = "SAVE TRANSACTION";
+            public const string DECLARE = "DECLARE";
+            public const string BREAK = "BREAK";
+            public const string CONTINUE = "CONTINUE";
+            public const string GOTO = "GOTO";
+            public const string RETURN = "RETURN";
+            public const string THROW = "THROW";
+            public const string BEGIN_TRY = "BEGIN TRY";
+            public const string END_TRY = "END TRY";
+            public const string BEGIN_CATCH = "BEGIN CATCH";
+            public const string END_CATCH = "END CATCH";
+            public const string WAITFOR_DELAY = "WAITFOR DELAY";
+            public const string WAITFOR_TIME = "WAITFOR TIME";
+            public const string WHILE = "WHILE";
+            public const string BEGIN = "BEGIN";
+            public const string END = "END";
+            public const string IF = "IF";
+            public const string ELSE = "ELSE";
+            public const string TABLE = "TABLE";
+            public const string FILETABLE = "FILETABLE";
+            public const string SPARSE = "SPARSE";
+            public const string ROWGUIDCOL = "ROWGUIDCOL";
+            public const string DEFAULT = "DEFAULT";
+            public const string EXEC = "EXEC";
+            public const string PAD_INDEX = "PAD_INDEX";
+            public const string FILLFACTOR = "FILLFACTOR";
+            public const string SORT_IN_TEMPDB = "SORT_IN_TEMPDB";
+            public const string DROP_EXISTING = "DROP_EXISTING";
+            public const string ALLOW_ROW_LOCKS = "ALLOW_ROW_LOCKS";
+            public const string ALLOW_PAGE_LOCKS = "ALLOW_PAGE_LOCKS";
+            public const string ALTER_INDEX = "ALTER INDEX";
+            public const string REBUILD = "REBUILD";
+            public const string IGNORE_DUP_KEY = "IGNORE_DUP_KEY";
+            public const string STATISTICS_NORECOMPUTE = " STATISTICS_NORECOMPUTE";
+            public const string DISABLE = "DISABLE";
+            public const string REORGANIZE = "REORGANIZE";
+
 
             public const string asterisk = "*";
 
@@ -636,3 +690,8 @@ namespace TTRider.FluidSql.Providers
         }
     }
 }
+
+
+
+
+

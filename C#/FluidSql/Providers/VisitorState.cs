@@ -20,7 +20,7 @@ namespace TTRider.FluidSql.Providers
             this.buffer = new StringBuilder();
         }
 
-        
+
 
         public List<Parameter> Parameters { get; private set; }
         public List<Parameter> Variables { get; private set; }
@@ -28,7 +28,20 @@ namespace TTRider.FluidSql.Providers
 
         public string Value
         {
-            get { return this.buffer.ToString(); }
+            get
+            {
+                // ignore trailing crlf
+                var length = this.buffer.Length;
+                if (length > 0 && this.buffer[length - 1] == '\n')
+                {
+                    if (length > 1 && this.buffer[length - 2] == '\r')
+                    {
+                        return this.buffer.ToString(0, length - 2);
+                    }
+                    return this.buffer.ToString(0, length - 1);
+                }
+                return this.buffer.ToString();
+            }
         }
 
         public void WriteBeginStringify(string prefix, string suffix = null)
@@ -38,7 +51,7 @@ namespace TTRider.FluidSql.Providers
 
             if (string.IsNullOrWhiteSpace(this.stringifyPrefix) || string.IsNullOrWhiteSpace(this.stringifySuffix))
             {
-                this.Write(prefix);
+                this.buffer.Append(prefix);
                 this.stringifyPrefix = prefix;
                 this.stringifySuffix = suffix;
             }
@@ -52,7 +65,7 @@ namespace TTRider.FluidSql.Providers
             var suffix = this.stringifySuffix;
             this.stringifySuffix = null;
             this.stringifyPrefix = null;
-            Write(suffix);
+            this.buffer.Append(suffix);
         }
 
 
@@ -61,7 +74,7 @@ namespace TTRider.FluidSql.Providers
             if (value == null) return;
 
             // special threatment of COMMA and CRLF
-            if (buffer.Length != 0 && value != "," && value != "\r\n" && buffer[buffer.Length-1]!='\n')
+            if (buffer.Length != 0 && value != "," && value != "\r\n" && buffer[buffer.Length - 1] != '\n')
             {
                 this.buffer.Append(" ");
             }
@@ -88,7 +101,7 @@ namespace TTRider.FluidSql.Providers
         /// <summary>
         /// Ensures that statement has proper terminating character (;)  
         /// </summary>
-        public void WriteStatementTerminator()
+        public void WriteStatementTerminator(bool addCRLF = true)
         {
             // we need to make sure that the last non-whitespace character
             // is ';' unless it is */ or :
@@ -117,6 +130,11 @@ namespace TTRider.FluidSql.Providers
                     this.buffer.Append(";");
                     break;
                 }
+            }
+
+            if (addCRLF && this.buffer.Length > 0 && this.buffer[this.buffer.Length - 1] != '\n')
+            {
+                this.buffer.Append("\r\n");
             }
         }
 
