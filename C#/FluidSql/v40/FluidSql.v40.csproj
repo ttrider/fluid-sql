@@ -127,6 +127,15 @@
     <Compile Include="..\Providers\Visitor.cs">
       <Link>Visitor.cs</Link>
     </Compile>
+    <Compile Include="..\Providers\Visitor.Statements.cs">
+      <Link>Visitor.Statements.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\Visitor.Symbols.cs">
+      <Link>Visitor.Symbols.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\Visitor.Tokens.cs">
+      <Link>Visitor.Tokens.cs</Link>
+    </Compile>
     <Compile Include="..\Providers\VisitorState.cs" />
     <Compile Include="..\RecordsetStatement.cs" />
     <Compile Include="..\ReturnStatement.cs">

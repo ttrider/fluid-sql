@@ -576,24 +576,24 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static Union Union(this RecordsetStatement statement, RecordsetStatement with)
+        public static UnionStatement Union(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Union(statement, with);
+            return new UnionStatement(statement, with);
         }
 
-        public static Union UnionAll(this RecordsetStatement statement, RecordsetStatement with)
+        public static UnionStatement UnionAll(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Union(statement, with, true);
+            return new UnionStatement(statement, with, true);
         }
 
-        public static Except Except(this RecordsetStatement statement, RecordsetStatement with)
+        public static ExceptStatement Except(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Except(statement, with);
+            return new ExceptStatement(statement, with);
         }
 
-        public static Intersect Intersect(this RecordsetStatement statement, RecordsetStatement with)
+        public static IntersectStatement Intersect(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Intersect(statement, with);
+            return new IntersectStatement(statement, with);
         }
 
         public static SelectStatement WrapAsSelect(this RecordsetStatement statement, string alias)

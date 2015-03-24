@@ -98,6 +98,8 @@
     <Compile Include="Providers\Provider.cs" />
     <Compile Include="Providers\SqlServer\SqlServerVisitor.cs" />
     <Compile Include="Providers\Visitor.cs" />
+    <Compile Include="Providers\Visitor.Symbols.cs" />
+    <Compile Include="Providers\Visitor.Tokens.cs" />
     <Compile Include="Providers\VisitorState.cs" />
     <Compile Include="RecordsetStatement.cs" />
     <Compile Include="ReturnStatement.cs" />
@@ -128,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FluidSql.cd" />
+    <Compile Include="Providers\Visitor.Statements.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

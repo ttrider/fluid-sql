@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace TTRider.FluidSql.Providers.SqlServer
 {
@@ -43,108 +42,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         };
 
 
-        
 
-
-        private static readonly Dictionary<Type, Action<SqlServerVisitor, Token, VisitorState>> TokenVisitors =
-            new Dictionary<Type, Action<SqlServerVisitor, Token, VisitorState>>
-            {
-                {typeof (SelectStatement), (v,t,s)=>v.VisitStatementToken((IStatement)t, s)},
-                {typeof (Union),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
-                {typeof (Intersect),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
-                {typeof (Except),(v,t,s)=>v.VisitStatementToken((IStatement)t,s)},
-                {typeof (Scalar),(v,t,s)=>v.VisitScalarToken((Scalar)t,s,"N'","'")},
-                {typeof (Name),(v,t,s)=>v.VisitNameToken((Name)t,s)},
-                {typeof (Parameter),(v,t,s)=>v.VisitParameterToken((Parameter)t,s)},
-                {typeof (Snippet),(v,t,s)=>v.VisitSnippetToken((Snippet)t,s)},
-                {typeof (Function),(v,t,s)=>v.VisitFunctionToken((Function)t,s)},
-                {typeof (IsEqualsToken),(v,t,s)=>v.VisitIsEqualsToken((IsEqualsToken)t,s)},
-                {typeof (NotEqualToken),(v,t,s)=>v.VisitNotEqualToken((NotEqualToken)t,s)},
-                {typeof (LessToken),(v,t,s)=>v.VisitLessToken((LessToken)t,s)},
-                {typeof (NotLessToken),(v,t,s)=>v.VisitNotLessToken((NotLessToken)t,s)},
-                {typeof (LessOrEqualToken),(v,t,s)=>v.VisitLessOrEqualToken((LessOrEqualToken)t,s)},
-                {typeof (GreaterToken),(v,t,s)=>v.VisitGreaterToken((GreaterToken)t,s)},
-                {typeof (NotGreaterToken),(v,t,s)=>v.VisitNotGreaterToken((NotGreaterToken)t,s)},
-                {typeof (GreaterOrEqualToken),(v,t,s)=>v.VisitGreaterOrEqualToken((GreaterOrEqualToken)t,s)},
-                {typeof (AndToken),(v,t,s)=>v.VisitAndToken((AndToken)t,s)},
-                {typeof (OrToken),(v,t,s)=>v.VisitOrToken((OrToken)t,s)},
-                {typeof (PlusToken),(v,t,s)=>v.VisitPlusToken((PlusToken)t,s)},
-                {typeof (MinusToken),(v,t,s)=>v.VisitMinusToken((MinusToken)t,s)},
-                {typeof (DivideToken),(v,t,s)=>v.VisitDivideToken((DivideToken)t,s)},
-                {typeof (ModuloToken),(v,t,s)=>v.VisitModuloToken((ModuloToken)t,s)},
-                {typeof (MultiplyToken),(v,t,s)=>v.VisitMultiplyToken((MultiplyToken)t,s)},
-                {typeof (BitwiseAndToken),(v,t,s)=>v.VisitBitwiseAndToken((BitwiseAndToken)t,s)},
-                {typeof (BitwiseOrToken),(v,t,s)=>v.VisitBitwiseOrToken((BitwiseOrToken)t,s)},
-                {typeof (BitwiseXorToken),(v,t,s)=>v.VisitBitwiseXorToken((BitwiseXorToken)t,s)},
-                {typeof (BitwiseNotToken),(v,t,s)=>v.VisitBitwiseNotToken((BitwiseNotToken)t,s)},
-                {typeof (ContainsToken),(v,t,s)=>v.VisitContainsToken((ContainsToken)t,s)},
-                {typeof (StartsWithToken),(v,t,s)=>v.VisitStartsWithToken((StartsWithToken)t,s)},
-                {typeof (EndsWithToken),(v,t,s)=>v.VisitEndsWithToken((EndsWithToken)t,s)},
-                {typeof (LikeToken),(v,t,s)=>v.VisitLikeToken((LikeToken)t,s)},
-                {typeof (GroupToken),(v,t,s)=>v.VisitGroupToken((GroupToken)t,s)},
-                {typeof (NotToken),(v,t,s)=>v.VisitNotToken((NotToken)t,s)},
-                {typeof (IsNullToken),(v,t,s)=>v.VisitIsNullToken((IsNullToken)t,s)},
-                {typeof (IsNotNullToken),(v,t,s)=>v.VisitIsNotNullToken((IsNotNullToken)t,s)},
-                {typeof (ExistsToken),(v,t,s)=>v.VisitExistsToken((ExistsToken)t,s)},
-                {typeof (AllToken),(v,t,s)=>v.VisitAllToken((AllToken)t,s)},
-                {typeof (AnyToken),(v,t,s)=>v.VisitAnyToken((AnyToken)t,s)},
-                {typeof (AssignToken),(v,t,s)=>v.VisitAssignToken((AssignToken)t,s)},
-                {typeof (BetweenToken),(v,t,s)=>v.VisitBetweenToken((BetweenToken)t,s)},
-                {typeof (InToken),(v,t,s)=>v.VisitInToken((InToken)t,s)},
-                {typeof (NotInToken),(v,t,s)=>v.VisitNotInToken((NotInToken)t,s)},
-                {typeof (CommentToken),(v,t,s)=>v.VisitCommentToken((CommentToken)t,s)},
-                {typeof (StringifyToken),(v,t,s)=>v.VisitStringifyToken((StringifyToken)t,s)},
-                {typeof (WhenMatchedThenDelete),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedThenDelete)t,s)},
-                {typeof (WhenMatchedThenUpdateSet),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedThenUpdateSet)t,s)},
-                {typeof (WhenNotMatchedThenInsert),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedThenInsert)t,s)},
-                {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
-
-                
-            };
-
-        private static readonly Dictionary<Type, Action<SqlServerVisitor, IStatement, VisitorState>> StatementVisitors =
-            new Dictionary<Type, Action<SqlServerVisitor, IStatement, VisitorState>>
-            {
-                {typeof (DeleteStatement), (v,stm,s)=>v.VisitDelete((DeleteStatement)stm, s)},
-                {typeof (UpdateStatement), (v,stm,s)=>v.VisitUpdate((UpdateStatement)stm, s)},
-                {typeof (InsertStatement), (v,stm,s)=>v.VisitInsert((InsertStatement)stm,s)},
-                {typeof (SelectStatement), (v,stm,s)=>v.VisitSelect((SelectStatement)stm,s)},
-                {typeof (MergeStatement),(v,stm,s)=>v. VisitMerge((MergeStatement)stm,s)},
-                {typeof (SetStatement), (v,stm,s)=>v.VisitSet((SetStatement)stm,s)},
-                {typeof (Union), (v,stm,s)=>v.VisitUnion((Union)stm,s)},
-                {typeof (Intersect), (v,stm,s)=>v.VisitIntersect((Intersect)stm,s)},
-                {typeof (Except), (v,stm,s)=>v.VisitExcept((Except)stm,s)},
-                {typeof (BeginTransactionStatement), (v,stm,s)=>v.VisitBeginTransaction((BeginTransactionStatement)stm,s)},
-                {typeof (CommitTransactionStatement), (v,stm,s)=>v.VisitCommitTransaction((CommitTransactionStatement)stm,s)},
-                {typeof (RollbackTransactionStatement), (v,stm,s)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm,s)},
-                {typeof (StatementsStatement), (v,stm,s)=>v.VisitStatementsStatement((StatementsStatement)stm,s)},
-                {typeof (SaveTransactionStatement), (v,stm,s)=>v.VisitSaveTransaction((SaveTransactionStatement)stm,s)},
-                {typeof (DeclareStatement), (v,stm,s)=>v.VisitDeclareStatement((DeclareStatement)stm,s)},
-                {typeof (IfStatement), (v,stm,s)=>v.VisitIfStatement((IfStatement)stm,s)},
-                {typeof (CreateTableStatement), (v,stm,s)=>v.VisitCreateTableStatement((CreateTableStatement)stm,s)},
-                {typeof (DropTableStatement), (v,stm,s)=>v.VisitDropTableStatement((DropTableStatement)stm,s)},
-                {typeof (CreateIndexStatement), (v,stm,s)=>v.VisitCreateIndexStatement((CreateIndexStatement)stm,s)},
-                {typeof (AlterIndexStatement), (v,stm,s)=>v.VisitAlterIndexStatement((AlterIndexStatement)stm,s)},
-                {typeof (DropIndexStatement), (v,stm,s)=>v.VisitDropIndexStatement((DropIndexStatement)stm,s)},
-                {typeof (CommentStatement), (v,stm,s)=>v.VisitCommentStatement((CommentStatement)stm,s)},
-                {typeof (StringifyStatement), (v,stm,s)=>v.VisitStringifyStatement((StringifyStatement)stm,s)},
-                {typeof (SnippetStatement), (v,stm,s)=>v.VisitSnippetStatement((SnippetStatement)stm,s)},
-                {typeof (BreakStatement), (v,stm,s)=>v.VisitBreakStatement((BreakStatement)stm,s)},
-                {typeof (ContinueStatement), (v,stm,s)=>v.VisitContinueStatement((ContinueStatement)stm,s)},
-                {typeof (GotoStatement), (v,stm,s)=>v.VisitGotoStatement((GotoStatement)stm,s)},
-                {typeof (ReturnStatement), (v,stm,s)=>v.VisitReturnStatement((ReturnStatement)stm,s)},
-                {typeof (ThrowStatement), (v,stm,s)=>v.VisitThrowStatement((ThrowStatement)stm,s)},
-                {typeof (TryCatchStatement), (v,stm,s)=>v.VisitTryCatchStatement((TryCatchStatement)stm,s)},
-                {typeof (LabelStatement), (v,stm,s)=>v.VisitLabelStatement((LabelStatement)stm,s)},
-                {typeof (WaitforDelayStatement), (v,stm,s)=>v.VisitWaitforDelayStatement((WaitforDelayStatement)stm,s)},
-                {typeof (WaitforTimeStatement), (v,stm,s)=>v.VisitWaitforTimeStatement((WaitforTimeStatement)stm,s)},
-                {typeof (WhileStatement), (v,stm,s)=>v.VisitWhileStatement((WhileStatement)stm,s)},
-                {typeof (CreateViewStatement), (v,stm,s)=>v.VisitCreateViewStatement((CreateViewStatement)stm,s)},
-                {typeof (CreateOrAlterViewStatement), (v,stm,s)=>v.VisitCreateOrAlterViewStatement((CreateOrAlterViewStatement)stm,s)},
-                {typeof (AlterViewStatement), (v,stm,s)=>v.VisitAlterViewStatement((AlterViewStatement)stm,s)},
-                {typeof (DropViewStatement), (v,stm,s)=>v.VisitDropViewStatement((DropViewStatement)stm,s)},
-                {typeof (ExecuteStatement), (v,stm,s)=>v.VisitExecuteStatement((ExecuteStatement)stm,s)},
-            };
 
         public static VisitorState Compile(IStatement statement)
         {
@@ -169,7 +67,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             var state = new VisitorState();
             var visitor = new SqlServerVisitor();
-            visitor.VisitToken(token, state, false);
+            visitor.VisitToken(token, state);
             return state;
         }
 
@@ -207,14 +105,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.WriteEndStringify();
         }
 
-        protected override string CloseQuote
-        {
-            get { return "]"; }
-        }
-        protected override string OpenQuote
-        {
-            get { return "["; }
-        }
+        protected override string IdentifierCloseQuote { get { return "]"; } }
+        protected override string IdentifierOpenQuote { get { return "["; } }
+        protected override string LiteralOpenQuote { get { return "N'"; } }
+        protected override string LiteralCloseQuote { get { return "'"; } }
+        protected override string CommentOpenQuote { get { return "/*"; } }
+        protected override string CommentCloseQuote { get { return "*/"; } }
 
 
 
@@ -234,12 +130,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 else if (typedToken.Precision.HasValue)
                 {
-                    state.Write(typedToken.Precision.Value.ToString());
+                    state.Write(typedToken.Precision.Value.ToString(CultureInfo.InvariantCulture));
 
                     if (typedToken.Scale.HasValue)
                     {
                         state.Write(Sym.COMMA);
-                        state.Write(typedToken.Scale.Value.ToString());
+                        state.Write(typedToken.Scale.Value.ToString(CultureInfo.InvariantCulture));
                     }
                 }
 
@@ -250,25 +146,21 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #region Statements
 
-        protected override void VisitStatement(IStatement statement, VisitorState state)
-        {
-            StatementVisitors[statement.GetType()](this, statement, state);
-        }
         protected override void VisitJoinType(Joins join, VisitorState state)
         {
             state.Write(JoinStrings[(int)join]);
         }
 
-        private void VisitSet(SetStatement statement, VisitorState state)
+        protected override void VisitSet(SetStatement statement, VisitorState state)
         {
             state.Write(Sym.SET);
 
             if (statement.Assign != null)
             {
-                VisitToken(statement.Assign, state, false);
+                VisitToken(statement.Assign, state);
             }
         }
-        private void VisitMerge(MergeStatement statement, VisitorState state)
+        protected override void VisitMerge(MergeStatement statement, VisitorState state)
         {
             state.Write(Sym.MERGE);
 
@@ -279,7 +171,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (!string.IsNullOrWhiteSpace(statement.Into.Alias))
             {
                 state.Write(Sym.AS);
-                state.Write(this.OpenQuote, statement.Into.Alias, this.CloseQuote);
+                state.Write(this.IdentifierOpenQuote, statement.Into.Alias, this.IdentifierCloseQuote);
             }
 
             state.Write(Sym.USING);
@@ -287,12 +179,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (!string.IsNullOrWhiteSpace(statement.Using.Alias))
             {
                 state.Write(Sym.AS);
-                state.Write(this.OpenQuote, statement.Using.Alias, this.CloseQuote);
+                state.Write(this.IdentifierOpenQuote, statement.Using.Alias, this.IdentifierCloseQuote);
             }
 
             state.Write(Sym.ON);
 
-            VisitToken(statement.On, state, false);
+            VisitToken(statement.On, state);
 
             foreach (var when in statement.WhenMatched)
             {
@@ -304,7 +196,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 state.Write(Sym.THEN);
 
-                VisitToken(when, state, false);
+                VisitToken(when, state);
             }
 
             foreach (var when in statement.WhenNotMatched)
@@ -317,7 +209,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 state.Write(Sym.THEN);
 
-                VisitToken(when, state, false);
+                VisitToken(when, state);
             }
 
             foreach (var when in statement.WhenNotMatchedBySource)
@@ -330,22 +222,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 state.Write(Sym.THEN);
 
-                VisitToken(when, state, false);
+                VisitToken(when, state);
             }
 
             VisitOutput(statement.Output, statement.OutputInto, state);
         }
 
-        private void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
+        // ReSharper disable once UnusedParameter.Local
+        protected override void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
         {
             state.Write(Sym.DELETE);
         }
-        private void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
+        protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
         {
             state.Write(Sym.UPDATE_SET);
             VisitTokenSet(token.Set, state, null, Sym.COMMA, null);
         }
-        private void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
+        protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
         {
             state.Write(Sym.INSERT);
             if (token.Columns.Count > 0)
@@ -362,7 +255,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
-        private void VisitSelect(SelectStatement statement, VisitorState state)
+        protected override void VisitSelect(SelectStatement statement, VisitorState state)
         {
             state.Write(Sym.SELECT);
 
@@ -396,17 +289,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitInto(statement.Into, state);
 
-            VisitFrom(statement.From, state);
+            VisitFromToken(statement.From, state);
 
             VisitJoin(statement.Joins, state);
 
-            VisitWhere(statement.Where, state);
+            VisitWhereToken(statement.Where, state);
 
-            VisitGroupBy(statement.GroupBy, state);
+            VisitGroupByToken(statement.GroupBy, state);
 
-            VisitHaving(statement.Having, state);
+            VisitHavingToken(statement.Having, state);
 
-            VisitOrderBy(statement.OrderBy, state);
+            VisitOrderByToken(statement.OrderBy, state);
 
             if (statement.Offset != null)
             {
@@ -416,7 +309,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Write(Sym.FETCH_NEXT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Write(statement.Top.Value.Value.ToString());
+                    state.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {
@@ -439,7 +332,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitNameToken(into, state);
             }
         }
-        private void VisitDelete(DeleteStatement statement, VisitorState state)
+        protected override void VisitDelete(DeleteStatement statement, VisitorState state)
         {
             state.Write(Sym.DELETE);
 
@@ -449,27 +342,27 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 if (!string.IsNullOrWhiteSpace(statement.From.Alias))
                 {
-                    state.Write(this.OpenQuote, statement.From.Alias, this.CloseQuote);
+                    state.Write(this.IdentifierOpenQuote, statement.From.Alias, this.IdentifierCloseQuote);
                 }
 
                 VisitOutput(statement.Output, statement.OutputInto, state);
 
-                VisitFrom(statement.From, state);
+                VisitFromToken(statement.From, state);
 
                 VisitJoin(statement.Joins, state);
 
-                VisitWhere(statement.Where, state);
+                VisitWhereToken(statement.Where, state);
             }
             else
             {
-                VisitFrom(statement.From, state);
+                VisitFromToken(statement.From, state);
 
                 VisitOutput(statement.Output, statement.OutputInto, state);
 
-                VisitWhere(statement.Where, state);
+                VisitWhereToken(statement.Where, state);
             }
         }
-        private void VisitUpdate(UpdateStatement updateStatement, VisitorState state)
+        protected override void VisitUpdate(UpdateStatement updateStatement, VisitorState state)
         {
             state.Write(Sym.UPDATE);
 
@@ -482,13 +375,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitOutput(updateStatement.Output, updateStatement.OutputInto, state);
 
-            VisitFrom(updateStatement.From, state);
+            VisitFromToken(updateStatement.From, state);
 
             VisitJoin(updateStatement.Joins, state);
 
-            VisitWhere(updateStatement.Where, state);
+            VisitWhereToken(updateStatement.Where, state);
         }
-        private void VisitInsert(InsertStatement insertStatement, VisitorState state)
+        protected override void VisitInsert(InsertStatement insertStatement, VisitorState state)
         {
             state.Write(Sym.INSERT);
 
@@ -520,33 +413,33 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitStatement(insertStatement.From, state);
             }
         }
-        
-        private void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
+
+        protected override void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
         {
             state.Write(Sym.BEGIN_TRANSACTION);
             if (VisitTransactionName(statement, state) && !string.IsNullOrWhiteSpace(statement.Description))
             {
                 state.Write(Sym.WITH_MARK);
-                state.Write("N'",statement.Description,"'");
+                state.Write("N'", statement.Description, "'");
             }
         }
-        private void VisitCommitTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitCommitTransaction(CommitTransactionStatement statement, VisitorState state)
         {
             state.Write(Sym.COMMIT_TRANSACTION);
             VisitTransactionName(statement, state);
         }
-        private void VisitRollbackTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitRollbackTransaction(RollbackTransactionStatement statement, VisitorState state)
         {
             state.Write(Sym.ROLLBACK_TRANSACTION);
             VisitTransactionName(statement, state);
         }
-        private void VisitSaveTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitSaveTransaction(SaveTransactionStatement statement, VisitorState state)
         {
             state.Write(Sym.SAVE_TRANSACTION);
             VisitTransactionName(statement, state);
         }
-       
-        private void VisitDeclareStatement(DeclareStatement statement, VisitorState state)
+
+        protected override void VisitDeclareStatement(DeclareStatement statement, VisitorState state)
         {
             if (statement.Variable != null)
             {
@@ -566,20 +459,22 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
 
         // ReSharper disable once UnusedParameter.Local
-        private void VisitBreakStatement(BreakStatement statement, VisitorState state)
+        protected override void VisitBreakStatement(BreakStatement statement, VisitorState state)
         {
             state.Write(Sym.BREAK);
         }
-        private void VisitContinueStatement(ContinueStatement statement, VisitorState state)
+
+        // ReSharper disable once UnusedParameter.Local
+        protected override void VisitContinueStatement(ContinueStatement statement, VisitorState state)
         {
             state.Write(Sym.CONTINUE);
         }
-        private void VisitGotoStatement(GotoStatement statement, VisitorState state)
+        protected override void VisitGotoStatement(GotoStatement statement, VisitorState state)
         {
             state.Write(Sym.GOTO);
             state.Write(statement.Label);
         }
-        private void VisitReturnStatement(ReturnStatement statement, VisitorState state)
+        protected override void VisitReturnStatement(ReturnStatement statement, VisitorState state)
         {
             state.Write(Sym.RETURN);
             if (statement.ReturnExpression != null)
@@ -588,7 +483,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
 
         }
-        private void VisitThrowStatement(ThrowStatement statement, VisitorState state)
+        protected override void VisitThrowStatement(ThrowStatement statement, VisitorState state)
         {
             state.Write(Sym.THROW);
             if (statement.ErrorNumber != null && statement.Message != null && statement.State != null)
@@ -600,7 +495,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitToken(statement.State, state);
             }
         }
-        private void VisitTryCatchStatement(TryCatchStatement stmt, VisitorState state)
+        protected override void VisitTryCatchStatement(TryCatchStatement stmt, VisitorState state)
         {
             state.Write(Sym.BEGIN_TRY);
             state.WriteCRLF();
@@ -618,47 +513,47 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Write(Sym.END_CATCH);
             state.WriteStatementTerminator();
         }
-        private void VisitLabelStatement(LabelStatement stmt, VisitorState state)
+        protected override void VisitLabelStatement(LabelStatement stmt, VisitorState state)
         {
             state.Write(stmt.Label, ":");
         }
-        private void VisitWaitforDelayStatement(WaitforDelayStatement stmt, VisitorState state)
+        protected override void VisitWaitforDelayStatement(WaitforDelayStatement stmt, VisitorState state)
         {
             state.Write(Sym.WAITFOR_DELAY);
-            state.Write("N'",stmt.Delay.ToString("HH:mm:ss"),"'");
+            state.Write("N'", stmt.Delay.ToString("HH:mm:ss"), "'");
         }
-        private void VisitWaitforTimeStatement(WaitforTimeStatement stmt, VisitorState state)
+        protected override void VisitWaitforTimeStatement(WaitforTimeStatement stmt, VisitorState state)
         {
             state.Write(Sym.WAITFOR_TIME);
-            state.Write("N'",stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"),"'");
+            state.Write("N'", stmt.Time.ToString("yyyy-MM-ddTHH:mm:ss"), "'");
         }
-        private void VisitWhileStatement(WhileStatement stmt, VisitorState state)
+        protected override void VisitWhileStatement(WhileStatement stmt, VisitorState state)
         {
             if (stmt.Condition != null)
             {
                 state.Write(Sym.WHILE);
-                VisitToken(stmt.Condition, state, false);
+                VisitToken(stmt.Condition, state);
 
                 if (stmt.Do != null)
                 {
                     state.WriteCRLF();
                     state.Write(Sym.BEGIN);
                     state.WriteStatementTerminator();
-                    
+
                     VisitStatement(stmt.Do, state);
                     state.WriteStatementTerminator();
-                    
+
                     state.Write(Sym.END);
                     state.WriteStatementTerminator();
                 }
             }
         }
-        private void VisitIfStatement(IfStatement ifs, VisitorState state)
+        protected override void VisitIfStatement(IfStatement ifs, VisitorState state)
         {
             if (ifs.Condition != null)
             {
                 state.Write(Sym.IF);
-                VisitToken(ifs.Condition, state, false);
+                VisitToken(ifs.Condition, state);
 
                 if (ifs.Then != null)
                 {
@@ -668,7 +563,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                     VisitStatement(ifs.Then, state);
                     state.WriteStatementTerminator();
-                    
+
                     state.Write(Sym.END);
                     state.WriteStatementTerminator();
 
@@ -681,14 +576,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                         VisitStatement(ifs.Else, state);
                         state.WriteStatementTerminator();
-                    
+
                         state.Write(Sym.END);
                         state.WriteStatementTerminator();
                     }
                 }
             }
         }
-        private void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
+        protected override void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
         {
             var tableName = ResolveName((statement.IsTemporary) ? GetTempTableName(statement.Name) : statement.Name);
 
@@ -700,7 +595,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Write(Sym.DROP_TABLE);
             state.Write(tableName);
         }
-        private void VisitCreateTableStatement(CreateTableStatement createStatement, VisitorState state)
+        protected override void VisitCreateTableStatement(CreateTableStatement createStatement, VisitorState state)
         {
             if (createStatement.IsTableVariable)
             {
@@ -716,7 +611,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 if (createStatement.CheckIfNotExists)
                 {
                     state.Write("IF OBJECT_ID ( N'", tableName, "', N'U' ) IS NULL");
-                    state.WriteCRLF(); 
+                    state.WriteCRLF();
                     state.Write(Sym.BEGIN);
                     state.WriteStatementTerminator();
                 }
@@ -737,7 +632,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Write(separator);
                 separator = Sym.COMMA;
 
-                state.Write(this.OpenQuote,column.Name,this.CloseQuote);
+                state.Write(this.IdentifierOpenQuote, column.Name, this.IdentifierCloseQuote);
 
                 VisitType(column, state);
 
@@ -753,9 +648,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     state.Write(Sym.IDENTITY);
                     state.Write(Sym.op);
-                    state.Write(column.Identity.Seed.ToString());
+                    state.Write(column.Identity.Seed.ToString(CultureInfo.InvariantCulture));
                     state.Write(Sym.COMMA);
-                    state.Write(column.Identity.Increment.ToString());
+                    state.Write(column.Identity.Increment.ToString(CultureInfo.InvariantCulture));
                     state.Write(Sym.cp);
                 }
                 if (column.RowGuid)
@@ -766,7 +661,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     state.Write(Sym.DEFAULT);
                     state.Write(Sym.op);
-                    VisitToken(column.DefaultValue, state, false);
+                    VisitToken(column.DefaultValue, state);
                     state.Write(Sym.cp);
                 }
             }
@@ -796,11 +691,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Write(Sym.UNIQUE);
                 if (unique.Clustered.HasValue)
                 {
-                    state.Write(unique.Clustered.Value ? Sym.CLUSTERED:Sym.NONCLUSTERED);
+                    state.Write(unique.Clustered.Value ? Sym.CLUSTERED : Sym.NONCLUSTERED);
                 }
                 VisitTokenSet(unique.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
             }
-                
+
             state.Write(Sym.cp);
             state.WriteStatementTerminator();
 
@@ -820,19 +715,19 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Write(Sym.END);
             }
         }
-        
-        private void VisitStringifyStatement(StringifyStatement statement, VisitorState state)
+
+        protected override void VisitStringifyStatement(StringifyStatement statement, VisitorState state)
         {
             this.Stringify(statement.Content, state);
         }
-        private void VisitExecuteStatement(ExecuteStatement statement, VisitorState state)
+        protected override void VisitExecuteStatement(ExecuteStatement statement, VisitorState state)
         {
             state.Write(Sym.EXEC);
             state.Write(Sym.op);
             this.Stringify(statement.Target, state);
             state.Write(Sym.cp);
         }
-        private void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement, VisitorState state)
+        protected override void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement, VisitorState state)
         {
             state.Write(Sym.CREATE);
 
@@ -858,7 +753,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitTokenSet(createIndexStatement.Include, state, Sym.INCLUDE_op, Sym.COMMA, Sym.cp);
 
-            VisitWhere(createIndexStatement.Where, state);
+            VisitWhereToken(createIndexStatement.Where, state);
 
             if (createIndexStatement.With.IsDefined)
             {
@@ -881,7 +776,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             state.Write(Sym.sc);
         }
-        private void VisitAlterIndexStatement(AlterIndexStatement alterStatement, VisitorState state)
+        protected override void VisitAlterIndexStatement(AlterIndexStatement alterStatement, VisitorState state)
         {
             state.Write(Sym.ALTER_INDEX);
 
@@ -891,12 +786,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
             else
             {
-                VisitToken(alterStatement.Name, state, false);
+                VisitToken(alterStatement.Name, state);
             }
 
             state.Write(Sym.ON);
 
-            VisitToken(alterStatement.On, state, false);
+            VisitToken(alterStatement.On, state);
 
             if (alterStatement.Rebuild)
             {
@@ -938,7 +833,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWith(alterStatement.Set.StatisticsNorecompute, Sym.STATISTICS_NORECOMPUTE, state);
             }
         }
-        private void VisitDropIndexStatement(DropIndexStatement dropIndexStatement, VisitorState state)
+        protected override void VisitDropIndexStatement(DropIndexStatement dropIndexStatement, VisitorState state)
         {
             state.Write(Sym.DROP_INDEX);
             VisitToken(dropIndexStatement.Name, state);
@@ -962,13 +857,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     state.Write(Sym.MAXDOP);
                     state.Write(Sym.AssignVal);
-                    state.Write(dropIndexStatement.With.MaxDegreeOfParallelism.Value.ToString());
+                    state.Write(dropIndexStatement.With.MaxDegreeOfParallelism.Value.ToString(CultureInfo.InvariantCulture));
                 }
 
                 state.Write(Sym.cp);
             }
         }
-        private void VisitCreateViewStatement(CreateViewStatement createStatement, VisitorState state)
+        protected override void VisitCreateViewStatement(CreateViewStatement createStatement, VisitorState state)
         {
             var viewName = ResolveName(createStatement.Name);
 
@@ -993,7 +888,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitStatement(createStatement.DefinitionStatement, state);
             }
         }
-        private void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement createStatement, VisitorState state)
+        protected override void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement createStatement, VisitorState state)
         {
             var viewName = ResolveName(createStatement.Name);
 
@@ -1020,7 +915,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.Write(Sym.cp);
         }
 
-        private void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
+        protected override void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
         {
             var viewName = ResolveName(statement.Name);
 
@@ -1040,14 +935,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
             else
             {
                 state.Write(Sym.DROP_VIEW);
-                state.Write(ResolveName(statement.Name));
+                VisitNameToken(statement.Name, state);
             }
         }
 
-        private void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
+        protected override void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
         {
             state.Write(Sym.ALTER_VIEW);
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
@@ -1057,7 +952,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #region Select Parts
 
-        
+
 
 
 
@@ -1079,7 +974,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 state.Write(Sym.TOP_op);
                 if (top.Value.HasValue)
                 {
-                    state.Write(top.Value.Value.ToString());
+                    state.Write(top.Value.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (top.Parameters.Count > 0)
                 {
@@ -1103,7 +998,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
 
 
-        
+
 
         private void VisitWith(bool? value, string name, VisitorState state)
         {
@@ -1121,7 +1016,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 state.Write(name);
                 state.Write(Sym.AssignVal);
-                state.Write(value.Value.ToString());
+                state.Write(value.Value.ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -1129,25 +1024,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #region Tokens
 
-        protected override void VisitToken(Token token, VisitorState state, bool includeAlias = false)
-        {
-            // todo check for statement
-            TokenVisitors[token.GetType()](this, token, state);
 
-            if (includeAlias)
-            {
-                if (!string.IsNullOrWhiteSpace(token.Alias))
-                {
-                    state.Write(Sym.AS);
-                    state.Write(this.OpenQuote, token.Alias, this.CloseQuote);
-                }
-            }
-
-            state.Parameters.AddRange(token.Parameters);
-            state.ParameterValues.AddRange(token.ParameterValues);
-        }
-
-        private void VisitStringifyToken(StringifyToken token, VisitorState state)
+        protected override void VisitStringifyToken(StringifyToken token, VisitorState state)
         {
             Stringify(s => VisitToken(token.Content, s), state);
         }

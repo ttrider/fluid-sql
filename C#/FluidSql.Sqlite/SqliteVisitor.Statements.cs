@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TTRider.FluidSql.Providers.Sqlite
+﻿namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor
     {
-        private void VisitCreateTableStatement(CreateTableStatement statement, VisitorState state)
+        protected override void VisitCreateTableStatement(CreateTableStatement statement, VisitorState state)
         {
             state.Write(statement.IsTableVariable || statement.IsTemporary ? Sym.CREATE_TEMP_TABLE : Sym.CREATE_TABLE);
 
@@ -18,7 +11,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 state.Write(Sym.IF_NOT_EXISTS);
             }
 
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
 
             var separator = "(";
             foreach (var column in statement.Columns)
@@ -62,7 +55,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 {
                     state.Write(Sym.COMMA);
                     state.Write(Sym.CONSTRAINT);
-                    state.Write(ResolveName(statement.PrimaryKey.Name));
+                    VisitNameToken(statement.PrimaryKey.Name, state);
                 }
                 state.Write(Sym.PRIMARY_KEY);
                 VisitTokenSet(statement.PrimaryKey.Columns, state, Sym.op, Sym.COMMA,Sym.cp );
@@ -73,11 +66,9 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 state.Write(Sym.COMMA);
                 state.Write(Sym.CONSTRAINT);
-                state.Write(ResolveName(unique.Name));
+                VisitNameToken(unique.Name, state);
                 state.Write(Sym.UNIQUE);
-                VisitTokenSet(statement.PrimaryKey.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
-                state.Write(string.Join(Sym.COMMA,
-                    unique.Columns.Select(n => ResolveName(n.Column) + (n.Direction == Direction.Asc ? Sym.ASC : Sym.DESC))));
+                VisitTokenSet(unique.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
                 VisitConflict(unique.Conflict, state);
             }
 
@@ -95,17 +86,17 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
         }
 
-        private void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
+        protected override void VisitDropTableStatement(DropTableStatement statement, VisitorState state)
         {
             state.Write(Sym.DROP_TABLE);
             if (statement.CheckExists)
             {
                 state.Write(Sym.IF_EXISTS);
             }
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
         }
 
-        private void VisitCreateIndexStatement(CreateIndexStatement statement, VisitorState state)
+        protected override void VisitCreateIndexStatement(CreateIndexStatement statement, VisitorState state)
         {
             state.Write(Sym.CREATE);
 
@@ -129,10 +120,10 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             // columns
             VisitTokenSet(statement.Columns, state, Sym.op, Sym.COMMA, Sym.cp);
-            VisitWhere(statement.Where, state);
+            VisitWhereToken(statement.Where, state);
         }
 
-        private void VisitAlterIndexStatement(AlterIndexStatement statement, VisitorState state)
+        protected override void VisitAlterIndexStatement(AlterIndexStatement statement, VisitorState state)
         {
             if (statement.Rebuild)
             {
@@ -149,8 +140,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
         }
 
-
-        private void VisitDropIndexStatement(DropIndexStatement statement, VisitorState state)
+        protected override void VisitDropIndexStatement(DropIndexStatement statement, VisitorState state)
         {
             state.Write(Sym.DROP_INDEX);
 
@@ -170,8 +160,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
         }
 
-
-        private void VisitCreateViewStatement(CreateViewStatement statement, VisitorState state)
+        protected override void VisitCreateViewStatement(CreateViewStatement statement, VisitorState state)
         {
             state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
@@ -179,50 +168,49 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 state.Write(Sym.IF_NOT_EXISTS);
             }
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
 
-        private void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
+        protected override void VisitAlterViewStatement(AlterViewStatement statement, VisitorState state)
         {
             state.Write(Sym.DROP_VIEW);
             state.Write(Sym.IF_EXISTS);
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.WriteStatementTerminator();
 
             state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
 
-        private void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement, VisitorState state)
+        protected override void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement, VisitorState state)
         {
             state.Write(Sym.DROP_VIEW);
             state.Write(Sym.IF_EXISTS);
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.WriteStatementTerminator();
 
             state.Write(statement.IsTemporary ? Sym.CREATE_TEMPORARY_VIEW : Sym.CREATE_VIEW);
 
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
             state.Write(Sym.AS);
             VisitStatement(statement.DefinitionStatement, state);
         }
-        private void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
+        protected override void VisitDropViewStatement(DropViewStatement statement, VisitorState state)
         {
             state.Write(Sym.DROP_VIEW);
             if (statement.CheckExists)
             {
                 state.Write(Sym.IF_EXISTS);
             }
-            state.Write(ResolveName(statement.Name));
+            VisitNameToken(statement.Name, state);
         }
 
-
-        private void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
+        protected override void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
         {
             if (statement.Type.HasValue)
             {
@@ -245,13 +233,13 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
         }
 
-        private void VisitSaveTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitSaveTransaction(SaveTransactionStatement statement, VisitorState state)
         {
             state.Write(Sym.SAVEPOINT_);
             VisitTransactionName(statement, state);
         }
 
-        private void VisitRollbackTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitRollbackTransaction(RollbackTransactionStatement statement, VisitorState state)
         {
             state.Write("ROLLBACK TRANSACTION");
 
@@ -262,7 +250,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
         }
 
-        private void VisitCommitTransaction(TransactionStatement statement, VisitorState state)
+        protected override void VisitCommitTransaction(CommitTransactionStatement statement, VisitorState state)
         {
             if (statement.Name != null || statement.Parameter != null)
             {

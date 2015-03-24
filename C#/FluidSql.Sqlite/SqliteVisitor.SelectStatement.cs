@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
 namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor
     {
-        private void VisitSelect(SelectStatement statement, VisitorState state)
+        protected override void VisitSelect(SelectStatement statement, VisitorState state)
         {
             if (statement.Into != null)
             {
@@ -36,24 +31,24 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
 
 
-            VisitFrom(statement.From, state);
+            VisitFromToken(statement.From, state);
 
             VisitJoin(statement.Joins, state);
 
-            VisitWhere(statement.Where, state);
+            VisitWhereToken(statement.Where, state);
 
-            VisitGroupBy(statement.GroupBy, state);
+            VisitGroupByToken(statement.GroupBy, state);
 
-            VisitHaving(statement.Having, state);
+            VisitHavingToken(statement.Having, state);
 
-            VisitOrderBy(statement.OrderBy, state);
+            VisitOrderByToken(statement.OrderBy, state);
 
             if (statement.Top != null)
             {
                 state.Write(Sym.LIMIT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Write(statement.Top.Value.Value.ToString());
+                    state.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {

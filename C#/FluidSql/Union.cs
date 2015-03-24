@@ -2,6 +2,8 @@
 // Copyright (c) 2014 All Rights Reserved
 // </copyright>
 
+using System;
+
 namespace TTRider.FluidSql
 {
     public class CorrelationStatement : RecordsetStatement
@@ -34,9 +36,17 @@ namespace TTRider.FluidSql
         public RecordsetStatement Second { get; set; }
     }
 
-    public class Union : CorrelationStatement
+    [Obsolete("Please use UnionStatement", true)]
+    public class Union : UnionStatement
     {
         public Union(RecordsetStatement source1, RecordsetStatement source2, bool all = false)
+            : base(source1, source2, all)
+        {
+        }
+    }
+    public class UnionStatement : CorrelationStatement
+    {
+        public UnionStatement(RecordsetStatement source1, RecordsetStatement source2, bool all = false)
             : base(source1, source2)
         {
             this.All = all;
@@ -45,7 +55,17 @@ namespace TTRider.FluidSql
         public bool All { get; set; }
     }
 
-    public class Intersect : CorrelationStatement
+
+
+    public class IntersectStatement : CorrelationStatement
+    {
+        public IntersectStatement(RecordsetStatement source1, RecordsetStatement source2)
+            : base(source1, source2)
+        {
+        }
+    }
+    [Obsolete("Please use IntersectStatement", true)]
+    public class Intersect : IntersectStatement
     {
         public Intersect(RecordsetStatement source1, RecordsetStatement source2)
             : base(source1, source2)
@@ -53,7 +73,15 @@ namespace TTRider.FluidSql
         }
     }
 
-    public class Except : CorrelationStatement
+    public class ExceptStatement : CorrelationStatement
+    {
+        public ExceptStatement(RecordsetStatement source1, RecordsetStatement source2)
+            : base(source1, source2)
+        {
+        }
+    }
+    [Obsolete("Please use ExceptStatement", true)]
+    public class Except : ExceptStatement
     {
         public Except(RecordsetStatement source1, RecordsetStatement source2)
             : base(source1, source2)

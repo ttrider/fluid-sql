@@ -470,7 +470,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + '%' AND [name] LIKE '%' + N'foo' AND [name] LIKE '%' + N'foo' + '%' AND [name] LIKE N'%foo%';", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + N'%' AND [name] LIKE N'%' + N'foo' AND [name] LIKE N'%' + N'foo' + N'%' AND [name] LIKE N'%foo%';", command.CommandText);
         }
 
         [TestMethod]
