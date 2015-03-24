@@ -620,8 +620,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         private void VisitLabelStatement(LabelStatement stmt, VisitorState state)
         {
-            state.Write(stmt.Label);
-            state.Write(":");
+            state.Write(stmt.Label, ":");
         }
         private void VisitWaitforDelayStatement(WaitforDelayStatement stmt, VisitorState state)
         {
@@ -1064,7 +1063,13 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         private void VisitOutput(IEnumerable<Token> columns, Name outputInto, VisitorState state)
         {
-            VisitTokenSet(columns, state, Sym.OUTPUT, Sym.COMMA, outputInto == null ? null : Sym.INTO + ResolveName(outputInto), true);
+            VisitTokenSet(columns, state, Sym.OUTPUT, Sym.COMMA, null, true);
+            if (outputInto != null)
+            {
+                state.Write(Sym.INTO);
+                VisitNameToken(outputInto, state);
+            }
+
         }
 
         private void VisitTop(Top top, VisitorState state)

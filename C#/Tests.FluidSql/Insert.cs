@@ -106,7 +106,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ([id], [value]) VALUES (123, N'val0'), (234, N'val1'), (345, N'val2');", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) VALUES ( 123, N'val0' ), ( 234, N'val1' ), ( 345, N'val2' );", command.CommandText);
         }
     }
 }

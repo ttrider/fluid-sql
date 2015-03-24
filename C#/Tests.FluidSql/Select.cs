@@ -77,7 +77,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT  COUNT(*) FROM [sys].[objects];", command.CommandText);
+            Assert.AreEqual("SELECT COUNT( * ) FROM [sys].[objects];", command.CommandText);
         }
         [TestMethod]
         public void SelectFoo()
@@ -222,7 +222,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) 1 AS [foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -233,7 +233,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) 1 AS [foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -244,7 +244,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) PERCENT 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) PERCENT 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -255,7 +255,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) PERCENT WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) PERCENT WITH TIES 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -266,7 +266,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) WITH TIES 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -366,7 +366,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].* FROM (SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].* FROM ( SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -377,7 +377,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].[Name] FROM (SELECT [Name] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].[Name] FROM ( SELECT [Name] FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -388,7 +388,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].[nm] FROM (SELECT [Name] AS [nm] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].[nm] FROM ( SELECT [Name] AS [nm] FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
         [TestMethod]
         public void SelectUnionAllSelect()
@@ -433,7 +433,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].* FROM (SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].* FROM ( SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -502,7 +502,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND  ([object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND ( [object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -543,7 +543,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK 'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK N'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
 
         }
         [TestMethod]
@@ -586,7 +586,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DECLARE @name NVARCHAR(MAX) = (SELECT TOP (1) [name] FROM [sys].[objects]);", command.CommandText);
+            Assert.AreEqual("DECLARE @name NVARCHAR ( MAX ) = ( SELECT TOP ( 1 ) [name] FROM [sys].[objects] );", command.CommandText);
         }
 
         [TestMethod]
@@ -600,7 +600,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS((SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name))\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF EXISTS( ( SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;", command.CommandText);
         }
 
 
@@ -623,7 +623,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual(" /* DROP TABLE [some].[table]; */ ", command.CommandText);
+            Assert.AreEqual("/* DROP TABLE [some].[table] */", command.CommandText);
         }
 
         [TestMethod]
@@ -634,7 +634,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID(N'[some].[table]',N'U') IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[some].[table]', N'U' ) IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
         }
 
         [TestMethod]
@@ -646,7 +646,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF EXISTS ( SELECT * FROM [sys].[objects] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -658,7 +658,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -670,7 +670,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -681,7 +681,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
         //[TestMethod]
         //public void CreateTable()
@@ -704,7 +704,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -717,7 +717,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nBREAK;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nBREAK;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -730,7 +730,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, N'123', 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nTHROW 123, N'123', 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -743,7 +743,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, @fooMsg, 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nTHROW 123, @fooMsg, 1;\r\nEND;", command.CommandText);
         }
 
 
@@ -757,7 +757,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nCONTINUE;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nCONTINUE;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -770,7 +770,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ALL (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ALL ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
 

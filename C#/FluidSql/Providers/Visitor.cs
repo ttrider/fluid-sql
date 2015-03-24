@@ -65,11 +65,8 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitStatementsStatement(StatementsStatement statement, VisitorState state)
         {
-            bool first = true;
             foreach (var subStatement in statement.Statements)
             {
-                state.WriteCRLF(first);
-                first = false;
                 VisitStatement(subStatement, state);
                 state.WriteStatementTerminator();
             }

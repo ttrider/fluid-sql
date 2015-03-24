@@ -59,7 +59,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE \"tbl3\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL ); CREATE INDEX \"IX_tbl\" ON \"tbl3\" ( \"C2\" ASC );", text);
+            Assert.AreEqual("CREATE TABLE \"tbl3\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl3\" ( \"C2\" ASC );", text);
             return statement;
         }
 
@@ -75,7 +75,7 @@ namespace Tests.Sqlite
 
             var text = Provider.GenerateStatement(statement);
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL ); CREATE INDEX IF NOT EXISTS \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );", text);
+            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX IF NOT EXISTS \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );", text);
             return statement;
         }
 
@@ -129,7 +129,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("DROP VIEW IF EXISTS \"foo\"; CREATE VIEW \"foo\" AS SELECT * FROM \"bar\";", text);
+            Assert.AreEqual("DROP VIEW IF EXISTS \"foo\";\r\nCREATE VIEW \"foo\" AS SELECT * FROM \"bar\";", text);
         }
 
         [TestMethod]
@@ -162,7 +162,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("DROP VIEW IF EXISTS \"foo\"; CREATE VIEW \"foo\" AS SELECT * FROM \"bar\";", text);
+            Assert.AreEqual("DROP VIEW IF EXISTS \"foo\";\r\nCREATE VIEW \"foo\" AS SELECT * FROM \"bar\";", text);
         }
 
         [TestMethod]
