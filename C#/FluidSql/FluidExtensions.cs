@@ -1,5 +1,5 @@
 ﻿// <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014 All Rights Reserved
+// Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
 using System;
@@ -323,7 +323,7 @@ namespace TTRider.FluidSql
 
         public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenMatched.Add(new WhenMatchedThenDelete
+            statement.WhenMatched.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
@@ -331,7 +331,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -346,7 +346,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -361,7 +361,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -378,7 +378,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -395,7 +395,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenNotMatchedBySource.Add(new WhenMatchedThenDelete
+            statement.WhenNotMatchedBySource.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
@@ -403,7 +403,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -418,7 +418,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -433,7 +433,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -451,7 +451,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -469,7 +469,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -483,7 +483,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -499,7 +499,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -521,7 +521,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -545,7 +545,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -559,7 +559,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };

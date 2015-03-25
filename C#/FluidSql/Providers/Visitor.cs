@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 
 namespace TTRider.FluidSql.Providers
@@ -174,9 +178,9 @@ namespace TTRider.FluidSql.Providers
                 {typeof (NotInToken),(v,t,s)=>v.VisitNotInToken((NotInToken)t,s)},
                 {typeof (CommentToken),(v,t,s)=>v.VisitCommentToken((CommentToken)t,s)},
                 {typeof (StringifyToken),(v,t,s)=>v.VisitStringifyToken((StringifyToken)t,s)},
-                {typeof (WhenMatchedThenDelete),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedThenDelete)t,s)},
-                {typeof (WhenMatchedThenUpdateSet),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedThenUpdateSet)t,s)},
-                {typeof (WhenNotMatchedThenInsert),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedThenInsert)t,s)},
+                {typeof (WhenMatchedTokenThenDeleteToken),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedTokenThenDeleteToken)t,s)},
+                {typeof (WhenMatchedTokenThenUpdateSetToken),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedTokenThenUpdateSetToken)t,s)},
+                {typeof (WhenNotMatchedTokenThenInsertToken),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedTokenThenInsertToken)t,s)},
                 {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
 
                 

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 
 namespace TTRider.FluidSql.Providers
@@ -7,9 +11,9 @@ namespace TTRider.FluidSql.Providers
     {
 
         protected virtual void VisitStringifyToken(StringifyToken token, VisitorState state) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token, VisitorState state) { throw new NotImplementedException(); }
 
 
 

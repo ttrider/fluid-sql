@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -243,17 +247,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
 
         // ReSharper disable once UnusedParameter.Local
-        protected override void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
+        protected override void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token, VisitorState state)
         {
             state.Write(Symbols.DELETE);
         }
-        protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
+        protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token, VisitorState state)
         {
             state.Write(Symbols.UPDATE);
             state.Write(Symbols.SET);
             VisitTokenSet(token.Set, state, null, Symbols.Comma, null);
         }
-        protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
+        protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token, VisitorState state)
         {
             state.Write(Symbols.INSERT);
             if (token.Columns.Count > 0)
