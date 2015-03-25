@@ -92,6 +92,7 @@ namespace TTRider.FluidSql.Providers
             public const string ON = "ON";
             public const string ONLINE = "ONLINE";
             public const string ONLY = "ONLY";
+            public const string OR = "OR";
             public const string ORDER_BY = "ORDER BY";
             public const string OUTPUT = "OUTPUT";
             public const string PAD_INDEX = "PAD_INDEX";

@@ -244,27 +244,31 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, Name column,
+        public static T OrderBy<T>(this T statement, Name column,
             Direction direction = Direction.Asc)
+            where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, string column,
+        public static T OrderBy<T>(this T statement, string column,
             Direction direction = Direction.Asc)
+        where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, params Order[] columns)
+        public static T OrderBy<T>(this T statement, params Order[] columns)
+        where T : IOrderByStatement
         {
             statement.OrderBy.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, IEnumerable<Order> columns)
+        public static T OrderBy<T>(this T statement, IEnumerable<Order> columns)
+        where T : IOrderByStatement
         {
             if (columns != null)
             {
@@ -1165,6 +1169,31 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static InsertStatement OrReplace(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Replace;
+           return statement;
+        }
+        public static InsertStatement OrRollback(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Rollback;
+           return statement;
+        }
+        public static InsertStatement OrAbort(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Abort;
+           return statement;
+        }
+        public static InsertStatement OrFail(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Fail;
+           return statement;
+        }
+        public static InsertStatement OrIgnore(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Ignore;
+           return statement;
+        }
 
 
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column,
@@ -1920,21 +1949,25 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Limit(this SelectStatement statement, int value)
+        public static T Limit<T>(this T statement, int value)
+            where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
 
             return statement;
         }
 
-        public static SelectStatement Offset(this SelectStatement statement, int value)
+        public static T Offset<T>(this T statement, int value)
+            where T : IOffsetStatement
         {
-            statement.Offset = new Scalar(){Value = value};
+            statement.Offset = new Scalar() { Value = value };
             return statement;
         }
-        public static SelectStatement FetchNext(this SelectStatement statement, int value)
+        public static T FetchNext<T>(this T statement, int value)
+            where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
+
             return statement;
         }
         #endregion Top

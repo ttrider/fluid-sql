@@ -71,6 +71,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return state;
         }
 
+        public SqlServerVisitor()
+        {
+            this.IdentifierOpenQuote = "[";
+            this.IdentifierCloseQuote = "]";
+            this.LiteralOpenQuote = "N'";
+            this.LiteralCloseQuote = "'";
+            this.CommentOpenQuote = "/*";
+            this.CommentCloseQuote = "*/";            
+        }
+
         internal static Name GetTempTableName(Name name)
         {
             var namePart = name.LastPart;
@@ -105,12 +115,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             state.WriteEndStringify();
         }
 
-        protected override string IdentifierCloseQuote { get { return "]"; } }
-        protected override string IdentifierOpenQuote { get { return "["; } }
-        protected override string LiteralOpenQuote { get { return "N'"; } }
-        protected override string LiteralCloseQuote { get { return "'"; } }
-        protected override string CommentOpenQuote { get { return "/*"; } }
-        protected override string CommentCloseQuote { get { return "*/"; } }
+
 
 
 

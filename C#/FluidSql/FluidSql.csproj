@@ -71,6 +71,8 @@
     <Compile Include="Function.cs" />
     <Compile Include="GotoStatement.cs" />
     <Compile Include="IIntoStatement.cs" />
+    <Compile Include="IOffsetStatement.cs" />
+    <Compile Include="IOrderByStatement.cs" />
     <Compile Include="ISetStatement.cs" />
     <Compile Include="ICreateOrAlterIndexOptions.cs" />
     <Compile Include="IdentityOptions.cs" />

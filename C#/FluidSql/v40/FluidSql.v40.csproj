@@ -97,6 +97,12 @@
     <Compile Include="..\IndexDefinition.cs" />
     <Compile Include="..\IndexOptions.cs" />
     <Compile Include="..\InsertStatement.cs" />
+    <Compile Include="..\IOffsetStatement.cs">
+      <Link>IOffsetStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\IOrderByStatement.cs">
+      <Link>IOrderByStatement.cs</Link>
+    </Compile>
     <Compile Include="..\ISetIndexOptions.cs" />
     <Compile Include="..\ISetStatement.cs">
       <Link>ISetStatement.cs</Link>

@@ -6,10 +6,10 @@ namespace TTRider.FluidSql.Providers
     public abstract partial class Visitor
     {
 
-        protected abstract void VisitStringifyToken(StringifyToken token, VisitorState state);
-        protected abstract void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state);
-        protected abstract void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state);
-        protected abstract void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state);
+        protected virtual void VisitStringifyToken(StringifyToken token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state) { throw new NotImplementedException(); }
+        protected virtual void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state) { throw new NotImplementedException(); }
 
 
 
@@ -318,7 +318,10 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitOrderByToken(ICollection<Order> orderBy, VisitorState state)
         {
-            VisitTokenSet(orderBy, state, Symbols.ORDER_BY, Symbols.Comma, null);
+            if (orderBy != null)
+            {
+                VisitTokenSet(orderBy, state, Symbols.ORDER_BY, Symbols.Comma, null);
+            }
         }
 
 

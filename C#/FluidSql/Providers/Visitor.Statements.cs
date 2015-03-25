@@ -5,8 +5,6 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
-
-
         protected virtual void VisitStatementsStatement(StatementsStatement statement, VisitorState state)
         {
             foreach (var subStatement in statement.Statements)

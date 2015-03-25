@@ -22,5 +22,6 @@ namespace TTRider.FluidSql
         public List<Name> Columns { get; private set; }
         public List<Token[]> Values { get; private set; }
         public Top Top { get; set; }
+        public OnConflict? Conflict { get; set; }
     }
 }

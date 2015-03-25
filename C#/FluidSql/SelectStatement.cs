@@ -12,6 +12,7 @@ namespace TTRider.FluidSql
         , ISetStatement
         , IWhereStatement
         , IIntoStatement
+        , IOrderByStatement
     {
         public SelectStatement()
         {

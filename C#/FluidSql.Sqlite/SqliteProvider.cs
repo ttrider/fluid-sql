@@ -10,16 +10,20 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     public class SqliteProvider : Provider
     {
+        VisitorState Compile(IStatement statement)
+        {
+            return new SqliteVisitor().Compile(statement, new VisitorState());
+        }
+
         public override string GenerateStatement(IStatement statement)
         {
-            var state = SqliteVisitor.Compile(statement);
+            var state = this.Compile(statement);
             return state.Value;
         }
 
         public override IEnumerable<DbParameter> GetParameters(IStatement statement)
         {
-            var state = SqliteVisitor.Compile(statement);
-
+            var state = this.Compile(statement);
             return state.GetDbParameters();
         }
 
@@ -35,7 +39,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         public override IDbCommand GetCommand(IStatement statement, string connectionString = null)
         {
-            var state = SqliteVisitor.Compile(statement);
+            var state = this.Compile(statement);
 
             SQLiteCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
@@ -68,7 +72,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
         public override async Task<IDbCommand> GetCommandAsync(IStatement statement,
             string connectionString, CancellationToken token)
         {
-            var state = SqliteVisitor.Compile(statement);
+            var state = this.Compile(statement);
 
             var csb = new SQLiteConnectionStringBuilder(connectionString);
 

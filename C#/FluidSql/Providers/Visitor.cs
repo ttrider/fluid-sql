@@ -5,12 +5,12 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
-        protected abstract string IdentifierOpenQuote { get; }
-        protected abstract string IdentifierCloseQuote { get; }
-        protected abstract string LiteralOpenQuote { get; }
-        protected abstract string LiteralCloseQuote { get; }
-        protected abstract string CommentOpenQuote { get; }
-        protected abstract string CommentCloseQuote { get; }
+        protected string IdentifierOpenQuote = "\"";
+        protected string IdentifierCloseQuote = "\"";
+        protected string LiteralOpenQuote = "'";
+        protected string LiteralCloseQuote = "'";
+        protected string CommentOpenQuote = "/*";
+        protected string CommentCloseQuote = "*/";
 
         protected abstract void VisitJoinType(Joins join, VisitorState state);
 
@@ -19,6 +19,12 @@ namespace TTRider.FluidSql.Providers
             return name.GetFullName(this.IdentifierOpenQuote, this.IdentifierCloseQuote);
         }
 
+        public VisitorState Compile(IStatement statement, VisitorState state)
+        {
+            this.VisitStatement(statement, state);
+            state.WriteStatementTerminator();
+            return state;
+        }
 
         protected virtual void VisitToken(Token token, VisitorState state, bool includeAlias = false)
         {
