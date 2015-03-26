@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TTRider.FluidSql.SQLite</id>
+    <version>1.0.0.0</version>
+    <authors>TTRider</authors>
+    <owners>TTRider</owners>
+    <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ttrider/fluid-sql</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Fluid-style SQL statement generator</description>
+    <releaseNotes>
+      1.0.0.0
+      --
+      * Initial release of SQLite provider for FluidSQL
+
+      more information on GitHub:
+      https://github.com/ttrider/fluid-sql
+    </releaseNotes>
+    <copyright>Copyright (C) 2014-2015 TTRider, L.L.C.</copyright>
+    <tags>SQL, sqlite, fluid</tags>
+    <dependencies>
+      <dependency id="TTRider.FluidSql.dll" version="1.0.0.0" />
+      <dependency id="System.Data.SQLite.Core" version="1.0.96.0" />
+    </dependencies>
+  </metadata>
+</package>
