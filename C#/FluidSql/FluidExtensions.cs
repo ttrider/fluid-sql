@@ -1,5 +1,5 @@
 ﻿// <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014 All Rights Reserved
+// Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
 using System;
@@ -244,27 +244,31 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, Name column,
+        public static T OrderBy<T>(this T statement, Name column,
             Direction direction = Direction.Asc)
+            where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, string column,
+        public static T OrderBy<T>(this T statement, string column,
             Direction direction = Direction.Asc)
+        where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, params Order[] columns)
+        public static T OrderBy<T>(this T statement, params Order[] columns)
+        where T : IOrderByStatement
         {
             statement.OrderBy.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, IEnumerable<Order> columns)
+        public static T OrderBy<T>(this T statement, IEnumerable<Order> columns)
+        where T : IOrderByStatement
         {
             if (columns != null)
             {
@@ -319,7 +323,7 @@ namespace TTRider.FluidSql
 
         public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenMatched.Add(new WhenMatchedThenDelete
+            statement.WhenMatched.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
@@ -327,7 +331,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -342,7 +346,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -357,7 +361,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -374,7 +378,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -391,7 +395,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenNotMatchedBySource.Add(new WhenMatchedThenDelete
+            statement.WhenNotMatchedBySource.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
@@ -399,7 +403,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -414,7 +418,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -429,7 +433,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -447,7 +451,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -465,7 +469,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -479,7 +483,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -495,7 +499,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -517,7 +521,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -541,7 +545,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -555,7 +559,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -1164,6 +1168,31 @@ namespace TTRider.FluidSql
                 statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
             }
             return statement;
+        }
+        public static InsertStatement OrReplace(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Replace;
+           return statement;
+        }
+        public static InsertStatement OrRollback(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Rollback;
+           return statement;
+        }
+        public static InsertStatement OrAbort(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Abort;
+           return statement;
+        }
+        public static InsertStatement OrFail(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Fail;
+           return statement;
+        }
+        public static InsertStatement OrIgnore(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Ignore;
+           return statement;
         }
 
 
@@ -1920,21 +1949,25 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Limit(this SelectStatement statement, int value)
+        public static T Limit<T>(this T statement, int value)
+            where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
 
             return statement;
         }
 
-        public static SelectStatement Offset(this SelectStatement statement, int value)
+        public static T Offset<T>(this T statement, int value)
+            where T : IOffsetStatement
         {
-            statement.Offset = new Scalar(){Value = value};
+            statement.Offset = new Scalar() { Value = value };
             return statement;
         }
-        public static SelectStatement FetchNext(this SelectStatement statement, int value)
+        public static T FetchNext<T>(this T statement, int value)
+            where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
+
             return statement;
         }
         #endregion Top

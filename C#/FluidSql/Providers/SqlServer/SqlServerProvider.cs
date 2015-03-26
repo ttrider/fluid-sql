@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -11,15 +15,21 @@ namespace TTRider.FluidSql.Providers.SqlServer
     {
         public int CommandTimeout { get; set; }
 
+        VisitorState Compile(IStatement statement)
+        {
+            return new SqlServerVisitor().Compile(statement, new VisitorState());
+        }
+
+
         public override string GenerateStatement(IStatement statement)
         {
-            var state = SqlServerVisitor.Compile(statement);
+            var state = this.Compile(statement);
             return state.Value;
         }
 
         public override IEnumerable<DbParameter> GetParameters(IStatement statement)
         {
-            var state = SqlServerVisitor.Compile(statement);
+            var state = this.Compile(statement);
 
             return state.GetDbParameters();
         }
@@ -39,7 +49,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         public override IDbCommand GetCommand(IStatement statement, string connectionString = null)
         {
-            var state = SqlServerVisitor.Compile(statement);
+            var state = this.Compile(statement);
 
             SqlCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
@@ -76,7 +86,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         public override async System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement,
             string connectionString, CancellationToken token)
         {
-            var state = SqlServerVisitor.Compile(statement);
+            var state = this.Compile(statement);
 
             var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
 

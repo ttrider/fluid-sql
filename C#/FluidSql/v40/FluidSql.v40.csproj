@@ -42,88 +42,117 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AlterIndexStatement.cs" />
-    <Compile Include="..\AlterViewStatement.cs">
-      <Link>AlterViewStatement.cs</Link>
+    <Compile Include="..\CorrelationStatement.cs">
+      <Link>CorrelationStatement.cs</Link>
     </Compile>
-    <Compile Include="..\BeginTransactionStatement.cs" />
-    <Compile Include="..\BinaryToken.cs" />
-    <Compile Include="..\BreakStatement.cs">
-      <Link>BreakStatement.cs</Link>
-    </Compile>
-    <Compile Include="..\CommentToken.cs" />
-    <Compile Include="..\CommitTransactionStatement.cs" />
-    <Compile Include="..\ContinueStatement.cs">
-      <Link>ContinueStatement.cs</Link>
-    </Compile>
-    <Compile Include="..\CreateIndexStatement.cs" />
     <Compile Include="..\CreateTableStatement.cs">
-      <SubType>Code</SubType>
+      <Link>CreateTableStatement.cs</Link>
     </Compile>
-    <Compile Include="..\CreateViewStatement.cs">
-      <Link>CreateViewStatement.cs</Link>
+    <Compile Include="..\Direction.cs">
+      <Link>Direction.cs</Link>
     </Compile>
-    <Compile Include="..\DeclareStatement.cs" />
-    <Compile Include="..\DeleteStatement.cs" />
-    <Compile Include="..\Direction.cs" />
-    <Compile Include="..\DropIndexStatement.cs" />
-    <Compile Include="..\DropTableStatement.cs" />
-    <Compile Include="..\DropViewStatement.cs">
-      <Link>DropViewStatement.cs</Link>
+    <Compile Include="..\ExceptStatement.cs">
+      <Link>ExceptStatement.cs</Link>
     </Compile>
-    <Compile Include="..\ExecuteStatement.cs">
-      <Link>ExecuteStatement.cs</Link>
+    <Compile Include="..\FluidExtensions.cs">
+      <Link>FluidExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\FluidExtensions.cs" />
-    <Compile Include="..\ForeignDefinition.cs" />
-    <Compile Include="..\ForeignKeyOption.cs" />
-    <Compile Include="..\Function.cs" />
-    <Compile Include="..\GotoStatement.cs">
-      <Link>GotoStatement.cs</Link>
+    <Compile Include="..\ForeignDefinition.cs">
+      <Link>ForeignDefinition.cs</Link>
     </Compile>
-    <Compile Include="..\ICreateOrAlterIndexOptions.cs" />
-    <Compile Include="..\IdentityOptions.cs" />
-    <Compile Include="..\IDropIndexOptions.cs" />
-    <Compile Include="..\IFromStatement.cs">
+    <Compile Include="..\ForeignKeyOption.cs">
+      <Link>ForeignKeyOption.cs</Link>
+    </Compile>
+    <Compile Include="..\Function.cs">
+      <Link>Function.cs</Link>
+    </Compile>
+    <Compile Include="..\IdentityOptions.cs">
+      <Link>IdentityOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\IndexDefinition.cs">
+      <Link>IndexDefinition.cs</Link>
+    </Compile>
+    <Compile Include="..\IndexOptions.cs">
+      <Link>IndexOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ICreateOrAlterIndexOptions.cs">
+      <Link>ICreateOrAlterIndexOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IDropIndexOptions.cs">
+      <Link>IDropIndexOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IFromStatement.cs">
       <Link>IFromStatement.cs</Link>
     </Compile>
-    <Compile Include="..\IfStatement.cs" />
-    <Compile Include="..\IIntoStatement.cs">
+    <Compile Include="..\Interfaces\IfStatement.cs">
+      <Link>IfStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IIntoStatement.cs">
       <Link>IIntoStatement.cs</Link>
     </Compile>
-    <Compile Include="..\IJoinStatement.cs">
+    <Compile Include="..\Interfaces\IJoinStatement.cs">
       <Link>IJoinStatement.cs</Link>
     </Compile>
-    <Compile Include="..\IndexDefinition.cs" />
-    <Compile Include="..\IndexOptions.cs" />
-    <Compile Include="..\InsertStatement.cs" />
-    <Compile Include="..\ISetIndexOptions.cs" />
-    <Compile Include="..\ISetStatement.cs">
+    <Compile Include="..\Interfaces\IOffsetStatement.cs">
+      <Link>IOffsetStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\IOrderByStatement.cs">
+      <Link>IOrderByStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ISetIndexOptions.cs">
+      <Link>ISetIndexOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ISetStatement.cs">
       <Link>ISetStatement.cs</Link>
     </Compile>
-    <Compile Include="..\IStatement.cs" />
-    <Compile Include="..\ITopStatement.cs">
+    <Compile Include="..\Interfaces\IStatement.cs">
+      <Link>IStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Interfaces\ITopStatement.cs">
       <Link>ITopStatement.cs</Link>
     </Compile>
-    <Compile Include="..\IWhereStatement.cs">
+    <Compile Include="..\Interfaces\IWhereStatement.cs">
       <Link>IWhereStatement.cs</Link>
     </Compile>
-    <Compile Include="..\Join.cs" />
-    <Compile Include="..\LabelStatement.cs">
-      <Link>LabelStatement.cs</Link>
+    <Compile Include="..\IntersectStatement.cs">
+      <Link>IntersectStatement.cs</Link>
     </Compile>
-    <Compile Include="..\MergeStatement.cs">
-      <Link>MergeStatement.cs</Link>
+    <Compile Include="..\Join.cs">
+      <Link>Join.cs</Link>
     </Compile>
-    <Compile Include="..\Name.cs" />
-    <Compile Include="..\Order.cs" />
-    <Compile Include="..\Parameter.cs" />
-    <Compile Include="..\ParameterSet.cs" />
-    <Compile Include="..\ParameterValue.cs" />
-    <Compile Include="..\Providers\IProvider.cs" />
-    <Compile Include="..\Properties\AssemblyInfo.cs" />
-    <Compile Include="..\Providers\Provider.cs" />
-    <Compile Include="..\Providers\SqlServer\SqlServerVisitor.cs" />
+    <Compile Include="..\Joins.cs">
+      <Link>Joins.cs</Link>
+    </Compile>
+    <Compile Include="..\Name.cs">
+      <Link>Name.cs</Link>
+    </Compile>
+    <Compile Include="..\OnConflict.cs">
+      <Link>OnConflict.cs</Link>
+    </Compile>
+    <Compile Include="..\Order.cs">
+      <Link>Order.cs</Link>
+    </Compile>
+    <Compile Include="..\Parameter.cs">
+      <Link>Parameter.cs</Link>
+    </Compile>
+    <Compile Include="..\ParameterSet.cs">
+      <Link>ParameterSet.cs</Link>
+    </Compile>
+    <Compile Include="..\ParameterValue.cs">
+      <Link>ParameterValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\IProvider.cs">
+      <Link>IProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\Provider.cs">
+      <Link>Provider.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\SqlServer\SqlServerProvider.cs">
+      <Link>SqlServerProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Providers\SqlServer\SqlServerVisitor.cs">
+      <Link>SqlServerVisitor.cs</Link>
+    </Compile>
     <Compile Include="..\Providers\Visitor.cs">
       <Link>Visitor.cs</Link>
     </Compile>
@@ -136,52 +165,90 @@
     <Compile Include="..\Providers\Visitor.Tokens.cs">
       <Link>Visitor.Tokens.cs</Link>
     </Compile>
-    <Compile Include="..\Providers\VisitorState.cs" />
-    <Compile Include="..\RecordsetStatement.cs" />
-    <Compile Include="..\ReturnStatement.cs">
-      <Link>ReturnStatement.cs</Link>
+    <Compile Include="..\Providers\VisitorState.cs">
+      <Link>VisitorState.cs</Link>
     </Compile>
-    <Compile Include="..\RollbackTransactionStatement.cs" />
-    <Compile Include="..\SaveTransactionStatement.cs" />
-    <Compile Include="..\Scalar.cs" />
-    <Compile Include="..\SelectStatement.cs" />
-    <Compile Include="..\Providers\SqlServer\SqlServerProvider.cs" />
-    <Compile Include="..\SetStatement.cs">
-      <Link>SetStatement.cs</Link>
+    <Compile Include="..\Scalar.cs">
+      <Link>Scalar.cs</Link>
     </Compile>
-    <Compile Include="..\Snippet.cs" />
-    <Compile Include="..\SnippetStatement.cs" />
-    <Compile Include="..\Sql.cs" />
+    <Compile Include="..\Snippet.cs">
+      <Link>Snippet.cs</Link>
+    </Compile>
+    <Compile Include="..\Sql.cs">
+      <Link>Sql.cs</Link>
+    </Compile>
     <Compile Include="..\Sql_Function.cs">
       <Link>Sql_Function.cs</Link>
     </Compile>
-    <Compile Include="..\StatementsStatement.cs" />
-    <Compile Include="..\StringifyStatement.cs" />
-    <Compile Include="..\StringifyToken.cs" />
-    <Compile Include="..\TableColumn.cs" />
-    <Compile Include="..\ThrowStatement.cs">
-      <Link>ThrowStatement.cs</Link>
+    <Compile Include="..\Statements\AlterIndexStatement.cs">
+      <Link>AlterIndexStatement.cs</Link>
     </Compile>
-    <Compile Include="..\Token.cs" />
-    <Compile Include="..\Top.cs" />
-    <Compile Include="..\TransactionStatement.cs" />
-    <Compile Include="..\TryCatchStatement.cs">
-      <Link>TryCatchStatement.cs</Link>
+    <Compile Include="..\Statements\AlterViewStatement.cs">
+      <Link>AlterViewStatement.cs</Link>
     </Compile>
-    <Compile Include="..\TypedToken.cs" />
-    <Compile Include="..\Union.cs" />
-    <Compile Include="..\UpdateStatement.cs">
-      <Link>UpdateStatement.cs</Link>
+    <Compile Include="..\Statements\BeginTransactionStatement.cs">
+      <Link>BeginTransactionStatement.cs</Link>
     </Compile>
-    <Compile Include="..\WaitforStatement.cs">
-      <Link>WaitforStatement.cs</Link>
+    <Compile Include="..\Statements\BreakStatement.cs">
+      <Link>BreakStatement.cs</Link>
     </Compile>
-    <Compile Include="..\WhileStatement.cs">
-      <Link>WhileStatement.cs</Link>
+    <Compile Include="..\Statements\CommentStatement.cs">
+      <Link>CommentStatement.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\FluidSql.cd" />
+    <Compile Include="..\Statements\CommitTransactionStatement.cs">
+      <Link>CommitTransactionStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Statements\ContinueStatement.cs">
+      <Link>ContinueStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Statements\CreateIndexStatement.cs">
+      <Link>CreateIndexStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\Statements\CreateOrAlterViewStatement.cs">
+      <Link>CreateOrAlterViewStatement.cs</Link>
+    </Compile>
+    <Compile Include="..\StringifyToken.cs">
+      <Link>StringifyToken.cs</Link>
+    </Compile>
+    <Compile Include="..\TableColumn.cs">
+      <Link>TableColumn.cs</Link>
+    </Compile>
+    <Compile Include="..\Token.cs">
+      <Link>Token.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\BinaryToken.cs">
+      <Link>BinaryToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\CommentToken.cs">
+      <Link>CommentToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\WhenMatchedToken.cs">
+      <Link>WhenMatchedToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\WhenMatchedTokenThenDeleteToken.cs">
+      <Link>WhenMatchedTokenThenDeleteToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\WhenMatchedTokenThenUpdateSetToken.cs">
+      <Link>WhenMatchedTokenThenUpdateSetToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Tokens\WhenNotMatchedTokenThenInsertToken.cs">
+      <Link>WhenNotMatchedTokenThenInsertToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Top.cs">
+      <Link>Top.cs</Link>
+    </Compile>
+    <Compile Include="..\TransactionType.cs">
+      <Link>TransactionType.cs</Link>
+    </Compile>
+    <Compile Include="..\TypedToken.cs">
+      <Link>TypedToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Union.cs">
+      <Link>Union.cs</Link>
+    </Compile>
+    <Compile Include="..\UnionStatement.cs">
+      <Link>UnionStatement.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

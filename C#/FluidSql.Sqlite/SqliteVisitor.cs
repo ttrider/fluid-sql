@@ -41,140 +41,18 @@ namespace TTRider.FluidSql.Providers.Sqlite
         };
 
 
-        public static VisitorState Compile(IStatement statement)
+
+        public SqliteVisitor()
         {
-            var state = new VisitorState();
-
-            var visitor = new SqliteVisitor();
-
-            visitor.VisitStatement(statement, state);
-            state.WriteStatementTerminator();
-            return state;
+            this.IdentifierOpenQuote = "\"";
+            this.IdentifierCloseQuote = "\"";
+            this.LiteralOpenQuote = "'";
+            this.LiteralCloseQuote = "'";
+            this.CommentOpenQuote = "/*";
+            this.CommentCloseQuote = "*/";            
         }
 
-        protected override string IdentifierCloseQuote { get { return "\""; } }
-        protected override void VisitDelete(DeleteStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitUpdate(UpdateStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitInsert(InsertStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitMerge(MergeStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitSet(SetStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDeclareStatement(DeclareStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitIfStatement(IfStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitStringifyStatement(StringifyStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitBreakStatement(BreakStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitContinueStatement(ContinueStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitGotoStatement(GotoStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitReturnStatement(ReturnStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitThrowStatement(ThrowStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitTryCatchStatement(TryCatchStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitLabelStatement(LabelStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWaitforDelayStatement(WaitforDelayStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWaitforTimeStatement(WaitforTimeStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWhileStatement(WhileStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitExecuteStatement(ExecuteStatement statement, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitStringifyToken(StringifyToken token, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWhenMatchedThenDelete(WhenMatchedThenDelete token, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedThenUpdateSet token, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedThenInsert token, VisitorState state)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string IdentifierOpenQuote { get { return "\""; } }
-        protected override string LiteralOpenQuote { get { return "'"; } }
-        protected override string LiteralCloseQuote { get { return "'"; } }
-        protected override string CommentOpenQuote { get { return "/*"; } }
-        protected override string CommentCloseQuote { get { return "*/"; } }
-
-
+        
 
         protected override void VisitJoinType(Joins join, VisitorState state)
         {

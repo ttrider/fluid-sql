@@ -47,10 +47,11 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqliteVisitor.SelectStatement.cs" />
+    <Compile Include="SqliteVisitor.DMLStatements.cs" />
     <Compile Include="SqliteProvider.cs" />
     <Compile Include="SqliteVisitor.cs" />
-    <Compile Include="SqliteVisitor.Statements.cs" />
+    <Compile Include="SqliteVisitor.DDLStatements.cs" />
+    <Compile Include="SqliteVisitor.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluidSql\FluidSql.csproj">
