@@ -12,37 +12,35 @@ namespace TTRider.FluidSql.Providers.SqlServer
     {
         private readonly string[] DbTypeStrings =
         {
-            "BIGINT", //BigInt = 0,
-            "BINARY", //Binary = 1,      ()
-            "BIT", //Bit = 2,
-            "CHAR", //Char = 3,          ()
-            "DATETIME", //DateTime = 4,
-            "DECIMAL", //Decimal = 5,    (,)
-            "FLOAT", //Float = 6,
-            "IMAGE", //Image = 7,
-            "INT", //Int = 8,
-            "MONEY", //Money = 9,
-            "NCHAR", //NChar = 10,      ()
-            "NTEXT", //NText = 11,
-            "NVARCHAR", //NVarChar = 12, ()
-            "REAL", //Real = 13,
-            "UNIQUEIDENTIFIER", //UniqueIdentifier = 14,
-            "SMALLDATETIME", //SmallDateTime = 15,
-            "SMALLINT", //SmallInt = 16,
-            "SMALLMONEY", //SmallMoney = 17,
-            "TEXT", //Text = 18,
-            "TIMESTAMP", //Timestamp = 19,
-            "TINYINT", //TinyInt = 20,
-            "VARBINARY", //VarBinary = 21,   ()
-            "VARCHAR", //VarChar = 22,       ()
-            "SQL_VARIANT", //Variant = 23,
-            "Xml", //Xml = 25,
-            "", //Udt = 29,
-            "", //Structured = 30,
-            "DATE", //Date = 31,
-            "TIME", //Time = 32,            ()
-            "DATETIME2", //DateTime2 = 33,  ()
-            "DateTimeOffset" //DateTimeOffset = 34, ()
+            "BIGINT", // BigInt = 0,
+            "BINARY", // Binary = 1,
+            "BIT", // Bit = 2,
+            "CHAR", // Char = 3,
+            "DATETIME", // DateTime = 4,
+            "DECIMAL", // Decimal = 5,
+            "FLOAT", // Float = 6,
+            "IMAGE", // Image = 7,
+            "INT", // Int = 8,
+            "MONEY", // Money = 9,
+            "NCHAR", // NChar = 10,
+            "NTEXT", // NText = 11,
+            "NVARCHAR", // NVarChar = 12,
+            "REAL", // Real = 13,
+            "UNIQUEIDENTIFIER", // UniqueIdentifier = 14,
+            "SMALLDATETIME", // SmallDateTime = 15,
+            "SMALLINT", // SmallInt = 16,
+            "SMALLMONEY", // SmallMoney = 17,
+            "TEXT", // Text = 18,
+            "TIMESTAMP", // Timestamp = 19,
+            "TINYINT", // TinyInt = 20,
+            "VARBINARY", // VarBinary = 21,
+            "VARCHAR", // VarChar = 22,
+            "SQL_VARIANT", // Variant = 23,
+            "Xml", // Xml = 24,
+            "DATE", // Date = 25,
+            "TIME", // Time = 26,
+            "DATETIME2", // DateTime2 = 27,
+            "DateTimeOffset" // DateTimeOffset = 28,
         };
 
 

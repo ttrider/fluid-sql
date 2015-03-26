@@ -45,6 +45,7 @@
     <Compile Include="..\Shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CommonDbType.cs" />
     <Compile Include="Statements\CorrelationStatement.cs" />
     <Compile Include="Statements\ExceptStatement.cs" />
     <Compile Include="Statements\IntersectStatement.cs" />

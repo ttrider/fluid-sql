@@ -7,6 +7,9 @@ BINARY                          |BINARY(8)                       |              
 BINARY                          |BINARY(n)                       |RAW(n)                          |BINARY(n)                       |BINARY(n)                       |BYTEA                           |
 BINARY                          |BINARY(n/8)                     |                                |                                |BINARY(n/8)                     |                                |
 BINARY_DOUBLE                   |BINARY_DOUBLE                   |BINARY_DOUBLE                   |DOUBLE                          |BINARY_DOUBLE                   |DOUBLE PRECISION                |
+DOUBLE                          |DOUBLE                          |BINARY_DOUBLE                   |DOUBLE                          |FLOAT                           |                                |
+DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |
+
 BINARY_FLOAT                    |BINARY_FLOAT                    |BINARY_FLOAT                    |FLOAT                           |REAL                            |REAL                            |
 BIT                             |BIT                             |NUMBER(1)                       |TINYINT                         |BIT                             |BOOLEAN                         |
 BIT VARYING                     |BIT VARYING(n)                  |RAW(n/8)                        |                                |                                |BIT VARYING(n)                  |
@@ -38,8 +41,6 @@ DECIMAL                         |DECIMAL(38)                     |              
 DECIMAL                         |DECIMAL(6,4)                    |                                |DECIMAL(6,4)                    |                                |                                |
 DECIMAL                         |DECIMAL(p)                      |                                |DECIMAL(p)                      |DECIMAL(p)                      |DECIMAL(p)                      |
 DECIMAL                         |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |
-DOUBLE                          |DOUBLE                          |BINARY_DOUBLE                   |DOUBLE                          |FLOAT                           |                                |
-DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |
 FIXED                           |FIXED(p,s)                      |NUMBER(p,s)                     |FIXED(p,s)                      |DECIMAL(p,s)                    |                                |
 FLOAT                           |FLOAT                           |                                |FLOAT                           |FLOAT                           |                                |
 FLOAT                           |FLOAT(n)                        |NUMBER                          |                                |FLOAT(n)                        |                                |

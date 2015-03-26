@@ -2,7 +2,9 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
+using System.Collections.Generic;
 using System.Data;
+using TTRider.FluidSql.Providers.SqlServer;
 
 namespace TTRider.FluidSql
 {
@@ -12,7 +14,7 @@ namespace TTRider.FluidSql
             : this(name, sqlDbType)
         {
             this.Name = name;
-            this.DbType = sqlDbType;
+            this.DbType = SqlServerProvider.SqlDbTypeToCommonDbType[sqlDbType];
             this.Precision = precision;
             this.Scale = scale;
         }
@@ -26,7 +28,28 @@ namespace TTRider.FluidSql
         public TypedToken(string name, SqlDbType sqlDbType)
             : this(name)
         {
-            this.DbType = sqlDbType;
+            this.DbType = SqlServerProvider.SqlDbTypeToCommonDbType[sqlDbType];
+        }
+
+        public TypedToken(string name, CommonDbType dbType, byte precision, byte scale)
+            : this(name, dbType)
+        {
+            this.Name = name;
+            this.DbType = dbType;
+            this.Precision = precision;
+            this.Scale = scale;
+        }
+
+        public TypedToken(string name, CommonDbType dbType, int length)
+            : this(name, dbType)
+        {
+            this.Length = length;
+        }
+
+        public TypedToken(string name, CommonDbType dbType)
+            : this(name)
+        {
+            this.DbType = dbType;
         }
 
         public TypedToken(string name)
@@ -36,7 +59,7 @@ namespace TTRider.FluidSql
         }
 
         public string Name { get; set; }
-        public SqlDbType? DbType { get; set; }
+        public CommonDbType? DbType { get; set; }
         public byte? Precision { get; set; }
         public byte? Scale { get; set; }
         public int? Length { get; set; }

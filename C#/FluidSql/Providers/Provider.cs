@@ -11,8 +11,17 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract class Provider : IProvider
     {
-        public abstract string GenerateStatement(IStatement statement);
-        public abstract IEnumerable<DbParameter> GetParameters(IStatement statement);
+        protected abstract VisitorState Compile(IStatement statement);
+        protected abstract IEnumerable<DbParameter> GetDbParameters(VisitorState state);
+
+        public virtual string GenerateStatement(IStatement statement)
+        {
+            return this.Compile(statement).Value;
+        }
+        public virtual IEnumerable<DbParameter> GetParameters(IStatement statement)
+        {
+            return GetDbParameters(this.Compile(statement));
+        }
 
         public abstract IDbCommand GetCommand(IStatement statement, string connectionString = null);
 

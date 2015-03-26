@@ -27,6 +27,23 @@ namespace TTRider.FluidSql
         {
             this.Parameters.Add(this);
         }
+        public Parameter(string name, CommonDbType dbType, byte precision, byte scale)
+            : base(name, dbType, precision, scale)
+        {
+            this.Parameters.Add(this);
+        }
+
+        public Parameter(string name, CommonDbType dbType, int length)
+            : base(name, dbType, length)
+        {
+            this.Parameters.Add(this);
+        }
+
+        public Parameter(string name, CommonDbType dbType)
+            : base(name, dbType)
+        {
+            this.Parameters.Add(this);
+        }
 
         public Parameter(string name)
             : base(name)
@@ -67,162 +84,152 @@ namespace TTRider.FluidSql
 
         public static Parameter BigInt(string name)
         {
-            return new Parameter(name, SqlDbType.BigInt);
+            return new Parameter(name, CommonDbType.BigInt);
         }
 
         public static Parameter Binary(string name, int length)
         {
-            return new Parameter(name, SqlDbType.Binary, length);
+            return new Parameter(name, CommonDbType.Binary, length);
         }
 
         public static Parameter Bit(string name)
         {
-            return new Parameter(name, SqlDbType.Bit);
+            return new Parameter(name, CommonDbType.Bit);
         }
 
         public static Parameter Char(string name, int length)
         {
-            return new Parameter(name, SqlDbType.Char, length);
+            return new Parameter(name, CommonDbType.Char, length);
         }
 
         public static Parameter DateTime(string name)
         {
-            return new Parameter(name, SqlDbType.DateTime);
+            return new Parameter(name, CommonDbType.DateTime);
         }
 
         public static Parameter Decimal(string name, int length, byte precision = 18, byte scale = 0)
         {
-            return new Parameter(name, SqlDbType.Decimal, precision, scale);
+            return new Parameter(name, CommonDbType.Decimal, precision, scale);
         }
 
         public static Parameter Float(string name)
         {
-            return new Parameter(name, SqlDbType.Float);
+            return new Parameter(name, CommonDbType.Float);
         }
 
         public static Parameter Image(string name)
         {
-            return new Parameter(name, SqlDbType.Image);
+            return new Parameter(name, CommonDbType.Image);
         }
 
         public static Parameter Int(string name)
         {
-            return new Parameter(name, SqlDbType.Int);
+            return new Parameter(name, CommonDbType.Int);
         }
 
         public static Parameter Money(string name)
         {
-            return new Parameter(name, SqlDbType.Money);
+            return new Parameter(name, CommonDbType.Money);
         }
 
         public static Parameter NChar(string name, int length)
         {
-            return new Parameter(name, SqlDbType.NChar, length);
+            return new Parameter(name, CommonDbType.NChar, length);
         }
 
         public static Parameter NText(string name)
         {
-            return new Parameter(name, SqlDbType.NText);
+            return new Parameter(name, CommonDbType.NText);
         }
 
         public static Parameter NVarChar(string name, int length = -1)
         {
-            return new Parameter(name, SqlDbType.NVarChar, length);
+            return new Parameter(name, CommonDbType.NVarChar, length);
         }
 
         public static Parameter String(string name)
         {
-            return new Parameter(name, SqlDbType.NVarChar, -1);
+            return new Parameter(name, CommonDbType.NVarChar, -1);
         }
 
         public static Parameter Real(string name)
         {
-            return new Parameter(name, SqlDbType.Real);
+            return new Parameter(name, CommonDbType.Real);
         }
 
         public static Parameter UniqueIdentifier(string name)
         {
-            return new Parameter(name, SqlDbType.UniqueIdentifier);
+            return new Parameter(name, CommonDbType.UniqueIdentifier);
         }
 
         public static Parameter SmallDateTime(string name)
         {
-            return new Parameter(name, SqlDbType.SmallDateTime);
+            return new Parameter(name, CommonDbType.SmallDateTime);
         }
 
         public static Parameter SmallInt(string name)
         {
-            return new Parameter(name, SqlDbType.SmallInt);
+            return new Parameter(name, CommonDbType.SmallInt);
         }
 
         public static Parameter SmallMoney(string name)
         {
-            return new Parameter(name, SqlDbType.SmallMoney);
+            return new Parameter(name, CommonDbType.SmallMoney);
         }
 
         public static Parameter Text(string name)
         {
-            return new Parameter(name, SqlDbType.Text);
+            return new Parameter(name, CommonDbType.Text);
         }
 
         public static Parameter Timestamp(string name)
         {
-            return new Parameter(name, SqlDbType.Timestamp);
+            return new Parameter(name, CommonDbType.Timestamp);
         }
 
         public static Parameter TinyInt(string name)
         {
-            return new Parameter(name, SqlDbType.TinyInt);
+            return new Parameter(name, CommonDbType.TinyInt);
         }
 
         public static Parameter VarBinary(string name, int length = -1)
         {
-            return new Parameter(name, SqlDbType.VarBinary, length);
+            return new Parameter(name, CommonDbType.VarBinary, length);
         }
 
         public static Parameter VarChar(string name, int length = -1)
         {
-            return new Parameter(name, SqlDbType.VarChar, length);
+            return new Parameter(name, CommonDbType.VarChar, length);
         }
 
         public static Parameter Variant(string name)
         {
-            return new Parameter(name, SqlDbType.Variant);
+            return new Parameter(name, CommonDbType.Variant);
         }
 
         public static Parameter Xml(string name)
         {
-            return new Parameter(name, SqlDbType.Xml);
-        }
-
-        public static Parameter Udt(string name)
-        {
-            return new Parameter(name, SqlDbType.Udt);
-        }
-
-        public static Parameter Structured(string name)
-        {
-            return new Parameter(name, SqlDbType.Structured);
+            return new Parameter(name, CommonDbType.Xml);
         }
 
         public static Parameter Date(string name)
         {
-            return new Parameter(name, SqlDbType.Date);
+            return new Parameter(name, CommonDbType.Date);
         }
 
         public static Parameter Time(string name, int length = 7)
         {
-            return new Parameter(name, SqlDbType.Time, length);
+            return new Parameter(name, CommonDbType.Time, length);
         }
 
         public static Parameter DateTime2(string name, int length = 7)
         {
-            return new Parameter(name, SqlDbType.DateTime2, length);
+            return new Parameter(name, CommonDbType.DateTime2, length);
         } //0..7
 
         public static Parameter DateTimeOffset(string name, int length = 7)
         {
-            return new Parameter(name, SqlDbType.DateTimeOffset, length);
+            return new Parameter(name, CommonDbType.DateTimeOffset, length);
         } //0..7
     }
 
