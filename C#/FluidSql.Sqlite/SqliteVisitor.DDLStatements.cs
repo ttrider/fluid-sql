@@ -72,7 +72,7 @@
                 }
                 State.Write(Symbols.PRIMARY);
                 State.Write(Symbols.KEY);
-                VisitTokenSet(statement.PrimaryKey.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(statement.PrimaryKey.Columns);
                 VisitConflict(statement.PrimaryKey.Conflict);
             }
 
@@ -82,7 +82,7 @@
                 State.Write(Symbols.CONSTRAINT);
                 VisitNameToken(unique.Name);
                 State.Write(Symbols.UNIQUE);
-                VisitTokenSet(unique.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(unique.Columns);
                 VisitConflict(unique.Conflict);
             }
 
@@ -137,7 +137,7 @@
             VisitToken(statement.On);
 
             // columns
-            VisitTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+            VisitTokenSetInParenthesis(statement.Columns);
             VisitWhereToken(statement.Where);
         }
 

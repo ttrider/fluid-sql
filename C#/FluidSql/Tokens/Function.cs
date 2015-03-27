@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class Function : Token
+    public class Function : AliasedToken
     {
         public Function()
         {

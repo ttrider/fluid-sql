@@ -22,8 +22,6 @@ namespace TTRider.FluidSql
 
         public IList<ParameterValue> ParameterValues { get; private set; }
 
-        public string Alias { get; set; }
-
         private string TSql
         {
             get
@@ -32,5 +30,10 @@ namespace TTRider.FluidSql
                 return state.Value;
             }
         }
+    }
+
+    public class AliasedToken : Token
+    {
+        public string Alias { get; set; }
     }
 }

@@ -19,13 +19,13 @@ namespace TTRider.FluidSql
         {
             this.GroupBy = new List<Name>();
             this.OrderBy = new List<Order>();
-            this.From = new List<Token>();
+            this.From = new List<AliasedToken>();
             this.Joins = new List<Join>();
             this.Set = new List<BinaryEqualToken>();
             this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
-        public List<Token> From { get; set; }
+        public List<AliasedToken> From { get; set; }
         public bool Distinct { get; set; }
         public Token Having { get; set; }
         public Name Into { get; set; }

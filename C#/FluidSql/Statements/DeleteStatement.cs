@@ -22,7 +22,7 @@ namespace TTRider.FluidSql
             this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
-        public Token From { get; set; }
+        public AliasedToken From { get; set; }
         public List<Join> Joins { get; private set; }
         public Top Top { get; set; }
         public Token Where { get; set; }

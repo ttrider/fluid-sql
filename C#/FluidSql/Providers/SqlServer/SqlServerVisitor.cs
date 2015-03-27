@@ -249,12 +249,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write(Symbols.INSERT);
             if (token.Columns.Count > 0)
             {
-                VisitTokenSet(token.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(token.Columns);
             }
             if (token.Values.Count > 0)
             {
-                State.Write(Symbols.VALUES);
-                VisitTokenSet(token.Values, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(token.Values, () => State.Write(Symbols.VALUES));
             }
             else
             {
@@ -293,7 +292,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 else
                 {
-                    VisitTokenSet(statement.Output, (string)null, Symbols.Comma, null, true);
+                    VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
                 }
             }
 
@@ -407,7 +406,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitInto(statement.Into);
 
-            VisitTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
+            VisitAliasedTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
 
             VisitOutput(statement.Output, statement.OutputInto);
 
@@ -425,7 +424,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     State.Write(separator);
                     separator = Symbols.Comma;
 
-                    VisitTokenSet(valuesSet, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                    VisitTokenSetInParenthesis(valuesSet);
                 }
             }
             else if (statement.From != null)
@@ -732,7 +731,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
                 State.Write(Symbols.PRIMARY);
                 State.Write(Symbols.KEY);
-                VisitTokenSet(createStatement.PrimaryKey.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(createStatement.PrimaryKey.Columns);
             }
 
             foreach (var unique in createStatement.UniqueConstrains)
@@ -749,7 +748,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 {
                     State.Write(unique.Clustered.Value ? Symbols.CLUSTERED : Symbols.NONCLUSTERED);
                 }
-                VisitTokenSet(unique.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                VisitTokenSetInParenthesis(unique.Columns);
             }
 
             State.Write(Symbols.CloseParenthesis);
@@ -805,13 +804,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(createIndexStatement.On);
 
             // columns
-            VisitTokenSet(createIndexStatement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+            VisitTokenSetInParenthesis(createIndexStatement.Columns);
 
-            if (createIndexStatement.Include.Count > 0)
-            {
-                State.Write(Symbols.INCLUDE);
-                VisitTokenSet(createIndexStatement.Include, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
-            }
+            VisitTokenSetInParenthesis(createIndexStatement.Include, ()=>State.Write(Symbols.INCLUDE));
 
             VisitWhereToken(createIndexStatement.Where);
 
@@ -1047,9 +1042,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #endregion Statements
 
-        private void VisitOutput(IEnumerable<Token> columns, Name outputInto)
+        private void VisitOutput(IEnumerable<AliasedToken> columns, Name outputInto)
         {
-            VisitTokenSet(columns, Symbols.OUTPUT, Symbols.Comma, null, true);
+            VisitAliasedTokenSet(columns, Symbols.OUTPUT, Symbols.Comma, null);
             if (outputInto != null)
             {
                 State.Write(Symbols.INTO);

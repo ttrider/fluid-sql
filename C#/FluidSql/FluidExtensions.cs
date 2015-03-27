@@ -33,7 +33,7 @@ namespace TTRider.FluidSql
         }
 
         public static T As<T>(this T token, string alias)
-            where T : Token
+            where T : AliasedToken
         {
             token.Alias = alias;
             return token;
@@ -53,13 +53,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, params Token[] columns)
+        public static SelectStatement Output(this SelectStatement statement, params AliasedToken[] columns)
         {
             statement.Output.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, IEnumerable<Token> columns)
+        public static SelectStatement Output(this SelectStatement statement, IEnumerable<AliasedToken> columns)
         {
             if (columns != null)
             {
@@ -283,7 +283,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement From(this SelectStatement statement, Token token)
+        public static SelectStatement From(this SelectStatement statement, AliasedToken token)
         {
             statement.From.Add(token);
             return statement;
@@ -296,7 +296,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T From<T>(this T statement, Token token)
+        public static T From<T>(this T statement, AliasedToken token)
             where T : IFromStatement
         {
             statement.From = token;
@@ -605,8 +605,8 @@ namespace TTRider.FluidSql
             return new SelectStatement()
                 .From(statement.As(alias))
                 .Output(statement.Output.Select(
-                    column => !string.IsNullOrWhiteSpace(column.Alias)
-                        ? column.Alias // we should use alias    
+                    column => (column is AliasedToken) && !string.IsNullOrWhiteSpace(((AliasedToken)column).Alias)
+                        ? ((AliasedToken)column).Alias // we should use alias    
                         : ((column is Name) ? ((Name)column).LastPart : null)) // or the LAST PART of the name
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Select(name => Sql.Name(alias, name)));
@@ -735,32 +735,32 @@ namespace TTRider.FluidSql
             return new OrToken { First = first, Second = second };
         }
 
-        public static Token PlusEqual(this Token first, Token second)
+        public static PlusToken PlusEqual(this Token first, Token second)
         {
             return new PlusToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token MinusEqual(this Token first, Token second)
+        public static MinusToken MinusEqual(this Token first, Token second)
         {
             return new MinusToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token DivideEqual(this Token first, Token second)
+        public static DivideToken DivideEqual(this Token first, Token second)
         {
             return new DivideToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseAndEqual(this Token first, Token second)
+        public static BitwiseAndToken BitwiseAndEqual(this Token first, Token second)
         {
             return new BitwiseAndToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseOrEqual(this Token first, Token second)
+        public static BitwiseOrToken BitwiseOrEqual(this Token first, Token second)
         {
             return new BitwiseOrToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseXorEqual(this Token first, Token second)
+        public static BitwiseXorToken BitwiseXorEqual(this Token first, Token second)
         {
             return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
@@ -770,89 +770,89 @@ namespace TTRider.FluidSql
             return new BitwiseNotToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token ModuloEqual(this Token first, Token second)
+        public static ModuloToken ModuloEqual(this Token first, Token second)
         {
             return new ModuloToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token MultiplyEqual(this Token first, Token second)
+        public static MultiplyToken MultiplyEqual(this Token first, Token second)
         {
             return new MultiplyToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token Plus(this Token first, Token second)
+        public static PlusToken Plus(this Token first, Token second)
         {
             return new PlusToken { First = first, Second = second };
         }
 
-        public static Token Minus(this Token first, Token second)
+        public static MinusToken Minus(this Token first, Token second)
         {
             return new MinusToken { First = first, Second = second };
         }
 
-        public static Token Divide(this Token first, Token second)
+        public static DivideToken Divide(this Token first, Token second)
         {
             return new DivideToken { First = first, Second = second };
         }
 
-        public static Token BitwiseAnd(this Token first, Token second)
+        public static BitwiseAndToken BitwiseAnd(this Token first, Token second)
         {
             return new BitwiseAndToken { First = first, Second = second };
         }
 
-        public static Token BitwiseOr(this Token first, Token second)
+        public static BitwiseOrToken BitwiseOr(this Token first, Token second)
         {
             return new BitwiseOrToken { First = first, Second = second };
         }
 
-        public static Token BitwiseXor(this Token first, Token second)
+        public static BitwiseXorToken BitwiseXor(this Token first, Token second)
         {
             return new BitwiseXorToken { First = first, Second = second };
         }
 
-        public static Token BitwiseNot(this Token first, Token second)
+        public static BitwiseNotToken BitwiseNot(this Token first, Token second)
         {
             return new BitwiseNotToken { First = first, Second = second };
         }
 
         [Obsolete]
-        public static Token Module(this Token first, Token second)
+        public static ModuloToken Module(this Token first, Token second)
         {
             return new ModuloToken { First = first, Second = second };
         }
 
-        public static Token Modulo(this Token first, Token second)
+        public static ModuloToken Modulo(this Token first, Token second)
         {
             return new ModuloToken { First = first, Second = second };
         }
 
-        public static Token Multiply(this Token first, Token second)
+        public static MultiplyToken Multiply(this Token first, Token second)
         {
             return new MultiplyToken { First = first, Second = second };
         }
 
 
-        public static Token IsEqual(this Token first, string second)
+        public static IsEqualsToken IsEqual(this Token first, string second)
         {
             return new IsEqualsToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token NotEqual(this Token first, string second)
+        public static NotEqualToken NotEqual(this Token first, string second)
         {
             return new NotEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Less(this Token first, string second)
+        public static LessToken Less(this Token first, string second)
         {
             return new LessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token NotLess(this Token first, string second)
+        public static NotLessToken NotLess(this Token first, string second)
         {
             return new NotLessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token LessOrEqual(this Token first, string second)
+        public static LessOrEqualToken LessOrEqual(this Token first, string second)
         {
             return new LessOrEqualToken { First = first, Second = Sql.Name(second) };
         }

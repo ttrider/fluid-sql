@@ -4,7 +4,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class Join
+    public class Join : AliasedToken
     {
         public Joins Type { get; set; }
 

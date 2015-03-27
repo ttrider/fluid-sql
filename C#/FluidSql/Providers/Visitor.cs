@@ -47,12 +47,12 @@ namespace TTRider.FluidSql.Providers
                 // todo check for statement
                 TokenVisitors[token.GetType()](this, token);
             }
-            if (includeAlias)
+            if (includeAlias && token is AliasedToken)
             {
-                if (!string.IsNullOrWhiteSpace(token.Alias))
+                if (!string.IsNullOrWhiteSpace(((AliasedToken)token).Alias))
                 {
                     State.Write(Symbols.AS);
-                    State.Write(this.IdentifierOpenQuote, token.Alias, this.IdentifierCloseQuote);
+                    State.Write(this.IdentifierOpenQuote, ((AliasedToken)token).Alias, this.IdentifierCloseQuote);
                 }
             }
 
@@ -116,8 +116,8 @@ namespace TTRider.FluidSql.Providers
             return false;
         }
 
-        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, string prefix,
-            string separator, string suffix, bool includeAlias = false)
+        protected virtual void VisitAliasedTokenSet(IEnumerable<AliasedToken> tokens, string prefix,
+            string separator, string suffix)
         {
             if (tokens != null)
             {
@@ -125,12 +125,12 @@ namespace TTRider.FluidSql.Providers
                 if (enumerator.MoveNext())
                 {
                     State.Write(prefix);
-                    VisitToken(enumerator.Current, includeAlias);
+                    VisitToken(enumerator.Current, true);
 
                     while (enumerator.MoveNext())
                     {
                         State.Write(separator);
-                        VisitToken(enumerator.Current, includeAlias);
+                        VisitToken(enumerator.Current, true);
                     }
                     State.Write(suffix);
                 }
@@ -138,7 +138,7 @@ namespace TTRider.FluidSql.Providers
         }
 
         protected virtual void VisitTokenSet(IEnumerable<Token> tokens, Action prefix = null,
-            string separator = Symbols.Comma, Action suffix = null, bool includeAlias = false)
+            string separator = Symbols.Comma, Action suffix = null)
         {
             if (tokens != null)
             {
@@ -149,12 +149,12 @@ namespace TTRider.FluidSql.Providers
                     {
                         prefix();
                     }
-                    VisitToken(enumerator.Current, includeAlias);
+                    VisitToken(enumerator.Current);
 
                     while (enumerator.MoveNext())
                     {
                         State.Write(separator);
-                        VisitToken(enumerator.Current, includeAlias);
+                        VisitToken(enumerator.Current);
                     }
                     if (suffix != null)
                     {

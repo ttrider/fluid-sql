@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class BinaryToken : Token
+    public class BinaryToken : AliasedToken
     {
         public Token First { get; set; }
         public Token Second { get; set; }

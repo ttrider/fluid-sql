@@ -269,7 +269,7 @@ namespace TTRider.FluidSql.Providers
         {
             VisitToken(token.Token);
             State.Write(Symbols.IN);
-            VisitTokenSet(token.Set, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+            VisitTokenSetInParenthesis(token.Set);
         }
 
         protected virtual void VisitNotInToken(NotInToken token)
@@ -277,7 +277,7 @@ namespace TTRider.FluidSql.Providers
             VisitToken(token.Token);
             State.Write(Symbols.NOT);
             State.Write(Symbols.IN);
-            VisitTokenSet(token.Set, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+            VisitTokenSetInParenthesis(token.Set);
         }
         protected virtual void VisitCommentToken(CommentToken token)
         {
@@ -285,9 +285,9 @@ namespace TTRider.FluidSql.Providers
             VisitToken(token.Content);
             State.Write(this.CommentCloseQuote);
         }
-        protected virtual void VisitFromToken(IEnumerable<Token> recordsets)
+        protected virtual void VisitFromToken(IEnumerable<AliasedToken> recordsets)
         {
-            VisitTokenSet(recordsets, Symbols.FROM, Symbols.Comma, null, true);
+            VisitAliasedTokenSet(recordsets, Symbols.FROM, Symbols.Comma, null);
         }
 
         protected virtual void VisitFromToken(Token recordset)
@@ -301,7 +301,7 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitGroupByToken(ICollection<Name> groupBy)
         {
-            VisitTokenSet(groupBy, Symbols.GROUP_BY, Symbols.Comma, null);
+            VisitTokenSet(groupBy, ()=>State.Write(Symbols.GROUP_BY));
         }
 
         protected virtual void VisitHavingToken(Token whereToken)
@@ -324,7 +324,7 @@ namespace TTRider.FluidSql.Providers
         {
             if (orderBy != null)
             {
-                VisitTokenSet(orderBy, Symbols.ORDER_BY, Symbols.Comma, null);
+                VisitTokenSet(orderBy, ()=>State.Write(Symbols.ORDER_BY));
             }
         }
 

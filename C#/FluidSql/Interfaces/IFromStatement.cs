@@ -6,6 +6,6 @@ namespace TTRider.FluidSql
 {
     public interface IFromStatement
     {
-        Token From { get; set; }
+        AliasedToken From { get; set; }
     }
 }

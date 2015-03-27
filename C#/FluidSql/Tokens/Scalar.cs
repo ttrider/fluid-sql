@@ -4,7 +4,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class Scalar : Token
+    public class Scalar : AliasedToken
     {
         public object Value { get; set; }
     }

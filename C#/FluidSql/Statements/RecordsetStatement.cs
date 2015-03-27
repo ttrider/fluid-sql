@@ -6,14 +6,14 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public abstract class RecordsetStatement : Token, IStatement
+    public abstract class RecordsetStatement : AliasedToken, IStatement
     {
         protected RecordsetStatement()
         {
-            this.Output = new List<Token>();
+            this.Output = new List<AliasedToken>();
         }
 
-        public List<Token> Output { get; private set; }
+        public List<AliasedToken> Output { get; private set; }
         public Name OutputInto { get; set; }
     }
 }

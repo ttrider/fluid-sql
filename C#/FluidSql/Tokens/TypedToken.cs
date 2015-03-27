@@ -8,7 +8,7 @@ using TTRider.FluidSql.Providers.SqlServer;
 
 namespace TTRider.FluidSql
 {
-    public class TypedToken : Token
+    public class TypedToken : AliasedToken
     {
         public TypedToken(string name, SqlDbType sqlDbType, byte precision, byte scale)
             : this(name, sqlDbType)

@@ -31,7 +31,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
             else
             {
-                VisitTokenSet(statement.Output, (string)null, Symbols.Comma, null, true);
+                VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
             }
 
 
@@ -140,7 +140,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             State.Write(Symbols.SET);
 
-            VisitTokenSet(statement.Set, (string)null, Symbols.Comma, null);
+            VisitTokenSet(statement.Set);
 
             VisitWhereToken(statement.Where);
         }
@@ -177,7 +177,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             VisitNameToken(statement.Into);
 
-            VisitTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
+            VisitAliasedTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
 
             if (statement.DefaultValues)
             {
@@ -193,7 +193,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                     State.Write(separator);
                     separator = Symbols.Comma;
 
-                    VisitTokenSet(valuesSet, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                    VisitTokenSetInParenthesis(valuesSet);
                 }
             }
             else if (statement.From != null)
