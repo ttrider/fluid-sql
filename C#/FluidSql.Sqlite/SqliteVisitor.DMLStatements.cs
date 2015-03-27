@@ -105,7 +105,38 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         protected override void VisitUpdate(UpdateStatement statement, VisitorState state)
         {
-            throw new NotImplementedException();
+            state.Write(Symbols.UPDATE);
+
+            if (statement.Conflict.HasValue)
+            {
+                state.Write(Symbols.OR);
+                switch (statement.Conflict.Value)
+                {
+                    case OnConflict.Abort:
+                        state.Write(Symbols.ABORT);
+                        break;
+                    case OnConflict.Fail:
+                        state.Write(Symbols.FAIL);
+                        break;
+                    case OnConflict.Ignore:
+                        state.Write(Symbols.IGNORE);
+                        break;
+                    case OnConflict.Replace:
+                        state.Write(Symbols.REPLACE);
+                        break;
+                    case OnConflict.Rollback:
+                        state.Write(Symbols.ROLLBACK);
+                        break;
+                }
+            }
+
+            VisitNameToken(statement.Target, state);
+
+            state.Write(Symbols.SET);
+
+            VisitTokenSet(statement.Set, state, null, Symbols.Comma, null);
+
+            VisitWhereToken(statement.Where, state);
         }
 
         protected override void VisitInsert(InsertStatement statement, VisitorState state)

@@ -1195,6 +1195,31 @@ namespace TTRider.FluidSql
            return statement;
         }
 
+        public static UpdateStatement OrReplace(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Replace;
+            return statement;
+        }
+        public static UpdateStatement OrRollback(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Rollback;
+            return statement;
+        }
+        public static UpdateStatement OrAbort(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Abort;
+            return statement;
+        }
+        public static UpdateStatement OrFail(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Fail;
+            return statement;
+        }
+        public static UpdateStatement OrIgnore(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Ignore;
+            return statement;
+        }
 
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column,
             Direction direction = Direction.Asc)
