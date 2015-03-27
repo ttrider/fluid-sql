@@ -169,6 +169,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         protected override void VisitMerge(MergeStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state);
+
             state.Write(Symbols.MERGE);
 
             VisitTop(statement.Top, state);
@@ -253,7 +255,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             state.Write(Symbols.UPDATE);
             state.Write(Symbols.SET);
-            VisitTokenSet(token.Set, state, null, Symbols.Comma, null);
+            VisitTokenSet(token.Set, state);
         }
         protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token, VisitorState state)
         {
@@ -276,6 +278,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected override void VisitSelect(SelectStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state);
+
             state.Write(Symbols.SELECT);
 
             if (statement.Distinct)
@@ -291,7 +295,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             // assignments
             if (statement.Set.Count > 0)
             {
-                VisitTokenSet(statement.Set, state, null, Symbols.Comma, null);
+                VisitTokenSet(statement.Set, state);
             }
             else
             {
@@ -302,7 +306,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 }
                 else
                 {
-                    VisitTokenSet(statement.Output, state, null, Symbols.Comma, null, true);
+                    VisitTokenSet(statement.Output, state, (string)null, Symbols.Comma, null, true);
                 }
             }
 
@@ -355,6 +359,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         protected override void VisitDelete(DeleteStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state);
+
             state.Write(Symbols.DELETE);
 
             VisitTop(statement.Top, state);
@@ -383,47 +389,51 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 VisitWhereToken(statement.Where, state);
             }
         }
-        protected override void VisitUpdate(UpdateStatement updateStatement, VisitorState state)
+        protected override void VisitUpdate(UpdateStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state);
+
             state.Write(Symbols.UPDATE);
 
-            VisitTop(updateStatement.Top, state);
+            VisitTop(statement.Top, state);
 
-            VisitToken(updateStatement.Target, state, true);
+            VisitToken(statement.Target, state, true);
 
             state.Write(Symbols.SET);
-            VisitTokenSet(updateStatement.Set, state, null, Symbols.Comma, null);
+            VisitTokenSet(statement.Set, state);
 
-            VisitOutput(updateStatement.Output, updateStatement.OutputInto, state);
+            VisitOutput(statement.Output, statement.OutputInto, state);
 
-            VisitFromToken(updateStatement.From, state);
+            VisitFromToken(statement.From, state);
 
-            VisitJoin(updateStatement.Joins, state);
+            VisitJoin(statement.Joins, state);
 
-            VisitWhereToken(updateStatement.Where, state);
+            VisitWhereToken(statement.Where, state);
         }
-        protected override void VisitInsert(InsertStatement insertStatement, VisitorState state)
+        protected override void VisitInsert(InsertStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state);
+
             state.Write(Symbols.INSERT);
 
-            VisitTop(insertStatement.Top, state);
+            VisitTop(statement.Top, state);
 
-            VisitInto(insertStatement.Into, state);
+            VisitInto(statement.Into, state);
 
-            VisitTokenSet(insertStatement.Columns, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
+            VisitTokenSet(statement.Columns, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
 
-            VisitOutput(insertStatement.Output, insertStatement.OutputInto, state);
+            VisitOutput(statement.Output, statement.OutputInto, state);
 
-            if (insertStatement.DefaultValues)
+            if (statement.DefaultValues)
             {
                 state.Write(Symbols.DEFAULT);
                 state.Write(Symbols.VALUES);
 
             }
-            else if (insertStatement.Values.Count > 0)
+            else if (statement.Values.Count > 0)
             {
                 var separator = Symbols.VALUES;
-                foreach (var valuesSet in insertStatement.Values)
+                foreach (var valuesSet in statement.Values)
                 {
                     state.Write(separator);
                     separator = Symbols.Comma;
@@ -431,9 +441,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitTokenSet(valuesSet, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
                 }
             }
-            else if (insertStatement.From != null)
+            else if (statement.From != null)
             {
-                VisitStatement(insertStatement.From, state);
+                VisitStatement(statement.From, state);
             }
         }
 

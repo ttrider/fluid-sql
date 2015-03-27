@@ -100,6 +100,7 @@ namespace TTRider.FluidSql.Providers
             public const string PERCENT = "PERCENT";
             public const string PRIMARY = "PRIMARY";
             public const string REBUILD = "REBUILD";
+            public const string RECURSIVE = "RECURSIVE";
             public const string REINDEX = "REINDEX";
             public const string REORGANIZE = "REORGANIZE";
             public const string RELEASE = "RELEASE";

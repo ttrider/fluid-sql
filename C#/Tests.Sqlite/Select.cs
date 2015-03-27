@@ -406,7 +406,24 @@ namespace Tests.Sqlite
             Assert.IsNotNull(text);
             Assert.AreEqual("/* DROP TABLE \"some\".\"table\" */", text); return statement;
         }
-       
+
+
+
+         [TestMethod]
+         public IStatement SelectWithCTE()
+         {
+
+             var statement = Sql.With("name", "a").Recursive()
+                 .As(Sql.Select.From("sys.objects").Output(Sql.Name("object_id").As("a")))
+                 .With("name2").As(Sql.Select.From("sys.tables"))
+                 .Select().From("name");
+
+             var text = Provider.GenerateStatement(statement);
+
+             Assert.IsNotNull(text);
+             Assert.AreEqual("WITH RECURSIVE \"name\" ( \"a\" ) AS ( SELECT \"object_id\" AS \"a\" FROM \"sys\".\"objects\" ), \"name2\" AS ( SELECT * FROM \"sys\".\"tables\" ) SELECT * FROM \"name\";", text); return statement;
+         }
+
     }
 }
 

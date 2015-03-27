@@ -9,11 +9,14 @@ namespace TTRider.FluidSql
     public class InsertStatement : RecordsetStatement
         , ITopStatement
         , IIntoStatement
+        , ICTEStatement
+        , IOnConflict
     {
         public InsertStatement()
         {
             this.Columns = new List<Name>();
             this.Values = new List<Token[]>();
+            this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
         public Name Into { get; set; }
@@ -23,5 +26,6 @@ namespace TTRider.FluidSql
         public List<Token[]> Values { get; private set; }
         public Top Top { get; set; }
         public OnConflict? Conflict { get; set; }
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
     }
 }

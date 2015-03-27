@@ -13,6 +13,7 @@ namespace TTRider.FluidSql
         , IWhereStatement
         , IIntoStatement
         , IOrderByStatement
+        , ICTEStatement
     {
         public SelectStatement()
         {
@@ -21,6 +22,7 @@ namespace TTRider.FluidSql
             this.From = new List<Token>();
             this.Joins = new List<Join>();
             this.Set = new List<BinaryEqualToken>();
+            this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
         public List<Token> From { get; set; }
@@ -35,5 +37,6 @@ namespace TTRider.FluidSql
         public Token Where { get; set; }
 
         public Token Offset { get; set; }
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
     }
 }

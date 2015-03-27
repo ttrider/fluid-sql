@@ -97,7 +97,7 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitFunctionToken(Function token, VisitorState state)
         {
             state.Write(token.Name, Symbols.OpenParenthesis);
-            VisitTokenSet(token.Arguments, state, null, Symbols.Comma, null);
+            VisitTokenSet(token.Arguments, state);
             state.Write(Symbols.CloseParenthesis);
         }
 

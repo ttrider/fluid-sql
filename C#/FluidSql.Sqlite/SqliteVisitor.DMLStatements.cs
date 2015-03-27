@@ -7,6 +7,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
     {
         protected override void VisitSelect(SelectStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+
             if (statement.Into != null)
             {
                 state.Write(Symbols.CREATE);
@@ -29,7 +31,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
             else
             {
-                VisitTokenSet(statement.Output, state, null, Symbols.Comma, null, true);
+                VisitTokenSet(statement.Output, state, (string)null, Symbols.Comma, null, true);
             }
 
 
@@ -71,6 +73,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         protected override void VisitDelete(DeleteStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+
             state.Write(Symbols.DELETE);
 
             VisitFromToken(statement.From, state);
@@ -105,6 +109,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         protected override void VisitUpdate(UpdateStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+
             state.Write(Symbols.UPDATE);
 
             if (statement.Conflict.HasValue)
@@ -134,13 +140,15 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
             state.Write(Symbols.SET);
 
-            VisitTokenSet(statement.Set, state, null, Symbols.Comma, null);
+            VisitTokenSet(statement.Set, state, (string)null, Symbols.Comma, null);
 
             VisitWhereToken(statement.Where, state);
         }
 
         protected override void VisitInsert(InsertStatement statement, VisitorState state)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+
             state.Write(Symbols.INSERT);
 
             if (statement.Conflict.HasValue)

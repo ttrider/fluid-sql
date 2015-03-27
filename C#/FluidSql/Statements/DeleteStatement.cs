@@ -13,11 +13,13 @@ namespace TTRider.FluidSql
         , IWhereStatement
         , IOffsetStatement
         , IOrderByStatement
+        , ICTEStatement
     {
         public DeleteStatement()
         {
             this.Joins = new List<Join>();
             this.OrderBy = new List<Order>();
+            this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
         public Token From { get; set; }
@@ -28,6 +30,6 @@ namespace TTRider.FluidSql
         // supported on Sqlite
         public Token Offset { get; set; }
         public List<Order> OrderBy { get; private set; }
-
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
     }
 }

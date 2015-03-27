@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TTRider.FluidSql
 {
@@ -726,5 +727,31 @@ namespace TTRider.FluidSql
 
         #endregion Statements
 
+
+        public static CTEDeclaration With(string name, params string[] columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n=>Sql.Name(n)));
+            }
+            return cte;
+        }
+        public static CTEDeclaration With(string name, IEnumerable<string>columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+        
     }
 }

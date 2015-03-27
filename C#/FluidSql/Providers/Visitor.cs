@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace TTRider.FluidSql.Providers
@@ -114,25 +115,105 @@ namespace TTRider.FluidSql.Providers
             return false;
         }
 
-        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, string prefix, string separator, string suffix, bool includeAlias = false)
+        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, string prefix,
+            string separator, string suffix, bool includeAlias = false)
         {
-            var enumerator = tokens.GetEnumerator();
-            if (enumerator.MoveNext())
+            if (tokens != null)
             {
-                state.Write(prefix);
-                VisitToken(enumerator.Current, state, includeAlias);
-
-                while (enumerator.MoveNext())
+                var enumerator = tokens.GetEnumerator();
+                if (enumerator.MoveNext())
                 {
-                    state.Write(separator);
+                    state.Write(prefix);
                     VisitToken(enumerator.Current, state, includeAlias);
+
+                    while (enumerator.MoveNext())
+                    {
+                        state.Write(separator);
+                        VisitToken(enumerator.Current, state, includeAlias);
+                    }
+                    state.Write(suffix);
                 }
-                state.Write(suffix);
+            }
+        }
+
+        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, Action<VisitorState> prefix = null,
+            string separator = Symbols.Comma, Action<VisitorState> suffix = null, bool includeAlias = false)
+        {
+            if (tokens != null)
+            {
+                var enumerator = tokens.GetEnumerator();
+                if (enumerator.MoveNext())
+                {
+                    if (prefix != null)
+                    {
+                        prefix(state);
+                    }
+                    VisitToken(enumerator.Current, state, includeAlias);
+
+                    while (enumerator.MoveNext())
+                    {
+                        state.Write(separator);
+                        VisitToken(enumerator.Current, state, includeAlias);
+                    }
+                    if (suffix != null)
+                    {
+                        suffix(state);
+                    }
+                }
+            }
+        }
+
+        protected virtual void VisitTokenSetInParenthesis(IEnumerable<Token> tokens, VisitorState state, Action<VisitorState> prefix = null, bool includeAlias = false)
+        {
+            if (tokens != null)
+            {
+                var enumerator = tokens.GetEnumerator();
+                if (enumerator.MoveNext())
+                {
+                    if (prefix != null)
+                    {
+                        prefix(state);
+                    }
+                    state.Write(Symbols.OpenParenthesis);
+                    VisitToken(enumerator.Current, state, includeAlias);
+
+                    while (enumerator.MoveNext())
+                    {
+                        state.Write(Symbols.Comma);
+                        VisitToken(enumerator.Current, state, includeAlias);
+                    }
+                    state.Write(Symbols.CloseParenthesis);
+                }
             }
         }
 
 
+        protected virtual void VisitCommonTableExpressions(IList<CTEDefinition> definitions, VisitorState state,
+            bool emitRECURSIVE = false)
+        {
+            if (definitions != null)
+            {
+                this.VisitTokenSet(definitions, state, (s) =>
+                {
+                    s.Write(Symbols.WITH);
+                    if (emitRECURSIVE && definitions.Any(d => d.Declaration.Recursive))
+                    {
+                        s.Write(Symbols.RECURSIVE);
+                    }
+                });
+            }
+        }
 
+        protected virtual void VisitCommonTableExpression(CTEDefinition definition, VisitorState state)
+        {
+            VisitNameToken(definition.Declaration.Name, state);
+            this.VisitTokenSetInParenthesis(definition.Declaration.Columns, state);
+            state.Write(Symbols.AS);
+            state.Write(Symbols.OpenParenthesis);
+            this.VisitStatement(definition.Definition, state);
+            state.Write(Symbols.CloseParenthesis);
+
+        }
 
         private static readonly Dictionary<Type, Action<Visitor, Token, VisitorState>> TokenVisitors =
                 new Dictionary<Type, Action<Visitor, Token, VisitorState>>
@@ -182,8 +263,7 @@ namespace TTRider.FluidSql.Providers
                 {typeof (WhenMatchedTokenThenUpdateSetToken),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedTokenThenUpdateSetToken)t,s)},
                 {typeof (WhenNotMatchedTokenThenInsertToken),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedTokenThenInsertToken)t,s)},
                 {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
-
-                
+                {typeof (CTEDefinition),(v,t,s)=>v.VisitCommonTableExpression((CTEDefinition)t,s)},
             };
 
         private static readonly Dictionary<Type, Action<Visitor, IStatement, VisitorState>> StatementVisitors =
@@ -230,8 +310,8 @@ namespace TTRider.FluidSql.Providers
                 {typeof (ExecuteStatement), (v,stm,s)=>v.VisitExecuteStatement((ExecuteStatement)stm,s)},
             };
 
-    
-    
+
+
     }
 }
 

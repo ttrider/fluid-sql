@@ -1172,27 +1172,27 @@ namespace TTRider.FluidSql
         public static InsertStatement OrReplace(this InsertStatement statement)
         {
             statement.Conflict = OnConflict.Replace;
-           return statement;
+            return statement;
         }
         public static InsertStatement OrRollback(this InsertStatement statement)
         {
             statement.Conflict = OnConflict.Rollback;
-           return statement;
+            return statement;
         }
         public static InsertStatement OrAbort(this InsertStatement statement)
         {
             statement.Conflict = OnConflict.Abort;
-           return statement;
+            return statement;
         }
         public static InsertStatement OrFail(this InsertStatement statement)
         {
             statement.Conflict = OnConflict.Fail;
-           return statement;
+            return statement;
         }
         public static InsertStatement OrIgnore(this InsertStatement statement)
         {
             statement.Conflict = OnConflict.Ignore;
-           return statement;
+            return statement;
         }
 
         public static UpdateStatement OrReplace(this UpdateStatement statement)
@@ -1996,5 +1996,111 @@ namespace TTRider.FluidSql
             return statement;
         }
         #endregion Top
+
+        #region CTE
+
+        public static CTEDefinition As(this CTEDeclaration cte, SelectStatement definition)
+        {
+            return new CTEDefinition
+            {
+                Declaration = cte,
+                Definition = definition
+            };
+        }
+        public static CTEDeclaration Recursive(this CTEDeclaration cte, bool recursive = true)
+        {
+            cte.Recursive = recursive;
+            return cte;
+        }
+
+        public static CTEDeclaration With(this CTEDefinition prevCTE, string name, params string[] columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+                PrevCTE = prevCTE
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+        public static CTEDeclaration With(this CTEDefinition prevCTE, string name, IEnumerable<string> columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+                PrevCTE = prevCTE
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+
+        static IEnumerable<CTEDefinition> GetCteDefinitions(CTEDefinition definition)
+        {
+            if (definition != null)
+            {
+                if (definition.Declaration != null && definition.Declaration.PrevCTE != null)
+                {
+                    foreach (var prevDefinition in GetCteDefinitions(definition.Declaration.PrevCTE))
+                    {
+                        yield return prevDefinition;
+                    }
+                }
+                yield return definition;
+            }
+        }
+
+        public static SelectStatement Select(this CTEDefinition cte)
+        {
+            var statement = new SelectStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static DeleteStatement Delete(this CTEDefinition cte)
+        {
+            var statement = new DeleteStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static InsertStatement Insert(this CTEDefinition cte)
+        {
+            var statement = new InsertStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static MergeStatement Merge(this CTEDefinition cte)
+        {
+            var statement = new MergeStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+        public static UpdateStatement Update(this CTEDefinition cte, string target)
+        {
+            var statement = new UpdateStatement
+            {
+                Target = Sql.Name(target)
+            };
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static UpdateStatement Update(this CTEDefinition cte, Name target)
+        {
+            var statement = new UpdateStatement
+            {
+                Target = target
+            };
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+        #endregion CTE
     }
 }

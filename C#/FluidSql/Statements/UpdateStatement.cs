@@ -12,11 +12,15 @@ namespace TTRider.FluidSql
         , ISetStatement
         , IJoinStatement
         , IWhereStatement
+        , ICTEStatement
+        , IOnConflict
+
     {
         public UpdateStatement()
         {
             this.Set = new List<BinaryEqualToken>();
             this.Joins = new List<Join>();
+            this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
         public Name Target { get; set; }
@@ -26,5 +30,6 @@ namespace TTRider.FluidSql
         public Top Top { get; set; }
         public Token Where { get; set; }
         public OnConflict? Conflict { get; set; }
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
     }
 }

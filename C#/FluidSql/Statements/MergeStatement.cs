@@ -9,6 +9,7 @@ namespace TTRider.FluidSql
     public class MergeStatement : RecordsetStatement
                                 , ITopStatement
                                 , IIntoStatement
+                                , ICTEStatement
                                 
     {
         public MergeStatement()
@@ -16,6 +17,7 @@ namespace TTRider.FluidSql
             this.WhenMatched = new List<WhenMatchedToken>();
             this.WhenNotMatched = new List<WhenMatchedToken>();
             this.WhenNotMatchedBySource = new List<WhenMatchedToken>();
+            this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
 
@@ -27,5 +29,6 @@ namespace TTRider.FluidSql
         public List<WhenMatchedToken> WhenMatched { get; private set; }
         public List<WhenMatchedToken> WhenNotMatched { get; private set; }
         public List<WhenMatchedToken> WhenNotMatchedBySource { get; private set; }
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
     }
 }
