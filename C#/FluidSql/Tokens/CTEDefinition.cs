@@ -16,7 +16,7 @@ namespace TTRider.FluidSql
         public List<Name> Columns { get; set; }
 
         public bool Recursive { get; set; }
-        public CTEDefinition PrevCTE { get; set; }
+        public CTEDefinition PreviousCommonTableExpression { get; set; }
     }
     public class CTEDefinition : Token
     {

@@ -32,7 +32,11 @@ namespace TTRider.FluidSql.Providers
             return State;
         }
 
-        protected virtual void VisitToken(Token token, bool includeAlias = false)
+        protected virtual void VisitToken(Token token)
+        {
+            VisitToken(token, false);
+        }
+        protected virtual void VisitToken(Token token, bool includeAlias)
         {
             if (token is IStatement)
             {

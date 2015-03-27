@@ -290,7 +290,7 @@ namespace TTRider.FluidSql.Providers
             VisitAliasedTokenSet(recordsets, Symbols.FROM, Symbols.Comma, null);
         }
 
-        protected virtual void VisitFromToken(Token recordset)
+        protected virtual void VisitFromToken(AliasedToken recordset)
         {
             if (recordset != null)
             {
@@ -372,6 +372,7 @@ namespace TTRider.FluidSql.Providers
                 foreach (var join in list)
                 {
                     VisitJoinType(join.Type);
+                    
                     VisitToken(@join.Source, true);
 
                     if (join.On != null)
