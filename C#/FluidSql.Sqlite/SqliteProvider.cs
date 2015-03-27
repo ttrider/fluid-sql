@@ -13,7 +13,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
     {
         protected override VisitorState Compile(IStatement statement)
         {
-            return new SqliteVisitor().Compile(statement, new VisitorState());
+            return new SqliteVisitor().Compile(statement);
         }
 
         public override IDbConnection GetConnection(string connectionString)

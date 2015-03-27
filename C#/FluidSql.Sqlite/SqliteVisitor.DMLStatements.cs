@@ -5,184 +5,184 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor
     {
-        protected override void VisitSelect(SelectStatement statement, VisitorState state)
+        protected override void VisitSelect(SelectStatement statement)
         {
-            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+            VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
             if (statement.Into != null)
             {
-                state.Write(Symbols.CREATE);
-                state.Write(Symbols.TABLE);
-                VisitNameToken(statement.Into, state);
-                state.Write(Symbols.AS);
+                State.Write(Symbols.CREATE);
+                State.Write(Symbols.TABLE);
+                VisitNameToken(statement.Into);
+                State.Write(Symbols.AS);
             }
 
-            state.Write(Symbols.SELECT);
+            State.Write(Symbols.SELECT);
 
             if (statement.Distinct)
             {
-                state.Write(Symbols.DISTINCT);
+                State.Write(Symbols.DISTINCT);
             }
 
             // output columns
             if (statement.Output.Count == 0)
             {
-                state.Write(Symbols.Asterisk);
+                State.Write(Symbols.Asterisk);
             }
             else
             {
-                VisitTokenSet(statement.Output, state, (string)null, Symbols.Comma, null, true);
+                VisitTokenSet(statement.Output, (string)null, Symbols.Comma, null, true);
             }
 
 
-            VisitFromToken(statement.From, state);
+            VisitFromToken(statement.From);
 
-            VisitJoin(statement.Joins, state);
+            VisitJoin(statement.Joins);
 
-            VisitWhereToken(statement.Where, state);
+            VisitWhereToken(statement.Where);
 
-            VisitGroupByToken(statement.GroupBy, state);
+            VisitGroupByToken(statement.GroupBy);
 
-            VisitHavingToken(statement.Having, state);
+            VisitHavingToken(statement.Having);
 
-            VisitOrderByToken(statement.OrderBy, state);
+            VisitOrderByToken(statement.OrderBy);
 
             if (statement.Top != null)
             {
-                state.Write(Symbols.LIMIT);
+                State.Write(Symbols.LIMIT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
+                    State.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {
                     foreach (var parameter in statement.Top.Parameters)
                     {
-                        state.Parameters.Add(parameter);
+                        State.Parameters.Add(parameter);
                     }
-                    state.Write(statement.Top.Parameters[0].Name);
+                    State.Write(statement.Top.Parameters[0].Name);
                 }
             }
 
             if (statement.Offset != null)
             {
-                state.Write(Symbols.OFFSET);
-                VisitToken(statement.Offset, state);
+                State.Write(Symbols.OFFSET);
+                VisitToken(statement.Offset);
             }
         }
 
-        protected override void VisitDelete(DeleteStatement statement, VisitorState state)
+        protected override void VisitDelete(DeleteStatement statement)
         {
-            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+            VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
-            state.Write(Symbols.DELETE);
+            State.Write(Symbols.DELETE);
 
-            VisitFromToken(statement.From, state);
+            VisitFromToken(statement.From);
 
-            VisitWhereToken(statement.Where, state);
+            VisitWhereToken(statement.Where);
 
-            VisitOrderByToken(statement.OrderBy, state);
+            VisitOrderByToken(statement.OrderBy);
 
             if (statement.Top != null)
             {
-                state.Write(Symbols.LIMIT);
+                State.Write(Symbols.LIMIT);
                 if (statement.Top.Value.HasValue)
                 {
-                    state.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
+                    State.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (statement.Top.Parameters.Count > 0)
                 {
                     foreach (var parameter in statement.Top.Parameters)
                     {
-                        state.Parameters.Add(parameter);
+                        State.Parameters.Add(parameter);
                     }
-                    state.Write(statement.Top.Parameters[0].Name);
+                    State.Write(statement.Top.Parameters[0].Name);
                 }
             }
 
             if (statement.Offset != null)
             {
-                state.Write(Symbols.OFFSET);
-                VisitToken(statement.Offset, state);
+                State.Write(Symbols.OFFSET);
+                VisitToken(statement.Offset);
             }
         }
 
-        protected override void VisitUpdate(UpdateStatement statement, VisitorState state)
+        protected override void VisitUpdate(UpdateStatement statement)
         {
-            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+            VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
-            state.Write(Symbols.UPDATE);
+            State.Write(Symbols.UPDATE);
 
             if (statement.Conflict.HasValue)
             {
-                state.Write(Symbols.OR);
+                State.Write(Symbols.OR);
                 switch (statement.Conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Write(Symbols.ABORT);
+                        State.Write(Symbols.ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Write(Symbols.FAIL);
+                        State.Write(Symbols.FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Write(Symbols.IGNORE);
+                        State.Write(Symbols.IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Write(Symbols.REPLACE);
+                        State.Write(Symbols.REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Write(Symbols.ROLLBACK);
+                        State.Write(Symbols.ROLLBACK);
                         break;
                 }
             }
 
-            VisitNameToken(statement.Target, state);
+            VisitNameToken(statement.Target);
 
-            state.Write(Symbols.SET);
+            State.Write(Symbols.SET);
 
-            VisitTokenSet(statement.Set, state, (string)null, Symbols.Comma, null);
+            VisitTokenSet(statement.Set, (string)null, Symbols.Comma, null);
 
-            VisitWhereToken(statement.Where, state);
+            VisitWhereToken(statement.Where);
         }
 
-        protected override void VisitInsert(InsertStatement statement, VisitorState state)
+        protected override void VisitInsert(InsertStatement statement)
         {
-            VisitCommonTableExpressions(statement.CommonTableExpressions, state, true);
+            VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
-            state.Write(Symbols.INSERT);
+            State.Write(Symbols.INSERT);
 
             if (statement.Conflict.HasValue)
             {
-                state.Write(Symbols.OR);
+                State.Write(Symbols.OR);
                 switch (statement.Conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Write(Symbols.ABORT);
+                        State.Write(Symbols.ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Write(Symbols.FAIL);
+                        State.Write(Symbols.FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Write(Symbols.IGNORE);
+                        State.Write(Symbols.IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Write(Symbols.REPLACE);
+                        State.Write(Symbols.REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Write(Symbols.ROLLBACK);
+                        State.Write(Symbols.ROLLBACK);
                         break;
                 }
             }
-            state.Write(Symbols.INTO);
+            State.Write(Symbols.INTO);
 
-            VisitNameToken(statement.Into, state);
+            VisitNameToken(statement.Into);
 
-            VisitTokenSet(statement.Columns, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
+            VisitTokenSet(statement.Columns, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis, true);
 
             if (statement.DefaultValues)
             {
-                state.Write(Symbols.DEFAULT);
-                state.Write(Symbols.VALUES);
+                State.Write(Symbols.DEFAULT);
+                State.Write(Symbols.VALUES);
 
             }
             else if (statement.Values.Count > 0)
@@ -190,19 +190,19 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 var separator = Symbols.VALUES;
                 foreach (var valuesSet in statement.Values)
                 {
-                    state.Write(separator);
+                    State.Write(separator);
                     separator = Symbols.Comma;
 
-                    VisitTokenSet(valuesSet, state, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
+                    VisitTokenSet(valuesSet, Symbols.OpenParenthesis, Symbols.Comma, Symbols.CloseParenthesis);
                 }
             }
             else if (statement.From != null)
             {
-                VisitStatement(statement.From, state);
+                VisitStatement(statement.From);
             }
         }
 
-        protected override void VisitMerge(MergeStatement statement, VisitorState state)
+        protected override void VisitMerge(MergeStatement statement)
         {
             throw new NotImplementedException();
         }

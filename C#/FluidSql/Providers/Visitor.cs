@@ -10,6 +10,7 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
+        protected VisitorState State = new VisitorState();
         protected string IdentifierOpenQuote = "\"";
         protected string IdentifierCloseQuote = "\"";
         protected string LiteralOpenQuote = "'";
@@ -17,25 +18,25 @@ namespace TTRider.FluidSql.Providers
         protected string CommentOpenQuote = "/*";
         protected string CommentCloseQuote = "*/";
 
-        protected abstract void VisitJoinType(Joins join, VisitorState state);
+        protected abstract void VisitJoinType(Joins join);
 
         protected virtual string ResolveName(Name name)
         {
             return name.GetFullName(this.IdentifierOpenQuote, this.IdentifierCloseQuote);
         }
 
-        public VisitorState Compile(IStatement statement, VisitorState state)
+        public VisitorState Compile(IStatement statement)
         {
-            this.VisitStatement(statement, state);
-            state.WriteStatementTerminator();
-            return state;
+            this.VisitStatement(statement);
+            State.WriteStatementTerminator();
+            return State;
         }
 
-        protected virtual void VisitToken(Token token, VisitorState state, bool includeAlias = false)
+        protected virtual void VisitToken(Token token, bool includeAlias = false)
         {
             if (token is IStatement)
             {
-                VisitStatementToken((IStatement)token, state);
+                VisitStatementToken((IStatement)token);
             }
             else
             {
@@ -44,54 +45,54 @@ namespace TTRider.FluidSql.Providers
                     throw new NotImplementedException("Token " + token.GetType().Name + " is not implemented");
                 }
                 // todo check for statement
-                TokenVisitors[token.GetType()](this, token, state);
+                TokenVisitors[token.GetType()](this, token);
             }
             if (includeAlias)
             {
                 if (!string.IsNullOrWhiteSpace(token.Alias))
                 {
-                    state.Write(Symbols.AS);
-                    state.Write(this.IdentifierOpenQuote, token.Alias, this.IdentifierCloseQuote);
+                    State.Write(Symbols.AS);
+                    State.Write(this.IdentifierOpenQuote, token.Alias, this.IdentifierCloseQuote);
                 }
             }
 
-            state.Parameters.AddRange(token.Parameters);
-            state.ParameterValues.AddRange(token.ParameterValues);
+            State.Parameters.AddRange(token.Parameters);
+            State.ParameterValues.AddRange(token.ParameterValues);
         }
 
-        protected virtual void VisitStatement(IStatement statement, VisitorState state)
+        protected virtual void VisitStatement(IStatement statement)
         {
             if (!StatementVisitors.ContainsKey(statement.GetType()))
             {
                 throw new NotImplementedException("Statement " + statement.GetType().Name + " is not implemented");
             }
 
-            StatementVisitors[statement.GetType()](this, statement, state);
+            StatementVisitors[statement.GetType()](this, statement);
         }
 
 
-        protected virtual void VisitConflict(OnConflict? conflict, VisitorState state)
+        protected virtual void VisitConflict(OnConflict? conflict)
         {
             if (conflict.HasValue)
             {
-                state.Write(Symbols.ON);
-                state.Write(Symbols.CONFLICT);
+                State.Write(Symbols.ON);
+                State.Write(Symbols.CONFLICT);
                 switch (conflict.Value)
                 {
                     case OnConflict.Abort:
-                        state.Write(Symbols.ABORT);
+                        State.Write(Symbols.ABORT);
                         break;
                     case OnConflict.Fail:
-                        state.Write(Symbols.FAIL);
+                        State.Write(Symbols.FAIL);
                         break;
                     case OnConflict.Ignore:
-                        state.Write(Symbols.IGNORE);
+                        State.Write(Symbols.IGNORE);
                         break;
                     case OnConflict.Replace:
-                        state.Write(Symbols.REPLACE);
+                        State.Write(Symbols.REPLACE);
                         break;
                     case OnConflict.Rollback:
-                        state.Write(Symbols.ROLLBACK);
+                        State.Write(Symbols.ROLLBACK);
                         break;
                 }
 
@@ -99,23 +100,23 @@ namespace TTRider.FluidSql.Providers
 
         }
 
-        protected virtual bool VisitTransactionName(TransactionStatement statement, VisitorState state)
+        protected virtual bool VisitTransactionName(TransactionStatement statement)
         {
             if (statement.Name != null)
             {
-                VisitNameToken(statement.Name, state);
+                VisitNameToken(statement.Name);
                 return true;
             }
             if (statement.Parameter != null)
             {
-                state.Write(statement.Parameter.Name);
-                state.Parameters.Add(statement.Parameter);
+                State.Write(statement.Parameter.Name);
+                State.Parameters.Add(statement.Parameter);
                 return true;
             }
             return false;
         }
 
-        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, string prefix,
+        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, string prefix,
             string separator, string suffix, bool includeAlias = false)
         {
             if (tokens != null)
@@ -123,21 +124,21 @@ namespace TTRider.FluidSql.Providers
                 var enumerator = tokens.GetEnumerator();
                 if (enumerator.MoveNext())
                 {
-                    state.Write(prefix);
-                    VisitToken(enumerator.Current, state, includeAlias);
+                    State.Write(prefix);
+                    VisitToken(enumerator.Current, includeAlias);
 
                     while (enumerator.MoveNext())
                     {
-                        state.Write(separator);
-                        VisitToken(enumerator.Current, state, includeAlias);
+                        State.Write(separator);
+                        VisitToken(enumerator.Current, includeAlias);
                     }
-                    state.Write(suffix);
+                    State.Write(suffix);
                 }
             }
         }
 
-        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, VisitorState state, Action<VisitorState> prefix = null,
-            string separator = Symbols.Comma, Action<VisitorState> suffix = null, bool includeAlias = false)
+        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, Action prefix = null,
+            string separator = Symbols.Comma, Action suffix = null, bool includeAlias = false)
         {
             if (tokens != null)
             {
@@ -146,24 +147,24 @@ namespace TTRider.FluidSql.Providers
                 {
                     if (prefix != null)
                     {
-                        prefix(state);
+                        prefix();
                     }
-                    VisitToken(enumerator.Current, state, includeAlias);
+                    VisitToken(enumerator.Current, includeAlias);
 
                     while (enumerator.MoveNext())
                     {
-                        state.Write(separator);
-                        VisitToken(enumerator.Current, state, includeAlias);
+                        State.Write(separator);
+                        VisitToken(enumerator.Current, includeAlias);
                     }
                     if (suffix != null)
                     {
-                        suffix(state);
+                        suffix();
                     }
                 }
             }
         }
 
-        protected virtual void VisitTokenSetInParenthesis(IEnumerable<Token> tokens, VisitorState state, Action<VisitorState> prefix = null, bool includeAlias = false)
+        protected virtual void VisitTokenSetInParenthesis(IEnumerable<Token> tokens, Action prefix = null, bool includeAlias = false)
         {
             if (tokens != null)
             {
@@ -172,142 +173,142 @@ namespace TTRider.FluidSql.Providers
                 {
                     if (prefix != null)
                     {
-                        prefix(state);
+                        prefix();
                     }
-                    state.Write(Symbols.OpenParenthesis);
-                    VisitToken(enumerator.Current, state, includeAlias);
+                    State.Write(Symbols.OpenParenthesis);
+                    VisitToken(enumerator.Current, includeAlias);
 
                     while (enumerator.MoveNext())
                     {
-                        state.Write(Symbols.Comma);
-                        VisitToken(enumerator.Current, state, includeAlias);
+                        State.Write(Symbols.Comma);
+                        VisitToken(enumerator.Current, includeAlias);
                     }
-                    state.Write(Symbols.CloseParenthesis);
+                    State.Write(Symbols.CloseParenthesis);
                 }
             }
         }
 
 
-        protected virtual void VisitCommonTableExpressions(IList<CTEDefinition> definitions, VisitorState state,
+        protected virtual void VisitCommonTableExpressions(IList<CTEDefinition> definitions,
             bool emitRECURSIVE = false)
         {
             if (definitions != null)
             {
-                this.VisitTokenSet(definitions, state, (s) =>
+                this.VisitTokenSet(definitions, () =>
                 {
-                    s.Write(Symbols.WITH);
+                    State.Write(Symbols.WITH);
                     if (emitRECURSIVE && definitions.Any(d => d.Declaration.Recursive))
                     {
-                        s.Write(Symbols.RECURSIVE);
+                        State.Write(Symbols.RECURSIVE);
                     }
                 });
             }
         }
 
-        protected virtual void VisitCommonTableExpression(CTEDefinition definition, VisitorState state)
+        protected virtual void VisitCommonTableExpression(CTEDefinition definition)
         {
-            VisitNameToken(definition.Declaration.Name, state);
-            this.VisitTokenSetInParenthesis(definition.Declaration.Columns, state);
-            state.Write(Symbols.AS);
-            state.Write(Symbols.OpenParenthesis);
-            this.VisitStatement(definition.Definition, state);
-            state.Write(Symbols.CloseParenthesis);
+            VisitNameToken(definition.Declaration.Name);
+            this.VisitTokenSetInParenthesis(definition.Declaration.Columns);
+            State.Write(Symbols.AS);
+            State.Write(Symbols.OpenParenthesis);
+            this.VisitStatement(definition.Definition);
+            State.Write(Symbols.CloseParenthesis);
 
         }
 
-        private static readonly Dictionary<Type, Action<Visitor, Token, VisitorState>> TokenVisitors =
-                new Dictionary<Type, Action<Visitor, Token, VisitorState>>
+        private static readonly Dictionary<Type, Action<Visitor, Token>> TokenVisitors =
+                new Dictionary<Type, Action<Visitor, Token>>
             {
-                {typeof (Scalar),(v,t,s)=>v.VisitScalarToken((Scalar)t,s)},
-                {typeof (Name),(v,t,s)=>v.VisitNameToken((Name)t,s)},
-                {typeof (Parameter),(v,t,s)=>v.VisitParameterToken((Parameter)t,s)},
-                {typeof (Snippet),(v,t,s)=>v.VisitSnippetToken((Snippet)t,s)},
-                {typeof (Function),(v,t,s)=>v.VisitFunctionToken((Function)t,s)},
-                {typeof (IsEqualsToken),(v,t,s)=>v.VisitIsEqualsToken((IsEqualsToken)t,s)},
-                {typeof (NotEqualToken),(v,t,s)=>v.VisitNotEqualToken((NotEqualToken)t,s)},
-                {typeof (LessToken),(v,t,s)=>v.VisitLessToken((LessToken)t,s)},
-                {typeof (NotLessToken),(v,t,s)=>v.VisitNotLessToken((NotLessToken)t,s)},
-                {typeof (LessOrEqualToken),(v,t,s)=>v.VisitLessOrEqualToken((LessOrEqualToken)t,s)},
-                {typeof (GreaterToken),(v,t,s)=>v.VisitGreaterToken((GreaterToken)t,s)},
-                {typeof (NotGreaterToken),(v,t,s)=>v.VisitNotGreaterToken((NotGreaterToken)t,s)},
-                {typeof (GreaterOrEqualToken),(v,t,s)=>v.VisitGreaterOrEqualToken((GreaterOrEqualToken)t,s)},
-                {typeof (AndToken),(v,t,s)=>v.VisitAndToken((AndToken)t,s)},
-                {typeof (OrToken),(v,t,s)=>v.VisitOrToken((OrToken)t,s)},
-                {typeof (PlusToken),(v,t,s)=>v.VisitPlusToken((PlusToken)t,s)},
-                {typeof (MinusToken),(v,t,s)=>v.VisitMinusToken((MinusToken)t,s)},
-                {typeof (DivideToken),(v,t,s)=>v.VisitDivideToken((DivideToken)t,s)},
-                {typeof (ModuloToken),(v,t,s)=>v.VisitModuloToken((ModuloToken)t,s)},
-                {typeof (MultiplyToken),(v,t,s)=>v.VisitMultiplyToken((MultiplyToken)t,s)},
-                {typeof (BitwiseAndToken),(v,t,s)=>v.VisitBitwiseAndToken((BitwiseAndToken)t,s)},
-                {typeof (BitwiseOrToken),(v,t,s)=>v.VisitBitwiseOrToken((BitwiseOrToken)t,s)},
-                {typeof (BitwiseXorToken),(v,t,s)=>v.VisitBitwiseXorToken((BitwiseXorToken)t,s)},
-                {typeof (BitwiseNotToken),(v,t,s)=>v.VisitBitwiseNotToken((BitwiseNotToken)t,s)},
-                {typeof (ContainsToken),(v,t,s)=>v.VisitContainsToken((ContainsToken)t,s)},
-                {typeof (StartsWithToken),(v,t,s)=>v.VisitStartsWithToken((StartsWithToken)t,s)},
-                {typeof (EndsWithToken),(v,t,s)=>v.VisitEndsWithToken((EndsWithToken)t,s)},
-                {typeof (LikeToken),(v,t,s)=>v.VisitLikeToken((LikeToken)t,s)},
-                {typeof (GroupToken),(v,t,s)=>v.VisitGroupToken((GroupToken)t,s)},
-                {typeof (NotToken),(v,t,s)=>v.VisitNotToken((NotToken)t,s)},
-                {typeof (IsNullToken),(v,t,s)=>v.VisitIsNullToken((IsNullToken)t,s)},
-                {typeof (IsNotNullToken),(v,t,s)=>v.VisitIsNotNullToken((IsNotNullToken)t,s)},
-                {typeof (ExistsToken),(v,t,s)=>v.VisitExistsToken((ExistsToken)t,s)},
-                {typeof (AllToken),(v,t,s)=>v.VisitAllToken((AllToken)t,s)},
-                {typeof (AnyToken),(v,t,s)=>v.VisitAnyToken((AnyToken)t,s)},
-                {typeof (AssignToken),(v,t,s)=>v.VisitAssignToken((AssignToken)t,s)},
-                {typeof (BetweenToken),(v,t,s)=>v.VisitBetweenToken((BetweenToken)t,s)},
-                {typeof (InToken),(v,t,s)=>v.VisitInToken((InToken)t,s)},
-                {typeof (NotInToken),(v,t,s)=>v.VisitNotInToken((NotInToken)t,s)},
-                {typeof (CommentToken),(v,t,s)=>v.VisitCommentToken((CommentToken)t,s)},
-                {typeof (StringifyToken),(v,t,s)=>v.VisitStringifyToken((StringifyToken)t,s)},
-                {typeof (WhenMatchedTokenThenDeleteToken),(v,t,s)=>v.VisitWhenMatchedThenDelete((WhenMatchedTokenThenDeleteToken)t,s)},
-                {typeof (WhenMatchedTokenThenUpdateSetToken),(v,t,s)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedTokenThenUpdateSetToken)t,s)},
-                {typeof (WhenNotMatchedTokenThenInsertToken),(v,t,s)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedTokenThenInsertToken)t,s)},
-                {typeof (Order),(v,t,s)=>v.VisitOrderToken((Order)t,s)},
-                {typeof (CTEDefinition),(v,t,s)=>v.VisitCommonTableExpression((CTEDefinition)t,s)},
+                {typeof (Scalar),(v,t)=>v.VisitScalarToken((Scalar)t)},
+                {typeof (Name),(v,t)=>v.VisitNameToken((Name)t)},
+                {typeof (Parameter),(v,t)=>v.VisitParameterToken((Parameter)t)},
+                {typeof (Snippet),(v,t)=>v.VisitSnippetToken((Snippet)t)},
+                {typeof (Function),(v,t)=>v.VisitFunctionToken((Function)t)},
+                {typeof (IsEqualsToken),(v,t)=>v.VisitIsEqualsToken((IsEqualsToken)t)},
+                {typeof (NotEqualToken),(v,t)=>v.VisitNotEqualToken((NotEqualToken)t)},
+                {typeof (LessToken),(v,t)=>v.VisitLessToken((LessToken)t)},
+                {typeof (NotLessToken),(v,t)=>v.VisitNotLessToken((NotLessToken)t)},
+                {typeof (LessOrEqualToken),(v,t)=>v.VisitLessOrEqualToken((LessOrEqualToken)t)},
+                {typeof (GreaterToken),(v,t)=>v.VisitGreaterToken((GreaterToken)t)},
+                {typeof (NotGreaterToken),(v,t)=>v.VisitNotGreaterToken((NotGreaterToken)t)},
+                {typeof (GreaterOrEqualToken),(v,t)=>v.VisitGreaterOrEqualToken((GreaterOrEqualToken)t)},
+                {typeof (AndToken),(v,t)=>v.VisitAndToken((AndToken)t)},
+                {typeof (OrToken),(v,t)=>v.VisitOrToken((OrToken)t)},
+                {typeof (PlusToken),(v,t)=>v.VisitPlusToken((PlusToken)t)},
+                {typeof (MinusToken),(v,t)=>v.VisitMinusToken((MinusToken)t)},
+                {typeof (DivideToken),(v,t)=>v.VisitDivideToken((DivideToken)t)},
+                {typeof (ModuloToken),(v,t)=>v.VisitModuloToken((ModuloToken)t)},
+                {typeof (MultiplyToken),(v,t)=>v.VisitMultiplyToken((MultiplyToken)t)},
+                {typeof (BitwiseAndToken),(v,t)=>v.VisitBitwiseAndToken((BitwiseAndToken)t)},
+                {typeof (BitwiseOrToken),(v,t)=>v.VisitBitwiseOrToken((BitwiseOrToken)t)},
+                {typeof (BitwiseXorToken),(v,t)=>v.VisitBitwiseXorToken((BitwiseXorToken)t)},
+                {typeof (BitwiseNotToken),(v,t)=>v.VisitBitwiseNotToken((BitwiseNotToken)t)},
+                {typeof (ContainsToken),(v,t)=>v.VisitContainsToken((ContainsToken)t)},
+                {typeof (StartsWithToken),(v,t)=>v.VisitStartsWithToken((StartsWithToken)t)},
+                {typeof (EndsWithToken),(v,t)=>v.VisitEndsWithToken((EndsWithToken)t)},
+                {typeof (LikeToken),(v,t)=>v.VisitLikeToken((LikeToken)t)},
+                {typeof (GroupToken),(v,t)=>v.VisitGroupToken((GroupToken)t)},
+                {typeof (NotToken),(v,t)=>v.VisitNotToken((NotToken)t)},
+                {typeof (IsNullToken),(v,t)=>v.VisitIsNullToken((IsNullToken)t)},
+                {typeof (IsNotNullToken),(v,t)=>v.VisitIsNotNullToken((IsNotNullToken)t)},
+                {typeof (ExistsToken),(v,t)=>v.VisitExistsToken((ExistsToken)t)},
+                {typeof (AllToken),(v,t)=>v.VisitAllToken((AllToken)t)},
+                {typeof (AnyToken),(v,t)=>v.VisitAnyToken((AnyToken)t)},
+                {typeof (AssignToken),(v,t)=>v.VisitAssignToken((AssignToken)t)},
+                {typeof (BetweenToken),(v,t)=>v.VisitBetweenToken((BetweenToken)t)},
+                {typeof (InToken),(v,t)=>v.VisitInToken((InToken)t)},
+                {typeof (NotInToken),(v,t)=>v.VisitNotInToken((NotInToken)t)},
+                {typeof (CommentToken),(v,t)=>v.VisitCommentToken((CommentToken)t)},
+                {typeof (StringifyToken),(v,t)=>v.VisitStringifyToken((StringifyToken)t)},
+                {typeof (WhenMatchedTokenThenDeleteToken),(v,t)=>v.VisitWhenMatchedThenDelete((WhenMatchedTokenThenDeleteToken)t)},
+                {typeof (WhenMatchedTokenThenUpdateSetToken),(v,t)=>v.VisitWhenMatchedThenUpdateSet((WhenMatchedTokenThenUpdateSetToken)t)},
+                {typeof (WhenNotMatchedTokenThenInsertToken),(v,t)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedTokenThenInsertToken)t)},
+                {typeof (Order),(v,t)=>v.VisitOrderToken((Order)t)},
+                {typeof (CTEDefinition),(v,t)=>v.VisitCommonTableExpression((CTEDefinition)t)},
             };
 
-        private static readonly Dictionary<Type, Action<Visitor, IStatement, VisitorState>> StatementVisitors =
-            new Dictionary<Type, Action<Visitor, IStatement, VisitorState>>
+        private static readonly Dictionary<Type, Action<Visitor, IStatement>> StatementVisitors =
+            new Dictionary<Type, Action<Visitor, IStatement>>
             {
-                {typeof (DeleteStatement), (v,stm,s)=>v.VisitDelete((DeleteStatement)stm, s)},
-                {typeof (UpdateStatement), (v,stm,s)=>v.VisitUpdate((UpdateStatement)stm, s)},
-                {typeof (InsertStatement), (v,stm,s)=>v.VisitInsert((InsertStatement)stm,s)},
-                {typeof (SelectStatement), (v,stm,s)=>v.VisitSelect((SelectStatement)stm,s)},
-                {typeof (MergeStatement),(v,stm,s)=>v. VisitMerge((MergeStatement)stm,s)},
-                {typeof (SetStatement), (v,stm,s)=>v.VisitSet((SetStatement)stm,s)},
-                {typeof (UnionStatement), (v,stm,s)=>v.VisitUnionStatement((UnionStatement)stm,s)},
-                {typeof (IntersectStatement), (v,stm,s)=>v.VisitIntersectStatement((IntersectStatement)stm,s)},
-                {typeof (ExceptStatement), (v,stm,s)=>v.VisitExceptStatement((ExceptStatement)stm,s)},
-                {typeof (BeginTransactionStatement), (v,stm,s)=>v.VisitBeginTransaction((BeginTransactionStatement)stm,s)},
-                {typeof (CommitTransactionStatement), (v,stm,s)=>v.VisitCommitTransaction((CommitTransactionStatement)stm,s)},
-                {typeof (RollbackTransactionStatement), (v,stm,s)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm,s)},
-                {typeof (StatementsStatement), (v,stm,s)=>v.VisitStatementsStatement((StatementsStatement)stm,s)},
-                {typeof (SaveTransactionStatement), (v,stm,s)=>v.VisitSaveTransaction((SaveTransactionStatement)stm,s)},
-                {typeof (DeclareStatement), (v,stm,s)=>v.VisitDeclareStatement((DeclareStatement)stm,s)},
-                {typeof (IfStatement), (v,stm,s)=>v.VisitIfStatement((IfStatement)stm,s)},
-                {typeof (CreateTableStatement), (v,stm,s)=>v.VisitCreateTableStatement((CreateTableStatement)stm,s)},
-                {typeof (DropTableStatement), (v,stm,s)=>v.VisitDropTableStatement((DropTableStatement)stm,s)},
-                {typeof (CreateIndexStatement), (v,stm,s)=>v.VisitCreateIndexStatement((CreateIndexStatement)stm,s)},
-                {typeof (AlterIndexStatement), (v,stm,s)=>v.VisitAlterIndexStatement((AlterIndexStatement)stm,s)},
-                {typeof (DropIndexStatement), (v,stm,s)=>v.VisitDropIndexStatement((DropIndexStatement)stm,s)},
-                {typeof (CommentStatement), (v,stm,s)=>v.VisitCommentStatement((CommentStatement)stm,s)},
-                {typeof (StringifyStatement), (v,stm,s)=>v.VisitStringifyStatement((StringifyStatement)stm,s)},
-                {typeof (SnippetStatement), (v,stm,s)=>v.VisitSnippetStatement((SnippetStatement)stm,s)},
-                {typeof (BreakStatement), (v,stm,s)=>v.VisitBreakStatement((BreakStatement)stm,s)},
-                {typeof (ContinueStatement), (v,stm,s)=>v.VisitContinueStatement((ContinueStatement)stm,s)},
-                {typeof (GotoStatement), (v,stm,s)=>v.VisitGotoStatement((GotoStatement)stm,s)},
-                {typeof (ReturnStatement), (v,stm,s)=>v.VisitReturnStatement((ReturnStatement)stm,s)},
-                {typeof (ThrowStatement), (v,stm,s)=>v.VisitThrowStatement((ThrowStatement)stm,s)},
-                {typeof (TryCatchStatement), (v,stm,s)=>v.VisitTryCatchStatement((TryCatchStatement)stm,s)},
-                {typeof (LabelStatement), (v,stm,s)=>v.VisitLabelStatement((LabelStatement)stm,s)},
-                {typeof (WaitforDelayStatement), (v,stm,s)=>v.VisitWaitforDelayStatement((WaitforDelayStatement)stm,s)},
-                {typeof (WaitforTimeStatement), (v,stm,s)=>v.VisitWaitforTimeStatement((WaitforTimeStatement)stm,s)},
-                {typeof (WhileStatement), (v,stm,s)=>v.VisitWhileStatement((WhileStatement)stm,s)},
-                {typeof (CreateViewStatement), (v,stm,s)=>v.VisitCreateViewStatement((CreateViewStatement)stm,s)},
-                {typeof (CreateOrAlterViewStatement), (v,stm,s)=>v.VisitCreateOrAlterViewStatement((CreateOrAlterViewStatement)stm,s)},
-                {typeof (AlterViewStatement), (v,stm,s)=>v.VisitAlterViewStatement((AlterViewStatement)stm,s)},
-                {typeof (DropViewStatement), (v,stm,s)=>v.VisitDropViewStatement((DropViewStatement)stm,s)},
-                {typeof (ExecuteStatement), (v,stm,s)=>v.VisitExecuteStatement((ExecuteStatement)stm,s)},
+                {typeof (DeleteStatement), (v, stm)=>v.VisitDelete((DeleteStatement)stm)},
+                {typeof (UpdateStatement), (v, stm)=>v.VisitUpdate((UpdateStatement)stm)},
+                {typeof (InsertStatement), (v, stm)=>v.VisitInsert((InsertStatement)stm)},
+                {typeof (SelectStatement), (v, stm)=>v.VisitSelect((SelectStatement)stm)},
+                {typeof (MergeStatement),(v, stm)=>v. VisitMerge((MergeStatement)stm)},
+                {typeof (SetStatement), (v, stm)=>v.VisitSet((SetStatement)stm)},
+                {typeof (UnionStatement), (v, stm)=>v.VisitUnionStatement((UnionStatement)stm)},
+                {typeof (IntersectStatement), (v, stm)=>v.VisitIntersectStatement((IntersectStatement)stm)},
+                {typeof (ExceptStatement), (v, stm)=>v.VisitExceptStatement((ExceptStatement)stm)},
+                {typeof (BeginTransactionStatement), (v, stm)=>v.VisitBeginTransaction((BeginTransactionStatement)stm)},
+                {typeof (CommitTransactionStatement), (v, stm)=>v.VisitCommitTransaction((CommitTransactionStatement)stm)},
+                {typeof (RollbackTransactionStatement), (v, stm)=>v.VisitRollbackTransaction((RollbackTransactionStatement)stm)},
+                {typeof (StatementsStatement), (v, stm)=>v.VisitStatementsStatement((StatementsStatement)stm)},
+                {typeof (SaveTransactionStatement), (v, stm)=>v.VisitSaveTransaction((SaveTransactionStatement)stm)},
+                {typeof (DeclareStatement), (v, stm)=>v.VisitDeclareStatement((DeclareStatement)stm)},
+                {typeof (IfStatement), (v, stm)=>v.VisitIfStatement((IfStatement)stm)},
+                {typeof (CreateTableStatement), (v, stm)=>v.VisitCreateTableStatement((CreateTableStatement)stm)},
+                {typeof (DropTableStatement), (v, stm)=>v.VisitDropTableStatement((DropTableStatement)stm)},
+                {typeof (CreateIndexStatement), (v, stm)=>v.VisitCreateIndexStatement((CreateIndexStatement)stm)},
+                {typeof (AlterIndexStatement), (v, stm)=>v.VisitAlterIndexStatement((AlterIndexStatement)stm)},
+                {typeof (DropIndexStatement), (v, stm)=>v.VisitDropIndexStatement((DropIndexStatement)stm)},
+                {typeof (CommentStatement), (v, stm)=>v.VisitCommentStatement((CommentStatement)stm)},
+                {typeof (StringifyStatement), (v, stm)=>v.VisitStringifyStatement((StringifyStatement)stm)},
+                {typeof (SnippetStatement), (v, stm)=>v.VisitSnippetStatement((SnippetStatement)stm)},
+                {typeof (BreakStatement), (v, stm)=>v.VisitBreakStatement((BreakStatement)stm)},
+                {typeof (ContinueStatement), (v, stm)=>v.VisitContinueStatement((ContinueStatement)stm)},
+                {typeof (GotoStatement), (v, stm)=>v.VisitGotoStatement((GotoStatement)stm)},
+                {typeof (ReturnStatement), (v, stm)=>v.VisitReturnStatement((ReturnStatement)stm)},
+                {typeof (ThrowStatement), (v, stm)=>v.VisitThrowStatement((ThrowStatement)stm)},
+                {typeof (TryCatchStatement), (v, stm)=>v.VisitTryCatchStatement((TryCatchStatement)stm)},
+                {typeof (LabelStatement), (v, stm)=>v.VisitLabelStatement((LabelStatement)stm)},
+                {typeof (WaitforDelayStatement), (v, stm)=>v.VisitWaitforDelayStatement((WaitforDelayStatement)stm)},
+                {typeof (WaitforTimeStatement), (v, stm)=>v.VisitWaitforTimeStatement((WaitforTimeStatement)stm)},
+                {typeof (WhileStatement), (v, stm)=>v.VisitWhileStatement((WhileStatement)stm)},
+                {typeof (CreateViewStatement), (v, stm)=>v.VisitCreateViewStatement((CreateViewStatement)stm)},
+                {typeof (CreateOrAlterViewStatement), (v, stm)=>v.VisitCreateOrAlterViewStatement((CreateOrAlterViewStatement)stm)},
+                {typeof (AlterViewStatement), (v, stm)=>v.VisitAlterViewStatement((AlterViewStatement)stm)},
+                {typeof (DropViewStatement), (v, stm)=>v.VisitDropViewStatement((DropViewStatement)stm)},
+                {typeof (ExecuteStatement), (v, stm)=>v.VisitExecuteStatement((ExecuteStatement)stm)},
             };
 
 

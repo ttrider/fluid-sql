@@ -3,58 +3,58 @@
     internal partial class SqliteVisitor
     {
 
-        protected override void VisitBeginTransaction(BeginTransactionStatement statement, VisitorState state)
+        protected override void VisitBeginTransaction(BeginTransactionStatement statement)
         {
-            state.Write(Symbols.BEGIN);
+            State.Write(Symbols.BEGIN);
             if (statement.Type.HasValue)
             {
                 switch (statement.Type.Value)
                 {
                     case TransactionType.Deferred:
-                        state.Write(Symbols.DEFERRED);
+                        State.Write(Symbols.DEFERRED);
                         break;
                     case TransactionType.Immediate:
-                        state.Write(Symbols.IMMIDIATE);
+                        State.Write(Symbols.IMMIDIATE);
                         break;
                     case TransactionType.Exclusive:
-                        state.Write(Symbols.EXCLUSIVE);
+                        State.Write(Symbols.EXCLUSIVE);
                         break;
                 }
             }
-            state.Write(Symbols.TRANSACTION);
+            State.Write(Symbols.TRANSACTION);
         }
 
-        protected override void VisitSaveTransaction(SaveTransactionStatement statement, VisitorState state)
+        protected override void VisitSaveTransaction(SaveTransactionStatement statement)
         {
-            state.Write(Symbols.SAVEPOINT);
-            VisitTransactionName(statement, state);
+            State.Write(Symbols.SAVEPOINT);
+            VisitTransactionName(statement);
         }
 
-        protected override void VisitRollbackTransaction(RollbackTransactionStatement statement, VisitorState state)
+        protected override void VisitRollbackTransaction(RollbackTransactionStatement statement)
         {
-            state.Write(Symbols.ROLLBACK);
-            state.Write(Symbols.TRANSACTION);
+            State.Write(Symbols.ROLLBACK);
+            State.Write(Symbols.TRANSACTION);
 
             if (statement.Name != null || statement.Parameter != null)
             {
-                state.Write(Symbols.TO);
-                state.Write(Symbols.SAVEPOINT);
-                VisitTransactionName(statement, state);
+                State.Write(Symbols.TO);
+                State.Write(Symbols.SAVEPOINT);
+                VisitTransactionName(statement);
             }
         }
 
-        protected override void VisitCommitTransaction(CommitTransactionStatement statement, VisitorState state)
+        protected override void VisitCommitTransaction(CommitTransactionStatement statement)
         {
             if (statement.Name != null || statement.Parameter != null)
             {
-                state.Write(Symbols.RELEASE);
-                state.Write(Symbols.SAVEPOINT);
-                VisitTransactionName(statement, state);
+                State.Write(Symbols.RELEASE);
+                State.Write(Symbols.SAVEPOINT);
+                VisitTransactionName(statement);
             }
             else
             {
-                state.Write(Symbols.COMMIT);
-                state.Write(Symbols.TRANSACTION);
+                State.Write(Symbols.COMMIT);
+                State.Write(Symbols.TRANSACTION);
             }
         }
     }

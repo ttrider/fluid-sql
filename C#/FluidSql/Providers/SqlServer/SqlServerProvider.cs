@@ -18,7 +18,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected override VisitorState Compile(IStatement statement)
         {
-            return new SqlServerVisitor().Compile(statement, new VisitorState());
+            return new SqlServerVisitor().Compile(statement);
         }
 
         public override IDbConnection GetConnection(string connectionString)

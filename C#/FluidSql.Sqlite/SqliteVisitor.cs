@@ -52,21 +52,21 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         
 
-        protected override void VisitJoinType(Joins join, VisitorState state)
+        protected override void VisitJoinType(Joins join)
         {
             if (join == Joins.RightOuter || join == Joins.FullOuter)
             {
                 throw new NotImplementedException("join "+join+" is not implemented on SQLite");
             }
-            state.Write(JoinStrings[(int)join]);
+            State.Write(JoinStrings[(int)join]);
         }
 
 
-         void VisitType(TypedToken typedToken, VisitorState state)
+         void VisitType(TypedToken typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
-                state.Write(DbTypeStrings[(int)typedToken.DbType]);
+                State.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }
     }
