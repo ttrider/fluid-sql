@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Syntax Diagrams For SQLite.html" />
+    <None Include="FluidSql.Sqlite.licenseheader" />
     <None Include="TTRider.FluidSql.SQLite.nuspec" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>

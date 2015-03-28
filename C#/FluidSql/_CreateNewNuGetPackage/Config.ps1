@@ -16,7 +16,7 @@
 # Specify the Version Number to use for the NuGet package. If not specified, the version number of the assembly being packed will be used.
 # NuGet version number guidance: https://docs.nuget.org/docs/reference/versioning and the Semantic Versioning spec: http://semver.org/
 # e.g. "" (use assembly's version), "1.2.3" (stable version), "1.2.3-alpha" (prerelease version).
-$versionNumber = ""
+$versionNumber = "1.0.0-alpha"
 
 # Specify any Release Notes for this package. 
 # These will only be included in the package if you have a .nuspec file for the project in the same directory as the project file.
@@ -25,8 +25,8 @@ $releaseNotes = ""
 # Specify a specific Configuration and/or Platform to only create a NuGet package when building the project with this Configuration and/or Platform.
 #	e.g. $configuration = "Release"
 #		 $platform = "Any CPU"
-$configuration = ""
-$platform = ""
+$configuration = "Release"
+$platform = "AnyCPU"
 
 # Specify any NuGet Pack Properties to pass to MsBuild.
 #	e.g. $packProperties = "TargetFrameworkVersion=v3.5;Optimize=true"
@@ -47,7 +47,7 @@ $packOptions = ""
 # Specify $true if the generated .nupkg file should be renamed to include the Configuration and Platform that was used to build the project, $false if not.
 #	e.g. If $true, MyProject.1.1.5.6.nupkg might be renamed to MyProject.1.1.5.6.Debug.AnyCPU.nupkg
 #	e.g. If $true, MyProject.1.1.5.6-beta1.nupkg might re renamed to MyProject.1.1.5.6-beta1.Release.x86.nupkg
-$appendConfigurationAndPlatformToNuGetPackageFileName = $true
+$appendConfigurationAndPlatformToNuGetPackageFileName = $false
 
 
 #------------------------------------------------

@@ -143,7 +143,6 @@
     <Compile Include="Statements\TransactionStatement.cs" />
     <Compile Include="Statements\TryCatchStatement.cs" />
     <Compile Include="Tokens\TypedToken.cs" />
-    <Compile Include="Statements\Union.cs" />
     <Compile Include="Statements\UpdateStatement.cs" />
     <Compile Include="Statements\WaitforStatement.cs" />
     <Compile Include="Statements\WhileStatement.cs" />
@@ -152,7 +151,9 @@
   <ItemGroup>
     <None Include="FluidSql.cd" />
     <Compile Include="Providers\Visitor.Statements.cs" />
+    <None Include="FluidSql.licenseheader" />
     <None Include="packages.config" />
+    <None Include="TTRider.FluidSql.dll.nuspec" />
     <None Include="_CreateNewNuGetPackage\Config.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />
