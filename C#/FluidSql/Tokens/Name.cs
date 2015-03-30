@@ -114,7 +114,7 @@ namespace TTRider.FluidSql
 
         public void Add(string item)
         {
-            this.parts.Add(item);
+            this.parts.AddRange(GetParts(item));
         }
 
         public void Add(params string[] names)
@@ -124,20 +124,20 @@ namespace TTRider.FluidSql
 
         public void Add(string name1, Name name2)
         {
-            this.parts.Add(name1);
+            this.parts.AddRange(GetParts(name1));
             this.parts.AddRange(name2.parts);
         }
         public void Add(string name1, string name2, Name name3)
         {
-            this.parts.Add(name1);
-            this.parts.Add(name2);
+            this.parts.AddRange(GetParts(name1));
+            this.parts.AddRange(GetParts(name2));
             this.parts.AddRange(name3.parts);
         }
         public void Add(string name1, string name2, string name3, Name name4)
         {
-            this.parts.Add(name1);
-            this.parts.Add(name2);
-            this.parts.Add(name3);
+            this.parts.AddRange(GetParts(name1));
+            this.parts.AddRange(GetParts(name2));
+            this.parts.AddRange(GetParts(name3));
             this.parts.AddRange(name4.parts);
         }
         public void Add(Name name, params string[] names)

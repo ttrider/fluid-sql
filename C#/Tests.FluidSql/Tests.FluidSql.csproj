@@ -58,6 +58,7 @@
     <Compile Include="Select.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Create.cs" />
+    <Compile Include="NameTests.cs" />
     <Compile Include="Update.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

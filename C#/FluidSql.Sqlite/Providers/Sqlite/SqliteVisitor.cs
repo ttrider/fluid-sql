@@ -5,6 +5,7 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 using System;
+using TTRider.FluidSql.Statements;
 
 namespace TTRider.FluidSql.Providers.Sqlite
 {
@@ -74,5 +75,28 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }
+
+         protected override void VisitStatement(IStatement statement)
+         {
+             if (statement is VacuumStatement)
+             {
+                 VisitVacuumStatement((VacuumStatement)statement);
+                 return;
+             }
+             base.VisitStatement(statement);
+         }
+
+
+        void VisitVacuumStatement(VacuumStatement statement)
+        {
+            State.Write(SqliteSymbols.VACUUM);
+        }
+
+
+        protected class SqliteSymbols : Symbols
+        {
+            public const string VACUUM = "VACUUM";
+        }
+    
     }
 }

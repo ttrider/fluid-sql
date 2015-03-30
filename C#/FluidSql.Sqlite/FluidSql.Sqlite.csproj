@@ -7,7 +7,7 @@
     <ProjectGuid>{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TTRider.FluidSql.Providers.Sqlite</RootNamespace>
+    <RootNamespace>TTRider.FluidSql</RootNamespace>
     <AssemblyName>TTRider.FluidSql.Sqlite</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,11 +47,13 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqliteVisitor.DMLStatements.cs" />
-    <Compile Include="SqliteProvider.cs" />
-    <Compile Include="SqliteVisitor.cs" />
-    <Compile Include="SqliteVisitor.DDLStatements.cs" />
-    <Compile Include="SqliteVisitor.Transaction.cs" />
+    <Compile Include="Sqlite.cs" />
+    <Compile Include="Providers\Sqlite\SqliteVisitor.DMLStatements.cs" />
+    <Compile Include="Providers\Sqlite\SqliteProvider.cs" />
+    <Compile Include="Providers\Sqlite\SqliteVisitor.cs" />
+    <Compile Include="Providers\Sqlite\SqliteVisitor.DDLStatements.cs" />
+    <Compile Include="Providers\Sqlite\SqliteVisitor.Transaction.cs" />
+    <Compile Include="Statements\VacuumStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluidSql\FluidSql.csproj">
@@ -60,7 +62,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Syntax Diagrams For SQLite.html" />
     <None Include="FluidSql.Sqlite.licenseheader" />
     <None Include="TTRider.FluidSql.SQLite.nuspec" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
