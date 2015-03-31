@@ -113,6 +113,16 @@ namespace FluidSqlTests
             Assert.AreEqual("SET @Foo = N'bar';", command.CommandText);
         }
         [TestMethod]
+        public void SelectFunction()
+        {
+            var statement = Sql.Select.Output(Sql.Function("GETUTCDATE").As("Foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT  GETUTCDATE() AS [Foo];", command.CommandText);
+        }
+        [TestMethod]
         public void SetPlus()
         {
             var statement = Sql.PlusSet(Sql.Name("@Foo"), Sql.Scalar(10));

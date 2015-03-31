@@ -11,4 +11,5 @@ namespace TTRider.FluidSql
 
         public IStatement DefinitionQuery { get; set; }
     }
+
 }

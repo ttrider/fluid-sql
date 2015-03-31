@@ -552,7 +552,6 @@ namespace TTRider.FluidSql
                 DefinitionStatement = definitionStatement
             };
         }
-
         public static DropViewStatement DropView(Name name)
         {
             return new DropViewStatement { Name = name};

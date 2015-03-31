@@ -1392,8 +1392,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             var value = ((Function)token);
             state.Buffer.Append(" ");
             state.Buffer.Append(value.Name);
-
-            VisitTokenSet("(", ", ", ")", value.Arguments, false, state);
+            state.Buffer.Append("(");
+            VisitTokenSet("", ", ", "", value.Arguments, false, state);
+            state.Buffer.Append(")");
         }
 
         private static void VisitBinaryToken(Token token, VisitorState state, string operation)

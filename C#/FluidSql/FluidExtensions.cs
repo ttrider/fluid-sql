@@ -1302,6 +1302,11 @@ namespace TTRider.FluidSql
             column.DefaultValue = value;
             return column;
         }
+        public static TableColumn Default(this TableColumn column, Function value)
+        {
+            column.DefaultValue = value;
+            return column;
+        }
 
         public static TableColumn Sparse(this TableColumn column)
         {
