@@ -33,9 +33,4 @@ namespace TTRider.FluidSql
             }
         }
     }
-
-    public class AliasedToken : Token
-    {
-        public string Alias { get; set; }
-    }
 }

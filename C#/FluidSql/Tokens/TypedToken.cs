@@ -11,7 +11,7 @@ using TTRider.FluidSql.Providers.SqlServer;
 
 namespace TTRider.FluidSql
 {
-    public class TypedToken : AliasedToken
+    public class TypedToken : ExpressionToken
     {
         public TypedToken(string name, SqlDbType sqlDbType, byte precision, byte scale)
             : this(name, sqlDbType)

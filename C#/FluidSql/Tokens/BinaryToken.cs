@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class BinaryToken : AliasedToken
+    public class BinaryToken : ExpressionToken
     {
         public Token First { get; set; }
         public Token Second { get; set; }
@@ -120,7 +120,7 @@ namespace TTRider.FluidSql
         }
     }
 
-    public class UnaryToken : Token
+    public class UnaryToken : ExpressionToken
     {
         public Token Token { get; set; }
     }
@@ -153,14 +153,14 @@ namespace TTRider.FluidSql
     {
     }
 
-    public class BetweenToken : Token
+    public class BetweenToken : ExpressionToken
     {
         public Token Token { get; set; }
         public Token First { get; set; }
         public Token Second { get; set; }
     };
 
-    public class InToken : Token
+    public class InToken : ExpressionToken
     {
         public InToken()
         {
@@ -171,7 +171,7 @@ namespace TTRider.FluidSql
         public List<Token> Set { get; private set; }
     };
 
-    public class NotInToken : Token
+    public class NotInToken : ExpressionToken
     {
         public NotInToken()
         {

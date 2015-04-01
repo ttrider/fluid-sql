@@ -4,11 +4,11 @@
 // <copyright company="TTRider, L.L.C.">
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
-
 namespace TTRider.FluidSql
 {
-    public class Scalar : ExpressionToken
+    public class ExpressionToken : Token
+        , IAliasToken
     {
-        public object Value { get; set; }
+        public string Alias { get; set; }
     }
 }

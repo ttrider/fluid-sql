@@ -46,6 +46,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Interfaces\IAliasToken.cs" />
     <Compile Include="Interfaces\ICTEStatement.cs" />
     <Compile Include="Interfaces\IOnConflict.cs" />
     <Compile Include="Statements\CorrelationStatement.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />
+    <Compile Include="Tokens\ExpressionToken.cs" />
     <Compile Include="Tokens\WhenMatchedToken.cs" />
     <Compile Include="Tokens\WhenMatchedTokenThenDeleteToken.cs" />
     <Compile Include="Tokens\WhenMatchedTokenThenUpdateSetToken.cs" />

@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace TTRider.FluidSql
 {
-    public class Name : AliasedToken
+    public class Name : ExpressionToken
                       , IList<string>
     {
         private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|(\`(?<name>[^\`]*)`\.?)|(\""(?<name>[^\""]*)""\.?)|((?<name>[^\.]*)\.?)", RegexOptions.Compiled);

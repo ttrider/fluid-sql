@@ -175,10 +175,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             State.Write(Symbols.USING);
             VisitToken(statement.Using);
-            if (!string.IsNullOrWhiteSpace(statement.Using.Alias))
+
+            if ((statement.Using is IAliasToken) && !string.IsNullOrWhiteSpace(((IAliasToken)(statement.Using)).Alias))
             {
                 State.Write(Symbols.AS);
-                State.Write(this.IdentifierOpenQuote, statement.Using.Alias, this.IdentifierCloseQuote);
+                State.Write(this.IdentifierOpenQuote, ((IAliasToken)(statement.Using)).Alias, this.IdentifierCloseQuote);
             }
 
             State.Write(Symbols.ON);
@@ -356,11 +357,15 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (statement.Joins.Count > 0)
             {
-                if (!string.IsNullOrWhiteSpace(statement.From.Alias))
+                if (statement.From is IAliasToken)
                 {
-                    State.Write(this.IdentifierOpenQuote, statement.From.Alias, this.IdentifierCloseQuote);
-                }
+                    var alias = ((IAliasToken) (statement.From)).Alias;
 
+                    if (!string.IsNullOrWhiteSpace(alias))
+                    {
+                        State.Write(this.IdentifierOpenQuote, alias, this.IdentifierCloseQuote);
+                    }
+                }
                 VisitOutput(statement.Output, statement.OutputInto);
 
                 VisitFromToken(statement.From);
@@ -1045,7 +1050,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         #endregion Statements
 
-        private void VisitOutput(IEnumerable<AliasedToken> columns, Name outputInto)
+        private void VisitOutput(IEnumerable<ExpressionToken> columns, Name outputInto)
         {
             VisitAliasedTokenSet(columns, Symbols.OUTPUT, Symbols.Comma, null);
             if (outputInto != null)

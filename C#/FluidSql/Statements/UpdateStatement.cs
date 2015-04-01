@@ -27,7 +27,7 @@ namespace TTRider.FluidSql
         }
 
         public Name Target { get; set; }
-        public AliasedToken From { get; set; }
+        public Token From { get; set; }
         public List<Join> Joins { get; private set; }
         public IList<BinaryEqualToken> Set { get; private set; }
         public Top Top { get; set; }

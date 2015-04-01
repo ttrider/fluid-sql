@@ -54,12 +54,12 @@ namespace TTRider.FluidSql.Providers
                 // todo check for statement
                 TokenVisitors[token.GetType()](this, token);
             }
-            if (includeAlias && token is AliasedToken)
+            if (includeAlias && token is IAliasToken)
             {
-                if (!string.IsNullOrWhiteSpace(((AliasedToken)token).Alias))
+                if (!string.IsNullOrWhiteSpace(((IAliasToken)token).Alias))
                 {
                     State.Write(Symbols.AS);
-                    State.Write(this.IdentifierOpenQuote, ((AliasedToken)token).Alias, this.IdentifierCloseQuote);
+                    State.Write(this.IdentifierOpenQuote, ((IAliasToken)token).Alias, this.IdentifierCloseQuote);
                 }
             }
 
@@ -123,7 +123,7 @@ namespace TTRider.FluidSql.Providers
             return false;
         }
 
-        protected virtual void VisitAliasedTokenSet(IEnumerable<AliasedToken> tokens, string prefix,
+        protected virtual void VisitAliasedTokenSet(IEnumerable<Token> tokens, string prefix,
             string separator, string suffix)
         {
             if (tokens != null)

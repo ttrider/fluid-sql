@@ -26,7 +26,7 @@ namespace TTRider.FluidSql
 
         public Top Top { get; set; }
         public Name Into { get; set; }
-        public AliasedToken Using { get; set; }
+        public Token Using { get; set; }
         public Token On { get; set; }
 
         public List<WhenMatchedToken> WhenMatched { get; private set; }

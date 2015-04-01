@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class Function : AliasedToken
+    public class Function : ExpressionToken
     {
         public Function()
         {

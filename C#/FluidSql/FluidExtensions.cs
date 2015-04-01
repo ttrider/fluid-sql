@@ -36,7 +36,7 @@ namespace TTRider.FluidSql
         }
 
         public static T As<T>(this T token, string alias)
-            where T : AliasedToken
+            where T : IAliasToken
         {
             token.Alias = alias;
             return token;
@@ -56,13 +56,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, params AliasedToken[] columns)
+        public static SelectStatement Output(this SelectStatement statement, params ExpressionToken[] columns)
         {
             statement.Output.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, IEnumerable<AliasedToken> columns)
+        public static SelectStatement Output(this SelectStatement statement, IEnumerable<ExpressionToken> columns)
         {
             if (columns != null)
             {
@@ -286,7 +286,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement From(this SelectStatement statement, AliasedToken token)
+        public static SelectStatement From(this SelectStatement statement, Token token)
         {
             statement.From.Add(token);
             return statement;
@@ -299,7 +299,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T From<T>(this T statement, AliasedToken token)
+        public static T From<T>(this T statement, Token token)
             where T : IFromStatement
         {
             statement.From = token;
@@ -307,14 +307,12 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token, string alias = null)
         {
-            statement.Using = token;
-            statement.Using.Alias = alias;
+            statement.Using = token.As(alias);
             return statement;
         }
         public static MergeStatement Using(this MergeStatement statement, Name token, string alias = null)
         {
-            statement.Using = token;
-            statement.Using.Alias = alias;
+            statement.Using = token.As(alias);
             return statement;
         }
         public static MergeStatement On(this MergeStatement statement, Token token)
@@ -1384,6 +1382,11 @@ namespace TTRider.FluidSql
         }
 
         public static TableColumn Default(this TableColumn column, Scalar value)
+        {
+            column.DefaultValue = value;
+            return column;
+        }
+        public static TableColumn Default(this TableColumn column, Function value)
         {
             column.DefaultValue = value;
             return column;

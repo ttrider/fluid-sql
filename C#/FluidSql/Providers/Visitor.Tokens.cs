@@ -288,12 +288,12 @@ namespace TTRider.FluidSql.Providers
             VisitToken(token.Content);
             State.Write(this.CommentCloseQuote);
         }
-        protected virtual void VisitFromToken(IEnumerable<AliasedToken> recordsets)
+        protected virtual void VisitFromToken(IEnumerable<Token> recordsets)
         {
             VisitAliasedTokenSet(recordsets, Symbols.FROM, Symbols.Comma, null);
         }
 
-        protected virtual void VisitFromToken(AliasedToken recordset)
+        protected virtual void VisitFromToken(Token recordset)
         {
             if (recordset != null)
             {
