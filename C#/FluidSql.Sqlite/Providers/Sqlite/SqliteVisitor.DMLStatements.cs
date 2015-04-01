@@ -56,17 +56,10 @@ namespace TTRider.FluidSql.Providers.Sqlite
             if (statement.Top != null)
             {
                 State.Write(Symbols.LIMIT);
-                if (statement.Top.Value.HasValue)
+
+                if (statement.Top.Value != null)
                 {
-                    State.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (statement.Top.Parameters.Count > 0)
-                {
-                    foreach (var parameter in statement.Top.Parameters)
-                    {
-                        State.Parameters.Add(parameter);
-                    }
-                    State.Write(statement.Top.Parameters[0].Name);
+                    VisitToken(statement.Top.Value);
                 }
             }
 
@@ -92,17 +85,9 @@ namespace TTRider.FluidSql.Providers.Sqlite
             if (statement.Top != null)
             {
                 State.Write(Symbols.LIMIT);
-                if (statement.Top.Value.HasValue)
+                if (statement.Top.Value != null)
                 {
-                    State.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (statement.Top.Parameters.Count > 0)
-                {
-                    foreach (var parameter in statement.Top.Parameters)
-                    {
-                        State.Parameters.Add(parameter);
-                    }
-                    State.Write(statement.Top.Parameters[0].Name);
+                    VisitToken(statement.Top.Value);
                 }
             }
 

@@ -321,17 +321,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.ROWS);
                 State.Write(Symbols.FETCH);
                 State.Write(Symbols.NEXT);
-                if (statement.Top.Value.HasValue)
+                if (statement.Top.Value!=null)
                 {
-                    State.Write(statement.Top.Value.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (statement.Top.Parameters.Count > 0)
-                {
-                    foreach (var parameter in statement.Top.Parameters)
-                    {
-                        State.Parameters.Add(parameter);
-                    }
-                    State.Write(statement.Top.Parameters[0].Name);
+                    VisitToken(statement.Top.Value);
                 }
                 State.Write(Symbols.ROWS);
                 State.Write(Symbols.ONLY);
@@ -1067,17 +1059,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 State.Write(Symbols.TOP);
                 State.Write(Symbols.OpenParenthesis);
-                if (top.Value.HasValue)
+                if (top.Value != null)
                 {
-                    State.Write(top.Value.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (top.Parameters.Count > 0)
-                {
-                    foreach (var parameter in top.Parameters)
-                    {
-                        State.Parameters.Add(parameter);
-                    }
-                    State.Write(top.Parameters[0].Name);
+                    VisitToken(top.Value);
                 }
                 State.Write(Symbols.CloseParenthesis);
 

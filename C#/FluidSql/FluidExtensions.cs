@@ -1958,7 +1958,7 @@ namespace TTRider.FluidSql
 
             return statement;
         }
-        public static SelectStatement Top(this SelectStatement statement, string value, bool percent, bool withTies = false)
+        public static SelectStatement Top(this SelectStatement statement, Parameter value, bool percent, bool withTies = false)
         {
             statement.Top = new Top(value, percent, withTies);
 
@@ -1972,7 +1972,7 @@ namespace TTRider.FluidSql
 
             return statement;
         }
-        public static T Top<T>(this T statement, string value, bool percent = false)
+        public static T Top<T>(this T statement, Parameter value, bool percent = false)
             where T : ITopStatement
         {
             statement.Top = new Top(value, percent, false);
