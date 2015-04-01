@@ -11,8 +11,8 @@ namespace TTRider.FluidSql
 {
     public class BinaryToken : ExpressionToken
     {
-        public Token First { get; set; }
-        public Token Second { get; set; }
+        public ExpressionToken First { get; set; }
+        public ExpressionToken Second { get; set; }
     }
 
     public class BinaryEqualToken : BinaryToken
@@ -155,9 +155,9 @@ namespace TTRider.FluidSql
 
     public class BetweenToken : ExpressionToken
     {
-        public Token Token { get; set; }
-        public Token First { get; set; }
-        public Token Second { get; set; }
+        public ExpressionToken Token { get; set; }
+        public ExpressionToken First { get; set; }
+        public ExpressionToken Second { get; set; }
     };
 
     public class InToken : ExpressionToken

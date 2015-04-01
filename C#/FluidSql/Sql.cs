@@ -82,37 +82,37 @@ namespace TTRider.FluidSql
         }
 
 
-        public static Token Group(Token value)
+        public static GroupToken Group(Token value)
         {
             return new GroupToken {Token = value};
         }
 
-        public static Token Exists(Token value)
+        public static ExistsToken Exists(Token value)
         {
             return new ExistsToken {Token = value};
         }
 
-        public static Token NotExists(Token value)
+        public static NotToken NotExists(Token value)
         {
             return new ExistsToken {Token = value}.Not();
         }
 
-        public static Token Not(Token value)
+        public static NotToken Not(Token value)
         {
             return value.Not();
         }
 
-        public static Token All(SelectStatement subQuery)
+        public static AllToken All(SelectStatement subQuery)
         {
             return new AllToken {Token = subQuery};
         }
 
-        public static Token Any(SelectStatement subQuery)
+        public static AnyToken Any(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }
 
-        public static Token Some(SelectStatement subQuery)
+        public static AnyToken Some(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }
@@ -207,7 +207,7 @@ namespace TTRider.FluidSql
             }.Rebuild();
         }
 
-        public static SetStatement Assign(Name target, Token expression)
+        public static SetStatement Assign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -215,7 +215,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement PlusAssign(Name target, Token expression)
+        public static SetStatement PlusAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -223,7 +223,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MinusAssign(Name target, Token expression)
+        public static SetStatement MinusAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -231,7 +231,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement DivideAssign(Name target, Token expression)
+        public static SetStatement DivideAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -239,7 +239,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseAndAssign(Name target, Token expression)
+        public static SetStatement BitwiseAndAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -247,7 +247,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseOrAssign(Name target, Token expression)
+        public static SetStatement BitwiseOrAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -255,7 +255,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseXorAssign(Name target, Token expression)
+        public static SetStatement BitwiseXorAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -263,7 +263,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotAssign(Name target, Token expression)
+        public static SetStatement BitwiseNotAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -271,7 +271,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement ModuloAssign(Name target, Token expression)
+        public static SetStatement ModuloAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -279,7 +279,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MultiplyAssign(Name target, Token expression)
+        public static SetStatement MultiplyAssign(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -287,7 +287,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement Set(Name target, Token expression)
+        public static SetStatement Set(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -295,7 +295,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement PlusSet(Name target, Token expression)
+        public static SetStatement PlusSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -303,7 +303,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MinusSet(Name target, Token expression)
+        public static SetStatement MinusSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -311,7 +311,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement DivideSet(Name target, Token expression)
+        public static SetStatement DivideSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -319,7 +319,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseAndSet(Name target, Token expression)
+        public static SetStatement BitwiseAndSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -327,7 +327,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseOrSet(Name target, Token expression)
+        public static SetStatement BitwiseOrSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -335,7 +335,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseXorSet(Name target, Token expression)
+        public static SetStatement BitwiseXorSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -343,7 +343,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotSet(Name target, Token expression)
+        public static SetStatement BitwiseNotSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -351,7 +351,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement ModuloSet(Name target, Token expression)
+        public static SetStatement ModuloSet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -359,7 +359,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MultiplySet(Name target, Token expression)
+        public static SetStatement MultiplySet(Name target, ExpressionToken expression)
         {
             return new SetStatement
             {
