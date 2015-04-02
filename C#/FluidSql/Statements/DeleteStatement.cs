@@ -23,9 +23,9 @@ namespace TTRider.FluidSql
             this.Joins = new List<Join>();
             this.OrderBy = new List<Order>();
             this.CommonTableExpressions = new List<CTEDefinition>();
-        }
+        }   
 
-        public Token From { get; set; }
+        public RecordsetSourceToken RecordsetSource { get; set; }
         public List<Join> Joins { get; private set; }
         public Top Top { get; set; }
         public Token Where { get; set; }

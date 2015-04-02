@@ -9,6 +9,6 @@ namespace TTRider.FluidSql
 {
     public interface IFromStatement
     {
-        Token From { get; set; }
+        RecordsetSourceToken RecordsetSource { get; set; }
     }
 }

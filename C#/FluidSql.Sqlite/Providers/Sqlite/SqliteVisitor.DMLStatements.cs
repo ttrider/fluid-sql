@@ -41,7 +41,11 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
 
 
-            VisitFromToken(statement.From);
+            if (statement.From.Count > 0)
+            {
+                State.Write(Symbols.FROM);
+                VisitFromToken(statement.From);
+            }
 
             VisitJoin(statement.Joins);
 
@@ -75,8 +79,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
             VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
             State.Write(Symbols.DELETE);
-
-            VisitFromToken(statement.From);
+            State.Write(Symbols.FROM);
+            VisitFromToken(statement.RecordsetSource);
 
             VisitWhereToken(statement.Where);
 

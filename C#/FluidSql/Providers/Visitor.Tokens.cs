@@ -290,21 +290,27 @@ namespace TTRider.FluidSql.Providers
         }
         protected virtual void VisitFromToken(IEnumerable<Token> recordsets)
         {
-            VisitAliasedTokenSet(recordsets, Symbols.FROM, Symbols.Comma, null);
+            VisitTokenSet(recordsets);
         }
 
-        protected virtual void VisitFromToken(Token recordset)
+        protected virtual void VisitFromToken(RecordsetSourceToken recordset)
         {
             if (recordset != null)
             {
-                State.Write(Symbols.FROM);
-                VisitToken(recordset, true);
+                VisitToken(recordset.Source);
+
+                if (!string.IsNullOrWhiteSpace(recordset.Alias))
+                {
+                    State.Write(Symbols.AS);
+                    State.Write(this.IdentifierOpenQuote, recordset.Alias, this.IdentifierCloseQuote);
+                }
+
             }
         }
 
         protected virtual void VisitGroupByToken(ICollection<Name> groupBy)
         {
-            VisitTokenSet(groupBy, ()=>State.Write(Symbols.GROUP_BY));
+            VisitTokenSet(groupBy, () => State.Write(Symbols.GROUP_BY));
         }
 
         protected virtual void VisitHavingToken(Token whereToken)
@@ -327,7 +333,7 @@ namespace TTRider.FluidSql.Providers
         {
             if (orderBy != null)
             {
-                VisitTokenSet(orderBy, ()=>State.Write(Symbols.ORDER_BY));
+                VisitTokenSet(orderBy, () => State.Write(Symbols.ORDER_BY));
             }
         }
 
@@ -375,8 +381,8 @@ namespace TTRider.FluidSql.Providers
                 foreach (var join in list)
                 {
                     VisitJoinType(join.Type);
-                    
-                    VisitToken(@join.Source, true);
+
+                    VisitFromToken(join.Source);
 
                     if (join.On != null)
                     {

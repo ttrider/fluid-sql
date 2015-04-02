@@ -38,7 +38,10 @@ namespace TTRider.FluidSql
         public static T As<T>(this T token, string alias)
             where T : IAliasToken
         {
-            token.Alias = alias;
+            if (!string.IsNullOrWhiteSpace(alias))
+            {
+                token.Alias = alias;
+            }
             return token;
         }
 
@@ -282,27 +285,27 @@ namespace TTRider.FluidSql
 
         public static SelectStatement From(this SelectStatement statement, string name, string alias = null)
         {
-            statement.From.Add(Sql.Name(name).As(alias));
+            statement.From.Add(new RecordsetSourceToken { Source = Sql.Name(name), Alias = alias });
             return statement;
         }
 
-        public static SelectStatement From(this SelectStatement statement, Token token)
+        public static SelectStatement From(this SelectStatement statement, RecordsetSourceToken token, string alias = null)
         {
-            statement.From.Add(token);
+            statement.From.Add(token.As(alias));
             return statement;
         }
 
         public static T From<T>(this T statement, string name, string alias = null)
             where T : IFromStatement
         {
-            statement.From = Sql.Name(name).As(alias);
+            statement.RecordsetSource = new RecordsetSourceToken { Source = Sql.Name(name), Alias = alias };
             return statement;
         }
 
         public static T From<T>(this T statement, Token token)
             where T : IFromStatement
         {
-            statement.From = token;
+            statement.RecordsetSource = new RecordsetSourceToken { Source = token };
             return statement;
         }
         public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token, string alias = null)
@@ -604,7 +607,7 @@ namespace TTRider.FluidSql
         public static SelectStatement WrapAsSelect(this RecordsetStatement statement, string alias)
         {
             return new SelectStatement()
-                .From(statement.As(alias))
+                .From(statement,alias)
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
@@ -613,7 +616,7 @@ namespace TTRider.FluidSql
                     .Select(name => Sql.Name(alias, name)));
         }
 
-        public static T InnerJoin<T>(this T statement, Token source, Token on)
+        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
@@ -624,8 +627,19 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
+        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            statement.Joins.Add(new Join
+            {
+                Type = Joins.Inner,
+                Source = source.As(alias),
+                On = on
+            });
+            return statement;
+        }
 
-        public static T LeftOuterJoin<T>(this T statement, Token source, Token on)
+        public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
@@ -636,8 +650,19 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
+        public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            statement.Joins.Add(new Join
+            {
+                Type = Joins.LeftOuter,
+                Source = source.As(alias),
+                On = on
+            });
+            return statement;
+        }
 
-        public static T RightOuterJoin<T>(this T statement, Token source, Token on)
+        public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
@@ -648,8 +673,19 @@ namespace TTRider.FluidSql
             });
             return statement;
         }
+        public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            statement.Joins.Add(new Join
+            {
+                Type = Joins.RightOuter,
+                Source = source.As(alias),
+                On = on
+            });
+            return statement;
+        }
 
-        public static T FullOuterJoin<T>(this T statement, Token source, Token on)
+        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
@@ -661,13 +697,35 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T CrossJoin<T>(this T statement, Token source)
+        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            statement.Joins.Add(new Join
+            {
+                Type = Joins.FullOuter,
+                Source = source.As(alias),
+                On = on
+            });
+            return statement;
+        }
+
+        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
                 Type = Joins.Cross,
                 Source = source,
+            });
+            return statement;
+        }
+        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source, string alias)
+            where T : IJoinStatement
+        {
+            statement.Joins.Add(new Join
+            {
+                Type = Joins.Cross,
+                Source = source.As(alias),
             });
             return statement;
         }
@@ -686,143 +744,143 @@ namespace TTRider.FluidSql
         }
 
 
-        public static IsEqualsToken IsEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken IsEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new IsEqualsToken { First = first, Second = second };
         }
 
-        public static NotEqualToken NotEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken NotEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new NotEqualToken { First = first, Second = second };
         }
 
-        public static LessToken Less(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Less(this ExpressionToken first, ExpressionToken second)
         {
             return new LessToken { First = first, Second = second };
         }
 
-        public static NotLessToken NotLess(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken NotLess(this ExpressionToken first, ExpressionToken second)
         {
             return new NotLessToken { First = first, Second = second };
         }
 
-        public static LessOrEqualToken LessOrEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken LessOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new LessOrEqualToken { First = first, Second = second };
         }
 
-        public static GreaterToken Greater(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Greater(this ExpressionToken first, ExpressionToken second)
         {
             return new GreaterToken { First = first, Second = second };
         }
 
-        public static NotGreaterToken NotGreater(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken NotGreater(this ExpressionToken first, ExpressionToken second)
         {
             return new NotGreaterToken { First = first, Second = second };
         }
 
-        public static GreaterOrEqualToken GreaterOrEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken GreaterOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new GreaterOrEqualToken { First = first, Second = second };
         }
 
-        public static AndToken And(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken And(this ExpressionToken first, ExpressionToken second)
         {
             return new AndToken { First = first, Second = second };
         }
 
-        public static OrToken Or(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Or(this ExpressionToken first, ExpressionToken second)
         {
             return new OrToken { First = first, Second = second };
         }
 
-        public static PlusToken PlusEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken PlusEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new PlusToken { First = first, Second = second, Equal = true };
         }
 
-        public static MinusToken MinusEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken MinusEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new MinusToken { First = first, Second = second, Equal = true };
         }
 
-        public static DivideToken DivideEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken DivideEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new DivideToken { First = first, Second = second, Equal = true };
         }
 
-        public static BitwiseAndToken BitwiseAndEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseAndEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseAndToken { First = first, Second = second, Equal = true };
         }
 
-        public static BitwiseOrToken BitwiseOrEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseOrToken { First = first, Second = second, Equal = true };
         }
 
-        public static BitwiseXorToken BitwiseXorEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseXorEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
 
-        public static BitwiseNotToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseNotToken { First = first, Second = second, Equal = true };
         }
 
-        public static ModuloToken ModuloEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken ModuloEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new ModuloToken { First = first, Second = second, Equal = true };
         }
 
-        public static MultiplyToken MultiplyEqual(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken MultiplyEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new MultiplyToken { First = first, Second = second, Equal = true };
         }
 
-        public static PlusToken Plus(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Plus(this ExpressionToken first, ExpressionToken second)
         {
             return new PlusToken { First = first, Second = second };
         }
 
-        public static MinusToken Minus(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Minus(this ExpressionToken first, ExpressionToken second)
         {
             return new MinusToken { First = first, Second = second };
         }
 
-        public static DivideToken Divide(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Divide(this ExpressionToken first, ExpressionToken second)
         {
             return new DivideToken { First = first, Second = second };
         }
 
-        public static BitwiseAndToken BitwiseAnd(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseAnd(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseAndToken { First = first, Second = second };
         }
 
-        public static BitwiseOrToken BitwiseOr(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseOr(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseOrToken { First = first, Second = second };
         }
 
-        public static BitwiseXorToken BitwiseXor(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseXor(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseXorToken { First = first, Second = second };
         }
 
-        public static BitwiseNotToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseNotToken { First = first, Second = second };
         }
 
         [Obsolete]
-        public static ModuloToken Module(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Module(this ExpressionToken first, ExpressionToken second)
         {
             return new ModuloToken { First = first, Second = second };
         }
 
-        public static ModuloToken Modulo(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Modulo(this ExpressionToken first, ExpressionToken second)
         {
             return new ModuloToken { First = first, Second = second };
         }
@@ -833,142 +891,142 @@ namespace TTRider.FluidSql
         }
 
 
-        public static IsEqualsToken IsEqual(this ExpressionToken first, string second)
+        public static ExpressionToken IsEqual(this ExpressionToken first, string second)
         {
             return new IsEqualsToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static NotEqualToken NotEqual(this ExpressionToken first, string second)
+        public static ExpressionToken NotEqual(this ExpressionToken first, string second)
         {
             return new NotEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static LessToken Less(this ExpressionToken first, string second)
+        public static ExpressionToken Less(this ExpressionToken first, string second)
         {
             return new LessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static NotLessToken NotLess(this ExpressionToken first, string second)
+        public static ExpressionToken NotLess(this ExpressionToken first, string second)
         {
             return new NotLessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static LessOrEqualToken LessOrEqual(this ExpressionToken first, string second)
+        public static ExpressionToken LessOrEqual(this ExpressionToken first, string second)
         {
             return new LessOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static GreaterToken Greater(this ExpressionToken first, string second)
+        public static ExpressionToken Greater(this ExpressionToken first, string second)
         {
             return new GreaterToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static NotGreaterToken NotGreater(this ExpressionToken first, string second)
+        public static ExpressionToken NotGreater(this ExpressionToken first, string second)
         {
             return new NotGreaterToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static GreaterOrEqualToken GreaterOrEqual(this ExpressionToken first, string second)
+        public static ExpressionToken GreaterOrEqual(this ExpressionToken first, string second)
         {
             return new GreaterOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static AndToken And(this ExpressionToken first, string second)
+        public static ExpressionToken And(this ExpressionToken first, string second)
         {
             return new AndToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static OrToken Or(this ExpressionToken first, string second)
+        public static ExpressionToken Or(this ExpressionToken first, string second)
         {
             return new OrToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static PlusToken PlusEqual(this ExpressionToken first, string second)
+        public static ExpressionToken PlusEqual(this ExpressionToken first, string second)
         {
             return new PlusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static MinusToken MinusEqual(this ExpressionToken first, string second)
+        public static ExpressionToken MinusEqual(this ExpressionToken first, string second)
         {
             return new MinusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static DivideToken DivideEqual(this ExpressionToken first, string second)
+        public static ExpressionToken DivideEqual(this ExpressionToken first, string second)
         {
             return new DivideToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static BitwiseAndToken BitwiseAndEqual(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseAndEqual(this ExpressionToken first, string second)
         {
             return new BitwiseAndToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token BitwiseOrEqual(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseOrEqual(this ExpressionToken first, string second)
         {
             return new BitwiseOrToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static BitwiseXorToken BitwiseXorEqual(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseXorEqual(this ExpressionToken first, string second)
         {
             return new BitwiseXorToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static BitwiseNotToken BitwiseNotEqual(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
         {
             return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token ModuloEqual(this ExpressionToken first, string second)
+        public static ExpressionToken ModuloEqual(this ExpressionToken first, string second)
         {
             return new ModuloToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static MultiplyToken MultiplyEqual(this ExpressionToken first, string second)
+        public static ExpressionToken MultiplyEqual(this ExpressionToken first, string second)
         {
             return new MultiplyToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static PlusToken Plus(this ExpressionToken first, string second)
+        public static ExpressionToken Plus(this ExpressionToken first, string second)
         {
             return new PlusToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static MinusToken Minus(this ExpressionToken first, string second)
+        public static ExpressionToken Minus(this ExpressionToken first, string second)
         {
             return new MinusToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static DivideToken Divide(this ExpressionToken first, string second)
+        public static ExpressionToken Divide(this ExpressionToken first, string second)
         {
             return new DivideToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static BitwiseAndToken BitwiseAnd(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseAnd(this ExpressionToken first, string second)
         {
             return new BitwiseAndToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static BitwiseOrToken BitwiseOr(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseOr(this ExpressionToken first, string second)
         {
             return new BitwiseOrToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static BitwiseXorToken BitwiseXor(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseXor(this ExpressionToken first, string second)
         {
             return new BitwiseXorToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static BitwiseNotToken BitwiseNot(this ExpressionToken first, string second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
         {
             return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static ModuloToken Modulo(this ExpressionToken first, string second)
+        public static ExpressionToken Modulo(this ExpressionToken first, string second)
         {
             return new ModuloToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static MultiplyToken Multiply(this ExpressionToken first, string second)
+        public static ExpressionToken Multiply(this ExpressionToken first, string second)
         {
             return new MultiplyToken { First = first, Second = Sql.Name(second) };
         }
@@ -978,17 +1036,17 @@ namespace TTRider.FluidSql
             return new GroupToken { Token = token };
         }
 
-        public static NotToken Not(this Token token)
+        public static ExpressionToken Not(this ExpressionToken token)
         {
             return new NotToken { Token = token };
         }
 
-        public static IsNullToken IsNull(this Token token)
+        public static ExpressionToken IsNull(this ExpressionToken token)
         {
             return new IsNullToken { Token = token };
         }
 
-        public static IsNotNullToken IsNotNull(this Token token)
+        public static ExpressionToken IsNotNull(this ExpressionToken token)
         {
             return new IsNotNullToken { Token = token };
         }
@@ -998,21 +1056,21 @@ namespace TTRider.FluidSql
             return new BetweenToken { Token = token, First = first, Second = second };
         }
 
-        public static InToken In(this Token token, params Token[] tokens)
+        public static ExpressionToken In(this ExpressionToken token, params ExpressionToken[] tokens)
         {
             var value = new InToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
-        public static NotInToken NotIn(this Token token, params Token[] tokens)
+        public static ExpressionToken NotIn(this ExpressionToken token, params ExpressionToken[] tokens)
         {
             var value = new NotInToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
-        public static InToken In(this Token token, IEnumerable<Token> tokens)
+        public static ExpressionToken In(this ExpressionToken token, IEnumerable<ExpressionToken> tokens)
         {
             var value = new InToken { Token = token };
             if (tokens != null)
@@ -1022,7 +1080,7 @@ namespace TTRider.FluidSql
             return value;
         }
 
-        public static NotInToken NotIn(this Token token, IEnumerable<Token> tokens)
+        public static ExpressionToken NotIn(this ExpressionToken token, IEnumerable<ExpressionToken> tokens)
         {
             var value = new NotInToken { Token = token };
             if (tokens != null)
@@ -1032,22 +1090,22 @@ namespace TTRider.FluidSql
             return value;
         }
 
-        public static ContainsToken Contains(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Contains(this ExpressionToken first, ExpressionToken second)
         {
             return new ContainsToken { First = first, Second = second };
         }
 
-        public static StartsWithToken StartsWith(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken StartsWith(this ExpressionToken first, ExpressionToken second)
         {
             return new StartsWithToken { First = first, Second = second };
         }
 
-        public static EndsWithToken EndsWith(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken EndsWith(this ExpressionToken first, ExpressionToken second)
         {
             return new EndsWithToken { First = first, Second = second };
         }
 
-        public static LikeToken Like(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken Like(this ExpressionToken first, ExpressionToken second)
         {
             return new LikeToken { First = first, Second = second };
         }

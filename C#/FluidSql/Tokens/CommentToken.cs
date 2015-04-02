@@ -9,6 +9,8 @@ namespace TTRider.FluidSql
 {
     public class CommentToken : Token
     {
-        public Token Content { get; set; }
+        public Token Content { get; set; } 
+
+        public string Alias { get; set; }
     }
 }

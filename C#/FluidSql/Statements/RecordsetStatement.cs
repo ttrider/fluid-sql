@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public abstract class RecordsetStatement : Token, IStatement, IAliasToken
+    public abstract class RecordsetStatement : ExpressionToken, IStatement
     {
         protected RecordsetStatement()
         {
@@ -18,6 +18,5 @@ namespace TTRider.FluidSql
 
         public List<ExpressionToken> Output { get; private set; }
         public Name OutputInto { get; set; }
-        public string Alias { get; set; }
     }
 }

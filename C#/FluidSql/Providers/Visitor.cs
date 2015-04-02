@@ -272,6 +272,7 @@ namespace TTRider.FluidSql.Providers
                 {typeof (WhenNotMatchedTokenThenInsertToken),(v,t)=>v.VisitWhenNotMatchedThenInsert((WhenNotMatchedTokenThenInsertToken)t)},
                 {typeof (Order),(v,t)=>v.VisitOrderToken((Order)t)},
                 {typeof (CTEDefinition),(v,t)=>v.VisitCommonTableExpression((CTEDefinition)t)},
+                {typeof (RecordsetSourceToken),(v,t)=>v.VisitFromToken((RecordsetSourceToken)t)},
             };
 
         private static readonly Dictionary<Type, Action<Visitor, IStatement>> StatementVisitors =

@@ -87,32 +87,32 @@ namespace TTRider.FluidSql
             return new GroupToken {Token = value};
         }
 
-        public static ExistsToken Exists(Token value)
+        public static ExpressionToken Exists(ExpressionToken value)
         {
             return new ExistsToken {Token = value};
         }
 
-        public static NotToken NotExists(Token value)
+        public static ExpressionToken NotExists(ExpressionToken value)
         {
             return new ExistsToken {Token = value}.Not();
         }
 
-        public static NotToken Not(Token value)
+        public static ExpressionToken Not(ExpressionToken value)
         {
             return value.Not();
         }
 
-        public static AllToken All(SelectStatement subQuery)
+        public static ExpressionToken All(SelectStatement subQuery)
         {
             return new AllToken {Token = subQuery};
         }
 
-        public static AnyToken Any(SelectStatement subQuery)
+        public static ExpressionToken Any(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }
 
-        public static AnyToken Some(SelectStatement subQuery)
+        public static ExpressionToken Some(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }

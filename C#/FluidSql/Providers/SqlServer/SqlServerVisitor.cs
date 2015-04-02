@@ -302,7 +302,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitInto(statement.Into);
 
-            VisitFromToken(statement.From);
+            if (statement.From.Count > 0)
+            {
+                State.Write(Symbols.FROM);
+                VisitFromToken(statement.From);
+            }
 
             VisitJoin(statement.Joins);
 
@@ -349,18 +353,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             if (statement.Joins.Count > 0)
             {
-                if (statement.From is IAliasToken)
+                if (statement.RecordsetSource!=null)
                 {
-                    var alias = ((IAliasToken) (statement.From)).Alias;
-
-                    if (!string.IsNullOrWhiteSpace(alias))
+                    if (!string.IsNullOrWhiteSpace(statement.RecordsetSource.Alias))
                     {
-                        State.Write(this.IdentifierOpenQuote, alias, this.IdentifierCloseQuote);
+                        State.Write(this.IdentifierOpenQuote, statement.RecordsetSource.Alias, this.IdentifierCloseQuote);
                     }
                 }
                 VisitOutput(statement.Output, statement.OutputInto);
 
-                VisitFromToken(statement.From);
+                State.Write(Symbols.FROM);
+
+                VisitFromToken(statement.RecordsetSource);
 
                 VisitJoin(statement.Joins);
 
@@ -368,7 +372,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
             else
             {
-                VisitFromToken(statement.From);
+                State.Write(Symbols.FROM);
+
+                VisitFromToken(statement.RecordsetSource);
 
                 VisitOutput(statement.Output, statement.OutputInto);
 
@@ -390,7 +396,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitOutput(statement.Output, statement.OutputInto);
 
-            VisitFromToken(statement.From);
+            VisitFromToken(statement.RecordsetSource);
 
             VisitJoin(statement.Joins);
 

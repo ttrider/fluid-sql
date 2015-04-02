@@ -38,6 +38,42 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * FROM [sys].[objects];", command.CommandText);
         }
+
+        [TestMethod]
+        public void SelectFromSelectStarFromSysObjects()
+        {
+            var subselect = Sql.Select.From("sys.objects");
+
+            var statement = Sql.Select.From(subselect.As("foo"));
+
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM ( SELECT * FROM [sys].[objects] ) AS [foo];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectStarFromSysObjectsAsO()
+        {
+            var statement = Sql.Select.From("sys.objects","O");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [O];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectStarFromSysObjectsAsO2()
+        {
+            var statement = Sql.Select.From(Sql.Name("sys.objects").As("O"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [O];", command.CommandText);
+        }
         [TestMethod]
         public void SelectSkipSchema()
         {

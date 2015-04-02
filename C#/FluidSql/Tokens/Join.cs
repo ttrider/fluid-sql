@@ -11,8 +11,8 @@ namespace TTRider.FluidSql
     {
         public Joins Type { get; set; }
 
-        public Token Source { get; set; }
+        public RecordsetSourceToken Source { get; set; }
 
-        public Token On { get; set; }
+        public ExpressionToken On { get; set; }
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="Statements\WaitforTimeStatement.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />
     <Compile Include="Tokens\ExpressionToken.cs" />
+    <Compile Include="Tokens\RecordsetSourceToken.cs" />
     <Compile Include="Tokens\WhenMatchedToken.cs" />
     <Compile Include="Tokens\WhenMatchedTokenThenDeleteToken.cs" />
     <Compile Include="Tokens\WhenMatchedTokenThenUpdateSetToken.cs" />

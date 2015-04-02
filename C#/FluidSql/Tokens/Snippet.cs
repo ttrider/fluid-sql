@@ -7,7 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class Snippet : Token
+    public class Snippet : ExpressionToken
     {
         public string Value { get; set; }
     }
