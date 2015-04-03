@@ -25,12 +25,12 @@ namespace FluidSqlTests
         [TestMethod]
         public void Delete1P()
         {
-            var statement = Sql.Delete.Top(1, true).From(Sql.Name("foo.bar"));
+            var statement = Sql.Delete.Top(1, true).From(Sql.Name("foo.bar").As("f"));
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DELETE TOP ( 1 ) PERCENT FROM [foo].[bar];", command.CommandText);
+            Assert.AreEqual("DELETE TOP ( 1 ) PERCENT [f] FROM [foo].[bar] AS [f];", command.CommandText);
         }
 
         [TestMethod]
@@ -42,6 +42,17 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("DELETE FROM [foo].[bar] OUTPUT [INSERTED].*, [DELETED].*;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DeleteOutput2()
+        {
+            var statement = Sql.Delete.From(Sql.Name("foo.bar").As("s")).Output(Sql.Name("INSERTED.*"), Sql.Name("DELETED.*"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DELETE [s] OUTPUT [INSERTED].*, [DELETED].* FROM [foo].[bar] AS [s];", command.CommandText);
         }
 
         [TestMethod]

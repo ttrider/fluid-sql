@@ -15,6 +15,51 @@ namespace TTRider.FluidSql
 {
     public static class FluidExtensions
     {
+        static IEnumerable<Name> ToNames(Name name, params Name[] names)
+        {
+            if (name != null) yield return name;
+            foreach (var nm in names)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Name> ToNames(string name, params string[] names)
+        {
+            if (name != null) yield return name;
+            foreach (var nm in names)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Name> ToNames(IEnumerable<string> names)
+        {
+            if (names != null)
+            {
+                foreach (var nm in names)
+                {
+                    yield return nm;
+                }
+            }
+        }
+
+        static IEnumerable<Order> ToOrders(Order order, params Order[] orders)
+        {
+            if (order != null) yield return order;
+            foreach (var nm in orders)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Order> ToOrders(string order, params string[] orders)
+        {
+            if (order != null) yield return Sql.Order(order);
+            foreach (var nm in orders)
+            {
+                yield return Sql.Order(nm);
+            }
+        }
+
+
         public static IDataParameterCollection SetValue(this IDataParameterCollection parameterCollection,
             string parameterName, object value)
         {
@@ -173,6 +218,15 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static T Output<T>(this T statement, IEnumerable<string> columns)
+            where T : RecordsetStatement
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns.Select(s => Sql.Name(s)));
+            }
+            return statement;
+        }
 
         public static T OutputInto<T>(this T statement, Name target, params Name[] columns)
             where T : RecordsetStatement
@@ -192,23 +246,14 @@ namespace TTRider.FluidSql
             statement.OutputInto = target;
             return statement;
         }
-
-        public static T OutputInto<T>(this T statement, string target, params Name[] columns)
-            where T : RecordsetStatement
-        {
-            statement.Output.AddRange(columns);
-            statement.OutputInto = Sql.Name(target);
-            return statement;
-        }
-
-        public static T OutputInto<T>(this T statement, string target, IEnumerable<Name> columns)
+        public static T OutputInto<T>(this T statement, Name target, IEnumerable<string> columns)
             where T : RecordsetStatement
         {
             if (columns != null)
             {
-                statement.Output.AddRange(columns);
+                statement.Output.AddRange(columns.Select(s => Sql.Name(s)));
             }
-            statement.OutputInto = Sql.Name(target);
+            statement.OutputInto = target;
             return statement;
         }
 
@@ -295,15 +340,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T From<T>(this T statement, string name, string alias = null)
-            where T : IFromStatement
-        {
-            statement.RecordsetSource = new RecordsetSourceToken { Source = Sql.Name(name), Alias = alias };
-            return statement;
-        }
-
-        public static T From<T>(this T statement, Token token)
-            where T : IFromStatement
+        public static DeleteStatement From(this DeleteStatement statement, Token token)
         {
             statement.RecordsetSource = new RecordsetSourceToken { Source = token };
             return statement;
@@ -350,18 +387,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedTokenThenUpdateSetToken();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenMatched.Add(wm);
-            return statement;
+            return WhenMatchedThenUpdateSet(statement, (IEnumerable<AssignToken>)set);
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
@@ -382,20 +408,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedTokenThenUpdateSetToken
-            {
-                AndCondition = andCondition
-            };
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenMatched.Add(wm);
-            return statement;
+            return WhenMatchedThenUpdateSet(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
         public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement, Token andCondition = null)
         {
@@ -403,36 +416,6 @@ namespace TTRider.FluidSql
             {
                 AndCondition = andCondition
             });
-            return statement;
-        }
-        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
-        {
-            var wm = new WhenMatchedTokenThenUpdateSetToken();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenNotMatchedBySource.Add(wm);
-            return statement;
-        }
-        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
-        {
-            var wm = new WhenMatchedTokenThenUpdateSetToken();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenNotMatchedBySource.Add(wm);
             return statement;
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
@@ -448,29 +431,22 @@ namespace TTRider.FluidSql
                     wm.Set.Add(columnValue);
                 }
             }
-
-
             statement.WhenNotMatchedBySource.Add(wm);
             return statement;
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedTokenThenUpdateSetToken
-            {
-                AndCondition = andCondition
-            };
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-
-            statement.WhenNotMatchedBySource.Add(wm);
-            return statement;
+            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>) set);
         }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
+        {
+            return WhenNotMatchedBySourceThenUpdate(statement, null, (IEnumerable<AssignToken>)set);
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
+        {
+            return WhenNotMatchedBySourceThenUpdate(statement, null, set);
+        }
+
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns)
         {
             var wm = new WhenNotMatchedTokenThenInsertToken();
@@ -607,7 +583,7 @@ namespace TTRider.FluidSql
         public static SelectStatement WrapAsSelect(this RecordsetStatement statement, string alias)
         {
             return new SelectStatement()
-                .From(statement,alias)
+                .From(statement, alias)
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
@@ -616,119 +592,129 @@ namespace TTRider.FluidSql
                     .Select(name => Sql.Name(alias, name)));
         }
 
-        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+        #region INNER JOIN
+
+        public static T Join<T>(this T statement, Joins join, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
-                Type = Joins.Inner,
+                Type = join,
                 Source = source,
                 On = on
             });
             return statement;
         }
+
+
+        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, source, on);
+        }
         public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.Inner,
-                Source = source.As(alias),
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.Inner, source.As(alias), on);
+        }
+        public static T InnerJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, Sql.Name(source), on);
+        }
+        public static T InnerJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, Sql.Name(source).As(alias), on);
         }
 
         public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.LeftOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.LeftOuter, source, on);
         }
         public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.LeftOuter,
-                Source = source.As(alias),
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.LeftOuter, source.As(alias), on);
+        }
+        public static T LeftOuterJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.LeftOuter, Sql.Name(source), on);
+        }
+        public static T LeftOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.LeftOuter, Sql.Name(source).As(alias), on);
         }
 
         public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
-            where T : IJoinStatement
+                   where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.RightOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.RightOuter, source, on);
         }
         public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.RightOuter,
-                Source = source.As(alias),
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.RightOuter, source.As(alias), on);
         }
-
-        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+        public static T RightOuterJoin<T>(this T statement, string source, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.FullOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.RightOuter, Sql.Name(source), on);
+        }
+        public static T RightOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.RightOuter, Sql.Name(source).As(alias), on);
         }
 
+
+        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+                           where T : IJoinStatement
+        {
+            return Join(statement, Joins.FullOuter, source, on);
+        }
         public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.FullOuter,
-                Source = source.As(alias),
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.FullOuter, source.As(alias), on);
         }
-
-        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source)
+        public static T FullOuterJoin<T>(this T statement, string source, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.Cross,
-                Source = source,
-            });
-            return statement;
+            return Join(statement, Joins.FullOuter, Sql.Name(source), on);
+        }
+        public static T FullOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.FullOuter, Sql.Name(source).As(alias), on);
+        }
+
+
+
+        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source)
+                           where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, source, null);
         }
         public static T CrossJoin<T>(this T statement, RecordsetSourceToken source, string alias)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.Cross,
-                Source = source.As(alias),
-            });
-            return statement;
+            return Join(statement, Joins.Cross, source.As(alias), null);
         }
+        public static T CrossJoin<T>(this T statement, string source)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, Sql.Name(source), null);
+        }
+        public static T CrossJoin<T>(this T statement, string source, string alias)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, Sql.Name(source).As(alias), null);
+        }
+        #endregion INNER JOIN
 
         public static SelectStatement Having(this SelectStatement statement, Token condition)
         {
@@ -872,12 +858,6 @@ namespace TTRider.FluidSql
         public static ExpressionToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseNotToken { First = first, Second = second };
-        }
-
-        [Obsolete]
-        public static ExpressionToken Module(this ExpressionToken first, ExpressionToken second)
-        {
-            return new ModuloToken { First = first, Second = second };
         }
 
         public static ExpressionToken Modulo(this ExpressionToken first, ExpressionToken second)
@@ -1113,9 +1093,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Then(this IfStatement statement, params IStatement[] statements)
         {
-            statement.Then = new StatementsStatement();
-            statement.Then.Statements.AddRange(statements);
-            return statement;
+            return Then(statement, (IEnumerable<IStatement>) statements);
         }
 
         public static IfStatement Then(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1130,9 +1108,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Else(this IfStatement statement, params IStatement[] statements)
         {
-            statement.Else = new StatementsStatement();
-            statement.Else.Statements.AddRange(statements);
-            return statement;
+            return Else(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Else(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1169,12 +1145,6 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static InsertStatement Columns(this InsertStatement statement, params Name[] columns)
-        {
-            statement.Columns.AddRange(columns);
-            return statement;
-        }
-
         public static InsertStatement Columns(this InsertStatement statement, IEnumerable<Name> columns)
         {
             if (columns != null)
@@ -1184,25 +1154,19 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static InsertStatement Columns(this InsertStatement statement, params string[] columns)
+        public static InsertStatement Columns(this InsertStatement statement, Name column, params Name[] columns)
         {
-            statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
-            return statement;
+            return Columns(statement, ToNames(column, columns));
+        }
+
+        public static InsertStatement Columns(this InsertStatement statement, string column, params string[] columns)
+        {
+            return Columns(statement, ToNames(column, columns));
         }
 
         public static InsertStatement Columns(this InsertStatement statement, IEnumerable<string> columns)
         {
-            if (columns != null)
-            {
-                statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
-            }
-            return statement;
-        }
-
-        public static InsertStatement Values(this InsertStatement statement, params Token[] values)
-        {
-            statement.Values.Add(values);
-            return statement;
+            return Columns(statement, ToNames(columns));
         }
 
         public static InsertStatement Values(this InsertStatement statement, IEnumerable<Token> values)
@@ -1213,20 +1177,19 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static InsertStatement Values(this InsertStatement statement, params Token[] values)
+        {
+            return Values(statement, (IEnumerable<Token>)values);
+        }
 
         public static InsertStatement Values(this InsertStatement statement, params object[] values)
         {
-            statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
-            return statement;
+            return Values(statement, (values??Enumerable.Empty<object>()).Select(Sql.Scalar));
         }
 
         public static InsertStatement Values(this InsertStatement statement, IEnumerable<object> values)
         {
-            if (values != null)
-            {
-                statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
-            }
-            return statement;
+            return Values(statement, (values ?? Enumerable.Empty<object>()).Select(Sql.Scalar));
         }
         public static InsertStatement OrReplace(this InsertStatement statement)
         {
@@ -1280,6 +1243,17 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column,
             Direction direction = Direction.Asc)
         {
@@ -1294,31 +1268,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, params Order[] columns)
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Order column, params Order[] columns)
         {
-            statement.Columns.AddRange(columns);
-            return statement;
+            return OnColumn(statement, ToOrders(column, columns));
         }
-
-        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, IEnumerable<Order> columns)
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column, params string[] columns)
         {
-            if (columns != null)
-            {
-                statement.Columns.AddRange(columns);
-            }
-            return statement;
-        }
-
-        public static CreateIndexStatement Include(this CreateIndexStatement statement, string column)
-        {
-            statement.Include.Add(Sql.Name(column));
-            return statement;
-        }
-
-        public static CreateIndexStatement Include(this CreateIndexStatement statement, params Name[] columns)
-        {
-            statement.Include.AddRange(columns);
-            return statement;
+            return OnColumn(statement, ToOrders(column, columns));
         }
 
         public static CreateIndexStatement Include(this CreateIndexStatement statement, IEnumerable<Name> columns)
@@ -1328,6 +1284,16 @@ namespace TTRider.FluidSql
                 statement.Include.AddRange(columns);
             }
             return statement;
+        }
+
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, string column, params string[] columns)
+        {
+            return Include(statement, ToNames(column, columns));
+        }
+
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, Name column, params Name[] columns)
+        {
+            return Include(statement, ToNames(column, columns));
         }
 
         public static CreateIndexStatement Unique(this CreateIndexStatement statement, bool unique = true)

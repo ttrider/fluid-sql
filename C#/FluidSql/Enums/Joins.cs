@@ -13,6 +13,6 @@ namespace TTRider.FluidSql
         LeftOuter = 1,
         RightOuter = 2,
         FullOuter = 3,
-        Cross = 3,
+        Cross = 4,
     }
 }

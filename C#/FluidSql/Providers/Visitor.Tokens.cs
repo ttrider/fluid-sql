@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TTRider.FluidSql.Providers
 {
@@ -298,13 +299,11 @@ namespace TTRider.FluidSql.Providers
             if (recordset != null)
             {
                 VisitToken(recordset.Source);
-
                 if (!string.IsNullOrWhiteSpace(recordset.Alias))
                 {
                     State.Write(Symbols.AS);
                     State.Write(this.IdentifierOpenQuote, recordset.Alias, this.IdentifierCloseQuote);
                 }
-
             }
         }
 

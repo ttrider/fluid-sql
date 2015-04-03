@@ -6,6 +6,7 @@
 // </copyright>
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 
@@ -13,4 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: Guid("641e8b10-0798-44ee-afc6-89c90aaf5a1a")]
 
+[assembly: InternalsVisibleTo("FluidSqlTests")]
 

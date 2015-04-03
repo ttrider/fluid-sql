@@ -9,7 +9,7 @@ using TTRider.FluidSql;
 namespace FluidSqlTests
 {
     [TestClass]
-    public class Insert
+    public class Insert : SqlProviderTests
     {
         [TestMethod]
         public void InsertDefault()
@@ -26,6 +26,17 @@ namespace FluidSqlTests
         public void InsertFrom()
         {
             var statement = Sql.Insert.Into(Sql.Name("foo.bar")).From(Sql.Select.From(Sql.Name("bar.foo")));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("INSERT INTO [foo].[bar] SELECT * FROM [bar].[foo];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void InsertFrom2()
+        {
+            var statement = Sql.Insert.Into("foo.bar").From(Sql.Select.From("bar.foo"));
 
             var command = Utilities.GetCommand(statement);
 
@@ -69,15 +80,33 @@ namespace FluidSqlTests
         [TestMethod]
         public void InsertColumnsFromOutput()
         {
-            var statement = Sql.Insert.Into(Sql.Name("foo.bar"))
+            AssertSql(
+                Sql.Insert.Into(Sql.Name("foo.bar"))
                 .From(Sql.Select.From(Sql.Name("bar.foo")))
                 .Columns(Sql.Name("id"), Sql.Name("value"))
-                .Output(Sql.Name("inserted", "id"));
+                .Output(Sql.Name("inserted", "id")),
+                "INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];");
 
-            var command = Utilities.GetCommand(statement);
+            AssertSql(
+                Sql.Insert.Into(Sql.Name("foo.bar"))
+                .From(Sql.Select.From(Sql.Name("bar.foo")))
+                .Columns(new List<Name> { Sql.Name("id"), Sql.Name("value") })
+                .Output(Sql.Name("inserted", "id")),
+                "INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];");
 
-            Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];", command.CommandText);
+            AssertSql(
+                Sql.Insert.Into(Sql.Name("foo.bar"))
+                .From(Sql.Select.From(Sql.Name("bar.foo")))
+                .Columns(new List<string> { "id", "value" })
+                .Output(Sql.Name("inserted", "id")),
+                "INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];");
+
+            AssertSql(
+                Sql.Insert.Into(Sql.Name("foo.bar"))
+                .From(Sql.Select.From(Sql.Name("bar.foo")))
+                .Columns("id", "value")
+                .Output(Sql.Name("inserted", "id")),
+                "INSERT INTO [foo].[bar] ( [id], [value] ) OUTPUT [inserted].[id] SELECT * FROM [bar].[foo];");
         }
 
         [TestMethod]
@@ -100,13 +129,15 @@ namespace FluidSqlTests
             var statement = Sql.Insert.Into(Sql.Name("foo.bar"))
                 .Columns(Sql.Name("id"), Sql.Name("value"))
                 .Values(Sql.Scalar(123), Sql.Scalar("val0"))
-                .Values(Sql.Scalar(234), Sql.Scalar("val1"))
-                .Values(Sql.Scalar(345), Sql.Scalar("val2"));
+                .Values(234, "val1")
+                .Values(new List<Scalar> { Sql.Scalar(345), Sql.Scalar("val2") })
+                .Values(new List<object> { Sql.Scalar(345), Sql.Scalar("val2") })
+                .Values(new List<object> { 345, "val2" });
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) VALUES ( 123, N'val0' ), ( 234, N'val1' ), ( 345, N'val2' );", command.CommandText);
+            Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) VALUES ( 123, N'val0' ), ( 234, N'val1' ), ( 345, N'val2' ), ( 345, N'val2' ), ( 345, N'val2' );", command.CommandText);
         }
     }
 }

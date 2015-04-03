@@ -78,6 +78,10 @@ namespace TTRider.FluidSql
 
         public static Scalar Scalar(object value)
         {
+            if (value is Scalar)
+            {
+                return value as Scalar;
+            }
             return new Scalar {Value = value};
         }
 

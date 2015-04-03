@@ -351,14 +351,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitTop(statement.Top);
 
-            if (statement.Joins.Count > 0)
+            // if 'FROM' has an alias or joins , we need to re-arrange tokens in a statement
+            // even more, if it has joins, it MUST have an alias :)
+            var hasAlias = statement.RecordsetSource != null &&
+                           !string.IsNullOrWhiteSpace(statement.RecordsetSource.Alias);
+
+            if (statement.Joins.Count > 0 || hasAlias)
             {
-                if (statement.RecordsetSource!=null)
+                if (hasAlias)
                 {
-                    if (!string.IsNullOrWhiteSpace(statement.RecordsetSource.Alias))
-                    {
-                        State.Write(this.IdentifierOpenQuote, statement.RecordsetSource.Alias, this.IdentifierCloseQuote);
-                    }
+                    State.Write(this.IdentifierOpenQuote, statement.RecordsetSource.Alias, this.IdentifierCloseQuote);
                 }
                 VisitOutput(statement.Output, statement.OutputInto);
 
