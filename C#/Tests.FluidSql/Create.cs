@@ -21,7 +21,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ));", command.CommandText);
+            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );", command.CommandText);
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE NONCLUSTERED ([C2] ASC ));", command.CommandText);
+            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE NONCLUSTERED ( [C2] ASC ) );", command.CommandText);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE CLUSTERED ([C2] ASC ));", command.CommandText);
+            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE CLUSTERED ( [C2] ASC ) );", command.CommandText);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ));CREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ([C2] ASC);", command.CommandText);
+            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;", command.CommandText);
         }
 
         [TestMethod]
@@ -89,7 +89,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID(N'[tbl]',N'U') IS NULL  BEGIN; CREATE TABLE [tbl] ([C1] INT NOT NULL IDENTITY (1, 1), [C2] NVARCHAR(MAX) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ([C1] ASC ));CREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ([C2] ASC); END;", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[tbl]', N'U' ) IS NULL\r\nBEGIN;\r\nCREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DECLARE @tbl TABLE ([C1] INT NOT NULL IDENTITY (1, 1), [C2] INT NOT NULL, PRIMARY KEY ([C1] ASC ), UNIQUE NONCLUSTERED ([C2] ASC ));", command.CommandText);
+            Assert.AreEqual("DECLARE @tbl TABLE ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] INT NOT NULL, PRIMARY KEY ( [C1] ASC ), UNIQUE NONCLUSTERED ( [C2] ASC ) );", command.CommandText);
         }
 
         [TestMethod]
@@ -140,6 +140,39 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("DROP VIEW [foo];", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void CreateViewIfNotExists()
+        {
+            var statement  = Sql.CreateView(Sql.Name("foo"), Sql.Select.From("bar"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+        }
+        [TestMethod]
+        public void CreateOrAlterView()
+        {
+            var statement = Sql.CreateOrAlterView(Sql.Name("foo"), Sql.Select.From("bar"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );\r\nELSE EXEC (N' ALTER VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropViewIfExists()
+        {
+            var statement = Sql.DropView(Sql.Name("foo"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NOT NULL EXEC (N' DROP VIEW [foo];' );", command.CommandText);
         }
     }
 }

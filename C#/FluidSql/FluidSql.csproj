@@ -42,91 +42,131 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlterIndexStatement.cs" />
-    <Compile Include="AlterViewStatement.cs" />
-    <Compile Include="BeginTransactionStatement.cs" />
-    <Compile Include="BinaryToken.cs" />
-    <Compile Include="BreakStatement.cs" />
-    <Compile Include="CommentToken.cs" />
-    <Compile Include="CommitTransactionStatement.cs" />
-    <Compile Include="ContinueStatement.cs" />
-    <Compile Include="CreateIndexStatement.cs" />
-    <Compile Include="CreateTableStatement.cs">
+    <Compile Include="..\Shared\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Interfaces\IAliasToken.cs" />
+    <Compile Include="Interfaces\ICTEStatement.cs" />
+    <Compile Include="Interfaces\IOnConflict.cs" />
+    <Compile Include="Statements\CorrelationStatement.cs" />
+    <Compile Include="Statements\ExceptStatement.cs" />
+    <Compile Include="Statements\IntersectStatement.cs" />
+    <Compile Include="Enums\Joins.cs" />
+    <Compile Include="OnConflict.cs" />
+    <Compile Include="Statements\CommentStatement.cs" />
+    <Compile Include="Statements\AlterIndexStatement.cs" />
+    <Compile Include="Statements\AlterViewStatement.cs" />
+    <Compile Include="Statements\BeginTransactionStatement.cs" />
+    <Compile Include="Statements\CreateOrAlterViewStatement.cs" />
+    <Compile Include="Statements\WaitforDelayStatement.cs" />
+    <Compile Include="Statements\WaitforTimeStatement.cs" />
+    <Compile Include="Tokens\CTEDefinition.cs" />
+    <Compile Include="Tokens\ExpressionToken.cs" />
+    <Compile Include="Tokens\RecordsetSourceToken.cs" />
+    <Compile Include="Tokens\WhenMatchedToken.cs" />
+    <Compile Include="Tokens\WhenMatchedTokenThenDeleteToken.cs" />
+    <Compile Include="Tokens\WhenMatchedTokenThenUpdateSetToken.cs" />
+    <Compile Include="Tokens\WhenNotMatchedTokenThenInsertToken.cs" />
+    <Compile Include="Enums\TransactionType.cs" />
+    <Compile Include="Tokens\BinaryToken.cs" />
+    <Compile Include="Statements\BreakStatement.cs" />
+    <Compile Include="Tokens\CommentToken.cs" />
+    <Compile Include="Statements\CommitTransactionStatement.cs" />
+    <Compile Include="Statements\ContinueStatement.cs" />
+    <Compile Include="Statements\CreateIndexStatement.cs" />
+    <Compile Include="Statements\CreateTableStatement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CreateViewStatement.cs" />
-    <Compile Include="DeclareStatement.cs" />
-    <Compile Include="DeleteStatement.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="DropIndexStatement.cs" />
-    <Compile Include="DropTableStatement.cs" />
-    <Compile Include="DropViewStatement.cs" />
+    <Compile Include="Statements\CreateViewStatement.cs" />
+    <Compile Include="Statements\DeclareStatement.cs" />
+    <Compile Include="Statements\DeleteStatement.cs" />
+    <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Statements\DropIndexStatement.cs" />
+    <Compile Include="Statements\DropTableStatement.cs" />
+    <Compile Include="Statements\DropViewStatement.cs" />
+    <Compile Include="Statements\ExecuteStatement.cs" />
     <Compile Include="FluidExtensions.cs" />
-    <Compile Include="ForeignDefinition.cs" />
+    <Compile Include="Tokens\ForeignDefinition.cs" />
     <Compile Include="ForeignKeyOption.cs" />
-    <Compile Include="Function.cs" />
-    <Compile Include="GotoStatement.cs" />
-    <Compile Include="IIntoStatement.cs" />
-    <Compile Include="ISetStatement.cs" />
-    <Compile Include="ICreateOrAlterIndexOptions.cs" />
-    <Compile Include="IdentityOptions.cs" />
-    <Compile Include="IDropIndexOptions.cs" />
-    <Compile Include="IFromStatement.cs" />
-    <Compile Include="IfStatement.cs" />
-    <Compile Include="IJoinStatement.cs" />
-    <Compile Include="IndexDefinition.cs" />
-    <Compile Include="IndexOptions.cs" />
-    <Compile Include="InsertStatement.cs" />
-    <Compile Include="ISetIndexOptions.cs" />
-    <Compile Include="IStatement.cs" />
-    <Compile Include="ITopStatement.cs" />
-    <Compile Include="IWhereStatement.cs" />
-    <Compile Include="Join.cs" />
-    <Compile Include="LabelStatement.cs" />
-    <Compile Include="MergeStatement.cs" />
-    <Compile Include="Name.cs" />
-    <Compile Include="Order.cs" />
-    <Compile Include="Parameter.cs" />
+    <Compile Include="Tokens\Function.cs" />
+    <Compile Include="Statements\GotoStatement.cs" />
+    <Compile Include="Interfaces\IIntoStatement.cs" />
+    <Compile Include="Interfaces\IOffsetStatement.cs" />
+    <Compile Include="Interfaces\IOrderByStatement.cs" />
+    <Compile Include="Interfaces\ISetStatement.cs" />
+    <Compile Include="Interfaces\ICreateOrAlterIndexOptions.cs" />
+    <Compile Include="Tokens\IdentityOptions.cs" />
+    <Compile Include="Interfaces\IDropIndexOptions.cs" />
+    <Compile Include="Interfaces\IFromStatement.cs" />
+    <Compile Include="Interfaces\IfStatement.cs" />
+    <Compile Include="Interfaces\IJoinStatement.cs" />
+    <Compile Include="Tokens\IndexDefinition.cs" />
+    <Compile Include="Tokens\IndexOptions.cs" />
+    <Compile Include="Statements\InsertStatement.cs" />
+    <Compile Include="Interfaces\ISetIndexOptions.cs" />
+    <Compile Include="Interfaces\IStatement.cs" />
+    <Compile Include="Interfaces\ITopStatement.cs" />
+    <Compile Include="Interfaces\IWhereStatement.cs" />
+    <Compile Include="Tokens\Join.cs" />
+    <Compile Include="Statements\LabelStatement.cs" />
+    <Compile Include="Statements\MergeStatement.cs" />
+    <Compile Include="Tokens\Name.cs" />
+    <Compile Include="Tokens\Order.cs" />
+    <Compile Include="Tokens\Parameter.cs" />
     <Compile Include="ParameterSet.cs" />
-    <Compile Include="ParameterValue.cs" />
+    <Compile Include="Tokens\ParameterValue.cs" />
     <Compile Include="Providers\IProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Provider.cs" />
     <Compile Include="Providers\SqlServer\SqlServerVisitor.cs" />
+    <Compile Include="Providers\Visitor.cs" />
+    <Compile Include="Providers\Visitor.Symbols.cs" />
+    <Compile Include="Providers\Visitor.Tokens.cs" />
     <Compile Include="Providers\VisitorState.cs" />
-    <Compile Include="RecordsetStatement.cs" />
-    <Compile Include="ReturnStatement.cs" />
-    <Compile Include="RollbackTransactionStatement.cs" />
-    <Compile Include="SaveTransactionStatement.cs" />
-    <Compile Include="Scalar.cs" />
-    <Compile Include="SelectStatement.cs" />
+    <Compile Include="Statements\RecordsetStatement.cs" />
+    <Compile Include="Statements\ReturnStatement.cs" />
+    <Compile Include="Statements\RollbackTransactionStatement.cs" />
+    <Compile Include="Statements\SaveTransactionStatement.cs" />
+    <Compile Include="Tokens\Scalar.cs" />
+    <Compile Include="Statements\SelectStatement.cs" />
     <Compile Include="Providers\SqlServer\SqlServerProvider.cs" />
-    <Compile Include="SetStatement.cs" />
-    <Compile Include="Snippet.cs" />
-    <Compile Include="SnippetStatement.cs" />
+    <Compile Include="Statements\SetStatement.cs" />
+    <Compile Include="Tokens\Snippet.cs" />
+    <Compile Include="Statements\SnippetStatement.cs" />
     <Compile Include="Sql.cs" />
-    <Compile Include="Sql_Function.cs" />
-    <Compile Include="StatementsStatement.cs" />
-    <Compile Include="StringifyStatement.cs" />
-    <Compile Include="StringifyToken.cs" />
-    <Compile Include="TableColumn.cs" />
-    <Compile Include="ThrowStatement.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="Top.cs" />
-    <Compile Include="TransactionStatement.cs" />
-    <Compile Include="TryCatchStatement.cs" />
-    <Compile Include="TypedToken.cs" />
-    <Compile Include="Union.cs" />
-    <Compile Include="UpdateStatement.cs" />
-    <Compile Include="WaitforStatement.cs" />
-    <Compile Include="WhileStatement.cs" />
+    <Compile Include="Sql.Functions.cs" />
+    <Compile Include="Statements\StatementsStatement.cs" />
+    <Compile Include="Statements\StringifyStatement.cs" />
+    <Compile Include="Tokens\StringifyToken.cs" />
+    <Compile Include="Tokens\TableColumn.cs" />
+    <Compile Include="Statements\ThrowStatement.cs" />
+    <Compile Include="Tokens\Token.cs" />
+    <Compile Include="Tokens\Top.cs" />
+    <Compile Include="Statements\TransactionStatement.cs" />
+    <Compile Include="Statements\TryCatchStatement.cs" />
+    <Compile Include="Tokens\TypedToken.cs" />
+    <Compile Include="Statements\UpdateStatement.cs" />
+    <Compile Include="Statements\WaitforStatement.cs" />
+    <Compile Include="Statements\WhileStatement.cs" />
+    <Compile Include="Statements\UnionStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FluidSql.cd" />
+    <Compile Include="Providers\Visitor.Statements.cs" />
+    <None Include="FluidSql.licenseheader" />
+    <None Include="TTRider.FluidSql.dll.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y  $(TargetDir)*.* $(SolutionDir)..\redist\CLR\Lib\net45
+    <PostBuildEvent>if exist $(TargetDir)packing rd /s /q $(TargetDir)packing
+mkdir $(TargetDir)packing\lib\net45
+if not exist $(SolutionDir)nuget\$(ConfigurationName) mkdir $(SolutionDir)nuget\$(ConfigurationName)
+copy $(TargetPath) $(TargetDir)packing\lib\net45
+copy $(TargetDir)$(TargetName).pdb $(TargetDir)packing\lib\net45
+copy $(ProjectDir)TTRider.FluidSql.dll.nuspec $(TargetDir)packing
+$(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.dll.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
+
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
@@ -37,6 +33,29 @@ namespace FluidSqlTests
         public void UpdateOutputInto()
         {
             var statement = Sql.Update("foo.bar").Set(Sql.Name("a"), Sql.Scalar(1)).Where(Sql.Name("z").IsEqual(Sql.Scalar("b"))).OutputInto("@tempt", Sql.Name("inserted", "a"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("UPDATE [foo].[bar] SET [a] = 1 OUTPUT [inserted].[a] INTO @tempt WHERE [z] = N'b';", command.CommandText);
+        }
+
+        [TestMethod]
+        public void UpdateOutputInto2()
+        {
+            var columns = new List<Name> {"inserted.a"};
+            var statement = Sql.Update("foo.bar").Set(Sql.Name("a"), Sql.Scalar(1)).Where(Sql.Name("z").IsEqual(Sql.Scalar("b"))).OutputInto("@tempt", columns);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("UPDATE [foo].[bar] SET [a] = 1 OUTPUT [inserted].[a] INTO @tempt WHERE [z] = N'b';", command.CommandText);
+        }
+        [TestMethod]
+        public void UpdateOutputInto3()
+        {
+            var columns = new List<string> { "inserted.a" };
+            var statement = Sql.Update("foo.bar").Set(Sql.Name("a"), Sql.Scalar(1)).Where(Sql.Name("z").IsEqual(Sql.Scalar("b"))).OutputInto("@tempt", columns);
 
             var command = Utilities.GetCommand(statement);
 

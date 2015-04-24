@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+0.0.23.1
+--
+* Support for CREATE/ALTER/DROP VIEW
+
 0.0.22.1
 --
 * Support for WHILE, BREAK AND CONTINUE

@@ -1,0 +1,156 @@
+base                            |Type                            |Oracle                          |MySQL                           |SQL Server                      |Postgres                        |
+                                |                                |                                |                                |                                |                                |
+BFILE                           |BFILE                           |BFILE                           |VARCHAR(255)                    |VARCHAR(255)                    |VARCHAR(255)                    |
+BIGINT                          |BIGINT                          |NUMBER(19)                      |BIGINT                          |BIGINT                          |BIGINT                          |
+BIGSERIAL                       |BIGSERIAL                       |                                |                                |                                |BIGSERIAL                       |
+BINARY                          |BINARY(8)                       |                                |BINARY(8)                       |                                |                                |
+BINARY                          |BINARY(n)                       |RAW(n)                          |BINARY(n)                       |BINARY(n)                       |BYTEA                           |
+BINARY                          |BINARY(n/8)                     |                                |                                |BINARY(n/8)                     |                                |
+BINARY_DOUBLE                   |BINARY_DOUBLE                   |BINARY_DOUBLE                   |DOUBLE                          |BINARY_DOUBLE                   |DOUBLE PRECISION                |
+DOUBLE                          |DOUBLE                          |BINARY_DOUBLE                   |DOUBLE                          |FLOAT                           |                                |
+DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |DOUBLE PRECISION                |
+
+BINARY_FLOAT                    |BINARY_FLOAT                    |BINARY_FLOAT                    |FLOAT                           |REAL                            |REAL                            |
+BIT                             |BIT                             |NUMBER(1)                       |TINYINT                         |BIT                             |BOOLEAN                         |
+BIT VARYING                     |BIT VARYING(n)                  |RAW(n/8)                        |                                |                                |BIT VARYING(n)                  |
+BIT                             |BIT(n)                          |RAW(n/8)                        |BIT(n)                          |BINARY(n/8)                     |BIT(n)                          |
+BLOB                            |BLOB                            |BLOB                            |LONGBLOB                        |VARBINARY(max)                  |BYTEA                           |
+BLOB                            |BLOB(n)                         |BLOB                            |BLOB(n)                         |VARBINARY(max)                  |                                |
+BOOL                            |BOOL                            |CHAR(1)                         |BOOL                            |BIT                             |BOOL                            |
+BOOLEAN                         |BOOLEAN                         |CHAR(1)                         |BOOLEAN                         |BIT                             |BOOLEAN                         |
+BYTEA                           |BYTEA                           |BLOB                            |                                |                                |BYTEA                           |
+CHAR                            |CHAR(1)                         |CHAR(1)                         |                                |                                |                                |
+CHAR                            |CHAR(10)                        |                                |CHAR(10)                        |                                |CHAR(10)                        |
+CHAR                            |CHAR(16)                        |                                |CHAR(16)                        |                                |CHAR(16)                        |
+CHAR                            |CHAR(18)                        |                                |                                |CHAR(18)                        |                                |
+CHAR                            |CHAR(36)                        |CHAR(36)                        |                                |                                |                                |
+CHAR                            |CHAR(n)                         |CHAR(n)                         |CHAR(n)                         |CHAR(n)                         |CHAR(n)                         |
+CHAR                            |CHAR(n)                         |                                |                                |                                |CHAR(n)                         |
+CHARACTER VARYING               |CHARACTER VARYING(n)            |VARCHAR2(n)                     |CHARACTER VARYING(n)            |CHARACTER VARYING(n)            |CHARACTER VARYING(n)            |
+CHARACTER                       |CHARACTER(n)                    |CHARACTER(n)                    |CHARACTER(n)                    |CHARACTER(n)                    |CHARACTER(n)                    |
+CLOB                            |CLOB                            |CLOB                            |LONGTEXT                        |VARCHAR(max)                    |TEXT                            |
+DATE                            |DATE                            |DATE                            |DATE                            |DATE                            |DATE                            |
+DATETIME                        |DATETIME                        |TIMESTAMP(3)                    |DATETIME                        |DATETIME                        |TIMESTAMP(3)                    |
+DATETIME                        |DATETIME(3)                     |                                |DATETIME(3)                     |                                |                                |
+DATETIME                        |DATETIME(p)                     |TIMESTAMP(p)                    |DATETIME(p)                     |DATETIME2(p)                    |                                |
+DATETIME2                       |DATETIME2(p)                    |                                |DATETIME(p)                     |DATETIME2(p)                    |TIMESTAMP(p)                    |
+DATETIMEOFFSET                  |DATETIMEOFFSET(p)               |                                |DATETIME(p)                     |DATETIMEOFFSET(p)               |TIMESTAMP(p) WITH TIME ZONE     |
+DEC                             |DEC(p,s)                        |DEC(p,s)                        |DEC(p,s)                        |DEC(p,s)                        |DEC(p,s)                        |
+DECIMAL                         |DECIMAL(15,4)                   |                                |DECIMAL(15,4)                   |                                |                                |
+DECIMAL                         |DECIMAL(38)                     |                                |DECIMAL(38)                     |DECIMAL(38)                     |DECIMAL(38)                     |
+DECIMAL                         |DECIMAL(6,4)                    |                                |DECIMAL(6,4)                    |                                |                                |
+DECIMAL                         |DECIMAL(p)                      |                                |DECIMAL(p)                      |DECIMAL(p)                      |DECIMAL(p)                      |
+DECIMAL                         |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |
+FIXED                           |FIXED(p,s)                      |NUMBER(p,s)                     |FIXED(p,s)                      |DECIMAL(p,s)                    |                                |
+FLOAT                           |FLOAT                           |                                |FLOAT                           |FLOAT                           |                                |
+FLOAT                           |FLOAT(n)                        |NUMBER                          |                                |FLOAT(n)                        |                                |
+FLOAT                           |FLOAT(p)                        |FLOAT(p)                        |FLOAT(p)                        |FLOAT(p)                        |DOUBLE PRECISION                |
+FLOAT4                          |FLOAT4                          |BINARY_FLOAT                    |                                |                                |FLOAT4                          |
+FLOAT4                          |FLOAT4(p)                       |BINARY_DOUBLE                   |FLOAT4(p)                       |FLOAT                           |                                |
+FLOAT8                          |FLOAT8                          |BINARY_DOUBLE                   |FLOAT8                          |BINARY_DOUBLE                   |FLOAT8                          |
+IMAGE                           |IMAGE                           |                                |LONGBLOB                        |IMAGE                           |BYTEA                           |
+INT                             |INT                             |INT                             |INT                             |INT                             |INT                             |
+INT1                            |INT1                            |NUMBER(3)                       |INT1                            |SMALLINT                        |                                |
+INT2                            |INT2                            |NUMBER(5)                       |INT2                            |SMALLINT                        |INT2                            |
+INT3                            |INT3                            |NUMBER(7)                       |INT3                            |INT                             |                                |
+INT4                            |INT4                            |NUMBER(10)                      |INT4                            |INT                             |INT4                            |
+INT8                            |INT8                            |NUMBER(19)                      |INT8                            |BIGINT                          |INT8                            |
+INTEGER                         |INTEGER                         |INTEGER                         |INTEGER                         |INTEGER                         |INTEGER                         |
+INTERVAL                        |INTERVAL                        |INTERVAL YEAR TO MONTH          |                                |                                |INTERVAL                        |
+INTERVAL DAY TO HOUR            |INTERVAL DAY TO HOUR            |INTERVAL DAY(5) TO SECOND       |                                |                                |INTERVAL DAY TO HOUR            |
+INTERVAL DAY TO MINUTE          |INTERVAL DAY TO MINUTE          |INTERVAL DAY(5) TO SECOND       |                                |                                |INTERVAL DAY TO MINUTE          |
+INTERVAL DAY TO SECOND          |INTERVAL DAY TO SECOND          |INTERVAL DAY TO SECOND          |                                |                                |INTERVAL DAY TO SECOND          |
+INTERVAL DAY TO SECOND          |INTERVAL DAY TO SECOND(p)       |INTERVAL DAY(5) TO SECOND(p)    |                                |                                |INTERVAL DAY TO SECOND(p)       |
+INTERVAL DAY TO SECOND          |INTERVAL DAY TO SECOND(s)       |                                |                                |                                |INTERVAL DAY TO SECOND(s)       |
+INTERVAL DAY TO SECOND          |INTERVAL DAY(5) TO SECOND       |INTERVAL DAY(5) TO SECOND       |                                |                                |                                |
+INTERVAL DAY TO SECOND          |INTERVAL DAY(5) TO SECOND(p)    |INTERVAL DAY(5) TO SECOND(p)    |                                |                                |                                |
+INTERVAL DAY TO SECOND          |INTERVAL DAY(p) TO SECOND(s)    |INTERVAL DAY(p) TO SECOND(s)    |VARCHAR(30)                     |VARCHAR(30)                     |INTERVAL DAY TO SECOND(s)       |
+INTERVAL HOUR TO MINUTE         |INTERVAL HOUR TO MINUTE         |INTERVAL DAY(5) TO SECOND       |                                |                                |INTERVAL HOUR TO MINUTE         |
+INTERVAL HOUR TO SECOND         |INTERVAL HOUR TO SECOND         |INTERVAL DAY(5) TO SECOND       |                                |                                |INTERVAL HOUR TO SECOND         |
+INTERVAL HOUR TO SECOND         |INTERVAL HOUR TO SECOND(p)      |INTERVAL DAY(5) TO SECOND(p)    |                                |                                |INTERVAL HOUR TO SECOND(p)      |
+INTERVAL MINUTE TO SECOND       |INTERVAL MINUTE TO SECOND       |INTERVAL DAY(5) TO SECOND       |                                |                                |INTERVAL MINUTE TO SECOND       |
+INTERVAL MINUTE TO SECOND       |INTERVAL MINUTE TO SECOND(p)    |INTERVAL DAY(5) TO SECOND(p)    |                                |                                |INTERVAL MINUTE TO SECOND(p)    |
+INTERVAL YEAR TO MONTH          |INTERVAL YEAR TO MONTH          |INTERVAL YEAR TO MONTH          |                                |                                |INTERVAL YEAR TO MONTH          |
+INTERVAL YEAR TO MONTH          |INTERVAL YEAR(p) TO MONTH       |INTERVAL YEAR(p) TO MONTH       |VARCHAR(30)                     |VARCHAR(30)                     |INTERVAL YEAR TO MONTH          |
+INTERVAL unit                   |INTERVAL unit                   |NUMBER(5)                       |                                |                                |INTERVAL unit                   |
+LONG                            |LONG                            |LONG                            |LONG                            |VARCHAR(max)                    |TEXT                            |
+LONG RAW                        |LONG RAW                        |LONG RAW                        |LONGBLOB                        |VARBINARY(max)                  |BYTEA                           |
+LONG VARBINARY                  |LONG VARBINARY                  |BLOB                            |LONG VARBINARY                  |VARBINARY(max)                  |                                |
+LONG VARCHAR                    |LONG VARCHAR                    |CLOB                            |LONG VARCHAR                    |VARCHAR(max)                    |                                |
+LONGBLOB                        |LONGBLOB                        |BLOB                            |LONGBLOB                        |VARBINARY(max)                  |                                |
+LONGTEXT                        |LONGTEXT                        |CLOB                            |LONGTEXT                        |VARCHAR(max)                    |                                |
+MEDIUMBLOB                      |MEDIUMBLOB                      |BLOB                            |MEDIUMBLOB                      |VARBINARY(max)                  |                                |
+MEDIUMINT                       |MEDIUMINT                       |NUMBER(7)                       |MEDIUMINT                       |INT                             |                                |
+MEDIUMTEXT                      |MEDIUMTEXT                      |CLOB                            |MEDIUMTEXT                      |VARCHAR(max)                    |                                |
+MIDDLEINT                       |MIDDLEINT                       |NUMBER(7)                       |MIDDLEINT                       |INT                             |                                |
+MONEY                           |MONEY                           |NUMBER(17,2)                    |DECIMAL(15,4)                   |MONEY                           |MONEY                           |
+NCHAR VARYING                   |NCHAR VARYING(n)                |NCHAR VARYING(n)                |NCHAR VARYING(n)                |NVARCHAR(n)                     |VARCHAR(n)                      |
+NCHAR                           |NCHAR(n)                        |NCHAR(n)                        |NCHAR(n)                        |NCHAR(n)                        |CHAR(n)                         |
+NCLOB                           |NCLOB                           |NCLOB                           |NVARCHAR(max)                   |NVARCHAR(max)                   |TEXT                            |
+NTEXT                           |NTEXT                           |                                |LONGTEXT                        |NTEXT                           |TEXT                            |
+NUMBER                          |NUMBER                          |NUMBER                          |DOUBLE                          |FLOAT                           |DOUBLE PRECISION                |
+NUMBER                          |NUMBER(*)                       |NUMBER(*)                       |DOUBLE                          |FLOAT                           |DOUBLE PRECISION                |
+NUMBER                          |NUMBER(1)                       |NUMBER(1)                       |                                |                                |                                |
+NUMBER                          |NUMBER(10)                      |NUMBER(10)                      |                                |                                |                                |
+NUMBER                          |NUMBER(10, 4)                   |NUMBER(10, 4)                   |                                |                                |                                |
+NUMBER                          |NUMBER(17,2)                    |NUMBER(17,2)                    |                                |                                |                                |
+NUMBER                          |NUMBER(19)                      |NUMBER(19)                      |                                |                                |                                |
+NUMBER                          |NUMBER(19, 4)                   |NUMBER(19, 4)                   |                                |                                |                                |
+NUMBER                          |NUMBER(20)                      |NUMBER(20)                      |                                |                                |                                |
+NUMBER                          |NUMBER(3)                       |NUMBER(3)                       |                                |                                |                                |
+NUMBER                          |NUMBER(4)                       |NUMBER(4)                       |                                |NUMBER(4)                       |                                |
+NUMBER                          |NUMBER(5)                       |NUMBER(5)                       |                                |                                |                                |
+NUMBER                          |NUMBER(7)                       |NUMBER(7)                       |                                |                                |                                |
+NUMBER                          |NUMBER(p)                       |NUMBER(p)                       |TINYINT                         |TINYINT                         |SMALLINT                        |
+NUMBER                          |NUMBER(p,0)                     |NUMBER(p,0)                     |TINYINT                         |TINYINT                         |SMALLINT                        |
+NUMBER                          |NUMBER(p,s)                     |NUMBER(p,s)                     |DECIMAL(p,s)                    |DECIMAL(p,s)                    |DECIMAL(p,s)                    |
+NUMERIC                         |NUMERIC(20)                     |                                |                                |NUMERIC(20)                     |                                |
+NUMERIC                         |NUMERIC(p,s)                    |NUMERIC(p,s)                    |NUMERIC(p,s)                    |NUMERIC(p,s)                    |NUMERIC(p,s)                    |
+NVARCHAR                        |NVARCHAR(max)                   |NCLOB                           |NVARCHAR(max)                   |NVARCHAR(max)                   |TEXT                            |
+NVARCHAR                        |NVARCHAR(n)                     |NVARCHAR2(n)                    |NVARCHAR(n)                     |NVARCHAR(n)                     |VARCHAR(n)                      |
+NVARCHAR2                       |NVARCHAR2(n)                    |NVARCHAR2(n)                    |NVARCHAR(n)                     |NVARCHAR(n)                     |VARCHAR(n)                      |
+RAW                             |RAW(255)                        |RAW(255)                        |                                |                                |                                |
+RAW                             |RAW(n)                          |RAW(n)                          |BINARY(n)                       |VARBINARY(n)                    |BYTEA                           |
+RAW                             |RAW(n/8)                        |RAW(n/8)                        |                                |                                |                                |
+REAL                            |REAL                            |REAL                            |REAL                            |REAL                            |REAL                            |
+ROWID                           |ROWID                           |ROWID                           |CHAR(10)                        |CHAR(18)                        |CHAR(10)                        |
+ROWVERSION                      |ROWVERSION                      |                                |BINARY(8)                       |ROWVERSION                      |BYTEA                           |
+SERIAL                          |SERIAL                          |                                |SERIAL                          |NUMERIC(20)                     |SERIAL                          |
+SERIAL2                         |SERIAL2                         |                                |                                |                                |SERIAL2                         |
+SERIAL4                         |SERIAL4                         |                                |                                |                                |SERIAL4                         |
+SERIAL8                         |SERIAL8                         |                                |                                |                                |SERIAL8                         |
+SMALLDATETIME                   |SMALLDATETIME                   |                                |DATETIME                        |SMALLDATETIME                   |TIMESTAMP(0)                    |
+SMALLINT                        |SMALLINT                        |SMALLINT                        |SMALLINT                        |SMALLINT                        |SMALLINT                        |
+SMALLMONEY                      |SMALLMONEY                      |NUMBER(10, 4)                   |DECIMAL(6,4)                    |SMALLMONEY                      |MONEY                           |
+SMALLSERIAL                     |SMALLSERIAL                     |                                |                                |                                |SMALLSERIAL                     |
+TEXT                            |TEXT                            |CLOB                            |TEXT                            |TEXT                            |TEXT                            |
+TIME                            |TIME(p)                         |TIMESTAMP(p)                    |TIME(p)                         |TIME(p)                         |TIME(p)                         |
+TIME WITH TIME ZONE             |TIME(p) WITH TIME ZONE          |TIMESTAMP(p) WITH TIME ZONE     |                                |                                |TIME(p) WITH TIME ZONE          |
+TIMESTAMP                       |TIMESTAMP                       |                                |BINARY(8)                       |TIMESTAMP                       |BYTEA                           |
+TIMESTAMP                       |TIMESTAMP(0)                    |                                |                                |                                |TIMESTAMP(0)                    |
+TIMESTAMP                       |TIMESTAMP(3)                    |TIMESTAMP(3)                    |                                |                                |TIMESTAMP(3)                    |
+TIMESTAMP                       |TIMESTAMP(p)                    |TIMESTAMP(p)                    |TIMESTAMP(p)                    |DATETIME2(p)                    |TIMESTAMP(p)                    |
+TIMESTAMP WITH TIME ZONE        |TIMESTAMP(p) WITH TIME ZONE     |TIMESTAMP(p) WITH TIME ZONE     |DATETIME(p)                     |DATETIMEOFFSET(p)               |TIMESTAMP(p) WITH TIME ZONE     |
+TIMESTAMPTZ                     |TIMESTAMPTZ(p)                  |TIMESTAMP(p) WITH TIME ZONE     |                                |                                |TIMESTAMPTZ(p)                  |
+TIMETZ                          |TIMETZ(p)                       |TIMESTAMP(p) WITH TIME ZONE     |                                |                                |TIMETZ(p)                       |
+TINYBLOB                        |TINYBLOB                        |RAW(255)                        |TINYBLOB                        |VARBINARY(255)                  |                                |
+TINYINT                         |TINYINT                         |NUMBER(3)                       |TINYINT                         |TINYINT                         |SMALLINT                        |
+TINYINT UNSIGNED                |TINYINT UNSIGNED                |                                |TINYINT UNSIGNED                |                                |                                |
+TINYTEXT                        |TINYTEXT                        |VARCHAR2(255)                   |TINYTEXT                        |VARCHAR(255)                    |                                |
+UNIQUEIDENTIFIER                |UNIQUEIDENTIFIER                |CHAR(36)                        |CHAR(16)                        |UNIQUEIDENTIFIER                |CHAR(16)                        |
+UROWID                          |UROWID(n)                       |UROWID(n)                       |VARCHAR(n)                      |VARCHAR(n)                      |VARCHAR(n)                      |
+UUID                            |UUID                            |CHAR(36)                        |                                |                                |UUID                            |
+VARBINARY                       |VARBINARY(255)                  |                                |                                |VARBINARY(255)                  |                                |
+VARBINARY                       |VARBINARY(max)                  |                                |LONGBLOB                        |VARBINARY(max)                  |BYTEA                           |
+VARBINARY                       |VARBINARY(n)                    |RAW(n)                          |VARBINARY(n)                    |VARBINARY(n)                    |BYTEA                           |
+VARBIT                          |VARBIT(n)                       |RAW(n/8)                        |                                |                                |VARBIT(n)                       |
+VARCHAR                         |VARCHAR(255)                    |                                |VARCHAR(255)                    |VARCHAR(255)                    |VARCHAR(255)                    |
+VARCHAR                         |VARCHAR(30)                     |                                |VARCHAR(30)                     |VARCHAR(30)                     |                                |
+VARCHAR                         |VARCHAR(max)                    |CLOB                            |LONGTEXT                        |VARCHAR(max)                    |TEXT                            |
+VARCHAR                         |VARCHAR(n)                      |VARCHAR(n)                      |VARCHAR(n)                      |VARCHAR(n)                      |VARCHAR(n)                      |
+VARCHAR2                        |VARCHAR2(255)                   |VARCHAR2(255)                   |                                |                                |                                |
+VARCHAR2                        |VARCHAR2(n)                     |VARCHAR2(n)                     |VARCHAR(n)                      |VARCHAR(n)                      |VARCHAR(n)                      |
+XML                             |XML                             |XMLTYPE                         |LONGTEXT                        |XML                             |XML                             |
+XMLTYPE                         |XMLTYPE                         |XMLTYPE                         |LONGTEXT                        |XML                             |XML                             |
+YEAR                            |YEAR(2)                         |NUMBER(4)                       |YEAR(2)                         |NUMBER(4)                       |                                |
+YEAR                            |YEAR(4)                         |NUMBER(4)                       |YEAR(4)                         |NUMBER(4)                       |                                |
