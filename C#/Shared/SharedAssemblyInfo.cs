@@ -10,10 +10,10 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TTRider, L.L.C.")]
-[assembly: AssemblyProduct("fluid-sql")]
+[assembly: AssemblyProduct("fluid-sql")] 
 [assembly: AssemblyCopyright("Copyright © 2014-2015 TTRider, L.L.C.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.0.13.0")]
-[assembly: AssemblyFileVersion("1.0.13.0")]
+[assembly: AssemblyVersion("1.0.20.0")]
+[assembly: AssemblyFileVersion("1.0.20.0")]

@@ -66,7 +66,7 @@ namespace TTRider.FluidSql.Providers
             State.Parameters.AddRange(token.Parameters);
             State.ParameterValues.AddRange(token.ParameterValues);
         }
-
+         
         protected virtual void VisitStatement(IStatement statement)
         {
             if (!StatementVisitors.ContainsKey(statement.GetType()))
@@ -75,6 +75,13 @@ namespace TTRider.FluidSql.Providers
             }
 
             StatementVisitors[statement.GetType()](this, statement);
+
+            if (statement is Token)
+            {
+                var token = (Token) statement;
+                State.Parameters.AddRange(token.Parameters);
+                State.ParameterValues.AddRange(token.ParameterValues);
+            }
         }
 
 

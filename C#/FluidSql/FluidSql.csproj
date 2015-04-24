@@ -163,6 +163,7 @@
 mkdir $(TargetDir)packing\lib\net45
 if not exist $(SolutionDir)nuget\$(ConfigurationName) mkdir $(SolutionDir)nuget\$(ConfigurationName)
 copy $(TargetPath) $(TargetDir)packing\lib\net45
+copy $(TargetDir)$(TargetName).pdb $(TargetDir)packing\lib\net45
 copy $(ProjectDir)TTRider.FluidSql.dll.nuspec $(TargetDir)packing
 $(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.dll.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
 

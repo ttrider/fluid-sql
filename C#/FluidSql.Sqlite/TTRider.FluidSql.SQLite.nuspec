@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.SQLite</id>
-    <version>1.0.13-alpha</version>
+    <version>1.0.20</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,9 +11,9 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
-      1.0.13-alpha
+      1.0.20
       --
-      * Initial pre-release of SQLite provider for FluidSQL
+      * Initial release of the SQLite provider for FluidSQL
 
       more information on GitHub:
       https://github.com/ttrider/fluid-sql
