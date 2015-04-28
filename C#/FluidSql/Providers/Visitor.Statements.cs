@@ -27,7 +27,28 @@ namespace TTRider.FluidSql.Providers
         }
         protected virtual void VisitSnippetStatement(SnippetStatement statement)
         {
-            State.Write(statement.Value);
+            var value = statement.Value;
+
+            if (statement.Arguments.Count > 0)
+            {
+                var index = 0;
+                SnippetArgumentRegex.Replace(value, match =>
+                {
+                    if (match.Index > index)
+                    {
+                        State.Write(value.Substring(index, match.Index - index));
+                    }
+                    var argIndex = int.Parse(match.Groups["index"].Value);
+                    VisitToken(statement.Arguments[argIndex]);
+                    index = match.Index + match.Length;
+                    return "";
+                });
+                State.Write(value.Substring(index));
+            }
+            else
+            {
+                State.Write(value);
+            }
         }
         protected virtual void VisitUnionStatement(UnionStatement statement)
         {

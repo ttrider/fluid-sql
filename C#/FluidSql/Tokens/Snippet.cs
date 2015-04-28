@@ -5,10 +5,20 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace TTRider.FluidSql
 {
     public class Snippet : ExpressionToken
     {
+        public Snippet()
+        {
+            this.Arguments = new List<Token>();
+        }
+
         public string Value { get; set; }
+
+        public IList<Token> Arguments { get; private set; }
     }
 }

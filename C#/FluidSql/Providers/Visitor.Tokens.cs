@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace TTRider.FluidSql.Providers
 {
@@ -93,9 +94,34 @@ namespace TTRider.FluidSql.Providers
             State.Write(token.Name);
         }
 
+
+        private static Regex SnippetArgumentRegex = new Regex(@"{(?<index>\d+)([,:][^}]*)?}");
+
+
         protected virtual void VisitSnippetToken(Snippet token)
         {
-            State.Write(token.Value);
+            var value = token.Value;
+
+            if (token.Arguments.Count > 0)
+            {
+                var index = 0;
+                SnippetArgumentRegex.Replace(value, match =>
+                {
+                    if (match.Index > index)
+                    {
+                        State.Write(value.Substring(index, match.Index - index));
+                    }
+                    var argIndex = int.Parse(match.Groups["index"].Value);
+                    VisitToken(token.Arguments[argIndex]);
+                    index = match.Index + match.Length;
+                    return "";
+                });
+                State.Write(value.Substring(index));
+            }
+            else
+            {
+                State.Write(value);
+            }
         }
 
         protected virtual void VisitFunctionToken(Function token)
