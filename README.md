@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+1.1.0
+--
+* Renaming parameterized snippet to Templated Statement
+* Adopting semantic versioning
 
 1.0.21
 --

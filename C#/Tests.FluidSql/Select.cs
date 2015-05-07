@@ -1227,7 +1227,7 @@ namespace FluidSqlTests
         [TestMethod]
         public void Snippet02()
         {
-            var statement = Sql.SnippetStatement("SELECT {0},{0} FROM sys.objects",Sql.Name("foo"));
+            var statement = Sql.TemplateStatement("SELECT {0},{0} FROM sys.objects",Sql.Name("foo"));
 
             var command = Utilities.GetCommand(statement);
 
