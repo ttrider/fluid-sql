@@ -157,7 +157,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT  GETUTCDATE() AS [Foo];", command.CommandText);
+            Assert.AreEqual("SELECT GETUTCDATE( ) AS [Foo];", command.CommandText);
         }
         [TestMethod]
         public void SetPlus()
@@ -1210,6 +1210,29 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("WHILE @i < 10\r\nBEGIN;\r\nSET @i = @i + 1;\r\nEND;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void Snippet01()
+        {
+            var statement = Sql.SnippetStatement("SELECT * FROM sys.objects");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM sys.objects;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Snippet02()
+        {
+            var statement = Sql.TemplateStatement("SELECT {0},{0} FROM sys.objects",Sql.Name("foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT  [foo], [foo]  FROM sys.objects;", command.CommandText);
         }
     }
 }

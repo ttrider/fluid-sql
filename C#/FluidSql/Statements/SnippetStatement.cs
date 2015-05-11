@@ -14,11 +14,14 @@ namespace TTRider.FluidSql
     {
         public SnippetStatement()
         {
+            this.Arguments = new List<Token>();
             this.Dialects = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public string Value { get; set; }
-    
+
+        public IList<Token> Arguments { get; private set; }
+
         public IDictionary<string, string> Dialects { get; private set; }
 
         public string GetValue(params string[] compatibleDialects)

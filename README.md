@@ -4,6 +4,16 @@ fluid-sql
 
 Release Notes
 ==
+1.1.0
+--
+* Renaming parameterized snippet to Templated Statement
+* Adopting semantic versioning
+
+1.0.21
+--
+* Adding parameterized snippet support
+
+
 0.0.23.1
 --
 * Support for CREATE/ALTER/DROP VIEW

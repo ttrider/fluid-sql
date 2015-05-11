@@ -34,6 +34,11 @@ namespace TTRider.FluidSql
             return val;
         }
 
+        public static Snippet Template(string value, Token argument, params Token[] arguments)
+        {
+            return Template(value, Enumerable.Repeat(argument, 1).Union(arguments));
+        }
+
         public static Snippet Snippet(string value, IEnumerable<Parameter> parameters)
         {
             var val = new Snippet {Value = value};
@@ -43,6 +48,22 @@ namespace TTRider.FluidSql
                 foreach (var p in parameters)
                 {
                     val.Parameters.Add(p);
+                }
+            }
+            return val;
+        }
+        public static Snippet Template(string value, IEnumerable<Token> arguments)
+        {
+            var val = new Snippet { Value = value };
+            if (arguments != null)
+            {
+                foreach (var argument in arguments)
+                {
+                    val.Arguments.Add(argument);
+                    if (argument is Parameter)
+                    {
+                        val.Parameters.Add((Parameter)argument);    
+                    }
                 }
             }
             return val;
@@ -61,7 +82,26 @@ namespace TTRider.FluidSql
             }
             return snippetStatement;
         }
-
+        public static SnippetStatement TemplateStatement(string value, IEnumerable<Token> arguments)
+        {
+            var snippetStatement = new SnippetStatement
+            {
+                Value = value
+            };
+            if (arguments != null)
+            {
+                foreach (var argument in arguments)
+                {
+                    snippetStatement.Arguments.Add(argument);
+                    if (argument is Parameter)
+                    {
+                        snippetStatement.Parameters.Add((Parameter)argument);
+                    }
+                }
+            }
+           
+            return snippetStatement;
+        }
         public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
         {
             var snippetStatement = new SnippetStatement
@@ -71,9 +111,15 @@ namespace TTRider.FluidSql
             if (parameters != null)
             {
                 foreach (var parameter in parameters)
+                {
                     snippetStatement.Parameters.Add(parameter);
+                }
             }
             return snippetStatement;
+        }
+        public static SnippetStatement TemplateStatement(string value, Token argument, params Token[] arguments)
+        {
+            return TemplateStatement(value, Enumerable.Repeat(argument, 1).Union(arguments));
         }
 
         public static Scalar Scalar(object value)
