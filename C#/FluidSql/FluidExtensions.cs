@@ -436,7 +436,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>) set);
+            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
         {
@@ -1093,7 +1093,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Then(this IfStatement statement, params IStatement[] statements)
         {
-            return Then(statement, (IEnumerable<IStatement>) statements);
+            return Then(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Then(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1184,7 +1184,7 @@ namespace TTRider.FluidSql
 
         public static InsertStatement Values(this InsertStatement statement, params object[] values)
         {
-            return Values(statement, (values??Enumerable.Empty<object>()).Select(Sql.Scalar));
+            return Values(statement, (values ?? Enumerable.Empty<object>()).Select(Sql.Scalar));
         }
 
         public static InsertStatement Values(this InsertStatement statement, IEnumerable<object> values)
@@ -2132,5 +2132,31 @@ namespace TTRider.FluidSql
             return statement;
         }
         #endregion CTE
+
+
+        #region Snippet
+
+        public static Snippet Dialect(this Snippet snippet, string value, string dialectName, params string[] additionalDialects)
+        {
+            return snippet;
+        }
+        public static Snippet Dialect(this Snippet snippet, string value, IEnumerable<string> dialects)
+        {
+            return snippet;
+        }
+
+        public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, string dialectName, params string[] additionalDialects)
+        {
+            return snippetStatement;
+        }
+        public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, IEnumerable<string> dialects)
+        {
+
+
+
+            return snippetStatement;
+        }
+
+        #endregion Snippet
     }
 }
