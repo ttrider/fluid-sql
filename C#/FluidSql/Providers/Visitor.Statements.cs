@@ -27,7 +27,7 @@ namespace TTRider.FluidSql.Providers
         }
         protected virtual void VisitSnippetStatement(SnippetStatement statement)
         {
-            var value = statement.Value;
+            var value = statement.GetValue(this.SupportedDialects);
 
             if (statement.Arguments.Count > 0)
             {

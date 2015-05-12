@@ -11,6 +11,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor : Visitor
     {
+		private static readonly string[] supportedDialects = new [] {"sqlite", "ansi"};
+		
         private readonly string[] DbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
@@ -44,7 +46,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             "DateTimeOffset" // DateTimeOffset = 28,
         };
 
-
+		protected override string[] SupportedDialects { get { return supportedDialects;}}
 
         public SqliteVisitor()
         {

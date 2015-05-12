@@ -13,6 +13,8 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
+		static readonly string[] supportedDialects = new [] {"", "ansi"};
+		
         protected VisitorState State = new VisitorState();
         protected string IdentifierOpenQuote = "\"";
         protected string IdentifierCloseQuote = "\"";
@@ -20,6 +22,8 @@ namespace TTRider.FluidSql.Providers
         protected string LiteralCloseQuote = "'";
         protected string CommentOpenQuote = "/*";
         protected string CommentCloseQuote = "*/";
+		
+		protected virtual string[] SupportedDialects { get { return supportedDialects;}}
 
         protected abstract void VisitJoinType(Joins join);
 

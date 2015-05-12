@@ -100,7 +100,7 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitSnippetToken(Snippet token)
         {
-            var value = token.Value;
+            var value = token.GetValue(this.SupportedDialects);
 
             if (token.Arguments.Count > 0)
             {

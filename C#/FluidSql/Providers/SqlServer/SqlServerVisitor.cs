@@ -13,6 +13,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 {
     internal class SqlServerVisitor : Visitor
     {
+		private static readonly string[] supportedDialects = new [] {"t-sql", "ansi"};
+				
         private readonly string[] DbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
@@ -47,7 +49,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         };
 
 
-
+		protected override string[] SupportedDialects { get { return supportedDialects;}}
 
 
 
