@@ -79,6 +79,11 @@ namespace TTRider.FluidSql
             parameter.DefaultValue = defaultValue;
             return parameter;
         }
+        public static Parameter ParameterDirection(this Parameter parameter, ParameterDirection direction)
+        {
+            parameter.Direction = direction;
+            return parameter;
+        }
 
         public static T As<T>(this T token, string alias)
             where T : IAliasToken

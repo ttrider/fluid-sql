@@ -104,6 +104,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                     var sp = new SQLiteParameter
                     {
                         ParameterName = p.Name,
+                        Direction = p.Direction
                     };
                     if (p.DbType.HasValue)
                     {

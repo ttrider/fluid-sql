@@ -115,6 +115,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     var sp = new SqlParameter
                     {
                         ParameterName = p.Name,
+                        Direction = p.Direction,
                     };
                     if (p.DbType.HasValue)
                     {

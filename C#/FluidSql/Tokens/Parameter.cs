@@ -56,6 +56,8 @@ namespace TTRider.FluidSql
 
         public object DefaultValue { get; set; }
 
+        public ParameterDirection Direction { get; set; }
+
         public bool Equals(Parameter obj)
         {
             if (obj == null) return false;
