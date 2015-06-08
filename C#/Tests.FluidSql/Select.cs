@@ -1234,6 +1234,25 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT  [foo], [foo]  FROM sys.objects;", command.CommandText);
         }
+
+
+        [TestMethod]
+        public void SelectParameters()
+        {
+            AssertSql(
+                Sql.Select.Output(Sql.Parameter.Int("@foo")),
+                "SELECT @foo;"
+                );
+        }
+
+        [TestMethod]
+        public void SelectIntoParameters()
+        {
+            AssertSql(
+                Sql.Select.From(Sql.Name("foo")).Set(Sql.Parameter.Int("@foo"),Sql.Name("bar")).Top(1),
+                "SELECT TOP ( 1 ) @foo = [bar] FROM [foo];"
+                );
+        }
     }
 }
 

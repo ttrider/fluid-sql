@@ -257,11 +257,172 @@ namespace TTRider.FluidSql
             }.Rebuild();
         }
 
-        public static SetStatement Assign(Name target, ExpressionToken expression)
+        #region Set
+        public static SetStatement Assign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
                 Assign = new AssignToken {First = target, Second = expression}
+            };
+        }
+
+        public static SetStatement PlusAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MinusAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement DivideAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseAndAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseOrAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseXorAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseNotAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement ModuloAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MultiplyAssign(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement Set(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken {First = target, Second = expression}
+            };
+        }
+
+        public static SetStatement PlusSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MinusSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement DivideSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseAndSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseOrSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseXorSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseNotSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement ModuloSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MultiplySet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement Assign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken { First = target, Second = expression }
             };
         }
 
@@ -269,7 +430,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -277,7 +438,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -285,7 +446,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -293,7 +454,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -301,7 +462,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -309,7 +470,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -317,7 +478,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -325,7 +486,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -333,7 +494,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -341,7 +502,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new AssignToken {First = target, Second = expression}
+                Assign = new AssignToken { First = target, Second = expression }
             };
         }
 
@@ -349,7 +510,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -357,7 +518,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -365,7 +526,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -373,7 +534,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -381,7 +542,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -389,7 +550,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -397,7 +558,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -405,7 +566,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -413,9 +574,11 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
             };
         }
+
+        #endregion Set
 
         #region Statements
 

@@ -251,4 +251,176 @@ namespace TTRider.FluidSql
             return obj.GetHashCode();
         }
     }
+
+    public class ParameterFactory
+    {
+        public Parameter Any(string name)
+        {
+            return new Parameter(name);
+        }
+
+        public Parameter Any(string name, object defaultValue)
+        {
+            return new Parameter(name) { DefaultValue = defaultValue };
+        }
+
+        public Parameter BigInt(string name)
+        {
+            return new Parameter(name, CommonDbType.BigInt);
+        }
+
+        public Parameter Binary(string name, int length)
+        {
+            return new Parameter(name, CommonDbType.Binary, length);
+        }
+
+        public Parameter Bit(string name)
+        {
+            return new Parameter(name, CommonDbType.Bit);
+        }
+
+        public Parameter Char(string name, int length)
+        {
+            return new Parameter(name, CommonDbType.Char, length);
+        }
+
+        public Parameter DateTime(string name)
+        {
+            return new Parameter(name, CommonDbType.DateTime);
+        }
+
+        public Parameter Decimal(string name, int length, byte precision = 18, byte scale = 0)
+        {
+            return new Parameter(name, CommonDbType.Decimal, precision, scale);
+        }
+
+        public Parameter Float(string name)
+        {
+            return new Parameter(name, CommonDbType.Float);
+        }
+
+        public Parameter Image(string name)
+        {
+            return new Parameter(name, CommonDbType.Image);
+        }
+
+        public Parameter Int(string name)
+        {
+            return new Parameter(name, CommonDbType.Int);
+        }
+
+        public Parameter Money(string name)
+        {
+            return new Parameter(name, CommonDbType.Money);
+        }
+
+        public Parameter NChar(string name, int length)
+        {
+            return new Parameter(name, CommonDbType.NChar, length);
+        }
+
+        public Parameter NText(string name)
+        {
+            return new Parameter(name, CommonDbType.NText);
+        }
+
+        public Parameter NVarChar(string name, int length = -1)
+        {
+            return new Parameter(name, CommonDbType.NVarChar, length);
+        }
+
+        public Parameter String(string name)
+        {
+            return new Parameter(name, CommonDbType.NVarChar, -1);
+        }
+
+        public Parameter Real(string name)
+        {
+            return new Parameter(name, CommonDbType.Real);
+        }
+
+        public Parameter UniqueIdentifier(string name)
+        {
+            return new Parameter(name, CommonDbType.UniqueIdentifier);
+        }
+
+        public Parameter SmallDateTime(string name)
+        {
+            return new Parameter(name, CommonDbType.SmallDateTime);
+        }
+
+        public Parameter SmallInt(string name)
+        {
+            return new Parameter(name, CommonDbType.SmallInt);
+        }
+
+        public Parameter SmallMoney(string name)
+        {
+            return new Parameter(name, CommonDbType.SmallMoney);
+        }
+
+        public Parameter Text(string name)
+        {
+            return new Parameter(name, CommonDbType.Text);
+        }
+
+        public Parameter Timestamp(string name)
+        {
+            return new Parameter(name, CommonDbType.Timestamp);
+        }
+
+        public Parameter TinyInt(string name)
+        {
+            return new Parameter(name, CommonDbType.TinyInt);
+        }
+
+        public Parameter VarBinary(string name, int length = -1)
+        {
+            return new Parameter(name, CommonDbType.VarBinary, length);
+        }
+
+        public Parameter VarChar(string name, int length = -1)
+        {
+            return new Parameter(name, CommonDbType.VarChar, length);
+        }
+
+        public Parameter Variant(string name)
+        {
+            return new Parameter(name, CommonDbType.Variant);
+        }
+
+        public Parameter Xml(string name)
+        {
+            return new Parameter(name, CommonDbType.Xml);
+        }
+
+        public Parameter Date(string name)
+        {
+            return new Parameter(name, CommonDbType.Date);
+        }
+
+        public Parameter Time(string name, int length = 7)
+        {
+            return new Parameter(name, CommonDbType.Time, length);
+        }
+
+        public Parameter DateTime2(string name, int length = 7)
+        {
+            return new Parameter(name, CommonDbType.DateTime2, length);
+        } //0..7
+
+        public Parameter DateTimeOffset(string name, int length = 7)
+        {
+            return new Parameter(name, CommonDbType.DateTimeOffset, length);
+        } //0..7
+    }
+
+    public partial class Sql
+    {
+        private static readonly ParameterFactory ParameterFactory = new ParameterFactory();
+        public static ParameterFactory Parameter
+        {
+            get { return ParameterFactory; }
+        }
+    }
 }

@@ -123,7 +123,86 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static AssignToken SetTo(this Name target, ExpressionToken expression)
+        {
+            return new AssignToken { First = target, Second = expression };
+        }
 
+        public static T Assign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
+
+        public static T Set<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
+
+        public static T PlusAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new PlusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T MinusAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new MinusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T DivideAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new DivideToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseAndAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseAndToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseOrAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseOrToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseXorAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseXorToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T ModuloAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new ModuloToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T MultiplyAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
         public static T Assign<T>(this T statement, Name target, ExpressionToken expression)
             where T : ISetStatement
         {
@@ -137,12 +216,6 @@ namespace TTRider.FluidSql
             statement.Set.Add(new AssignToken { First = target, Second = expression });
             return statement;
         }
-
-        public static AssignToken SetTo(this Name target, ExpressionToken expression)
-        {
-            return new AssignToken { First = target, Second = expression };
-        }
-
 
         public static T PlusAssign<T>(this T statement, Name target, ExpressionToken expression)
             where T : ISetStatement
@@ -199,9 +272,8 @@ namespace TTRider.FluidSql
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
-
-
-        public static SelectStatement BitwiseNotAssign(this SelectStatement statement, Name target, ExpressionToken expression)
+        public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
         {
             statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
             return statement;
