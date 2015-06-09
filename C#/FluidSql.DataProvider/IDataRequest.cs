@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 
 namespace TTRider.FluidSql.DataProvider
 {
     public interface IDataRequest
     {
-        /// <summary>
-        /// connection string
-        /// </summary>
-        string ConnectionString { get; }
+
+        IList<IDbCommand> PrerequisiteCommands { get; }
 
         /// <summary>
         /// buffering mode 
         /// </summary>
-        DataRequestMode Mode { get; set; }
+        DataRequestMode Mode { get; }
 
         /// <summary>
         /// main statement
         /// </summary>
-        IStatement Statement { get; set; }
+        IDbCommand Command { get; }
+
+        IDataResponse GetResponse();
     }
 }

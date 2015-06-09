@@ -4,43 +4,63 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using log4net;
 
 namespace TTRider.FluidSql.DataProvider
 {
     public class DataResponse : IDataResponse, IDisposable
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DataResponse));
+
         private IDbCommand command;
         private IDbCommand connection;
         private IDataReader reader;
         private IDictionary<string, object> output;
         private int? returnCode;
         private bool completed;
+        private bool disposed;
         private DataRecordEnumerable currentEnumerable;
 
-        internal static IDataResponse GetResponse(IDataRequest request, IDbCommand command)
+        internal static IDataResponse GetResponse(IDataRequest request)
         {
             if (request == null) throw new ArgumentNullException("request");
-            if (command == null) throw new ArgumentNullException("command");
-            if (command.Connection == null) throw new ArgumentException("command.Connection");
+            if (request.Command == null) throw new ArgumentException("request.Command");
+            if (request.Command.Connection == null) throw new ArgumentException("request.Command.Connection");
 
-            var response = new DataResponse(request, command);
+            var response = new DataResponse(request);
             response.ProcessRequest();
             return response;
         }
 
-        private DataResponse(IDataRequest request, IDbCommand command)
+        private DataResponse(IDataRequest request)
         {
-            this.command = command;
             this.Request = request;
+            this.command = request.Command;
+            this.sessionHash = (request.Command.CommandText+string.Join("-",request.PrerequisiteCommands)+DateTime.Now.ToString("s")).GetHashCode().ToString("x8");
         }
+
+        ~DataResponse()
+        {
+            Dispose(false);
+        }
+
+        private readonly string sessionHash;
 
         private void ProcessRequest()
         {
-            if (command.Connection.State != ConnectionState.Open)
+            if (this.Request.Command.Connection.State != ConnectionState.Open)
             {
-                command.Connection.Open();
+                this.Request.Command.Connection.Open();
             }
 
+            // process Prerequisites
+            foreach (var prerequisiteCommand in this.Request.PrerequisiteCommands)
+            {
+                Log.DebugFormat("{0}-PREREQUISITE_COMMAND: {1}",this.sessionHash,prerequisiteCommand.GetCommandSummary());
+                prerequisiteCommand.ExecuteNonQuery();
+            }
+
+            Log.DebugFormat("{0}-COMMAND: {1}", this.sessionHash, command.GetCommandSummary());
             this.reader = command.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
@@ -86,6 +106,12 @@ namespace TTRider.FluidSql.DataProvider
             if (!this.reader.NextResult())
             {
                 this.completed = true;
+                EnsureOutputValues();
+                Log.DebugFormat("{0}-COMMAND COMPLETED", this.sessionHash);
+                if (Completed != null)
+                {
+                    Completed(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -131,9 +157,19 @@ namespace TTRider.FluidSql.DataProvider
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
+            Dispose(true);
+        }
+        void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
             if (reader != null)
             {
-                reader.Close();
+                if (!reader.IsClosed)
+                {
+                    reader.Close();
+                }
                 reader.Dispose();
                 reader = null;
             }
@@ -149,9 +185,10 @@ namespace TTRider.FluidSql.DataProvider
                 connection.Dispose();
                 connection = null;
             }
+            this.disposed = true;
         }
 
-
+        public event EventHandler Completed;
 
         class DataRecordEnumerable : IEnumerable<object[]>
         {
