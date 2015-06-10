@@ -56,7 +56,7 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluidSql.DataProvider\FluidSql.RequestResponse.csproj">
+    <ProjectReference Include="..\FluidSql.RequestResponse\FluidSql.RequestResponse.csproj">
       <Project>{708850aa-c14b-4a9d-b8ec-fd200911479b}</Project>
       <Name>FluidSql.RequestResponse</Name>
     </ProjectReference>
