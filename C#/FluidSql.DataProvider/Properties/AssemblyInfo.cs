@@ -1,7 +1,14 @@
-﻿using System.Reflection;
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-[assembly: AssemblyTitle("FluidSql.DataProvider")]
+
+[assembly: AssemblyTitle("FluidSql.RequestResponse")]
 [assembly: AssemblyDescription("")]
 
-[assembly: InternalsVisibleTo("Tests.DataProvider", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("Tests.RequestResponse", AllInternalsVisible = true)]

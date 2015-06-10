@@ -1,112 +1,187 @@
-﻿using System;
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using System.Threading.Tasks;
 using TTRider.FluidSql.Providers;
 
-namespace TTRider.FluidSql.DataProvider
+namespace TTRider.FluidSql.RequestResponse
 {
     public class DataRequest : IDataRequest
     {
         static readonly ConcurrentDictionary<Type, IProvider> Providers = new ConcurrentDictionary<Type, IProvider>();
 
+        private DataRequestProperties properties;
+        private IEnumerable<IDbCommand> prerequisiteCommands;
+        private IDbCommand command;
 
-        public static IDataRequest Create<T>(string connectionString, IStatement statement, IEnumerable<IStatement> prerequisiteStatements = null)
-            where T : IProvider
+
+        public static IDataRequest Create(DataRequestProperties properties)
         {
-            return Create<T>(connectionString, DataRequestMode.NoBufferReuseMemory, statement, prerequisiteStatements);
+            if (properties == null) throw new ArgumentNullException("properties");
+            if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
+            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
+
+            return new DataRequest()
+            {
+                properties = properties.Clone()
+            };
         }
 
-        public static IDataRequest Create<T>(string connectionString, DataRequestMode mode, IStatement statement, IEnumerable<IStatement> prerequisiteStatements = null)
+        public static IDataRequest Create<T>(DataRequestProperties properties)
             where T : IProvider
         {
-            if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException("connectionString");
-            if (statement == null) throw new ArgumentNullException("statement");
+            if (properties == null) throw new ArgumentNullException("properties");
+            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
 
-            var queryProvider = Providers.GetOrAdd(typeof(T), t => Activator.CreateInstance<T>());
-
-            var connection = queryProvider.GetConnection(connectionString);
-
-            connection.Open();
-
-            var command = queryProvider.GetCommand(statement);
-            command.Connection = connection;
-
-            var request = new DataRequest
+            var prop = properties.Clone();
+            prop.QueryProvider = Providers.GetOrAdd(typeof(T), t => Activator.CreateInstance<T>());
+            return new DataRequest()
             {
-                Command = command,
-                Mode = mode
+                properties = prop
             };
+        }
 
+
+        public static IDataRequest Create<T>(IStatement statement, DataRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+            where T : IProvider
+        {
+            if (statement == null) throw new ArgumentNullException("statement");
+            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement, mode,
+                connectionString, prerequisiteStatements);
+        }
+
+        public static IDataRequest Create<T>(IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+            where T : IProvider
+        {
+            if (statement == null) throw new ArgumentNullException("statement");
+            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
+                DataRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+        }
+
+        public static IDataRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        {
+            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
+            if (statement == null) throw new ArgumentNullException("statement");
+            return Create(queryProvider, statement,
+                DataRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+        }
+
+        public static IDataRequest Create(IProvider queryProvider, IStatement statement, DataRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        {
+            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
+            if (statement == null) throw new ArgumentNullException("statement");
+            var properties = new DataRequestProperties
+            {
+                Statement = statement,
+                Mode = mode,
+                ConnectionString = connectionString,
+                QueryProvider = queryProvider
+            };
             if (prerequisiteStatements != null)
             {
-                foreach (var cmd in prerequisiteStatements
-                    .Select(ps => queryProvider.GetCommand(ps)))
+                foreach (var ps in prerequisiteStatements)
                 {
-                    cmd.Connection = connection;
-                    request.PrerequisiteCommands.Add(cmd);
+                    properties.PrerequisiteStatements.Add(ps);
                 }
             }
-
-            return request;
-        }
-
-        public static IDataRequest Create(IDbCommand command, IEnumerable<IDbCommand> prerequisiteCommands = null)
-        {
-            return Create(command, DataRequestMode.NoBufferReuseMemory, prerequisiteCommands);
-        }
-
-        public static IDataRequest Create(IDbCommand command, DataRequestMode mode, IEnumerable<IDbCommand> prerequisiteCommands = null)
-        {
-            if (command == null) throw new ArgumentNullException("command");
-            if (command.Connection == null) throw new ArgumentException("command.Connection");
-
-            if (command.Connection.State == ConnectionState.Closed)
+            return new DataRequest()
             {
-                command.Connection.Open();
-            }
-
-            var request = new DataRequest
-            {
-                Command = command,
-                Mode = mode
+                properties = properties
             };
-
-            if (prerequisiteCommands != null)
-            {
-                foreach (var cmd in prerequisiteCommands)
-                {
-                    cmd.Connection = command.Connection;
-                    request.PrerequisiteCommands.Add(cmd);
-                }
-            }
-
-            return request;
         }
 
-
-
-        DataRequest()
+        public IEnumerable<IDbCommand> PrerequisiteCommands
         {
-            this.PrerequisiteCommands = new List<IDbCommand>();
+            get
+            {
+                return this.prerequisiteCommands ??
+                       (this.prerequisiteCommands = this.properties.GetPrerequiseteCommands());
+            }
         }
 
-
-        public IList<IDbCommand> PrerequisiteCommands { get; private set; }
-
-
-        public IDbCommand Command { get; private set; }
-
+        public IDbCommand Command
+        {
+            get { return this.command ?? (this.command = this.properties.GetCommand()); }
+        }
 
         /// <summary>
         /// reuse buffer for each record in recordset
         /// </summary>
-        public DataRequestMode Mode { get; set; }
-
-        public IDataResponse GetResponse()
+        public DataRequestMode Mode 
         {
+            get { return this.properties.Mode; } 
+        }
+
+        public IDataResponse GetResponse(string connectionString = null, DataRequestMode? mode = null)
+        {
+            if (connectionString != null || mode!=null)
+            {
+                //we need to clone this data request with new connection information
+
+                var dr = new DataRequest
+                {
+                    properties = this.properties.Clone()
+                };
+                if (!string.IsNullOrWhiteSpace(connectionString))
+                {
+                    dr.properties.ConnectionString = connectionString;
+                }
+                if (mode.HasValue)
+                {
+                    dr.properties.Mode = mode.Value;
+                }
+                return dr.GetResponse();
+            }
+
+            // ensure that all commands will share a connection 
+            foreach (var dbCommand in this.PrerequisiteCommands)
+            {
+                dbCommand.Connection = this.Command.Connection;
+            }
+
             return DataResponse.GetResponse(this);
+        }
+
+        public async Task<IDataResponse> GetResponseAsync(string connectionString = null, DataRequestMode? mode = null)
+        {
+            if (connectionString != null || mode != null)
+            {
+                //we need to clone this data request with new connection information
+
+                var dr = new DataRequest
+                {
+                    properties = this.properties.Clone()
+                };
+                if (!string.IsNullOrWhiteSpace(connectionString))
+                {
+                    dr.properties.ConnectionString = connectionString;
+                }
+                if (mode.HasValue)
+                {
+                    dr.properties.Mode = mode.Value;
+                }
+                return await dr.GetResponseAsync();
+            }
+
+            if (this.command == null)
+            {
+                this.command = await this.properties.GetCommandAsync();
+            }
+
+            foreach (var dbCommand in this.PrerequisiteCommands)
+            {
+                dbCommand.Connection = this.command.Connection;
+            }
+
+            return await DataResponse.GetResponseAsync(this);
         }
     }
 }

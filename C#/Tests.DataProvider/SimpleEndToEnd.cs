@@ -3,8 +3,8 @@ using System.Data;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
-using TTRider.FluidSql.DataProvider;
 using TTRider.FluidSql.Providers.SqlServer;
+using TTRider.FluidSql.RequestResponse;
 
 namespace Tests.DataProvider
 {
@@ -36,7 +36,7 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select);
 
-            var request = DataRequest.Create<SqlServerProvider>(connectionString, s);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
             var response = request.GetResponse();
 
             Assert.AreEqual("Adam", response.Output["@Name"]);
@@ -61,7 +61,7 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select);
 
-            var request = DataRequest.Create<SqlServerProvider>(connectionString, s);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
             var response = request.GetResponse();
 
             var f = response.Records.First();
@@ -89,7 +89,7 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select1,select2);
 
-            var request = DataRequest.Create<SqlServerProvider>(connectionString, s);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
             var response = request.GetResponse();
 
             var f = response.Records.First();

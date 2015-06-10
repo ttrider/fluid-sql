@@ -7,8 +7,8 @@
     <ProjectGuid>{708850AA-C14B-4A9D-B8EC-FD200911479B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TTRider.FluidSql.DataProvider</RootNamespace>
-    <AssemblyName>TTRider.FluidSql.DataProvider</AssemblyName>
+    <RootNamespace>TTRider.FluidSql.RequestResponse</RootNamespace>
+    <AssemblyName>TTRider.FluidSql.RequestResponse</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>963abe11</NuGetPackageImportStamp>
@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IDbConnection-Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IDbConnection-Async.1.0.0\lib\net45\IDbConnection-Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -49,16 +53,15 @@
     </Compile>
     <Compile Include="DataRequest.cs" />
     <Compile Include="DataRequestMode.cs" />
+    <Compile Include="DataRequestProperties.cs" />
     <Compile Include="DataResponse.cs" />
-    <Compile Include="IDataProvider.cs" />
     <Compile Include="IDataRequest.cs" />
     <Compile Include="IDataResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FluidSql.DataProvider.licenseheader" />
     <None Include="packages.config" />
-    <None Include="TTRider.FluidSql.DataProvider.nuspec" />
+    <None Include="TTRider.FluidSql.RequestResponse.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluidSql\FluidSql.csproj">
@@ -73,9 +76,9 @@
       mkdir $(TargetDir)packing\lib\net45
       if not exist $(SolutionDir)nuget\$(ConfigurationName) mkdir $(SolutionDir)nuget\$(ConfigurationName)
       copy $(TargetPath) $(TargetDir)packing\lib\net45
-      copy $(ProjectDir)TTRider.FluidSql.DataProvider.nuspec $(TargetDir)packing
-      $(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.DataProvider.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
-    </PostBuildEvent>
+      copy $(ProjectDir)TTRider.FluidSql.RequestResponse.nuspec $(TargetDir)packing
+      $(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.RequestResponse.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

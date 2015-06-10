@@ -1,12 +1,20 @@
-﻿using System;
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 using log4net;
 
-namespace TTRider.FluidSql.DataProvider
+namespace TTRider.FluidSql.RequestResponse
 {
     public class DataResponse : IDataResponse, IDisposable
     {
@@ -28,7 +36,18 @@ namespace TTRider.FluidSql.DataProvider
             if (request.Command.Connection == null) throw new ArgumentException("request.Command.Connection");
 
             var response = new DataResponse(request);
-            response.ProcessRequest();
+            response.ProcessRequestAsync().Wait();
+            return response;
+        }
+
+        internal static async Task<IDataResponse> GetResponseAsync(IDataRequest request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+            if (request.Command == null) throw new ArgumentException("request.Command");
+            if (request.Command.Connection == null) throw new ArgumentException("request.Command.Connection");
+
+            var response = new DataResponse(request);
+            await response.ProcessRequestAsync();
             return response;
         }
 
@@ -36,7 +55,7 @@ namespace TTRider.FluidSql.DataProvider
         {
             this.Request = request;
             this.command = request.Command;
-            this.sessionHash = (request.Command.CommandText+string.Join("-",request.PrerequisiteCommands)+DateTime.Now.ToString("s")).GetHashCode().ToString("x8");
+            this.sessionHash = (request.Command.CommandText + string.Join("-", request.PrerequisiteCommands) + DateTime.Now.ToString("s")).GetHashCode().ToString("x8");
         }
 
         ~DataResponse()
@@ -46,22 +65,22 @@ namespace TTRider.FluidSql.DataProvider
 
         private readonly string sessionHash;
 
-        private void ProcessRequest()
+        private async Task ProcessRequestAsync()
         {
             if (this.Request.Command.Connection.State != ConnectionState.Open)
             {
-                this.Request.Command.Connection.Open();
+                await this.Request.Command.Connection.OpenAsync();
             }
 
             // process Prerequisites
             foreach (var prerequisiteCommand in this.Request.PrerequisiteCommands)
             {
-                Log.DebugFormat("{0}-PREREQUISITE_COMMAND: {1}",this.sessionHash,prerequisiteCommand.GetCommandSummary());
-                prerequisiteCommand.ExecuteNonQuery();
+                Log.DebugFormat("{0}-PREREQUISITE_COMMAND: {1}", this.sessionHash, prerequisiteCommand.GetCommandSummary());
+                await prerequisiteCommand.ExecuteNonQueryAsync();
             }
 
             Log.DebugFormat("{0}-COMMAND: {1}", this.sessionHash, command.GetCommandSummary());
-            this.reader = command.ExecuteReader(CommandBehavior.CloseConnection);
+            this.reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
         }
 
         private void EnsureOutputValues()
@@ -121,13 +140,21 @@ namespace TTRider.FluidSql.DataProvider
         {
             get
             {
-                if (completed)
+                if (this.Request.Mode == DataRequestMode.Buffer)
                 {
-                    return Enumerable.Empty<object[]>();
+                    return this.currentEnumerable ??
+                           (this.currentEnumerable = new BufferedDataRecordEnumerable(this, this.OnRecordsetProcessed));
                 }
+                else
+                {
+                    if (completed)
+                    {
+                        return Enumerable.Empty<object[]>();
+                    }
 
-                return this.currentEnumerable ??
-                       (this.currentEnumerable = new DataRecordEnumerable(this, this.OnRecordsetProcessed));
+                    return this.currentEnumerable ??
+                           (this.currentEnumerable = new DataRecordEnumerable(this, this.OnRecordsetProcessed));
+                }
             }
         }
 
@@ -137,7 +164,7 @@ namespace TTRider.FluidSql.DataProvider
             {
                 this.EnsureOutputValues();
                 return this.output;
-            } 
+            }
         }
 
         public int? ReturnCode
@@ -204,16 +231,41 @@ namespace TTRider.FluidSql.DataProvider
 
             public IEnumerator<object[]> GetEnumerator()
             {
-                var enumerator = new DataRecordEnumerator(response, this.onCompletedAction);
-                return enumerator;
+                return this.DoGetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
             }
+
+            protected virtual IEnumerator<object[]> DoGetEnumerator()
+            {
+                return new DataRecordEnumerator(response, this.onCompletedAction);
+            }
         }
 
+        private class BufferedDataRecordEnumerable : DataRecordEnumerable
+        {
+            private readonly List<object[]> records;
+            public BufferedDataRecordEnumerable(DataResponse response, Action onCompletedAction)
+                : base(response, onCompletedAction)
+            {
+                this.records = new List<object[]>();
+            }
+
+            protected override IEnumerator<object[]> DoGetEnumerator()
+            {
+                using(var enumerator = base.DoGetEnumerator())
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        this.records.Add(enumerator.Current);
+                    }
+                }
+                return this.records.GetEnumerator();
+            }
+        }
 
         class DataRecordEnumerator : IEnumerator<object[]>
         {

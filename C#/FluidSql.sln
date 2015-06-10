@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.Sqlite", "FluidSql
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Sqlite", "Tests.Sqlite\Tests.Sqlite.csproj", "{F5729BF8-94D5-4665-8A61-5AE933561547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.DataProvider", "FluidSql.DataProvider\FluidSql.DataProvider.csproj", "{708850AA-C14B-4A9D-B8EC-FD200911479B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.RequestResponse", "FluidSql.DataProvider\FluidSql.RequestResponse.csproj", "{708850AA-C14B-4A9D-B8EC-FD200911479B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.DataProvider", "Tests.DataProvider\Tests.DataProvider.csproj", "{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.RequestResponse", "Tests.DataProvider\Tests.RequestResponse.csproj", "{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

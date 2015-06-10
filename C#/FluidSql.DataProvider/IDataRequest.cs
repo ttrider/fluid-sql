@@ -1,12 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
 
-namespace TTRider.FluidSql.DataProvider
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+
+namespace TTRider.FluidSql.RequestResponse
 {
     public interface IDataRequest
     {
-
-        IList<IDbCommand> PrerequisiteCommands { get; }
+        IEnumerable<IDbCommand> PrerequisiteCommands { get; }
 
         /// <summary>
         /// buffering mode 
@@ -18,6 +25,7 @@ namespace TTRider.FluidSql.DataProvider
         /// </summary>
         IDbCommand Command { get; }
 
-        IDataResponse GetResponse();
+        IDataResponse GetResponse(string connectionString = null, DataRequestMode? mode = null);
+        Task<IDataResponse> GetResponseAsync(string connectionString = null, DataRequestMode? mode = null);
     }
 }
