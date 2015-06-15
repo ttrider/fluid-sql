@@ -52,9 +52,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="DataRequest.cs" />
     <Compile Include="DataRequestProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
