@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IDbConnection-Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IDbConnection-Async.1.0.0\lib\net45\IDbConnection-Async.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -46,17 +42,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TTRider.IDbConnection-Async, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbConnection-Async.1.0.2\lib\net45\TTRider.IDbConnection-Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TTRider.IDbRequestResponse, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbRequestResponse.1.0.3\lib\net45\TTRider.IDbRequestResponse.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DataRequest.cs" />
-    <Compile Include="DataRequestMode.cs" />
     <Compile Include="DataRequestProperties.cs" />
-    <Compile Include="DataResponse.cs" />
-    <Compile Include="IDataRequest.cs" />
-    <Compile Include="IDataResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -155,25 +155,22 @@
     <None Include="FluidSql.cd" />
     <Compile Include="Providers\Visitor.Statements.cs" />
     <None Include="FluidSql.licenseheader" />
-    <None Include="TTRider.FluidSql.dll.nuspec" />
+    <None Include="TTRider.FluidSql.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist $(TargetDir)packing rd /s /q $(TargetDir)packing
-mkdir $(TargetDir)packing\lib\net45
-if not exist $(SolutionDir)nuget\$(ConfigurationName) mkdir $(SolutionDir)nuget\$(ConfigurationName)
-copy $(TargetPath) $(TargetDir)packing\lib\net45
-copy $(TargetDir)$(TargetName).pdb $(TargetDir)packing\lib\net45
-copy $(ProjectDir)TTRider.FluidSql.dll.nuspec $(TargetDir)packing
-$(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.dll.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
-
-</PostBuildEvent>
+    <NugetPacking>$(TargetDir)\nugetpack</NugetPacking>
+    <NugetPackingLib>$(TargetDir)\nugetpack\lib\net45</NugetPackingLib>
+    <NugetTarget>$(SolutionDir)nuget\$(ConfigurationName)</NugetTarget>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
+    <RemoveDir Directories="$(NugetPacking);" Condition="Exists(@(NugetPacking))" />
+    <MakeDir Directories="$(NugetPacking)" />
+    <MakeDir Directories="$(NugetPackingLib)" />
+    <MakeDir Directories="$(NugetTarget)" Condition="!Exists(@(NugetTarget))" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="$(ProjectDir)$(AssemblyName).nuspec" DestinationFolder="$(NugetPacking)" OverwriteReadOnlyFiles="true" />
+    <Exec Command="$(SolutionDir)nuget\nuget pack $(NugetPacking)\$(AssemblyName).nuspec -OutputDir $(NugetTarget)" />
   </Target>
-  -->
 </Project>

@@ -10,11 +10,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using TTRider.Data.RequestResponse;
 using TTRider.FluidSql.Providers;
 
 namespace TTRider.FluidSql.RequestResponse
 {
-    public class DataRequest : IDataRequest
+    public class DataRequest : IDbRequest
     {
         static readonly ConcurrentDictionary<Type, IProvider> Providers = new ConcurrentDictionary<Type, IProvider>();
 
@@ -23,7 +24,7 @@ namespace TTRider.FluidSql.RequestResponse
         private IDbCommand command;
 
 
-        public static IDataRequest Create(DataRequestProperties properties)
+        public static IDbRequest Create(DataRequestProperties properties)
         {
             if (properties == null) throw new ArgumentNullException("properties");
             if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
@@ -35,7 +36,7 @@ namespace TTRider.FluidSql.RequestResponse
             };
         }
 
-        public static IDataRequest Create<T>(DataRequestProperties properties)
+        public static IDbRequest Create<T>(DataRequestProperties properties)
             where T : IProvider
         {
             if (properties == null) throw new ArgumentNullException("properties");
@@ -50,7 +51,7 @@ namespace TTRider.FluidSql.RequestResponse
         }
 
 
-        public static IDataRequest Create<T>(IStatement statement, DataRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        public static IDbRequest Create<T>(IStatement statement, DbRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
             where T : IProvider
         {
             if (statement == null) throw new ArgumentNullException("statement");
@@ -58,23 +59,23 @@ namespace TTRider.FluidSql.RequestResponse
                 connectionString, prerequisiteStatements);
         }
 
-        public static IDataRequest Create<T>(IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        public static IDbRequest Create<T>(IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
             where T : IProvider
         {
             if (statement == null) throw new ArgumentNullException("statement");
             return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
-                DataRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
         }
 
-        public static IDataRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        public static IDbRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
         {
             if (queryProvider == null) throw new ArgumentNullException("queryProvider");
             if (statement == null) throw new ArgumentNullException("statement");
             return Create(queryProvider, statement,
-                DataRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
         }
 
-        public static IDataRequest Create(IProvider queryProvider, IStatement statement, DataRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        public static IDbRequest Create(IProvider queryProvider, IStatement statement, DbRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
         {
             if (queryProvider == null) throw new ArgumentNullException("queryProvider");
             if (statement == null) throw new ArgumentNullException("statement");
@@ -98,6 +99,25 @@ namespace TTRider.FluidSql.RequestResponse
             };
         }
 
+
+        public IDbRequest CreateNew(string connectionString = null, DbRequestMode? mode = null)
+        {
+            var dr = new DataRequest
+            {
+                properties = this.properties.Clone()
+            };
+            if (!string.IsNullOrWhiteSpace(connectionString))
+            {
+                dr.properties.ConnectionString = connectionString;
+            }
+            if (mode.HasValue)
+            {
+                dr.properties.Mode = mode.Value;
+            }
+            return dr;
+        }
+
+
         public IEnumerable<IDbCommand> PrerequisiteCommands
         {
             get
@@ -115,62 +135,24 @@ namespace TTRider.FluidSql.RequestResponse
         /// <summary>
         /// reuse buffer for each record in recordset
         /// </summary>
-        public DataRequestMode Mode 
+        public DbRequestMode Mode 
         {
             get { return this.properties.Mode; } 
         }
 
-        public IDataResponse GetResponse(string connectionString = null, DataRequestMode? mode = null)
+        public IDbResponse GetResponse()
         {
-            if (connectionString != null || mode!=null)
-            {
-                //we need to clone this data request with new connection information
-
-                var dr = new DataRequest
-                {
-                    properties = this.properties.Clone()
-                };
-                if (!string.IsNullOrWhiteSpace(connectionString))
-                {
-                    dr.properties.ConnectionString = connectionString;
-                }
-                if (mode.HasValue)
-                {
-                    dr.properties.Mode = mode.Value;
-                }
-                return dr.GetResponse();
-            }
-
             // ensure that all commands will share a connection 
             foreach (var dbCommand in this.PrerequisiteCommands)
             {
                 dbCommand.Connection = this.Command.Connection;
             }
 
-            return DataResponse.GetResponse(this);
+            return DbResponse.GetResponse(this);
         }
 
-        public async Task<IDataResponse> GetResponseAsync(string connectionString = null, DataRequestMode? mode = null)
+        public async Task<IDbResponse> GetResponseAsync()
         {
-            if (connectionString != null || mode != null)
-            {
-                //we need to clone this data request with new connection information
-
-                var dr = new DataRequest
-                {
-                    properties = this.properties.Clone()
-                };
-                if (!string.IsNullOrWhiteSpace(connectionString))
-                {
-                    dr.properties.ConnectionString = connectionString;
-                }
-                if (mode.HasValue)
-                {
-                    dr.properties.Mode = mode.Value;
-                }
-                return await dr.GetResponseAsync();
-            }
-
             if (this.command == null)
             {
                 this.command = await this.properties.GetCommandAsync();
@@ -181,7 +163,7 @@ namespace TTRider.FluidSql.RequestResponse
                 dbCommand.Connection = this.command.Connection;
             }
 
-            return await DataResponse.GetResponseAsync(this);
+            return await DbResponse.GetResponseAsync(this);
         }
     }
 }

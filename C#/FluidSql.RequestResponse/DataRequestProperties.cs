@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using TTRider.Data.RequestResponse;
 using TTRider.FluidSql.Providers;
 
 namespace TTRider.FluidSql.RequestResponse
@@ -24,7 +25,7 @@ namespace TTRider.FluidSql.RequestResponse
 
         public string ConnectionString { get; set; }
         
-        public DataRequestMode Mode { get; set; }
+        public DbRequestMode Mode { get; set; }
         
         public IStatement Statement { get; set; }
         
