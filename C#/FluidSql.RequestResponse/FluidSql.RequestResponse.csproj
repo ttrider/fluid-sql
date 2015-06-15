@@ -46,8 +46,8 @@
       <HintPath>..\packages\TTRider.IDbConnection-Async.1.0.2\lib\net45\TTRider.IDbConnection-Async.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TTRider.IDbRequestResponse, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\TTRider.IDbRequestResponse.1.0.3\lib\net45\TTRider.IDbRequestResponse.dll</HintPath>
+    <Reference Include="TTRider.IDbRequestResponse, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbRequestResponse.1.0.4\lib\net45\TTRider.IDbRequestResponse.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
