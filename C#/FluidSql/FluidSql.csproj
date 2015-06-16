@@ -162,6 +162,7 @@
     <NugetPacking>$(TargetDir)\nugetpack</NugetPacking>
     <NugetPackingLib>$(TargetDir)\nugetpack\lib\net45</NugetPackingLib>
     <NugetTarget>$(SolutionDir)nuget\$(ConfigurationName)</NugetTarget>
+    <NugetApp>$(SolutionDir)nuget\nuget.exe</NugetApp>
   </PropertyGroup>
   <Target Name="AfterBuild">
     <RemoveDir Directories="$(NugetPacking);" Condition="Exists(@(NugetPacking))" />
@@ -171,6 +172,6 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
     <Copy SourceFiles="$(ProjectDir)$(AssemblyName).nuspec" DestinationFolder="$(NugetPacking)" OverwriteReadOnlyFiles="true" />
-    <Exec Command="$(SolutionDir)nuget\nuget pack $(NugetPacking)\$(AssemblyName).nuspec -OutputDir $(NugetTarget)" />
+    <Exec Condition="Exists($(NugetApp))" Command="$(SolutionDir)nuget\nuget pack $(NugetPacking)\$(AssemblyName).nuspec -OutputDir $(NugetTarget)" />
   </Target>
 </Project>
