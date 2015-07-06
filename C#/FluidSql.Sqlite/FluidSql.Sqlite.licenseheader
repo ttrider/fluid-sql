@@ -1,0 +1,28 @@
+extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+extensions: .aspx .ascx
+<%-- 
+ <license>
+ The MIT License (MIT)
+ </license>
+ <copyright company="TTRider, L.L.C.">
+ Copyright (c) 2014-2015 All Rights Reserved
+ </copyright>
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+ <license>
+ The MIT License (MIT)
+ </license>
+ <copyright company="TTRider, L.L.C.">
+ Copyright (c) 2014-2015 All Rights Reserved
+ </copyright>
+-->

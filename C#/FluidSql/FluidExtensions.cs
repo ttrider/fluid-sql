@@ -1,5 +1,8 @@
-﻿// <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014 All Rights Reserved
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
 using System;
@@ -7,11 +10,57 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 
 namespace TTRider.FluidSql
 {
     public static class FluidExtensions
     {
+        static IEnumerable<Name> ToNames(Name name, params Name[] names)
+        {
+            if (name != null) yield return name;
+            foreach (var nm in names)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Name> ToNames(string name, params string[] names)
+        {
+            if (name != null) yield return name;
+            foreach (var nm in names)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Name> ToNames(IEnumerable<string> names)
+        {
+            if (names != null)
+            {
+                foreach (var nm in names)
+                {
+                    yield return nm;
+                }
+            }
+        }
+
+        static IEnumerable<Order> ToOrders(Order order, params Order[] orders)
+        {
+            if (order != null) yield return order;
+            foreach (var nm in orders)
+            {
+                yield return nm;
+            }
+        }
+        static IEnumerable<Order> ToOrders(string order, params string[] orders)
+        {
+            if (order != null) yield return Sql.Order(order);
+            foreach (var nm in orders)
+            {
+                yield return Sql.Order(nm);
+            }
+        }
+
+
         public static IDataParameterCollection SetValue(this IDataParameterCollection parameterCollection,
             string parameterName, object value)
         {
@@ -31,11 +80,28 @@ namespace TTRider.FluidSql
             parameter.DefaultValue = defaultValue;
             return parameter;
         }
+        public static Parameter ParameterDirection(this Parameter parameter, ParameterDirection direction)
+        {
+            parameter.Direction = direction;
+            return parameter;
+        }
+
+        public static IList<ParameterValue> Add(this IList<ParameterValue> list, string name, object value)
+        {
+            list.Add(new ParameterValue() {Name = name, Value = value});
+            return list;
+        }
+
+
+
 
         public static T As<T>(this T token, string alias)
-            where T : Token
+            where T : IAliasToken
         {
-            token.Alias = alias;
+            if (!string.IsNullOrWhiteSpace(alias))
+            {
+                token.Alias = alias;
+            }
             return token;
         }
 
@@ -53,13 +119,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, params Token[] columns)
+        public static SelectStatement Output(this SelectStatement statement, params ExpressionToken[] columns)
         {
             statement.Output.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement Output(this SelectStatement statement, IEnumerable<Token> columns)
+        public static SelectStatement Output(this SelectStatement statement, IEnumerable<ExpressionToken> columns)
         {
             if (columns != null)
             {
@@ -67,85 +133,157 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
-
-        public static T Assign<T>(this T statement, Name target, Token expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new AssignToken { First = target, Second = expression });
-            return statement;
-        }
-
-        public static T Set<T>(this T statement, Name target, Token expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new AssignToken { First = target, Second = expression });
-            return statement;
-        }
-
-        public static AssignToken SetTo(this Name target, Token expression)
+        public static AssignToken SetTo(this Name target, ExpressionToken expression)
         {
             return new AssignToken { First = target, Second = expression };
         }
 
+        public static T Assign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
 
-        public static T PlusAssign<T>(this T statement, Name target, Token expression)
+        public static T Set<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
+
+        public static T PlusAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new PlusToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T MinusAssign<T>(this T statement, Name target, Token expression)
+        public static T MinusAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new MinusToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T DivideAssign<T>(this T statement, Name target, Token expression)
+        public static T DivideAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new DivideToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T BitwiseAndAssign<T>(this T statement, Name target, Token expression)
+        public static T BitwiseAndAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new BitwiseAndToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T BitwiseOrAssign<T>(this T statement, Name target, Token expression)
+        public static T BitwiseOrAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new BitwiseOrToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T BitwiseXorAssign<T>(this T statement, Name target, Token expression)
+        public static T BitwiseXorAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new BitwiseXorToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T ModuloAssign<T>(this T statement, Name target, Token expression)
+        public static T ModuloAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new ModuloToken { First = target, Second = expression, Equal = true });
             return statement;
         }
 
-        public static T MultiplyAssign<T>(this T statement, Name target, Token expression)
+        public static T MultiplyAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
+        public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static T Assign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
 
+        public static T Set<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
 
-        public static SelectStatement BitwiseNotAssign(this SelectStatement statement, Name target, Token expression)
+        public static T PlusAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new PlusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T MinusAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new MinusToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T DivideAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new DivideToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseAndAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseAndToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseOrAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseOrToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T BitwiseXorAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new BitwiseXorToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T ModuloAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new ModuloToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+
+        public static T MultiplyAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
+        {
+            statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
+            return statement;
+        }
+        public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
+            where T : ISetStatement
         {
             statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
             return statement;
@@ -164,6 +302,15 @@ namespace TTRider.FluidSql
             if (columns != null)
             {
                 statement.Output.AddRange(columns);
+            }
+            return statement;
+        }
+        public static T Output<T>(this T statement, IEnumerable<string> columns)
+            where T : RecordsetStatement
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns.Select(s => Sql.Name(s)));
             }
             return statement;
         }
@@ -186,23 +333,14 @@ namespace TTRider.FluidSql
             statement.OutputInto = target;
             return statement;
         }
-
-        public static T OutputInto<T>(this T statement, string target, params Name[] columns)
-            where T : RecordsetStatement
-        {
-            statement.Output.AddRange(columns);
-            statement.OutputInto = Sql.Name(target);
-            return statement;
-        }
-
-        public static T OutputInto<T>(this T statement, string target, IEnumerable<Name> columns)
+        public static T OutputInto<T>(this T statement, Name target, IEnumerable<string> columns)
             where T : RecordsetStatement
         {
             if (columns != null)
             {
-                statement.Output.AddRange(columns);
+                statement.Output.AddRange(columns.Select(s => Sql.Name(s)));
             }
-            statement.OutputInto = Sql.Name(target);
+            statement.OutputInto = target;
             return statement;
         }
 
@@ -244,27 +382,31 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, Name column,
+        public static T OrderBy<T>(this T statement, Name column,
             Direction direction = Direction.Asc)
+            where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, string column,
+        public static T OrderBy<T>(this T statement, string column,
             Direction direction = Direction.Asc)
+        where T : IOrderByStatement
         {
             statement.OrderBy.Add(Sql.Order(column, direction));
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, params Order[] columns)
+        public static T OrderBy<T>(this T statement, params Order[] columns)
+        where T : IOrderByStatement
         {
             statement.OrderBy.AddRange(columns);
             return statement;
         }
 
-        public static SelectStatement OrderBy(this SelectStatement statement, IEnumerable<Order> columns)
+        public static T OrderBy<T>(this T statement, IEnumerable<Order> columns)
+        where T : IOrderByStatement
         {
             if (columns != null)
             {
@@ -275,39 +417,29 @@ namespace TTRider.FluidSql
 
         public static SelectStatement From(this SelectStatement statement, string name, string alias = null)
         {
-            statement.From.Add(Sql.Name(name).As(alias));
+            statement.From.Add(new RecordsetSourceToken { Source = Sql.Name(name), Alias = alias });
             return statement;
         }
 
-        public static SelectStatement From(this SelectStatement statement, Token token)
+        public static SelectStatement From(this SelectStatement statement, RecordsetSourceToken token, string alias = null)
         {
-            statement.From.Add(token);
+            statement.From.Add(token.As(alias));
             return statement;
         }
 
-        public static T From<T>(this T statement, string name, string alias = null)
-            where T : IFromStatement
+        public static DeleteStatement From(this DeleteStatement statement, Token token)
         {
-            statement.From = Sql.Name(name).As(alias);
-            return statement;
-        }
-
-        public static T From<T>(this T statement, Token token)
-            where T : IFromStatement
-        {
-            statement.From = token;
+            statement.RecordsetSource = new RecordsetSourceToken { Source = token };
             return statement;
         }
         public static MergeStatement Using(this MergeStatement statement, RecordsetStatement token, string alias = null)
         {
-            statement.Using = token;
-            statement.Using.Alias = alias;
+            statement.Using = token.As(alias);
             return statement;
         }
         public static MergeStatement Using(this MergeStatement statement, Name token, string alias = null)
         {
-            statement.Using = token;
-            statement.Using.Alias = alias;
+            statement.Using = token.As(alias);
             return statement;
         }
         public static MergeStatement On(this MergeStatement statement, Token token)
@@ -319,7 +451,7 @@ namespace TTRider.FluidSql
 
         public static MergeStatement WhenMatchedThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenMatched.Add(new WhenMatchedThenDelete
+            statement.WhenMatched.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
@@ -327,7 +459,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
+            var wm = new WhenMatchedTokenThenUpdateSetToken();
 
             if (set != null)
             {
@@ -342,22 +474,11 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenMatched.Add(wm);
-            return statement;
+            return WhenMatchedThenUpdateSet(statement, (IEnumerable<AssignToken>)set);
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -374,62 +495,19 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
-            {
-                AndCondition = andCondition
-            };
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenMatched.Add(wm);
-            return statement;
+            return WhenMatchedThenUpdateSet(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
         public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement, Token andCondition = null)
         {
-            statement.WhenNotMatchedBySource.Add(new WhenMatchedThenDelete
+            statement.WhenNotMatchedBySource.Add(new WhenMatchedTokenThenDeleteToken
             {
                 AndCondition = andCondition
             });
             return statement;
         }
-        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
-        {
-            var wm = new WhenMatchedThenUpdateSet();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenNotMatchedBySource.Add(wm);
-            return statement;
-        }
-        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
-        {
-            var wm = new WhenMatchedThenUpdateSet();
-
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-            statement.WhenNotMatchedBySource.Add(wm);
-            return statement;
-        }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, IEnumerable<AssignToken> set)
         {
-            var wm = new WhenMatchedThenUpdateSet
+            var wm = new WhenMatchedTokenThenUpdateSetToken
             {
                 AndCondition = andCondition
             };
@@ -440,32 +518,25 @@ namespace TTRider.FluidSql
                     wm.Set.Add(columnValue);
                 }
             }
-
-
             statement.WhenNotMatchedBySource.Add(wm);
             return statement;
         }
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition, params AssignToken[] set)
         {
-            var wm = new WhenMatchedThenUpdateSet
-            {
-                AndCondition = andCondition
-            };
-            if (set != null)
-            {
-                foreach (var columnValue in set)
-                {
-                    wm.Set.Add(columnValue);
-                }
-            }
-
-
-            statement.WhenNotMatchedBySource.Add(wm);
-            return statement;
+            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, params AssignToken[] set)
+        {
+            return WhenNotMatchedBySourceThenUpdate(statement, null, (IEnumerable<AssignToken>)set);
+        }
+        public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, IEnumerable<AssignToken> set)
+        {
+            return WhenNotMatchedBySourceThenUpdate(statement, null, set);
+        }
+
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -479,7 +550,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -495,7 +566,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -517,7 +588,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -541,7 +612,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert();
+            var wm = new WhenNotMatchedTokenThenInsertToken();
 
             if (columns != null)
             {
@@ -555,7 +626,7 @@ namespace TTRider.FluidSql
         }
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, params Name[] columns)
         {
-            var wm = new WhenNotMatchedThenInsert
+            var wm = new WhenNotMatchedTokenThenInsertToken
             {
                 AndCondition = andCondition
             };
@@ -576,30 +647,30 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static Union Union(this RecordsetStatement statement, RecordsetStatement with)
+        public static UnionStatement Union(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Union(statement, with);
+            return new UnionStatement(statement, with);
         }
 
-        public static Union UnionAll(this RecordsetStatement statement, RecordsetStatement with)
+        public static UnionStatement UnionAll(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Union(statement, with, true);
+            return new UnionStatement(statement, with, true);
         }
 
-        public static Except Except(this RecordsetStatement statement, RecordsetStatement with)
+        public static ExceptStatement Except(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Except(statement, with);
+            return new ExceptStatement(statement, with);
         }
 
-        public static Intersect Intersect(this RecordsetStatement statement, RecordsetStatement with)
+        public static IntersectStatement Intersect(this RecordsetStatement statement, RecordsetStatement with)
         {
-            return new Intersect(statement, with);
+            return new IntersectStatement(statement, with);
         }
 
         public static SelectStatement WrapAsSelect(this RecordsetStatement statement, string alias)
         {
             return new SelectStatement()
-                .From(statement.As(alias))
+                .From(statement, alias)
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
@@ -608,64 +679,129 @@ namespace TTRider.FluidSql
                     .Select(name => Sql.Name(alias, name)));
         }
 
-        public static T InnerJoin<T>(this T statement, Token source, Token on)
+        #region INNER JOIN
+
+        public static T Join<T>(this T statement, Joins join, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
             statement.Joins.Add(new Join
             {
-                Type = Joins.Inner,
+                Type = join,
                 Source = source,
                 On = on
             });
             return statement;
         }
 
-        public static T LeftOuterJoin<T>(this T statement, Token source, Token on)
+
+        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.LeftOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.Inner, source, on);
+        }
+        public static T InnerJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, source.As(alias), on);
+        }
+        public static T InnerJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, Sql.Name(source), on);
+        }
+        public static T InnerJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Inner, Sql.Name(source).As(alias), on);
         }
 
-        public static T RightOuterJoin<T>(this T statement, Token source, Token on)
+        public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.RightOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.LeftOuter, source, on);
+        }
+        public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.LeftOuter, source.As(alias), on);
+        }
+        public static T LeftOuterJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.LeftOuter, Sql.Name(source), on);
+        }
+        public static T LeftOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.LeftOuter, Sql.Name(source).As(alias), on);
         }
 
-        public static T FullOuterJoin<T>(this T statement, Token source, Token on)
+        public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+                   where T : IJoinStatement
+        {
+            return Join(statement, Joins.RightOuter, source, on);
+        }
+        public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.FullOuter,
-                Source = source,
-                On = on
-            });
-            return statement;
+            return Join(statement, Joins.RightOuter, source.As(alias), on);
+        }
+        public static T RightOuterJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.RightOuter, Sql.Name(source), on);
+        }
+        public static T RightOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.RightOuter, Sql.Name(source).As(alias), on);
         }
 
-        public static T CrossJoin<T>(this T statement, Token source)
+
+        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
+                           where T : IJoinStatement
+        {
+            return Join(statement, Joins.FullOuter, source, on);
+        }
+        public static T FullOuterJoin<T>(this T statement, RecordsetSourceToken source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            statement.Joins.Add(new Join
-            {
-                Type = Joins.Cross,
-                Source = source,
-            });
-            return statement;
+            return Join(statement, Joins.FullOuter, source.As(alias), on);
         }
+        public static T FullOuterJoin<T>(this T statement, string source, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.FullOuter, Sql.Name(source), on);
+        }
+        public static T FullOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.FullOuter, Sql.Name(source).As(alias), on);
+        }
+
+
+
+        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source)
+                           where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, source, null);
+        }
+        public static T CrossJoin<T>(this T statement, RecordsetSourceToken source, string alias)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, source.As(alias), null);
+        }
+        public static T CrossJoin<T>(this T statement, string source)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, Sql.Name(source), null);
+        }
+        public static T CrossJoin<T>(this T statement, string source, string alias)
+            where T : IJoinStatement
+        {
+            return Join(statement, Joins.Cross, Sql.Name(source).As(alias), null);
+        }
+        #endregion INNER JOIN
 
         public static SelectStatement Having(this SelectStatement statement, Token condition)
         {
@@ -681,333 +817,327 @@ namespace TTRider.FluidSql
         }
 
 
-        public static Token IsEqual(this Token first, Token second)
+        public static ExpressionToken IsEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new IsEqualsToken { First = first, Second = second };
         }
 
-        public static Token NotEqual(this Token first, Token second)
+        public static ExpressionToken NotEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new NotEqualToken { First = first, Second = second };
         }
 
-        public static Token Less(this Token first, Token second)
+        public static ExpressionToken Less(this ExpressionToken first, ExpressionToken second)
         {
             return new LessToken { First = first, Second = second };
         }
 
-        public static Token NotLess(this Token first, Token second)
+        public static ExpressionToken NotLess(this ExpressionToken first, ExpressionToken second)
         {
             return new NotLessToken { First = first, Second = second };
         }
 
-        public static Token LessOrEqual(this Token first, Token second)
+        public static ExpressionToken LessOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new LessOrEqualToken { First = first, Second = second };
         }
 
-        public static Token Greater(this Token first, Token second)
+        public static ExpressionToken Greater(this ExpressionToken first, ExpressionToken second)
         {
             return new GreaterToken { First = first, Second = second };
         }
 
-        public static Token NotGreater(this Token first, Token second)
+        public static ExpressionToken NotGreater(this ExpressionToken first, ExpressionToken second)
         {
             return new NotGreaterToken { First = first, Second = second };
         }
 
-        public static Token GreaterOrEqual(this Token first, Token second)
+        public static ExpressionToken GreaterOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new GreaterOrEqualToken { First = first, Second = second };
         }
 
-        public static Token And(this Token first, Token second)
+        public static ExpressionToken And(this ExpressionToken first, ExpressionToken second)
         {
             return new AndToken { First = first, Second = second };
         }
 
-        public static Token Or(this Token first, Token second)
+        public static ExpressionToken Or(this ExpressionToken first, ExpressionToken second)
         {
             return new OrToken { First = first, Second = second };
         }
 
-        public static Token PlusEqual(this Token first, Token second)
+        public static ExpressionToken PlusEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new PlusToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token MinusEqual(this Token first, Token second)
+        public static ExpressionToken MinusEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new MinusToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token DivideEqual(this Token first, Token second)
+        public static ExpressionToken DivideEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new DivideToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseAndEqual(this Token first, Token second)
+        public static ExpressionToken BitwiseAndEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseAndToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseOrEqual(this Token first, Token second)
+        public static ExpressionToken BitwiseOrEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseOrToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseXorEqual(this Token first, Token second)
+        public static ExpressionToken BitwiseXorEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token BitwiseNotEqual(this Token first, Token second)
+        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseNotToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token ModuloEqual(this Token first, Token second)
+        public static ExpressionToken ModuloEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new ModuloToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token MultiplyEqual(this Token first, Token second)
+        public static ExpressionToken MultiplyEqual(this ExpressionToken first, ExpressionToken second)
         {
             return new MultiplyToken { First = first, Second = second, Equal = true };
         }
 
-        public static Token Plus(this Token first, Token second)
+        public static ExpressionToken Plus(this ExpressionToken first, ExpressionToken second)
         {
             return new PlusToken { First = first, Second = second };
         }
 
-        public static Token Minus(this Token first, Token second)
+        public static ExpressionToken Minus(this ExpressionToken first, ExpressionToken second)
         {
             return new MinusToken { First = first, Second = second };
         }
 
-        public static Token Divide(this Token first, Token second)
+        public static ExpressionToken Divide(this ExpressionToken first, ExpressionToken second)
         {
             return new DivideToken { First = first, Second = second };
         }
 
-        public static Token BitwiseAnd(this Token first, Token second)
+        public static ExpressionToken BitwiseAnd(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseAndToken { First = first, Second = second };
         }
 
-        public static Token BitwiseOr(this Token first, Token second)
+        public static ExpressionToken BitwiseOr(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseOrToken { First = first, Second = second };
         }
 
-        public static Token BitwiseXor(this Token first, Token second)
+        public static ExpressionToken BitwiseXor(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseXorToken { First = first, Second = second };
         }
 
-        public static Token BitwiseNot(this Token first, Token second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
         {
             return new BitwiseNotToken { First = first, Second = second };
         }
 
-        [Obsolete]
-        public static Token Module(this Token first, Token second)
+        public static ExpressionToken Modulo(this ExpressionToken first, ExpressionToken second)
         {
             return new ModuloToken { First = first, Second = second };
         }
 
-        public static Token Modulo(this Token first, Token second)
-        {
-            return new ModuloToken { First = first, Second = second };
-        }
-
-        public static Token Multiply(this Token first, Token second)
+        public static MultiplyToken Multiply(this ExpressionToken first, ExpressionToken second)
         {
             return new MultiplyToken { First = first, Second = second };
         }
 
 
-        public static Token IsEqual(this Token first, string second)
+        public static ExpressionToken IsEqual(this ExpressionToken first, string second)
         {
             return new IsEqualsToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token NotEqual(this Token first, string second)
+        public static ExpressionToken NotEqual(this ExpressionToken first, string second)
         {
             return new NotEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Less(this Token first, string second)
+        public static ExpressionToken Less(this ExpressionToken first, string second)
         {
             return new LessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token NotLess(this Token first, string second)
+        public static ExpressionToken NotLess(this ExpressionToken first, string second)
         {
             return new NotLessToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token LessOrEqual(this Token first, string second)
+        public static ExpressionToken LessOrEqual(this ExpressionToken first, string second)
         {
             return new LessOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Greater(this Token first, string second)
+        public static ExpressionToken Greater(this ExpressionToken first, string second)
         {
             return new GreaterToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token NotGreater(this Token first, string second)
+        public static ExpressionToken NotGreater(this ExpressionToken first, string second)
         {
             return new NotGreaterToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token GreaterOrEqual(this Token first, string second)
+        public static ExpressionToken GreaterOrEqual(this ExpressionToken first, string second)
         {
             return new GreaterOrEqualToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token And(this Token first, string second)
+        public static ExpressionToken And(this ExpressionToken first, string second)
         {
             return new AndToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Or(this Token first, string second)
+        public static ExpressionToken Or(this ExpressionToken first, string second)
         {
             return new OrToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token PlusEqual(this Token first, string second)
+        public static ExpressionToken PlusEqual(this ExpressionToken first, string second)
         {
             return new PlusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token MinusEqual(this Token first, string second)
+        public static ExpressionToken MinusEqual(this ExpressionToken first, string second)
         {
             return new MinusToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token DivideEqual(this Token first, string second)
+        public static ExpressionToken DivideEqual(this ExpressionToken first, string second)
         {
             return new DivideToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token BitwiseAndEqual(this Token first, string second)
+        public static ExpressionToken BitwiseAndEqual(this ExpressionToken first, string second)
         {
             return new BitwiseAndToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token BitwiseOrEqual(this Token first, string second)
+        public static ExpressionToken BitwiseOrEqual(this ExpressionToken first, string second)
         {
             return new BitwiseOrToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token BitwiseXorEqual(this Token first, string second)
+        public static ExpressionToken BitwiseXorEqual(this ExpressionToken first, string second)
         {
             return new BitwiseXorToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token BitwiseNotEqual(this Token first, string second)
+        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
         {
             return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token ModuloEqual(this Token first, string second)
+        public static ExpressionToken ModuloEqual(this ExpressionToken first, string second)
         {
             return new ModuloToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token MultiplyEqual(this Token first, string second)
+        public static ExpressionToken MultiplyEqual(this ExpressionToken first, string second)
         {
             return new MultiplyToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static Token Plus(this Token first, string second)
+        public static ExpressionToken Plus(this ExpressionToken first, string second)
         {
             return new PlusToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Minus(this Token first, string second)
+        public static ExpressionToken Minus(this ExpressionToken first, string second)
         {
             return new MinusToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Divide(this Token first, string second)
+        public static ExpressionToken Divide(this ExpressionToken first, string second)
         {
             return new DivideToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token BitwiseAnd(this Token first, string second)
+        public static ExpressionToken BitwiseAnd(this ExpressionToken first, string second)
         {
             return new BitwiseAndToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token BitwiseOr(this Token first, string second)
+        public static ExpressionToken BitwiseOr(this ExpressionToken first, string second)
         {
             return new BitwiseOrToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token BitwiseXor(this Token first, string second)
+        public static ExpressionToken BitwiseXor(this ExpressionToken first, string second)
         {
             return new BitwiseXorToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token BitwiseNot(this Token first, string second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
         {
             return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Modulo(this Token first, string second)
+        public static ExpressionToken Modulo(this ExpressionToken first, string second)
         {
             return new ModuloToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Multiply(this Token first, string second)
+        public static ExpressionToken Multiply(this ExpressionToken first, string second)
         {
             return new MultiplyToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static Token Group(this Token token)
+        public static GroupToken Group(this Token token)
         {
             return new GroupToken { Token = token };
         }
 
-        public static Token Not(this Token token)
+        public static ExpressionToken Not(this ExpressionToken token)
         {
             return new NotToken { Token = token };
         }
 
-        public static Token IsNull(this Token token)
+        public static ExpressionToken IsNull(this ExpressionToken token)
         {
             return new IsNullToken { Token = token };
         }
 
-        public static Token IsNotNull(this Token token)
+        public static ExpressionToken IsNotNull(this ExpressionToken token)
         {
             return new IsNotNullToken { Token = token };
         }
 
-        public static Token Between(this Token token, Token first, Token second)
+        public static BetweenToken Between(this ExpressionToken token, ExpressionToken first, ExpressionToken second)
         {
             return new BetweenToken { Token = token, First = first, Second = second };
         }
 
-        public static Token In(this Token token, params Token[] tokens)
+        public static ExpressionToken In(this ExpressionToken token, params ExpressionToken[] tokens)
         {
             var value = new InToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
-        public static Token NotIn(this Token token, params Token[] tokens)
+        public static ExpressionToken NotIn(this ExpressionToken token, params ExpressionToken[] tokens)
         {
             var value = new NotInToken { Token = token };
             value.Set.AddRange(tokens);
             return value;
         }
 
-        public static Token In(this Token token, IEnumerable<Token> tokens)
+        public static ExpressionToken In(this ExpressionToken token, IEnumerable<ExpressionToken> tokens)
         {
             var value = new InToken { Token = token };
             if (tokens != null)
@@ -1017,7 +1147,7 @@ namespace TTRider.FluidSql
             return value;
         }
 
-        public static Token NotIn(this Token token, IEnumerable<Token> tokens)
+        public static ExpressionToken NotIn(this ExpressionToken token, IEnumerable<ExpressionToken> tokens)
         {
             var value = new NotInToken { Token = token };
             if (tokens != null)
@@ -1027,22 +1157,22 @@ namespace TTRider.FluidSql
             return value;
         }
 
-        public static Token Contains(this Token first, Token second)
+        public static ExpressionToken Contains(this ExpressionToken first, ExpressionToken second)
         {
             return new ContainsToken { First = first, Second = second };
         }
 
-        public static Token StartsWith(this Token first, Token second)
+        public static ExpressionToken StartsWith(this ExpressionToken first, ExpressionToken second)
         {
             return new StartsWithToken { First = first, Second = second };
         }
 
-        public static Token EndsWith(this Token first, Token second)
+        public static ExpressionToken EndsWith(this ExpressionToken first, ExpressionToken second)
         {
             return new EndsWithToken { First = first, Second = second };
         }
 
-        public static Token Like(this Token first, Token second)
+        public static ExpressionToken Like(this ExpressionToken first, ExpressionToken second)
         {
             return new LikeToken { First = first, Second = second };
         }
@@ -1050,9 +1180,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Then(this IfStatement statement, params IStatement[] statements)
         {
-            statement.Then = new StatementsStatement();
-            statement.Then.Statements.AddRange(statements);
-            return statement;
+            return Then(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Then(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1067,9 +1195,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Else(this IfStatement statement, params IStatement[] statements)
         {
-            statement.Else = new StatementsStatement();
-            statement.Else.Statements.AddRange(statements);
-            return statement;
+            return Else(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Else(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1106,12 +1232,6 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static InsertStatement Columns(this InsertStatement statement, params Name[] columns)
-        {
-            statement.Columns.AddRange(columns);
-            return statement;
-        }
-
         public static InsertStatement Columns(this InsertStatement statement, IEnumerable<Name> columns)
         {
             if (columns != null)
@@ -1121,25 +1241,19 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static InsertStatement Columns(this InsertStatement statement, params string[] columns)
+        public static InsertStatement Columns(this InsertStatement statement, Name column, params Name[] columns)
         {
-            statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
-            return statement;
+            return Columns(statement, ToNames(column, columns));
+        }
+
+        public static InsertStatement Columns(this InsertStatement statement, string column, params string[] columns)
+        {
+            return Columns(statement, ToNames(column, columns));
         }
 
         public static InsertStatement Columns(this InsertStatement statement, IEnumerable<string> columns)
         {
-            if (columns != null)
-            {
-                statement.Columns.AddRange(columns.Select(name => Sql.Name(name)));
-            }
-            return statement;
-        }
-
-        public static InsertStatement Values(this InsertStatement statement, params Token[] values)
-        {
-            statement.Values.Add(values);
-            return statement;
+            return Columns(statement, ToNames(columns));
         }
 
         public static InsertStatement Values(this InsertStatement statement, IEnumerable<Token> values)
@@ -1150,18 +1264,78 @@ namespace TTRider.FluidSql
             }
             return statement;
         }
+        public static InsertStatement Values(this InsertStatement statement, params Token[] values)
+        {
+            return Values(statement, (IEnumerable<Token>)values);
+        }
 
         public static InsertStatement Values(this InsertStatement statement, params object[] values)
         {
-            statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
-            return statement;
+            return Values(statement, (values ?? Enumerable.Empty<object>()).Select(Sql.Scalar));
         }
 
         public static InsertStatement Values(this InsertStatement statement, IEnumerable<object> values)
         {
-            if (values != null)
+            return Values(statement, (values ?? Enumerable.Empty<object>()).Select(Sql.Scalar));
+        }
+        public static InsertStatement OrReplace(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Replace;
+            return statement;
+        }
+        public static InsertStatement OrRollback(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Rollback;
+            return statement;
+        }
+        public static InsertStatement OrAbort(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Abort;
+            return statement;
+        }
+        public static InsertStatement OrFail(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Fail;
+            return statement;
+        }
+        public static InsertStatement OrIgnore(this InsertStatement statement)
+        {
+            statement.Conflict = OnConflict.Ignore;
+            return statement;
+        }
+
+        public static UpdateStatement OrReplace(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Replace;
+            return statement;
+        }
+        public static UpdateStatement OrRollback(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Rollback;
+            return statement;
+        }
+        public static UpdateStatement OrAbort(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Abort;
+            return statement;
+        }
+        public static UpdateStatement OrFail(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Fail;
+            return statement;
+        }
+        public static UpdateStatement OrIgnore(this UpdateStatement statement)
+        {
+            statement.Conflict = OnConflict.Ignore;
+            return statement;
+        }
+
+
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
             {
-                statement.Values.Add(values.Select(value => (Token)Sql.Scalar(value)).ToArray());
+                statement.Columns.AddRange(columns);
             }
             return statement;
         }
@@ -1181,31 +1355,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, params Order[] columns)
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Order column, params Order[] columns)
         {
-            statement.Columns.AddRange(columns);
-            return statement;
+            return OnColumn(statement, ToOrders(column, columns));
         }
-
-        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, IEnumerable<Order> columns)
+        public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column, params string[] columns)
         {
-            if (columns != null)
-            {
-                statement.Columns.AddRange(columns);
-            }
-            return statement;
-        }
-
-        public static CreateIndexStatement Include(this CreateIndexStatement statement, string column)
-        {
-            statement.Include.Add(Sql.Name(column));
-            return statement;
-        }
-
-        public static CreateIndexStatement Include(this CreateIndexStatement statement, params Name[] columns)
-        {
-            statement.Include.AddRange(columns);
-            return statement;
+            return OnColumn(statement, ToOrders(column, columns));
         }
 
         public static CreateIndexStatement Include(this CreateIndexStatement statement, IEnumerable<Name> columns)
@@ -1215,6 +1371,16 @@ namespace TTRider.FluidSql
                 statement.Include.AddRange(columns);
             }
             return statement;
+        }
+
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, string column, params string[] columns)
+        {
+            return Include(statement, ToNames(column, columns));
+        }
+
+        public static CreateIndexStatement Include(this CreateIndexStatement statement, Name column, params Name[] columns)
+        {
+            return Include(statement, ToNames(column, columns));
         }
 
         public static CreateIndexStatement Unique(this CreateIndexStatement statement, bool unique = true)
@@ -1275,11 +1441,22 @@ namespace TTRider.FluidSql
             column.Null = !notNull;
             return column;
         }
-
+        public static TableColumn Null(this TableColumn column, OnConflict onConflict, bool notNull = false)
+        {
+            column.Null = !notNull;
+            column.NullConflict = onConflict;
+            return column;
+        }
 
         public static TableColumn NotNull(this TableColumn column)
         {
             column.Null = false;
+            return column;
+        }
+        public static TableColumn NotNull(this TableColumn column, OnConflict onConflict)
+        {
+            column.Null = false;
+            column.NullConflict = onConflict;
             return column;
         }
 
@@ -1290,6 +1467,24 @@ namespace TTRider.FluidSql
             column.Identity.Increment = increment;
             return column;
         }
+        public static TableColumn AutoIncrement(this TableColumn column)
+        {
+            column.Identity.On = true;
+            column.Identity.Seed = 1;
+            column.Identity.Increment = 1;
+            return column;
+        }
+        public static TableColumn PrimaryKey(this TableColumn column, Direction direction = Direction.Asc)
+        {
+            column.PrimaryKeyDirection = direction;
+            return column;
+        }
+        public static TableColumn PrimaryKey(this TableColumn column, OnConflict onConflict, Direction direction = Direction.Asc)
+        {
+            column.PrimaryKeyDirection = direction;
+            column.PrimaryKeyConflict = onConflict;
+            return column;
+        }
 
         public static TableColumn Default(this TableColumn column, object value)
         {
@@ -1298,6 +1493,11 @@ namespace TTRider.FluidSql
         }
 
         public static TableColumn Default(this TableColumn column, Scalar value)
+        {
+            column.DefaultValue = value;
+            return column;
+        }
+        public static TableColumn Default(this TableColumn column, Function value)
         {
             column.DefaultValue = value;
             return column;
@@ -1341,34 +1541,6 @@ namespace TTRider.FluidSql
 
         #region PrimaryKey
 
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name,
-            params Order[] columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-            statement.PrimaryKey.Name = Sql.Name(name);
-            statement.PrimaryKey.Columns.AddRange(columns);
-            return statement;
-        }
-
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name,
-            IEnumerable<Order> columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-
-            statement.PrimaryKey.Name = Sql.Name(name);
-            if (columns != null)
-            {
-                statement.PrimaryKey.Columns.AddRange(columns);
-            }
-            return statement;
-        }
-
         public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name,
             params Order[] columns)
         {
@@ -1398,36 +1570,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered,
-            params Order[] columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
 
-            statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name(name);
-            statement.PrimaryKey.Columns.AddRange(columns);
-            return statement;
-        }
-
-        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, string name, bool clustered,
-            IEnumerable<Order> columns)
-        {
-            if (statement.PrimaryKey == null)
-            {
-                statement.PrimaryKey = new ConstrainDefinition();
-            }
-
-            statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name(name);
-            if (columns != null)
-            {
-                statement.PrimaryKey.Columns.AddRange(columns);
-            }
-            return statement;
-        }
 
         public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered,
             params Order[] columns)
@@ -1517,6 +1660,132 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, OnConflict onConflict,
+            params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, OnConflict onConflict,
+            IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Conflict = onConflict;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered, OnConflict onConflict,
+            params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name, bool clustered,
+             OnConflict onConflict, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = name;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, OnConflict onConflict, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, OnConflict onConflict, IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Conflict = onConflict;
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered,
+           OnConflict onConflict, params Order[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Columns.AddRange(columns);
+            return statement;
+        }
+
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, bool clustered, OnConflict onConflict,
+            IEnumerable<Order> columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Clustered = clustered;
+            statement.PrimaryKey.Conflict = onConflict;
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            if (columns != null)
+            {
+                statement.PrimaryKey.Columns.AddRange(columns);
+            }
+            return statement;
+        }
         #endregion PrimaryKey
 
         #region UniqueConstrainOn
@@ -1800,6 +2069,12 @@ namespace TTRider.FluidSql
 
             return statement;
         }
+        public static SelectStatement Top(this SelectStatement statement, Parameter value, bool percent, bool withTies = false)
+        {
+            statement.Top = new Top(value, percent, withTies);
+
+            return statement;
+        }
 
         public static T Top<T>(this T statement, int value, bool percent = false)
             where T : ITopStatement
@@ -1808,7 +2083,212 @@ namespace TTRider.FluidSql
 
             return statement;
         }
+        public static T Top<T>(this T statement, Parameter value, bool percent = false)
+            where T : ITopStatement
+        {
+            statement.Top = new Top(value, percent, false);
 
+            return statement;
+        }
+
+        public static T Limit<T>(this T statement, int value)
+            where T : ITopStatement
+        {
+            statement.Top = new Top(value, false, false);
+
+            return statement;
+        }
+
+        public static T Offset<T>(this T statement, int value)
+            where T : IOffsetStatement
+        {
+            statement.Offset = new Scalar { Value = value };
+            return statement;
+        }
+        public static T FetchNext<T>(this T statement, int value)
+            where T : ITopStatement
+        {
+            statement.Top = new Top(value, false, false);
+
+            return statement;
+        }
         #endregion Top
+
+        #region CTE
+
+        public static CTEDefinition As(this CTEDeclaration cte, SelectStatement definition)
+        {
+            return new CTEDefinition
+            {
+                Declaration = cte,
+                Definition = definition
+            };
+        }
+        public static CTEDeclaration Recursive(this CTEDeclaration cte, bool recursive = true)
+        {
+            cte.Recursive = recursive;
+            return cte;
+        }
+
+        public static CTEDeclaration With(this CTEDefinition previousCommonTableExpression, string name, params string[] columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+                PreviousCommonTableExpression = previousCommonTableExpression
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+        public static CTEDeclaration With(this CTEDefinition previousCommonTableExpression, string name, IEnumerable<string> columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+                PreviousCommonTableExpression = previousCommonTableExpression
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+
+        static IEnumerable<CTEDefinition> GetCteDefinitions(CTEDefinition definition)
+        {
+            if (definition != null)
+            {
+                if (definition.Declaration != null && definition.Declaration.PreviousCommonTableExpression != null)
+                {
+                    foreach (var prevDefinition in GetCteDefinitions(definition.Declaration.PreviousCommonTableExpression))
+                    {
+                        yield return prevDefinition;
+                    }
+                }
+                yield return definition;
+            }
+        }
+
+        public static SelectStatement Select(this CTEDefinition cte)
+        {
+            var statement = new SelectStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static DeleteStatement Delete(this CTEDefinition cte)
+        {
+            var statement = new DeleteStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static InsertStatement Insert(this CTEDefinition cte)
+        {
+            var statement = new InsertStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static MergeStatement Merge(this CTEDefinition cte)
+        {
+            var statement = new MergeStatement();
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+        public static UpdateStatement Update(this CTEDefinition cte, string target)
+        {
+            var statement = new UpdateStatement
+            {
+                Target = Sql.Name(target)
+            };
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static UpdateStatement Update(this CTEDefinition cte, Name target)
+        {
+            var statement = new UpdateStatement
+            {
+                Target = target
+            };
+            statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+        #endregion CTE
+
+
+        #region Snippet
+
+        public static Snippet Dialect(this Snippet snippet, string value, string dialectName, params string[] additionalDialects)
+        {
+            return snippet;
+        }
+        public static Snippet Dialect(this Snippet snippet, string value, IEnumerable<string> dialects)
+        {
+            return snippet;
+        }
+
+        public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, string dialectName, params string[] additionalDialects)
+        {
+            return snippetStatement;
+        }
+        public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, IEnumerable<string> dialects)
+        {
+
+
+
+            return snippetStatement;
+        }
+
+        #endregion Snippet
+
+
+        public static string GetCommandSummary(this IDbCommand command)
+        {
+            if (command == null) return string.Empty;
+
+            var sb = new StringBuilder();
+            foreach (var p in command.Parameters.Cast<IDbDataParameter>())
+            {
+                sb.AppendFormat("-- DECLARE {0} ", p.ParameterName);
+
+                switch (p.DbType)
+                {
+                    case DbType.VarNumeric: sb.AppendFormat("NUMERIC({1},{2}) = {0}", p.Value, p.Precision, p.Scale); break;
+                    case DbType.UInt64:
+                    case DbType.Int64: sb.AppendFormat("BIGINT = {0}", p.Value); break;
+                    case DbType.Binary: sb.AppendFormat("BINARY({1}) = '{0}'", p.Value, p.Size); break;
+                    case DbType.Boolean: sb.AppendFormat("BIT = {0}", p.Value); break;
+                    case DbType.AnsiStringFixedLength: sb.AppendFormat("CHAR({1}) = N'{0}'", p.Value, p.Size); break;
+                    case DbType.DateTime: sb.AppendFormat("DATETIME = N'{0}'", p.Value); break;
+                    case DbType.Decimal: sb.AppendFormat("DECIMAL({1},{2}) = {0}", p.Value, p.Precision, p.Scale); break;
+                    case DbType.Single: sb.AppendFormat("FLOAT = {0}", p.Value); break;
+                    case DbType.UInt32:
+                    case DbType.Int32: sb.AppendFormat("INT = {0}", p.Value); break;
+                    case DbType.Currency: sb.AppendFormat("MONEY = {0}", p.Value); break;
+                    case DbType.StringFixedLength:
+                    case DbType.AnsiString: sb.AppendFormat("NCHAR({1}) = N'{0}'", p.Value, p.Size); break;
+                    case DbType.String: sb.AppendFormat("NVARCHAR({1}) = N'{0}'", p.Value, (p.Size == -1) ? "MAX" : p.Size.ToString()); break;
+                    case DbType.Double: sb.AppendFormat("REAL = {0}", p.Value); break;
+                    case DbType.Guid: sb.AppendFormat("UNIQUEIDENTIFIER = N'{0}'", p.Value); break;
+                    case DbType.UInt16:
+                    case DbType.Int16: sb.AppendFormat("SMALLINT = {0}", p.Value); break;
+                    case DbType.Byte:
+                    case DbType.SByte: sb.AppendFormat("TINYINT = {0}", p.Value); break;
+                    case DbType.Xml: sb.AppendFormat("XML = N'{0}'", p.Value); break;
+                    case DbType.Date: sb.AppendFormat("DATE = N'{0}'", p.Value); break;
+                    case DbType.Time: sb.AppendFormat("TIME = N'{0}'", p.Value); break;
+                    case DbType.DateTime2: sb.AppendFormat("DATETIME2({1}) = N'{0}'", p.Value, p.Size); break;
+                    case DbType.DateTimeOffset: sb.AppendFormat("DATETIMEOFFSET({1}) = N'{0}'", p.Value, p.Size); break;
+                }
+                sb.AppendLine();
+            }
+            sb.AppendLine(command.CommandText);
+            return sb.ToString();
+        }
     }
 }

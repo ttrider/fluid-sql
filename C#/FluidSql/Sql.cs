@@ -1,10 +1,13 @@
-﻿// <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014 All Rights Reserved
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace TTRider.FluidSql
 {
@@ -31,6 +34,11 @@ namespace TTRider.FluidSql
             return val;
         }
 
+        public static Snippet Template(string value, Token argument, params Token[] arguments)
+        {
+            return Template(value, Enumerable.Repeat(argument, 1).Union(arguments));
+        }
+
         public static Snippet Snippet(string value, IEnumerable<Parameter> parameters)
         {
             var val = new Snippet {Value = value};
@@ -40,6 +48,22 @@ namespace TTRider.FluidSql
                 foreach (var p in parameters)
                 {
                     val.Parameters.Add(p);
+                }
+            }
+            return val;
+        }
+        public static Snippet Template(string value, IEnumerable<Token> arguments)
+        {
+            var val = new Snippet { Value = value };
+            if (arguments != null)
+            {
+                foreach (var argument in arguments)
+                {
+                    val.Arguments.Add(argument);
+                    if (argument is Parameter)
+                    {
+                        val.Parameters.Add((Parameter)argument);    
+                    }
                 }
             }
             return val;
@@ -58,7 +82,26 @@ namespace TTRider.FluidSql
             }
             return snippetStatement;
         }
-
+        public static SnippetStatement TemplateStatement(string value, IEnumerable<Token> arguments)
+        {
+            var snippetStatement = new SnippetStatement
+            {
+                Value = value
+            };
+            if (arguments != null)
+            {
+                foreach (var argument in arguments)
+                {
+                    snippetStatement.Arguments.Add(argument);
+                    if (argument is Parameter)
+                    {
+                        snippetStatement.Parameters.Add((Parameter)argument);
+                    }
+                }
+            }
+           
+            return snippetStatement;
+        }
         public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
         {
             var snippetStatement = new SnippetStatement
@@ -68,48 +111,58 @@ namespace TTRider.FluidSql
             if (parameters != null)
             {
                 foreach (var parameter in parameters)
+                {
                     snippetStatement.Parameters.Add(parameter);
+                }
             }
             return snippetStatement;
+        }
+        public static SnippetStatement TemplateStatement(string value, Token argument, params Token[] arguments)
+        {
+            return TemplateStatement(value, Enumerable.Repeat(argument, 1).Union(arguments));
         }
 
         public static Scalar Scalar(object value)
         {
+            if (value is Scalar)
+            {
+                return value as Scalar;
+            }
             return new Scalar {Value = value};
         }
 
 
-        public static Token Group(Token value)
+        public static GroupToken Group(Token value)
         {
             return new GroupToken {Token = value};
         }
 
-        public static Token Exists(Token value)
+        public static ExpressionToken Exists(ExpressionToken value)
         {
             return new ExistsToken {Token = value};
         }
 
-        public static Token NotExists(Token value)
+        public static ExpressionToken NotExists(ExpressionToken value)
         {
             return new ExistsToken {Token = value}.Not();
         }
 
-        public static Token Not(Token value)
+        public static ExpressionToken Not(ExpressionToken value)
         {
             return value.Not();
         }
 
-        public static Token All(SelectStatement subQuery)
+        public static ExpressionToken All(SelectStatement subQuery)
         {
             return new AllToken {Token = subQuery};
         }
 
-        public static Token Any(SelectStatement subQuery)
+        public static ExpressionToken Any(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }
 
-        public static Token Some(SelectStatement subQuery)
+        public static ExpressionToken Some(SelectStatement subQuery)
         {
             return new AnyToken {Token = subQuery};
         }
@@ -151,6 +204,23 @@ namespace TTRider.FluidSql
                 On = on
             };
         }
+        public static DropIndexStatement DropIndex(Name name, Name on, bool checkExists)
+        {
+            return new DropIndexStatement
+            {
+                Name = name,
+                On = on,
+                CheckExists = checkExists
+            };
+        }
+        public static DropIndexStatement DropIndex(Name name, bool checkExists)
+        {
+            return new DropIndexStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
+        }
 
         public static CreateIndexStatement CreateIndex(string name, string on)
         {
@@ -161,115 +231,34 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static AlterIndexStatement AlterIndex(string name, string on)
-        {
-            return new AlterIndexStatement
-            {
-                Name = Name(name),
-                On = Name(on)
-            };
-        }
-
-        public static AlterIndexStatement AlterIndexAll(string on)
+        public static AlterIndexStatement AlterIndexAll(Name on)
         {
             return new AlterIndexStatement
             {
                 Name = null,
-                On = Name(on)
+                On = on
             };
         }
-
-        public static DropIndexStatement DropIndex(string name, string on)
+        public static AlterIndexStatement Reindex(Name on)
         {
-            return new DropIndexStatement
+            return new AlterIndexStatement
             {
-                Name = Name(name),
-                On = Name(on)
-            };
+                Name = null,
+                On = on
+            }.Rebuild();
         }
 
-
-        public static SetStatement Assign(Name target, Token expression)
+        public static AlterIndexStatement Reindex(Name name, Name on)
         {
-            return new SetStatement
+            return new AlterIndexStatement
             {
-                Assign = new AssignToken {First = target, Second = expression}
-            };
+                Name = name,
+                On = on
+            }.Rebuild();
         }
 
-        public static SetStatement PlusAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new PlusToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement MinusAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new MinusToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement DivideAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new DivideToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement BitwiseAndAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement BitwiseOrAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement BitwiseXorAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement BitwiseNotAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement ModuloAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement MultiplyAssign(Name target, Token expression)
-        {
-            return new SetStatement
-            {
-                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
-            };
-        }
-
-        public static SetStatement Set(Name target, Token expression)
+        #region Set
+        public static SetStatement Assign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -277,7 +266,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement PlusSet(Name target, Token expression)
+        public static SetStatement PlusAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -285,7 +274,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MinusSet(Name target, Token expression)
+        public static SetStatement MinusAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -293,7 +282,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement DivideSet(Name target, Token expression)
+        public static SetStatement DivideAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -301,7 +290,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseAndSet(Name target, Token expression)
+        public static SetStatement BitwiseAndAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -309,7 +298,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseOrSet(Name target, Token expression)
+        public static SetStatement BitwiseOrAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -317,7 +306,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseXorSet(Name target, Token expression)
+        public static SetStatement BitwiseXorAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -325,7 +314,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotSet(Name target, Token expression)
+        public static SetStatement BitwiseNotAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -333,7 +322,7 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement ModuloSet(Name target, Token expression)
+        public static SetStatement ModuloAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
@@ -341,15 +330,273 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement MultiplySet(Name target, Token expression)
+        public static SetStatement MultiplyAssign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
             {
                 Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
             };
         }
+
+        public static SetStatement Set(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken {First = target, Second = expression}
+            };
+        }
+
+        public static SetStatement PlusSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MinusSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement DivideSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseAndSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseOrSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseXorSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement BitwiseNotSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement ModuloSet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement MultiplySet(Parameter target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+            };
+        }
+
+        public static SetStatement Assign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken { First = target, Second = expression }
+            };
+        }
+
+        public static SetStatement PlusAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement MinusAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement DivideAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseAndAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseOrAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseXorAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseNotAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement ModuloAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement MultiplyAssign(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement Set(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new AssignToken { First = target, Second = expression }
+            };
+        }
+
+        public static SetStatement PlusSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement MinusSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement DivideSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseAndSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseOrSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseXorSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement BitwiseNotSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement ModuloSet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        public static SetStatement MultiplySet(Name target, ExpressionToken expression)
+        {
+            return new SetStatement
+            {
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
+            };
+        }
+
+        #endregion Set
 
         #region Statements
+
+        public static ExecuteStatement Execute(string statement)
+        {
+            return new ExecuteStatement
+            {
+                Target = Sql.SnippetStatement(statement)
+            };
+        }
+        public static ExecuteStatement Execute(IStatement statement)
+        {
+            return new ExecuteStatement
+            {
+                Target = statement
+            };
+        }
+
 
         public static SelectStatement Select
         {
@@ -389,8 +636,22 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+        public static CommitTransactionStatement ReleaseToSavepoint(Name name)
+        {
+            return new CommitTransactionStatement
+            {
+                Name = name
+            };
+        }
 
         public static RollbackTransactionStatement RollbackTransaction(Name name = null)
+        {
+            return new RollbackTransactionStatement
+            {
+                Name = name
+            };
+        }
+        public static RollbackTransactionStatement RollbackToSavepoint(Name name)
         {
             return new RollbackTransactionStatement
             {
@@ -405,6 +666,21 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+        public static SaveTransactionStatement SaveTransaction(Parameter parameter)
+        {
+            return new SaveTransactionStatement
+            {
+                Parameter = parameter
+            };
+        }
+        public static SaveTransactionStatement Savepoint(Name name = null)
+        {
+            return new SaveTransactionStatement
+            {
+                Name = name
+            };
+        }
+
 
         public static BeginTransactionStatement BeginTransaction(Parameter parameter, string description = null)
         {
@@ -431,13 +707,6 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SaveTransactionStatement SaveTransaction(Parameter parameter)
-        {
-            return new SaveTransactionStatement
-            {
-                Parameter = parameter
-            };
-        }
 
         #endregion Transaction
 
@@ -534,6 +803,54 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
+        {
+            return new CreateViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+        public static CreateViewStatement CreateTemporaryView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
+        {
+            return new CreateViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement,
+                IsTemporary = true,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+
+        public static CreateOrAlterViewStatement CreateOrAlterView(Name name, IStatement definitionStatement)
+        {
+            return new CreateOrAlterViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement,
+            };
+        }
+
+
+        public static AlterViewStatement AlterView(Name name, IStatement definitionStatement)
+        {
+            return new AlterViewStatement
+            {
+                Name = name,
+                DefinitionStatement = definitionStatement
+            };
+        }
+
+        public static DropViewStatement DropView(Name name, bool checkExists = false)
+        {
+            return new DropViewStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
+        }
+
         public static CommentToken Comment(string comment)
         {
             return new CommentToken {Content = Snippet(comment)};
@@ -625,5 +942,32 @@ namespace TTRider.FluidSql
         }
 
         #endregion Statements
+
+
+        public static CTEDeclaration With(string name, params string[] columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n=>Sql.Name(n)));
+            }
+            return cte;
+        }
+        public static CTEDeclaration With(string name, IEnumerable<string>columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name,
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
+            }
+            return cte;
+        }
+        
     }
 }

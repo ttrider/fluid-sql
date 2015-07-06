@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TTRider.FluidSql.RequestResponse</id>
+    <version>1.0.3</version>
+    <authors>TTRider</authors>
+    <owners>TTRider</owners>
+    <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ttrider/fluid-sql</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Data access wrapper for FluidSQL</description>
+    <releaseNotes>
+      1.0.1
+      --
+      * Initial release of the IDbRequestResponse adapter for FluidSQL
+
+      more information on GitHub:
+      https://github.com/ttrider/fluid-sql
+    </releaseNotes>
+    <copyright>Copyright (C) 2014-2015 TTRider, L.L.C.</copyright>
+    <tags>SQL, fluid</tags>
+    <dependencies>
+      <dependency id="TTRider.FluidSql.dll" version="1.3.0.0" />
+      <dependency id="TTRider.IDbConnection-Async" version="1.0.2.0" />
+      <dependency id="TTRider.IDbRequestResponse" version="1.0.4.0" />
+      <dependency id="log4net" version="2.0.3" />
+    </dependencies>
+  </metadata>
+</package>

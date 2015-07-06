@@ -1,4 +1,10 @@
-﻿using System;
+﻿// <license>
+// The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+// Copyright (c) 2014-2015 All Rights Reserved
+// </copyright>
+
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -8,11 +14,17 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract class Provider : IProvider
     {
-        public abstract string GenerateStatement(IStatement statement);
-        public abstract IEnumerable<DbParameter> GetParameters(IStatement statement);
+        protected abstract VisitorState Compile(IStatement statement);
+        protected abstract IEnumerable<DbParameter> GetDbParameters(VisitorState state);
 
-        [Obsolete]
-        public abstract IDbCommand GetCommand(string connectionString, IStatement statement);
+        public virtual string GenerateStatement(IStatement statement)
+        {
+            return this.Compile(statement).Value;
+        }
+        public virtual IEnumerable<DbParameter> GetParameters(IStatement statement)
+        {
+            return GetDbParameters(this.Compile(statement));
+        }
 
         public abstract IDbCommand GetCommand(IStatement statement, string connectionString = null);
 
@@ -40,11 +52,5 @@ namespace TTRider.FluidSql.Providers
             return this.GetCommandAsync(statement, connectionString, CancellationToken.None);
         }
 #endif
-    }
-
-
-    public static class Visitor
-    {
-        
     }
 }

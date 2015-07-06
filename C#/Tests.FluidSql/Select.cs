@@ -1,21 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Data.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
 namespace FluidSqlTests
 {
     [TestClass]
-    public class SelectTest
+    public class SelectTest : SqlProviderTests
     {
         [TestMethod]
         public void Select1()
         {
-            var statement = Sql.Select.Output(Sql.Scalar(1));
-
-            var command = Utilities.GetCommand(statement);
-
-            Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT 1;", command.CommandText);
+            AssertSql(
+                Sql.Select.Output(Sql.Scalar(1)),
+                "SELECT 1;"
+                );
         }
+
 
         [TestMethod]
         public void Select1Async()
@@ -37,6 +38,42 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * FROM [sys].[objects];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectFromSelectStarFromSysObjects()
+        {
+            var subselect = Sql.Select.From("sys.objects");
+
+            var statement = Sql.Select.From(subselect.As("foo"));
+
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM ( SELECT * FROM [sys].[objects] ) AS [foo];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectStarFromSysObjectsAsO()
+        {
+            var statement = Sql.Select.From("sys.objects", "O");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [O];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectStarFromSysObjectsAsO2()
+        {
+            var statement = Sql.Select.From(Sql.Name("sys.objects").As("O"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [O];", command.CommandText);
         }
         [TestMethod]
         public void SelectSkipSchema()
@@ -77,7 +114,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT  COUNT(*) FROM [sys].[objects];", command.CommandText);
+            Assert.AreEqual("SELECT COUNT( * ) FROM [sys].[objects];", command.CommandText);
         }
         [TestMethod]
         public void SelectFoo()
@@ -111,6 +148,16 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("SET @Foo = N'bar';", command.CommandText);
+        }
+        [TestMethod]
+        public void SelectFunction()
+        {
+            var statement = Sql.Select.Output(Sql.Function("GETUTCDATE").As("Foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT GETUTCDATE( ) AS [Foo];", command.CommandText);
         }
         [TestMethod]
         public void SetPlus()
@@ -222,18 +269,50 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) 1 AS [foo];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Select1OffsetFetch()
+        {
+            var statement = Sql.Select.From(Sql.Name("sys.objects").As("foo")).OrderBy("name").Offset(100).FetchNext(10);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [foo] ORDER BY [name] ASC OFFSET 100 ROWS FETCH NEXT 10 ROWS ONLY;", command.CommandText);
         }
 
         [TestMethod]
         public void Select1Top1Param()
         {
-            var statement = Sql.Select.Output(Sql.Scalar(1).As("foo")).Top(1);
+            var statement = Sql.Select.Output(Sql.Scalar(1).As("foo")).Top(Parameter.Int("@top").DefaultValue(10));
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) 1 AS [foo];", command.CommandText);
+
+            var param = command.Parameters[0] as DbParameter;
+            Assert.IsNotNull(param);
+            Assert.AreEqual(param.Value, 10);
+
+            Assert.AreEqual("SELECT TOP ( @top ) 1 AS [foo];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Select1Top1ParamP()
+        {
+            var statement = Sql.Select.Output(Sql.Scalar(1).As("foo")).Top(Parameter.Int("@top").DefaultValue(10), true, true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+
+            var param = command.Parameters[0] as DbParameter;
+            Assert.IsNotNull(param);
+            Assert.AreEqual(param.Value, 10);
+
+            Assert.AreEqual("SELECT TOP ( @top ) PERCENT WITH TIES 1 AS [foo];", command.CommandText);
         }
 
         [TestMethod]
@@ -244,7 +323,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) PERCENT 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) PERCENT 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -255,7 +334,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) PERCENT WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) PERCENT WITH TIES 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -266,7 +345,43 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT TOP (1) WITH TIES 1;", command.CommandText);
+            Assert.AreEqual("SELECT TOP ( 1 ) WITH TIES 1;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void SelectCTE()
+        {
+            var statement = Sql.With("SO").As(Sql.Select.From("sys.objects")).Select().From("SO");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("WITH [SO] AS ( SELECT * FROM [sys].[objects] ) SELECT * FROM [SO];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectCTE2()
+        {
+            var statement = Sql.With("SO", "name", "object_id").As(Sql.Select.Output("name", "object_id").From("sys.objects")).Select().From("SO");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("WITH [SO] ( [name], [object_id] ) AS ( SELECT [name], [object_id] FROM [sys].[objects] ) SELECT * FROM [SO];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectCTE3()
+        {
+            var columns = new List<string> { "name", "object_id" };
+
+            var statement = Sql.With("SO", columns).As(Sql.Select.Output(columns).From("sys.objects")).Select().From("SO");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("WITH [SO] ( [name], [object_id] ) AS ( SELECT [name], [object_id] FROM [sys].[objects] ) SELECT * FROM [SO];", command.CommandText);
         }
 
         [TestMethod]
@@ -313,6 +428,40 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] GROUP BY [src].[object_id], [src].[name];", command.CommandText);
         }
+        [TestMethod]
+        public void SelectGroupBy2()
+        {
+            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy("src.object_id", "src.name");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] GROUP BY [src].[object_id], [src].[name];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectGroupBy3()
+        {
+            var columns = new List<string> { "src.object_id", "src.name" };
+            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy(columns);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] GROUP BY [src].[object_id], [src].[name];", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectGroupBy4()
+        {
+            var columns = new List<Name> { "src.object_id", "src.name" };
+            var statement = Sql.Select.Output(Sql.Name("src", "object_id")).From("sys.objects", "src").GroupBy(columns);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] GROUP BY [src].[object_id], [src].[name];", command.CommandText);
+        }
 
         [TestMethod]
         public void SelectGroupByHaving()
@@ -329,6 +478,31 @@ namespace FluidSqlTests
         public void SelectOrderBy()
         {
             var statement = Sql.Select.Output(Sql.Name("src.object_id")).From("sys.objects", "src").OrderBy(Sql.Name("src", "object_id"), Direction.Asc).OrderBy(Sql.Name("src", "name"), Direction.Desc);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] ORDER BY [src].[object_id] ASC, [src].[name] DESC;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectOrderBy2()
+        {
+
+            var statement = Sql.Select.Output(Sql.Name("src.object_id")).From("sys.objects", "src").OrderBy(Sql.Name("src", "object_id"), Direction.Asc).OrderBy(Sql.Order("src.name", Direction.Desc));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT [src].[object_id] FROM [sys].[objects] AS [src] ORDER BY [src].[object_id] ASC, [src].[name] DESC;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void SelectOrderBy3()
+        {
+            var orders = new List<Order> { Sql.Order("src.object_id"), Sql.Order("src.name", Direction.Desc) };
+
+            var statement = Sql.Select.Output(Sql.Name("src.object_id")).From("sys.objects", "src").OrderBy(orders);
 
             var command = Utilities.GetCommand(statement);
 
@@ -366,7 +540,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].* FROM (SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].* FROM ( SELECT * FROM [sys].[objects] UNION SELECT * FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -377,7 +551,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].[Name] FROM (SELECT [Name] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].[Name] FROM ( SELECT [Name] FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
@@ -388,7 +562,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].[nm] FROM (SELECT [Name] AS [nm] FROM [sys].[objects]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].[nm] FROM ( SELECT [Name] AS [nm] FROM [sys].[objects] ) AS [wrap];", command.CommandText);
         }
         [TestMethod]
         public void SelectUnionAllSelect()
@@ -433,23 +607,161 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [wrap].* FROM (SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second]) AS [wrap];", command.CommandText);
+            Assert.AreEqual("SELECT [wrap].* FROM ( SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second] ) AS [wrap];", command.CommandText);
         }
 
         [TestMethod]
         public void SelectInnerJoin()
         {
-            var statement = Sql.Select
-
+            AssertSql(
+                Sql.Select
                 .Output(Sql.Star())
                 .From("sys.objects", "o")
-                .InnerJoin(Sql.Name("sys.tables").As("t"), Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id")));
+                .InnerJoin(Sql.Name("sys.tables").As("t"), Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
 
-            var command = Utilities.GetCommand(statement);
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .InnerJoin(Sql.Name("sys.tables"), "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
 
-            Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];", command.CommandText);
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .InnerJoin("sys.tables", "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .InnerJoin("sys.tables", Sql.Name("object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] INNER JOIN [sys].[tables] ON [object_id] = [o].[object_id];");
+
         }
+
+        [TestMethod]
+        public void SelectLeftOuterJoin()
+        {
+            AssertSql(
+                Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .LeftOuterJoin(Sql.Name("sys.tables").As("t"), Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] LEFT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .LeftOuterJoin(Sql.Name("sys.tables"), "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] LEFT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .LeftOuterJoin("sys.tables", "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] LEFT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .LeftOuterJoin("sys.tables", Sql.Name("object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] LEFT OUTER JOIN [sys].[tables] ON [object_id] = [o].[object_id];");
+
+        }
+
+        [TestMethod]
+        public void SelectRightOuterJoin()
+        {
+            AssertSql(
+                Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .RightOuterJoin(Sql.Name("sys.tables").As("t"), Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] RIGHT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .RightOuterJoin(Sql.Name("sys.tables"), "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] RIGHT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .RightOuterJoin("sys.tables", "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] RIGHT OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .RightOuterJoin("sys.tables", Sql.Name("object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] RIGHT OUTER JOIN [sys].[tables] ON [object_id] = [o].[object_id];");
+
+        }
+
+
+        [TestMethod]
+        public void SelectFullOuterJoin()
+        {
+            AssertSql(
+                Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .FullOuterJoin(Sql.Name("sys.tables").As("t"), Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] FULL OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .FullOuterJoin(Sql.Name("sys.tables"), "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] FULL OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .FullOuterJoin("sys.tables", "t", Sql.Name("t.object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] FULL OUTER JOIN [sys].[tables] AS [t] ON [t].[object_id] = [o].[object_id];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .FullOuterJoin("sys.tables", Sql.Name("object_id").IsEqual(Sql.Name("o.object_id"))),
+            "SELECT * FROM [sys].[objects] AS [o] FULL OUTER JOIN [sys].[tables] ON [object_id] = [o].[object_id];");
+
+        }
+
+
+        [TestMethod]
+        public void SelectCrossJoin()
+        {
+            AssertSql(
+                Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .CrossJoin(Sql.Name("sys.tables").As("t")),
+            "SELECT * FROM [sys].[objects] AS [o] CROSS JOIN [sys].[tables] AS [t];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .CrossJoin(Sql.Name("sys.tables"), "t"),
+            "SELECT * FROM [sys].[objects] AS [o] CROSS JOIN [sys].[tables] AS [t];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .CrossJoin("sys.tables", "t"),
+            "SELECT * FROM [sys].[objects] AS [o] CROSS JOIN [sys].[tables] AS [t];");
+
+            AssertSql(Sql.Select
+                .Output(Sql.Star())
+                .From("sys.objects", "o")
+                .CrossJoin("sys.tables"),
+            "SELECT * FROM [sys].[objects] AS [o] CROSS JOIN [sys].[tables];");
+
+        }
+
 
         [TestMethod]
         public void SelectLike()
@@ -470,7 +782,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + '%' AND [name] LIKE '%' + N'foo' AND [name] LIKE '%' + N'foo' + '%' AND [name] LIKE N'%foo%';", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [name] LIKE N'foo' + N'%' AND [name] LIKE N'%' + N'foo' AND [name] LIKE N'%' + N'foo' + N'%' AND [name] LIKE N'%foo%';", command.CommandText);
         }
 
         [TestMethod]
@@ -502,7 +814,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND  ([object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND ( [object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -543,7 +855,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK 'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
+            Assert.AreEqual("BEGIN TRANSACTION [foo] WITH MARK N'marked';\r\nSAVE TRANSACTION;\r\nROLLBACK TRANSACTION;\r\nCOMMIT TRANSACTION;", command.CommandText);
 
         }
         [TestMethod]
@@ -586,7 +898,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DECLARE @name NVARCHAR(MAX) = (SELECT TOP (1) [name] FROM [sys].[objects]);", command.CommandText);
+            Assert.AreEqual("DECLARE @name NVARCHAR ( MAX ) = ( SELECT TOP ( 1 ) [name] FROM [sys].[objects] );", command.CommandText);
         }
 
         [TestMethod]
@@ -600,7 +912,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS((SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name))\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF EXISTS( ( SELECT * FROM [tempdb].[sys].[tables] WHERE [name] = @name ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;\r\nELSE\r\nBEGIN;\r\nSELECT 2;\r\nEND;", command.CommandText);
         }
 
 
@@ -623,7 +935,30 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual(" /* DROP TABLE [some].[table]; */ ", command.CommandText);
+            Assert.AreEqual("/* DROP TABLE [some].[table] */", command.CommandText);
+        }
+
+        [TestMethod]
+        public void CommentOutName()
+        {
+            AssertSqlToken(Sql.Name("some.table").CommentOut(),"/* [some].[table] */");
+        }
+
+        [TestMethod]
+        public void StringifyDropTable()
+        {
+            var statement = Sql.DropTable(Sql.Name("some.table")).Stringify();
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("N' DROP TABLE [some].[table]';", command.CommandText);
+        }
+
+        [TestMethod]
+        public void StringifyName()
+        {
+            AssertSqlToken(Sql.Name("some.table").Stringify(), "N' [some].[table]'");
         }
 
         [TestMethod]
@@ -634,7 +969,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID(N'[some].[table]',N'U') IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[some].[table]', N'U' ) IS NOT NULL DROP TABLE [some].[table];", command.CommandText);
         }
 
         [TestMethod]
@@ -646,7 +981,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  EXISTS (SELECT * FROM [sys].[objects])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF EXISTS ( SELECT * FROM [sys].[objects] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -658,7 +993,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -670,7 +1005,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -681,7 +1016,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF  NOT ( EXISTS (SELECT * FROM [sys].[objects]) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF NOT ( EXISTS ( SELECT * FROM [sys].[objects] ) )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
         //[TestMethod]
         //public void CreateTable()
@@ -704,7 +1039,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -717,7 +1052,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nBREAK;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nBREAK;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -725,12 +1060,12 @@ namespace FluidSqlTests
         {
             var statement =
                 Sql.If(Sql.Scalar(3).Less(Sql.Some(Sql.Select.From("foo").Output(Sql.Name("a")))))
-                    .Then(Sql.Throw(123,"123",1));
+                    .Then(Sql.Throw(123, "123", 1));
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, N'123', 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nTHROW 123, N'123', 1;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -743,7 +1078,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nTHROW 123, @fooMsg, 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nTHROW 123, @fooMsg, 1;\r\nEND;", command.CommandText);
         }
 
 
@@ -757,7 +1092,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ANY (SELECT [a] FROM [foo])\r\nBEGIN;\r\nCONTINUE;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ANY ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nCONTINUE;\r\nEND;", command.CommandText);
         }
 
         [TestMethod]
@@ -770,7 +1105,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF 3 <  ALL (SELECT [a] FROM [foo])\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
+            Assert.AreEqual("IF 3 < ALL ( SELECT [a] FROM [foo] )\r\nBEGIN;\r\nSELECT 1;\r\nEND;", command.CommandText);
         }
 
 
@@ -875,6 +1210,48 @@ namespace FluidSqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("WHILE @i < 10\r\nBEGIN;\r\nSET @i = @i + 1;\r\nEND;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void Snippet01()
+        {
+            var statement = Sql.SnippetStatement("SELECT * FROM sys.objects");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM sys.objects;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Snippet02()
+        {
+            var statement = Sql.TemplateStatement("SELECT {0},{0} FROM sys.objects",Sql.Name("foo"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT  [foo], [foo]  FROM sys.objects;", command.CommandText);
+        }
+
+
+        [TestMethod]
+        public void SelectParameters()
+        {
+            AssertSql(
+                Sql.Select.Output(Sql.Parameter.Int("@foo")),
+                "SELECT @foo;"
+                );
+        }
+
+        [TestMethod]
+        public void SelectIntoParameters()
+        {
+            AssertSql(
+                Sql.Select.From(Sql.Name("foo")).Set(Sql.Parameter.Int("@foo"),Sql.Name("bar")).Top(1),
+                "SELECT TOP ( 1 ) @foo = [bar] FROM [foo];"
+                );
         }
     }
 }
