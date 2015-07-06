@@ -3,8 +3,8 @@ using System.Data;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
-using TTRider.FluidSql.DataProvider;
-using TTRider.FluidSql.DataProvider.SqlServer;
+using TTRider.FluidSql.Providers.SqlServer;
+using TTRider.FluidSql.RequestResponse;
 
 namespace Tests.DataProvider
 {
@@ -36,12 +36,8 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select);
 
-            var req = new DataRequest(s)
-            {
-                ConnectionString = connectionString,
-            };
-            var handler = new SqlServerDataProvider();
-            var response = handler.ProcessRequest(req);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
+            var response = request.GetResponse();
 
             Assert.AreEqual("Adam", response.Output["@Name"]);
         }
@@ -65,12 +61,8 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select);
 
-            var req = new DataRequest(s)
-            {
-                ConnectionString = connectionString,
-            };
-            var handler = new SqlServerDataProvider();
-            var response = handler.ProcessRequest(req);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
+            var response = request.GetResponse();
 
             var f = response.Records.First();
 
@@ -87,11 +79,7 @@ namespace Tests.DataProvider
                     .Output(Sql.Name("p", "Name"))
                     .Where(Sql.Name("p", "Id").IsEqual(Sql.Parameter.Int("@Id")));
             select1.Parameters.Add(Sql.Parameter.NVarChar("@Name").ParameterDirection(ParameterDirection.Output));
-            select1.ParameterValues.Add(new ParameterValue()
-            {
-                Name = "@Id",
-                Value = 1
-            });
+            select1.ParameterValues.Add("@Id", 1);
 
             var select2 =
                 Sql.Select.From(Sql.Name("Person"), "p")
@@ -101,12 +89,8 @@ namespace Tests.DataProvider
 
             var s = Sql.Statements(select1,select2);
 
-            var req = new DataRequest(s)
-            {
-                ConnectionString = connectionString,
-            };
-            var handler = new SqlServerDataProvider();
-            var response = handler.ProcessRequest(req);
+            var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
+            var response = request.GetResponse();
 
             var f = response.Records.First();
             Assert.AreEqual("Adam", f[0]);

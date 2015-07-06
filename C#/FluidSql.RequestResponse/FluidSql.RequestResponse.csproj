@@ -7,8 +7,8 @@
     <ProjectGuid>{708850AA-C14B-4A9D-B8EC-FD200911479B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TTRider.FluidSql.DataProvider</RootNamespace>
-    <AssemblyName>TTRider.FluidSql.DataProvider</AssemblyName>
+    <RootNamespace>TTRider.FluidSql.RequestResponse</RootNamespace>
+    <AssemblyName>TTRider.FluidSql.RequestResponse</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>963abe11</NuGetPackageImportStamp>
@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,26 +42,23 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TTRider.IDbConnection-Async, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbConnection-Async.1.0.2\lib\net45\TTRider.IDbConnection-Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TTRider.IDbRequestResponse, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbRequestResponse.1.0.4\lib\net45\TTRider.IDbRequestResponse.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="DataRequest.cs" />
-    <Compile Include="DataRequestMode.cs" />
-    <Compile Include="DataResponse.cs" />
-    <Compile Include="IDataProvider.cs" />
-    <Compile Include="IDataRequest.cs" />
-    <Compile Include="IDataResponse.cs" />
+    <Compile Include="DataRequestProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServer\SqlServerDataProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FluidSql.DataProvider.licenseheader" />
-    <None Include="TTRider.FluidSql.DataProvider.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="TTRider.FluidSql.RequestResponse.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluidSql\FluidSql.csproj">
@@ -67,20 +68,19 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      if exist $(TargetDir)packing rd /s /q $(TargetDir)packing
-      mkdir $(TargetDir)packing\lib\net45
-      if not exist $(SolutionDir)nuget\$(ConfigurationName) mkdir $(SolutionDir)nuget\$(ConfigurationName)
-      copy $(TargetPath) $(TargetDir)packing\lib\net45
-      copy $(ProjectDir)TTRider.FluidSql.DataProvider.nuspec $(TargetDir)packing
-      $(SolutionDir)nuget\nuget pack $(TargetDir)packing\TTRider.FluidSql.DataProvider.nuspec -OutputDir $(SolutionDir)nuget\$(ConfigurationName)
-    </PostBuildEvent>
+    <NugetPacking>$(TargetDir)\nugetpack</NugetPacking>
+    <NugetPackingLib>$(TargetDir)\nugetpack\lib\net45</NugetPackingLib>
+    <NugetTarget>$(SolutionDir)nuget\$(ConfigurationName)</NugetTarget>
+    <NugetApp>$(SolutionDir)nuget\nuget.exe</NugetApp>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
+    <RemoveDir Directories="$(NugetPacking);" Condition="Exists(@(NugetPacking))" />
+    <MakeDir Directories="$(NugetPacking)" />
+    <MakeDir Directories="$(NugetPackingLib)" />
+    <MakeDir Directories="$(NugetTarget)" Condition="!Exists(@(NugetTarget))" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(NugetPackingLib)" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="$(ProjectDir)$(AssemblyName).nuspec" DestinationFolder="$(NugetPacking)" OverwriteReadOnlyFiles="true" />
+    <Exec Condition="Exists($(NugetApp))" Command="$(SolutionDir)nuget\nuget pack $(NugetPacking)\$(AssemblyName).nuspec -OutputDir $(NugetTarget)" />
   </Target>
-  -->
 </Project>

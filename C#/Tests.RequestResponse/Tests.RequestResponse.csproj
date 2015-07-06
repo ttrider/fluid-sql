@@ -35,8 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="TTRider.IDbConnection-Async, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbConnection-Async.1.0.2\lib\net45\TTRider.IDbConnection-Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TTRider.IDbRequestResponse, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TTRider.IDbRequestResponse.1.0.3\lib\net45\TTRider.IDbRequestResponse.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -51,19 +63,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="SimpleEndToEnd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluidSql.DataProvider\FluidSql.DataProvider.csproj">
+    <ProjectReference Include="..\FluidSql.RequestResponse\FluidSql.RequestResponse.csproj">
       <Project>{708850aa-c14b-4a9d-b8ec-fd200911479b}</Project>
-      <Name>FluidSql.DataProvider</Name>
+      <Name>FluidSql.RequestResponse</Name>
     </ProjectReference>
     <ProjectReference Include="..\FluidSql\FluidSql.csproj">
       <Project>{e0e66eb2-fc27-4dae-8fc3-c05870c162e5}</Project>
       <Name>FluidSql</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
