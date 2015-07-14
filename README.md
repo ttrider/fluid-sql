@@ -4,6 +4,11 @@ fluid-sql
 
 Release Notes
 ==
+1.3.1
+--
+* Bug Fixes
+
+==
 1.1.1
 --
 * Adding Parameter direction support
