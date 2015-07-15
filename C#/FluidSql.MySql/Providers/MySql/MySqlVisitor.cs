@@ -12,7 +12,7 @@ namespace TTRider.FluidSql.Providers.MySql
     internal partial class MySqlVisitor : Visitor
     {
 		private static readonly string[] supportedDialects = new [] {"mysql", "ansi"};
-		
+
         private readonly string[] DbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
@@ -22,36 +22,36 @@ namespace TTRider.FluidSql.Providers.MySql
             "DATETIME", // DateTime = 4,
             "DECIMAL", // Decimal = 5,
             "FLOAT", // Float = 6,
-            "IMAGE", // Image = 7,
+            "LONGBLOB", // Image = 7,
             "INTEGER", // Int = 8,
-            "MONEY", // Money = 9,
-            "NCHAR", // NChar = 10,
-            "NTEXT", // NText = 11,
-            "NVARCHAR", // NVarChar = 12,
+            "DECIMAL", // Money = 9,
+            "CHAR", // NChar = 10,
+            "TEXT", // NText = 11,
+            "VARCHAR", // NVarChar = 12,
             "REAL", // Real = 13,
-            "UNIQUEIDENTIFIER", // UniqueIdentifier = 14,
-            "SMALLDATETIME", // SmallDateTime = 15,
+            "CHAR ( 38 )", // UniqueIdentifier = 14,
+            "DATETIME", // SmallDateTime = 15,
             "SMALLINT", // SmallInt = 16,
-            "SMALLMONEY", // SmallMoney = 17,
+            "DECIMAL", // SmallMoney = 17,
             "TEXT", // Text = 18,
             "TIMESTAMP", // Timestamp = 19,
             "TINYINT", // TinyInt = 20,
             "VARBINARY", // VarBinary = 21,
             "VARCHAR", // VarChar = 22,
-            "SQL_VARIANT", // Variant = 23,
-            "Xml", // Xml = 24,
+            "BLOB", // Variant = 23,
+            "LONGTEXT", // Xml = 24,
             "DATE", // Date = 25,
             "TIME", // Time = 26,
-            "DATETIME2", // DateTime2 = 27,
-            "DateTimeOffset" // DateTimeOffset = 28,
+            "DATETIME", // DateTime2 = 27,
+            "DATETIME" // DateTimeOffset = 28,
         };
 
 		protected override string[] SupportedDialects { get { return supportedDialects;}}
 
         public MySqlVisitor()
         {
-            this.IdentifierOpenQuote = "\"";
-            this.IdentifierCloseQuote = "\"";
+            this.IdentifierOpenQuote = "`";
+            this.IdentifierCloseQuote = "`";
             this.LiteralOpenQuote = "'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
@@ -97,7 +97,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
         protected class MySqlSymbols : Symbols
         {
-            //public const string VACUUM = "VACUUM";
+            public const string AUTO_INCREMENT = "AUTO_INCREMENT";
         }
     
     }
