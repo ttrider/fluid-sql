@@ -80,6 +80,22 @@ namespace Tests.Sqlite
         }
 
         [TestMethod]
+        public void CreateTableWith2IndexesIfNotExists()
+        {
+            var statement = Sql.CreateTable(Sql.Name("tbl"), true)
+                .Columns(
+                    TableColumn.Int("C1").NotNull()
+                    , TableColumn.NVarChar("C2").Null())
+                    .IndexOn("IX_tbl", new Order { Column = Sql.Name("C2") })
+                    .IndexOn("IX_tbl2", new Order { Column = Sql.Name("C1") })
+                ;
+
+            var text = Provider.GenerateStatement(statement);
+            Assert.IsNotNull(text);
+            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX IF NOT EXISTS \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );\r\nCREATE INDEX IF NOT EXISTS \"IX_tbl2\" ON \"tbl\" ( \"C1\" ASC );", text);
+        }
+
+        [TestMethod]
         public void DropTable()
         {
             var statement = Sql.DropTable(Sql.Name("some.table"));

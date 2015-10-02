@@ -97,9 +97,9 @@ namespace TTRider.FluidSql.Providers.Sqlite
             // if indecies are set, create them
             if (statement.Indicies.Count > 0)
             {
-                State.WriteStatementTerminator();
                 foreach (var createIndexStatement in statement.Indicies)
                 {
+                    State.WriteStatementTerminator();
                     createIndexStatement.CheckIfNotExists |= statement.CheckIfNotExists;
                     VisitCreateIndexStatement(createIndexStatement);
                 }
