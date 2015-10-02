@@ -46,7 +46,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MySql.cs" />
     <Compile Include="Providers\MySql\MySqlProvider.cs" />
-    <Compile Include="Providers\MySql\SqliteVisitor.cs" />
+    <Compile Include="Providers\MySql\MySqlVisitor.cs" />
+    <Compile Include="Providers\MySql\MySqlVisitor.DDLStatements.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

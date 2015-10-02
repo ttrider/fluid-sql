@@ -1609,7 +1609,7 @@ namespace TTRider.FluidSql
             {
                 statement.PrimaryKey = new ConstrainDefinition();
             }
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Columns.AddRange(columns);
             return statement;
         }
@@ -1621,7 +1621,7 @@ namespace TTRider.FluidSql
                 statement.PrimaryKey = new ConstrainDefinition();
             }
 
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             if (columns != null)
             {
                 statement.PrimaryKey.Columns.AddRange(columns);
@@ -1638,7 +1638,7 @@ namespace TTRider.FluidSql
             }
 
             statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Columns.AddRange(columns);
             return statement;
         }
@@ -1652,7 +1652,7 @@ namespace TTRider.FluidSql
             }
 
             statement.PrimaryKey.Clustered = clustered;
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             if (columns != null)
             {
                 statement.PrimaryKey.Columns.AddRange(columns);
@@ -1732,7 +1732,7 @@ namespace TTRider.FluidSql
             {
                 statement.PrimaryKey = new ConstrainDefinition();
             }
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Conflict = onConflict;
             statement.PrimaryKey.Columns.AddRange(columns);
             return statement;
@@ -1745,7 +1745,7 @@ namespace TTRider.FluidSql
                 statement.PrimaryKey = new ConstrainDefinition();
             }
 
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Conflict = onConflict;
             if (columns != null)
             {
@@ -1764,7 +1764,7 @@ namespace TTRider.FluidSql
 
             statement.PrimaryKey.Clustered = clustered;
             statement.PrimaryKey.Conflict = onConflict;
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Columns.AddRange(columns);
             return statement;
         }
@@ -1779,7 +1779,7 @@ namespace TTRider.FluidSql
 
             statement.PrimaryKey.Clustered = clustered;
             statement.PrimaryKey.Conflict = onConflict;
-            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name);
+            statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             if (columns != null)
             {
                 statement.PrimaryKey.Columns.AddRange(columns);
@@ -1883,7 +1883,7 @@ namespace TTRider.FluidSql
 
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, params Order[] columns)
         {
-            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name) };
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name.LastPart) };
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
             return statement;
@@ -1892,7 +1892,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name) };
+            var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name("UC_" + statement.Name.LastPart) };
 
             if (columns != null)
             {
@@ -1905,7 +1905,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered,
             params Order[] columns)
         {
-            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name.LastPart) };
 
             index.Columns.AddRange(columns);
             statement.UniqueConstrains.Add(index);
@@ -1915,7 +1915,7 @@ namespace TTRider.FluidSql
         public static CreateTableStatement UniqueConstrainOn(this CreateTableStatement statement, bool clustered,
             IEnumerable<Order> columns)
         {
-            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name) };
+            var index = new ConstrainDefinition { Clustered = clustered, Name = Sql.Name("UC_" + statement.Name.LastPart) };
 
             if (columns != null)
             {
