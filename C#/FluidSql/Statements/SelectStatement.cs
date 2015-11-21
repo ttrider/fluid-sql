@@ -18,6 +18,7 @@ namespace TTRider.FluidSql
         , IOrderByStatement
         , ICTEStatement
         , IOffsetStatement
+        , ISelectStatement
     {
         public SelectStatement()
         {

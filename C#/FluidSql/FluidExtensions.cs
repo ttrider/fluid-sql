@@ -88,7 +88,7 @@ namespace TTRider.FluidSql
 
         public static IList<ParameterValue> Add(this IList<ParameterValue> list, string name, object value)
         {
-            list.Add(new ParameterValue() {Name = name, Value = value});
+            list.Add(new ParameterValue() { Name = name, Value = value });
             return list;
         }
 
@@ -712,7 +712,7 @@ namespace TTRider.FluidSql
         public static T InnerJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.Inner, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.Inner, Sql.NameAs(source, alias), on);
         }
 
         public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
@@ -733,7 +733,7 @@ namespace TTRider.FluidSql
         public static T LeftOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.LeftOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.LeftOuter, Sql.NameAs(source, alias), on);
         }
 
         public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
@@ -754,7 +754,7 @@ namespace TTRider.FluidSql
         public static T RightOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.RightOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.RightOuter, Sql.NameAs(source, alias), on);
         }
 
 
@@ -776,7 +776,7 @@ namespace TTRider.FluidSql
         public static T FullOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.FullOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.FullOuter, Sql.NameAs(source, alias), on);
         }
 
 
@@ -799,7 +799,7 @@ namespace TTRider.FluidSql
         public static T CrossJoin<T>(this T statement, string source, string alias)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.Cross, Sql.Name(source).As(alias), null);
+            return Join(statement, Joins.Cross, Sql.NameAs(source, alias), null);
         }
         #endregion INNER JOIN
 
@@ -2116,7 +2116,7 @@ namespace TTRider.FluidSql
 
         #region CTE
 
-        public static CTEDefinition As(this CTEDeclaration cte, SelectStatement definition)
+        public static CTEDefinition As(this CTEDeclaration cte, ISelectStatement definition)
         {
             return new CTEDefinition
             {

@@ -4,6 +4,17 @@ fluid-sql
 
 Release Notes
 ==
+1.4.0
+--
+* Name token improvements
+* CTE improvements
+* Bug Fixes
+1.3.0
+--
+* Bug Fixes
+1.2.0
+--
+* Adding more Parameter-related helper functions, like Sql.Parameter.XXX
 1.1.1
 --
 * Adding Parameter direction support

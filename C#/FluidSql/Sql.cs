@@ -23,6 +23,23 @@ namespace TTRider.FluidSql
             return new Name(names);
         }
 
+        public static Name NameAs(string name, string alias)
+        {
+            return new Name(name) {Alias = alias};
+        }
+        public static Name NameAs(string part1, string part2, string alias)
+        {
+            return new Name(part1, part2) { Alias = alias };
+        }
+        public static Name NameAs(string part1, string part2, string part3, string alias)
+        {
+            return new Name(part1, part2, part3) { Alias = alias };
+        }
+        public static Name NameAs(string part1, string part2, string part3, string part4, string alias)
+        {
+            return new Name(part1, part2, part3, part4) { Alias = alias };
+        }
+
         public static Snippet Snippet(string value, params Parameter[] parameters)
         {
             var val = new Snippet {Value = value};
