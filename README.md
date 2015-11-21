@@ -4,7 +4,7 @@ fluid-sql
 
 Release Notes
 ==
-1.4.0
+1.4.1
 --
 * Name token improvements
 * CTE improvements
