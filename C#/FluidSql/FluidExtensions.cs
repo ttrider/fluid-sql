@@ -2225,21 +2225,40 @@ namespace TTRider.FluidSql
 
         public static Snippet Dialect(this Snippet snippet, string value, string dialectName, params string[] additionalDialects)
         {
-            return snippet;
+            return snippet.Dialect(value, Enumerable.Repeat(dialectName, 1).Concat(additionalDialects));
         }
         public static Snippet Dialect(this Snippet snippet, string value, IEnumerable<string> dialects)
         {
+            if (dialects != null)
+            {
+                foreach (var d in dialects
+                    .Where(d => !string.IsNullOrWhiteSpace(d))
+                    .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    snippet.Dialects.Add(d, value);
+                }
+            }
+
             return snippet;
         }
 
         public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, string dialectName, params string[] additionalDialects)
         {
-            return snippetStatement;
+            return snippetStatement.Dialect(value, Enumerable.Repeat(dialectName, 1).Concat(additionalDialects));
         }
         public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, IEnumerable<string> dialects)
         {
-
-
+            if (dialects != null)
+            {
+                foreach (var d in dialects
+                    .Where(d => !string.IsNullOrWhiteSpace(d))
+                    .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    snippetStatement.Dialects.Add(d, value);
+                }
+            }
 
             return snippetStatement;
         }
