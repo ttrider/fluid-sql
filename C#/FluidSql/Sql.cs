@@ -777,6 +777,38 @@ namespace TTRider.FluidSql
             };
         }
 
+
+        /*
+        CREATE SCHEMA schema_name_clause [ <schema_element> [ ...n ] ]
+
+<schema_name_clause> ::=
+    {
+    schema_name
+    | AUTHORIZATION owner_name
+    | schema_name AUTHORIZATION owner_name
+    }
+
+<schema_element> ::= 
+    { 
+        table_definition | view_definition | grant_statement | 
+        revoke_statement | deny_statement 
+    }
+    
+            
+            DROP SCHEMA  [ IF EXISTS ] schema_name - IOF EXISTS FOR 2016 (and azure ?)
+            
+            */
+
+        public static CreateSchemaStatement CreateSchema(Name name, bool checkIfNotExists = false)
+        {
+            return new CreateSchemaStatement { Name = name, CheckIfNotExists = checkIfNotExists };
+        }
+        public static DropSchemaStatement DropSchema(Name name, bool checkExists = false)
+        {
+            return new DropSchemaStatement { Name = name, CheckExists = checkExists };
+        }
+
+
         public static DropTableStatement DropTable(Name name, bool checkExists = false)
         {
             return new DropTableStatement {Name = name, CheckExists = checkExists};

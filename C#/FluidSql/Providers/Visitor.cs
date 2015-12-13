@@ -328,6 +328,8 @@ namespace TTRider.FluidSql.Providers
                 {typeof (AlterViewStatement), (v, stm)=>v.VisitAlterViewStatement((AlterViewStatement)stm)},
                 {typeof (DropViewStatement), (v, stm)=>v.VisitDropViewStatement((DropViewStatement)stm)},
                 {typeof (ExecuteStatement), (v, stm)=>v.VisitExecuteStatement((ExecuteStatement)stm)},
+                {typeof (DropSchemaStatement), (v, stm)=>v.VisitDropSchemaStatement((DropSchemaStatement)stm)},
+                {typeof (CreateSchemaStatement), (v, stm)=>v.VisitCreateSchemaStatement((CreateSchemaStatement)stm)},
             };
 
 

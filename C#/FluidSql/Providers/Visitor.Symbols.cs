@@ -30,6 +30,7 @@ namespace TTRider.FluidSql.Providers
             public const string AS = "AS";
             public const string ASC = "ASC";
             public const string AUTOINCREMENT = "AUTOINCREMENT";
+            public const string AUTHORIZATION = "AUTHORIZATION";
             public const string BEGIN = "BEGIN";
             public const string BEGIN_TRY = "BEGIN TRY";
             public const string BETWEEN = "BETWEEN";
@@ -114,6 +115,7 @@ namespace TTRider.FluidSql.Providers
             public const string ROWS = "ROWS";
             public const string SAVE = "SAVE";
             public const string SAVEPOINT = "SAVEPOINT";
+            public const string SCHEMA = "SCHEMA";
             public const string SELECT = "SELECT";
             public const string SET = "SET";
             public const string SORT_IN_TEMPDB = "SORT_IN_TEMPDB";

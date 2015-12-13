@@ -51,6 +51,8 @@
     <Compile Include="Interfaces\IOnConflict.cs" />
     <Compile Include="Interfaces\ISelectStatement.cs" />
     <Compile Include="Statements\CorrelationStatement.cs" />
+    <Compile Include="Statements\CreateSchemaStatement.cs" />
+    <Compile Include="Statements\DropSchemaStatement.cs" />
     <Compile Include="Statements\ExceptStatement.cs" />
     <Compile Include="Statements\IntersectStatement.cs" />
     <Compile Include="Enums\Joins.cs" />

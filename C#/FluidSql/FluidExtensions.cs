@@ -2220,7 +2220,6 @@ namespace TTRider.FluidSql
         }
         #endregion CTE
 
-
         #region Snippet
 
         public static Snippet Dialect(this Snippet snippet, string value, string dialectName, params string[] additionalDialects)
@@ -2265,6 +2264,14 @@ namespace TTRider.FluidSql
 
         #endregion Snippet
 
+        #region Schema
+
+        public static CreateSchemaStatement Authorization(this CreateSchemaStatement statement, string ownerName)
+        {
+            statement.Owner = ownerName;
+            return statement;
+        }
+        #endregion Schema
 
         public static string GetCommandSummary(this IDbCommand command)
         {
