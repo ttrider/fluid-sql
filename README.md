@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+1.5.0
+--
+* Initial support for SCHEMA
+* Bug Fixes
 1.4.1
 --
 * Name token improvements
