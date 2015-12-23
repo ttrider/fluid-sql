@@ -148,6 +148,10 @@ namespace TTRider.FluidSql
             return new Scalar {Value = value};
         }
 
+        public static UnaryMinusToken Minus(Token value)
+        {
+            return new UnaryMinusToken { Token = value };
+        }
 
         public static GroupToken Group(Token value)
         {

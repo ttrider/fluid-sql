@@ -399,6 +399,12 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.CloseParenthesis);
         }
 
+        protected virtual void VisitUnaryMinusToken(UnaryMinusToken token)
+        {
+            State.Write(Symbols.MinusVal);
+            VisitToken(token.Token);
+        }
+
         protected virtual void VisitJoin(ICollection<Join> list)
         {
             if (list.Count > 0)

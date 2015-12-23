@@ -266,6 +266,7 @@ namespace TTRider.FluidSql.Providers
                 {typeof (EndsWithToken),(v,t)=>v.VisitEndsWithToken((EndsWithToken)t)},
                 {typeof (LikeToken),(v,t)=>v.VisitLikeToken((LikeToken)t)},
                 {typeof (GroupToken),(v,t)=>v.VisitGroupToken((GroupToken)t)},
+                {typeof (UnaryMinusToken),(v,t)=>v.VisitUnaryMinusToken((UnaryMinusToken)t)},
                 {typeof (NotToken),(v,t)=>v.VisitNotToken((NotToken)t)},
                 {typeof (IsNullToken),(v,t)=>v.VisitIsNullToken((IsNullToken)t)},
                 {typeof (IsNotNullToken),(v,t)=>v.VisitIsNotNullToken((IsNotNullToken)t)},

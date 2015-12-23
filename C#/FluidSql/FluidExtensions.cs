@@ -1103,6 +1103,11 @@ namespace TTRider.FluidSql
             return new GroupToken { Token = token };
         }
 
+        public static UnaryMinusToken Minus(this Token token)
+        {
+            return new UnaryMinusToken { Token = token };
+        }
+
         public static ExpressionToken Not(this ExpressionToken token)
         {
             return new NotToken { Token = token };

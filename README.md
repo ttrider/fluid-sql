@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+1.5.1
+--
+* Adding overlooked unary minus token support
+* Bug Fixes
 1.5.0
 --
 * Initial support for SCHEMA

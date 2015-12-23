@@ -124,6 +124,9 @@ namespace TTRider.FluidSql
     {
         public Token Token { get; set; }
     }
+    public class UnaryMinusToken : UnaryToken
+    {
+    }
 
     public class GroupToken : UnaryToken
     {
