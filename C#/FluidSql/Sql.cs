@@ -335,13 +335,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotAssign(Parameter target, ExpressionToken expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
-            };
-        }
+        //public static SetStatement BitwiseNotAssign(Parameter target, ExpressionToken expression)
+        //{
+        //    return new SetStatement
+        //    {
+        //        Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+        //    };
+        //}
 
         public static SetStatement ModuloAssign(Parameter target, ExpressionToken expression)
         {
@@ -415,13 +415,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotSet(Parameter target, ExpressionToken expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
-            };
-        }
+        //public static SetStatement BitwiseNotSet(Parameter target, ExpressionToken expression)
+        //{
+        //    return new SetStatement
+        //    {
+        //        Assign = new BitwiseNotToken {First = target, Second = expression, Equal = true}
+        //    };
+        //}
 
         public static SetStatement ModuloSet(Parameter target, ExpressionToken expression)
         {
@@ -495,13 +495,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotAssign(Name target, ExpressionToken expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
-            };
-        }
+        //public static SetStatement BitwiseNotAssign(Name target, ExpressionToken expression)
+        //{
+        //    return new SetStatement
+        //    {
+        //        Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+        //    };
+        //}
 
         public static SetStatement ModuloAssign(Name target, ExpressionToken expression)
         {
@@ -575,13 +575,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SetStatement BitwiseNotSet(Name target, ExpressionToken expression)
-        {
-            return new SetStatement
-            {
-                Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
-            };
-        }
+        //public static SetStatement BitwiseNotSet(Name target, ExpressionToken expression)
+        //{
+        //    return new SetStatement
+        //    {
+        //        Assign = new BitwiseNotToken { First = target, Second = expression, Equal = true }
+        //    };
+        //}
 
         public static SetStatement ModuloSet(Name target, ExpressionToken expression)
         {

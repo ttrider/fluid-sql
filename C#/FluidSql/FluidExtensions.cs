@@ -207,12 +207,12 @@ namespace TTRider.FluidSql
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
-        public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
-            return statement;
-        }
+        //public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+        //    where T : ISetStatement
+        //{
+        //    statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+        //    return statement;
+        //}
         public static T Assign<T>(this T statement, Name target, ExpressionToken expression)
             where T : ISetStatement
         {
@@ -282,12 +282,12 @@ namespace TTRider.FluidSql
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
-        public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
-            return statement;
-        }
+        //public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
+        //    where T : ISetStatement
+        //{
+        //    statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+        //    return statement;
+        //}
 
         public static T Output<T>(this T statement, params Name[] columns)
             where T : RecordsetStatement
@@ -897,10 +897,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
 
-        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
-        {
-            return new BitwiseNotToken { First = first, Second = second, Equal = true };
-        }
+        //public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = second, Equal = true };
+        //}
 
         public static ExpressionToken ModuloEqual(this ExpressionToken first, ExpressionToken second)
         {
@@ -942,9 +942,9 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = second };
         }
 
-        public static ExpressionToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken token)
         {
-            return new BitwiseNotToken { First = first, Second = second };
+            return new BitwiseNotToken { Token = token };
         }
 
         public static ExpressionToken Modulo(this ExpressionToken first, ExpressionToken second)
@@ -1038,10 +1038,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
-        {
-            return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
-        }
+        //public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
+        //}
 
         public static ExpressionToken ModuloEqual(this ExpressionToken first, string second)
         {
@@ -1083,10 +1083,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
-        {
-            return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
-        }
+        //public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
+        //}
 
         public static ExpressionToken Modulo(this ExpressionToken first, string second)
         {

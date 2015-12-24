@@ -383,7 +383,6 @@ namespace Tests.Sqlite
                             .Modulo(Sql.Scalar(1))
                             .BitwiseAnd(Sql.Scalar(1))
                             .BitwiseOr(Sql.Scalar(1))
-                            .BitwiseNot(Sql.Scalar(1))
                             .BitwiseXor(Sql.Scalar(1))
                         ).Less(Sql.Scalar(1)))));
 
@@ -391,7 +390,7 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("SELECT * FROM \"sys\".\"objects\" WHERE \"object_id\" IS NOT NULL AND \"object_id\" IS NULL AND ( \"object_id\" + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", text); return statement;
+            Assert.AreEqual("SELECT * FROM \"sys\".\"objects\" WHERE \"object_id\" IS NOT NULL AND \"object_id\" IS NULL AND ( \"object_id\" + 1 - 1 * 1 / 1 % 1 & 1 | 1 ^ 1 ) < 1;", text); return statement;
         }
 
        

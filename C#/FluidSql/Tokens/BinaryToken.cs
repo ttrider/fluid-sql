@@ -84,7 +84,7 @@ namespace TTRider.FluidSql
     {
     }
 
-    public class BitwiseNotToken : BinaryEqualToken
+    public class BitwiseNotToken : UnaryToken
     {
     }
 

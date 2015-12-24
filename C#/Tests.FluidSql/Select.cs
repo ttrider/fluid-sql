@@ -806,7 +806,6 @@ namespace FluidSqlTests
                             .Modulo(Sql.Scalar(1))
                             .BitwiseAnd(Sql.Scalar(1))
                             .BitwiseOr(Sql.Scalar(1))
-                            .BitwiseNot(Sql.Scalar(1))
                             .BitwiseXor(Sql.Scalar(1))
                         ).Less(Sql.Scalar(1)))));
 
@@ -814,7 +813,7 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND ( [object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ~ 1 ^ 1 ) < 1;", command.CommandText);
+            Assert.AreEqual("SELECT * FROM [sys].[objects] WHERE [object_id] IS NOT NULL AND [object_id] IS NULL AND ( [object_id] + 1 - 1 * 1 / 1 % 1 & 1 | 1 ^ 1 ) < 1;", command.CommandText);
         }
 
         [TestMethod]
@@ -1126,8 +1125,6 @@ namespace FluidSqlTests
             Assert.AreEqual("SELECT [foo] &= 1 FROM [sys].[objects];", command.CommandText);
             statement = Sql.Select.Output(Sql.Name("foo").BitwiseOrEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
             Assert.AreEqual("SELECT [foo] |= 1 FROM [sys].[objects];", command.CommandText);
-            statement = Sql.Select.Output(Sql.Name("foo").BitwiseNotEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
-            Assert.AreEqual("SELECT [foo] ~= 1 FROM [sys].[objects];", command.CommandText);
             statement = Sql.Select.Output(Sql.Name("foo").BitwiseXorEqual(Sql.Scalar(1))).From("sys.objects"); command = Utilities.GetCommand(statement); Assert.IsNotNull(command);
             Assert.AreEqual("SELECT [foo] ^= 1 FROM [sys].[objects];", command.CommandText);
 

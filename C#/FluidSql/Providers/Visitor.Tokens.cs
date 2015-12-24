@@ -240,9 +240,10 @@ namespace TTRider.FluidSql.Providers
             VisitBinaryToken(token, token.Equal ? Symbols.BitwiseXorEqVal : Symbols.BitwiseXorVal);
         }
 
-        protected virtual void VisitBitwiseNotToken(BinaryEqualToken token)
+        protected virtual void VisitBitwiseNotToken(BitwiseNotToken token)
         {
-            VisitBinaryToken(token, token.Equal ? Symbols.BitwiseNotEqVal : Symbols.BitwiseNotVal);
+            State.Write(Symbols.BitwiseNotVal);
+            VisitToken(token);
         }
 
         protected virtual void VisitAssignToken(BinaryToken token)
