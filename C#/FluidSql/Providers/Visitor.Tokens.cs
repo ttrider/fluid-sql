@@ -243,7 +243,7 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitBitwiseNotToken(BitwiseNotToken token)
         {
             State.Write(Symbols.BitwiseNotVal);
-            VisitToken(token);
+            VisitToken(token.Token);
         }
 
         protected virtual void VisitAssignToken(BinaryToken token)
