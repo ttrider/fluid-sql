@@ -13,8 +13,8 @@ namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
-		static readonly string[] supportedDialects = new [] {"", "ansi"};
-		
+        static readonly string[] supportedDialects = new[] { "", "ansi" };
+
         protected VisitorState State = new VisitorState();
         protected string IdentifierOpenQuote = "\"";
         protected string IdentifierCloseQuote = "\"";
@@ -22,8 +22,8 @@ namespace TTRider.FluidSql.Providers
         protected string LiteralCloseQuote = "'";
         protected string CommentOpenQuote = "/*";
         protected string CommentCloseQuote = "*/";
-		
-		protected virtual string[] SupportedDialects { get { return supportedDialects;}}
+
+        protected virtual string[] SupportedDialects { get { return supportedDialects; } }
 
         protected abstract void VisitJoinType(Joins join);
 
@@ -70,7 +70,7 @@ namespace TTRider.FluidSql.Providers
             State.Parameters.AddRange(token.Parameters);
             State.ParameterValues.AddRange(token.ParameterValues);
         }
-         
+
         protected virtual void VisitStatement(IStatement statement)
         {
             if (!StatementVisitors.ContainsKey(statement.GetType()))
@@ -82,7 +82,7 @@ namespace TTRider.FluidSql.Providers
 
             if (statement is Token)
             {
-                var token = (Token) statement;
+                var token = (Token)statement;
                 State.Parameters.AddRange(token.Parameters);
                 State.ParameterValues.AddRange(token.ParameterValues);
             }
@@ -231,7 +231,27 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.OpenParenthesis);
             this.VisitStatement(definition.Definition);
             State.Write(Symbols.CloseParenthesis);
+        }
 
+
+        protected virtual void VisitCaseToken(CaseToken token)
+        {
+            State.Write(Symbols.CASE);
+            foreach (var whenCondition in token.WhenConditions)
+            {
+                State.Write(Symbols.WHEN);
+                VisitToken(whenCondition.WhenToken);
+                State.Write(Symbols.THEN);
+                VisitToken(whenCondition.ThenToken);
+            }
+
+            if (token.ElseToken != null)
+            {
+                State.Write(Symbols.ELSE);
+                VisitToken(token.ElseToken);
+            }
+
+            State.Write(Symbols.END);
         }
 
         private static readonly Dictionary<Type, Action<Visitor, Token>> TokenVisitors =
@@ -285,6 +305,14 @@ namespace TTRider.FluidSql.Providers
                 {typeof (Order),(v,t)=>v.VisitOrderToken((Order)t)},
                 {typeof (CTEDefinition),(v,t)=>v.VisitCommonTableExpression((CTEDefinition)t)},
                 {typeof (RecordsetSourceToken),(v,t)=>v.VisitFromToken((RecordsetSourceToken)t)},
+                {typeof (CaseToken),(v,t)=>v.VisitCaseToken((CaseToken)t)},
+
+                /*functions*/
+                {typeof (NowFunctionToken),(v,t)=>v.VisitNowFunctionToken((NowFunctionToken)t)},
+                {typeof (UuidFunctionToken),(v,t)=>v.VisitUuidFunctionToken((UuidFunctionToken)t)},
+                {typeof (IifFunctionToken),(v,t)=>v.VisitIIFFunctionToken((IifFunctionToken)t)},
+                {typeof (DatePartFunctionToken),(v,t)=>v.VisitDatePartFunctionToken((DatePartFunctionToken)t)},
+                {typeof (DurationFunctionToken),(v,t)=>v.VisitDurationFunctionToken((DurationFunctionToken)t)},
             };
 
         private static readonly Dictionary<Type, Action<Visitor, IStatement>> StatementVisitors =

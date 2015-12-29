@@ -7,8 +7,8 @@
 
 namespace TTRider.FluidSql
 {
-    public class Function : FunctionExpressionToken
+    public class NowFunctionToken : FunctionExpressionToken
     {
-        public string Name { get; set; }
+        public bool Utc { get; set; }
     }
 }

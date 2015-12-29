@@ -2278,6 +2278,23 @@ namespace TTRider.FluidSql
         }
         #endregion Schema
 
+        #region Case
+
+        public static CaseToken When(this CaseToken caseToken, ExpressionToken when, ExpressionToken then)
+        {
+            caseToken.WhenConditions.Add(new CaseWhenToken {WhenToken = when, ThenToken = then});
+            return caseToken;
+        }
+
+        public static CaseToken Else(this CaseToken caseToken, ExpressionToken elseToken)
+        {
+            caseToken.ElseToken = elseToken;
+            return caseToken;
+        }
+
+        #endregion Case
+
+
         public static string GetCommandSummary(this IDbCommand command)
         {
             if (command == null) return string.Empty;
@@ -2321,5 +2338,6 @@ namespace TTRider.FluidSql
             sb.AppendLine(command.CommandText);
             return sb.ToString();
         }
+
     }
 }

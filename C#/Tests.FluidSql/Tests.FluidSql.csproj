@@ -55,6 +55,7 @@
     <Compile Include="Insert.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Merge.cs" />
+    <Compile Include="Functions.cs" />
     <Compile Include="Select.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Create.cs" />

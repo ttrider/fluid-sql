@@ -1,4 +1,4 @@
-﻿// <license>
+// <license>
 // The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
@@ -7,8 +7,10 @@
 
 namespace TTRider.FluidSql
 {
-    public class Function : FunctionExpressionToken
+    public class DatePartFunctionToken : FunctionExpressionToken
     {
-        public string Name { get; set; }
+        public DatePart DatePart { get; set; }
+
+        public Token Token { get; set; }
     }
 }
