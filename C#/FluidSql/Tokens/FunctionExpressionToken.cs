@@ -2,13 +2,8 @@
 
 namespace TTRider.FluidSql
 {
-    public class FunctionExpressionToken : ExpressionToken
+    public class FunctionExpressionToken : SequenceToken
     {
-        public FunctionExpressionToken()
-        {
-            this.Arguments = new List<Token>();
-        }
-        public List<Token> Arguments { get; private set; }
-
+        public List<Token> Arguments { get { return base.Set; } }
     }
 }
