@@ -1021,6 +1021,10 @@ namespace TTRider.FluidSql
             }
             return cte;
         }
-        
+
+        public static CaseToken Case
+        {
+            get {  return new CaseToken();}
+        }
     }
 }

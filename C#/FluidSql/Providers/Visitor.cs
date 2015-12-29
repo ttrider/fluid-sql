@@ -231,7 +231,27 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.OpenParenthesis);
             this.VisitStatement(definition.Definition);
             State.Write(Symbols.CloseParenthesis);
+        }
 
+
+        protected virtual void VisitCaseToken(CaseToken token)
+        {
+            State.Write(Symbols.CASE);
+            foreach (var whenCondition in token.WhenConditions)
+            {
+                State.Write(Symbols.WHEN);
+                VisitToken(whenCondition.WhenToken);
+                State.Write(Symbols.THEN);
+                VisitToken(whenCondition.ThenToken);
+            }
+
+            if (token.ElseToken != null)
+            {
+                State.Write(Symbols.ELSE);
+                VisitToken(token.ElseToken);
+            }
+
+            State.Write(Symbols.END);
         }
 
         private static readonly Dictionary<Type, Action<Visitor, Token>> TokenVisitors =
@@ -285,6 +305,7 @@ namespace TTRider.FluidSql.Providers
                 {typeof (Order),(v,t)=>v.VisitOrderToken((Order)t)},
                 {typeof (CTEDefinition),(v,t)=>v.VisitCommonTableExpression((CTEDefinition)t)},
                 {typeof (RecordsetSourceToken),(v,t)=>v.VisitFromToken((RecordsetSourceToken)t)},
+                {typeof (CaseToken),(v,t)=>v.VisitCaseToken((CaseToken)t)},
 
                 /*functions*/
                 {typeof (NowFunctionToken),(v,t)=>v.VisitNowFunctionToken((NowFunctionToken)t)},

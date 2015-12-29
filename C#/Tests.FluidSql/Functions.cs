@@ -100,6 +100,30 @@ namespace FluidSqlTests
                 );
         }
 
+        [TestMethod]
+        public void IIF()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.IIF(
+                        Sql.Scalar("a").IsEqual(Sql.Scalar("b")),
+                        Sql.Scalar("a"),Sql.Scalar("b")
+                        )),
+                "SELECT IIF ( N'a' = N'b', N'a', N'b' );"
+                );
+        }
+
+        [TestMethod]
+        public void Case()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.Case.When(Sql.Scalar("a").IsEqual(Sql.Scalar("b")),Sql.Scalar("a"))
+                    .When(Sql.Scalar("a").NotEqual(Sql.Scalar("b")), Sql.Scalar("b"))
+                    .Else(Sql.Scalar("c"))),
+                "SELECT CASE WHEN N'a' = N'b' THEN N'a' WHEN N'a' <> N'b' THEN N'b' ELSE N'c' END;"
+                );
+        }
     }
 }
 
