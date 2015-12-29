@@ -47,8 +47,10 @@
     </Compile>
     <Compile Include="DatePart.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Functions\NullIfFunctionToken.cs" />
     <Compile Include="Functions\DatePartFunctionToken.cs" />
     <Compile Include="Functions\DurationFunctionToken.cs" />
+    <Compile Include="Functions\CoalesceFunctionToken.cs" />
     <Compile Include="Functions\IifFunctionToken.cs" />
     <Compile Include="Functions\MakeDateFunctionToken.cs" />
     <Compile Include="Functions\MakeTimeFunctionToken.cs" />

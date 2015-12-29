@@ -6,31 +6,44 @@
 // </copyright>
 
 using System.Collections.Generic;
+// ReSharper disable InconsistentNaming
 
 namespace TTRider.FluidSql
 {
     public partial class Sql
     {
-        public static Function Coalesce(params Token[] arguments)
+        public static FunctionExpressionToken Coalesce(params Token[] arguments)
         {
-            var f = new Function
-            {
-                Name = "COALESCE"
-            };
+            var f = new CoalesceFunctionToken();
             f.Arguments.AddRange(arguments);
             return f;
         }
 
-        public static Function Coalesce(IEnumerable<Token> arguments)
+        public static FunctionExpressionToken Coalesce(IEnumerable<Token> arguments)
         {
-            var f = new Function
-            {
-                Name = "COALESCE"
-            };
-            if (arguments != null)
-            {
-                f.Arguments.AddRange(arguments);
-            }
+            var f = new CoalesceFunctionToken();
+            f.Arguments.AddRange(arguments);
+            return f;
+        }
+        public static FunctionExpressionToken IsNull(Token first, Token second)
+        {
+            var f = new CoalesceFunctionToken();
+            f.Arguments.Add(first);
+            f.Arguments.Add(second);
+            return f;
+        }
+        public static FunctionExpressionToken IfNull(Token first, Token second)
+        {
+            var f = new CoalesceFunctionToken();
+            f.Arguments.Add(first);
+            f.Arguments.Add(second);
+            return f;
+        }
+        public static FunctionExpressionToken Nvl(Token first, Token second)
+        {
+            var f = new CoalesceFunctionToken();
+            f.Arguments.Add(first);
+            f.Arguments.Add(second);
             return f;
         }
 
@@ -228,6 +241,49 @@ namespace TTRider.FluidSql
             return new DurationFunctionToken { DatePart = FluidSql.DatePart.Millisecond, Start = start, End = end };
         }
 
+        public static MakeDateFunctionToken MakeDate(int year, int month, int day, int hour = 0, int minute = 0, int second = 0)
+        {
+            return new MakeDateFunctionToken
+            {
+                Year = Scalar(year),
+                Month = Scalar(month),
+                Day = Scalar(day),
+                Hour = Scalar(hour),
+                Minute = Scalar(minute),
+                Second = Scalar(second)
+            };
+        }
+        public static MakeDateFunctionToken MakeDate(ExpressionToken year, ExpressionToken month, ExpressionToken day, ExpressionToken hour = null, ExpressionToken minute = null, ExpressionToken second = null)
+        {
+            return new MakeDateFunctionToken
+            {
+                Year = year,
+                Month = month,
+                Day = day,
+                Hour = hour,
+                Minute = minute,
+                Second = second
+            };
+        }
 
+
+        public static MakeTimeFunctionToken MakeTime(int hour, int minute, int second = 0)
+        {
+            return new MakeTimeFunctionToken
+            {
+                Hour = Scalar(hour),
+                Minute = Scalar(minute),
+                Second = Scalar(second)
+            };
+        }
+        public static MakeTimeFunctionToken MakeTime(ExpressionToken hour, ExpressionToken minute, ExpressionToken second = null)
+        {
+            return new MakeTimeFunctionToken
+            {
+                Hour = hour,
+                Minute = minute,
+                Second = second
+            };
+        }
     }
 }

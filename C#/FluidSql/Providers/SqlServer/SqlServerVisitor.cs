@@ -1362,6 +1362,5 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write("0");
             State.Write(Symbols.CloseParenthesis);
         }
-
     }
 }

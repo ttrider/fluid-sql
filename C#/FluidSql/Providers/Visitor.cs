@@ -315,6 +315,8 @@ namespace TTRider.FluidSql.Providers
                 {typeof (DurationFunctionToken),(v,t)=>v.VisitDurationFunctionToken((DurationFunctionToken)t)},
                 {typeof (MakeDateFunctionToken),(v,t)=>v.VisitMakeDateFunctionToken((MakeDateFunctionToken)t)},
                 {typeof (MakeTimeFunctionToken),(v,t)=>v.VisitMakeTimeFunctionToken((MakeTimeFunctionToken)t)},
+                {typeof (CoalesceFunctionToken),(v,t)=>v.VisitCoalesceFunctionToken((CoalesceFunctionToken)t)},
+                {typeof (NullIfFunctionToken),(v,t)=>v.VisitNullIfFunctionToken((NullIfFunctionToken)t)},
 
             };
 
