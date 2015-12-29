@@ -50,6 +50,8 @@
     <Compile Include="Functions\DatePartFunctionToken.cs" />
     <Compile Include="Functions\DurationFunctionToken.cs" />
     <Compile Include="Functions\IifFunctionToken.cs" />
+    <Compile Include="Functions\MakeDateFunctionToken.cs" />
+    <Compile Include="Functions\MakeTimeFunctionToken.cs" />
     <Compile Include="Functions\NowFunctionToken.cs" />
     <Compile Include="Functions\UuidFunctionToken.cs" />
     <Compile Include="Interfaces\IAliasToken.cs" />

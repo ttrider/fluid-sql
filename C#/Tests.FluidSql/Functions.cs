@@ -124,6 +124,56 @@ namespace FluidSqlTests
                 "SELECT CASE WHEN N'a' = N'b' THEN N'a' WHEN N'a' <> N'b' THEN N'b' ELSE N'c' END;"
                 );
         }
+
+        [TestMethod]
+        public void MakeDate3()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeDate(2015,1,1)),
+                "SELECT DATETIMEFROMPARTS ( 2015, 1, 1, 0, 0, 0, 0 );"
+                );
+        }
+
+        [TestMethod]
+        public void MakeDate5()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeDate(2015, 1, 1, 13, 20)),
+                "SELECT DATETIMEFROMPARTS ( 2015, 1, 1, 13, 20, 0, 0 );"
+                );
+        }
+
+        [TestMethod]
+        public void MakeDate6()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeDate(2015, 1, 1, 13, 20, 50)),
+                "SELECT DATETIMEFROMPARTS ( 2015, 1, 1, 13, 20, 50, 0 );"
+                );
+        }
+
+        [TestMethod]
+        public void MakeTime2()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeTime(21, 45)),
+                "SELECT TIMEFROMPARTS ( 21, 45, 0, 0, 0 );"
+                );
+        }
+
+        [TestMethod]
+        public void MakeTime3() 
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeTime(21, 45, 32)),
+                "SELECT TIMEFROMPARTS ( 21, 45, 32, 0, 0 );"
+                );
+        }
     }
 }
 

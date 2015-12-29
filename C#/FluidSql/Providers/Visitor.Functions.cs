@@ -19,5 +19,7 @@ namespace TTRider.FluidSql.Providers
         protected abstract void VisitIIFFunctionToken(IifFunctionToken token);
         protected abstract void VisitDatePartFunctionToken(DatePartFunctionToken token);
         protected abstract void VisitDurationFunctionToken(DurationFunctionToken token);
+        protected abstract void VisitMakeDateFunctionToken(MakeDateFunctionToken token);
+        protected abstract void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token);
     }
 }

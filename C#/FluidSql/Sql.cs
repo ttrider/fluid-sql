@@ -1026,5 +1026,50 @@ namespace TTRider.FluidSql
         {
             get {  return new CaseToken();}
         }
+
+        public static MakeDateFunctionToken MakeDate(int year, int month, int day, int hour = 0, int minute = 0, int second = 0)
+        {
+            return new MakeDateFunctionToken
+            {
+                Year = Sql.Scalar(year),
+                Month = Sql.Scalar(month),
+                Day = Sql.Scalar(day),
+                Hour = Sql.Scalar(hour),
+                Minute = Sql.Scalar(minute),
+                Second = Sql.Scalar(second)
+            };
+        }
+        public static MakeDateFunctionToken MakeDate(ExpressionToken year, ExpressionToken month, ExpressionToken day, ExpressionToken hour = null, ExpressionToken minute = null, ExpressionToken second = null)
+        {
+            return new MakeDateFunctionToken
+            {
+                Year = year,
+                Month = month,
+                Day = day,
+                Hour = hour,
+                Minute = minute,
+                Second = second
+            };
+        }
+
+
+        public static MakeTimeFunctionToken MakeTime(int hour, int minute, int second = 0)
+        {
+            return new MakeTimeFunctionToken
+            {
+                Hour = Sql.Scalar(hour),
+                Minute = Sql.Scalar(minute),
+                Second = Sql.Scalar(second)
+            };
+        }
+        public static MakeTimeFunctionToken MakeTime(ExpressionToken hour, ExpressionToken minute, ExpressionToken second = null)
+        {
+            return new MakeTimeFunctionToken
+            {
+                Hour = hour,
+                Minute = minute,
+                Second = second
+            };
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             public const string d           = "d";
             public const string DATEDIFF    = "DATEDIFF";
             public const string DATEPART    = "DATEPART";
+            public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
             public const string GETDATE     = "GETDATE";
             public const string GETUTCDATE  = "GETUTCDATE";
             public const string hh          = "hh";
@@ -62,6 +63,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             public const string NEWID       = "NEWID";
             public const string s           = "s";
             public const string ss          = "ss";
+            public const string TIMEFROMPARTS = "TIMEFROMPARTS";
             public const string ww          = "ww";
             public const string yy          = "yy";
         }
@@ -1295,5 +1297,71 @@ namespace TTRider.FluidSql.Providers.SqlServer
             VisitToken(token.End);
             State.Write(Symbols.CloseParenthesis);
         }
+
+        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATETIMEFROMPARTS);
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitToken(token.Year);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Month);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Day);
+            State.Write(Symbols.Comma);
+
+            if (token.Hour != null)
+            {
+                VisitToken(token.Hour);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+
+            if (token.Minute != null)
+            {
+                VisitToken(token.Minute);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+
+            if (token.Second != null)
+            {
+                VisitToken(token.Second);
+            }
+            State.Write(Symbols.Comma);
+            State.Write("0");
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
+        {
+            State.Write(SqlSymbols.TIMEFROMPARTS);
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitToken(token.Hour);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Minute);
+            State.Write(Symbols.Comma);
+            if (token.Second != null)
+            {
+                VisitToken(token.Second);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+            State.Write("0");
+            State.Write(Symbols.Comma);
+            State.Write("0");
+            State.Write(Symbols.CloseParenthesis);
+        }
+
     }
 }
