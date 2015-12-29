@@ -4,6 +4,10 @@ fluid-sql
 
 Release Notes
 ==
+1.6.0
+--
+* Adding initial support for functions
+* Bug Fixes
 1.5.3
 --
 * Adding overlooked unary minus token support
