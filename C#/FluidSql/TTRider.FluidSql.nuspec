@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
-      1.5.3
+      1.5.4
       --
       * Adding overlooked unary minus token support
       * Bug Fixes
