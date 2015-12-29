@@ -97,7 +97,12 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         protected class SqliteSymbols : Symbols
         {
-            public const string VACUUM = "VACUUM";
+            public const string hex         = "hex";
+            public const string localtime   = "localtime";
+            public const string now         = "now";
+            public const string randomblob  = "randomblob";
+            public const string utc         = "utc";
+            public const string VACUUM      = "VACUUM";
         }
     
     }

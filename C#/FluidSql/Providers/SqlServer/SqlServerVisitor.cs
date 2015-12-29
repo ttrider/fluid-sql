@@ -48,6 +48,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
             "DateTimeOffset" // DateTimeOffset = 28,
         };
 
+        protected class SqlSymbols: Symbols
+        {
+            public const string d           = "d";
+            public const string DATEDIFF    = "DATEDIFF";
+            public const string DATEPART    = "DATEPART";
+            public const string GETDATE     = "GETDATE";
+            public const string GETUTCDATE  = "GETUTCDATE";
+            public const string hh          = "hh";
+            public const string m           = "m";
+            public const string mi          = "mi";
+            public const string ms          = "ms";
+            public const string NEWID       = "NEWID";
+            public const string s           = "s";
+            public const string ss          = "ss";
+            public const string ww          = "ww";
+            public const string yy          = "yy";
+        }
 
         protected override string[] SupportedDialects { get { return supportedDialects; } }
 
@@ -1193,6 +1210,90 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
 
             State.WriteStatementTerminator();
+        }
+
+
+        /* FUNCTIONS */
+
+        protected override void VisitNowFunctionToken(NowFunctionToken token)
+        {
+            if (token.Utc)
+            {
+                State.Write(SqlSymbols.GETUTCDATE);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.CloseParenthesis);
+            }
+            else
+            {
+                State.Write(SqlSymbols.GETDATE);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.CloseParenthesis);
+            }
+        }
+
+        protected override void VisitUuidFunctionToken(UuidFunctionToken token)
+        {
+            State.Write(SqlSymbols.NEWID);
+            State.Write(Symbols.OpenParenthesis);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+
+        protected override void VisitIIFFunctionToken(IifFunctionToken token)
+        {
+            State.Write(Symbols.IIF);
+            State.Write(Symbols.OpenParenthesis);
+            VisitToken(token.ConditionToken);
+            State.Write(Symbols.Comma);
+            VisitToken(token.ThenToken);
+            State.Write(Symbols.Comma);
+            VisitToken(token.ElseToken);
+            State.Write(Symbols.CloseParenthesis);
+
+        }
+
+        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEPART);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Token);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEDIFF);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Start);
+            State.Write(Symbols.Comma);
+            VisitToken(token.End);
+            State.Write(Symbols.CloseParenthesis);
         }
     }
 }

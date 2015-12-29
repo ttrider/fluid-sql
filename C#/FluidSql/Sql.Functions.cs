@@ -67,5 +67,167 @@ namespace TTRider.FluidSql
             }
             return f;
         }
+
+
+        public static NowFunctionToken Now(bool utc = false)
+        {
+            return new NowFunctionToken { Utc = utc };
+        }
+        public static NowFunctionToken GetDate(bool utc = false)
+        {
+            return new NowFunctionToken { Utc = utc };
+        }
+        public static UuidFunctionToken UUID()
+        {
+            return new UuidFunctionToken();
+        }
+        public static UuidFunctionToken NewId()
+        {
+            return new UuidFunctionToken();
+        }
+
+        public static IifFunctionToken IIF(ExpressionToken conditionToken, ExpressionToken thenToken, ExpressionToken elseToken)
+        {
+            return new IifFunctionToken
+            {
+                ConditionToken = conditionToken,
+                ThenToken = thenToken,
+                ElseToken = elseToken
+            };
+        }
+
+        public static DatePartFunctionToken DatePart(DatePart part, ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = part
+            };
+        }
+
+        public static DatePartFunctionToken Second(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Second
+            };
+        }
+        public static DatePartFunctionToken Minute(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Minute
+            };
+        }
+        public static DatePartFunctionToken Hour(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Hour
+            };
+        }
+        public static DatePartFunctionToken Week(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Week
+            };
+        }
+        public static DatePartFunctionToken Day(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Day
+            };
+        }
+        public static DatePartFunctionToken Month(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Month
+            };
+        }
+        public static DatePartFunctionToken Year(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Year
+            };
+        }
+
+        public static DatePartFunctionToken Millisecond(ExpressionToken token)
+        {
+            return new DatePartFunctionToken
+            {
+                Token = token,
+                DatePart = FluidSql.DatePart.Millisecond
+            };
+        }
+        public static DurationFunctionToken Duration(DatePart datePart, ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken
+            {
+                DatePart = datePart,
+                Start = start,
+                End = end
+            };
+        }
+
+
+
+
+        public static DurationFunctionToken DurationInYears(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken
+            {
+                DatePart = FluidSql.DatePart.Year,
+                Start = start,
+                End = end
+            };
+        }
+
+        public static DurationFunctionToken DurationInMonth(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Month, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInDays(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Day, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInWeeks(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Week, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInHours(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Hour, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInMinutes(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Minute, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInSeconds(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Second, Start = start, End = end };
+        }
+
+        public static DurationFunctionToken DurationInMilliseconds(ExpressionToken start, ExpressionToken end)
+        {
+            return new DurationFunctionToken { DatePart = FluidSql.DatePart.Millisecond, Start = start, End = end };
+        }
+
+
     }
 }

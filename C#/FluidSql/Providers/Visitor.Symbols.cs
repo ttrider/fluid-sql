@@ -43,6 +43,7 @@ namespace TTRider.FluidSql.Providers
             public const string CONSTRAINT = "CONSTRAINT";
             public const string CONTINUE = "CONTINUE";
             public const string CREATE = "CREATE";
+            public const string DATETIME = "DATETIME";
             public const string DECLARE = "DECLARE";
             public const string DEFAULT = "DEFAULT";
             public const string DEFERRED = "DEFERRED";
@@ -69,6 +70,7 @@ namespace TTRider.FluidSql.Providers
             public const string HAVING = "HAVING";
             public const string IDENTITY = "IDENTITY";
             public const string IF = "IF";
+            public const string IIF = "IIF";
             public const string IGNORE = "IGNORE";
             public const string IGNORE_DUP_KEY = "IGNORE_DUP_KEY";
             public const string INCLUDE = "INCLUDE";
@@ -185,6 +187,9 @@ namespace TTRider.FluidSql.Providers
             public const string BitwiseOrEqVal = "|=";
             public const string BitwiseXorEqVal = "^=";
             public const string BitwiseNotEqVal = "~=";
+
+            public const string SingleQuote = "'";
+            public const string DoubleQuote = "\"";
         }
     }
 }
