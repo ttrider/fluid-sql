@@ -174,6 +174,17 @@ namespace FluidSqlTests
                 "SELECT TIMEFROMPARTS ( 21, 45, 32, 0, 0 );"
                 );
         }
+
+
+        [TestMethod]
+        public void DateAdd()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.MakeTime(21, 45, 32).AddDays(1).SubtractWeeks(1)),
+                "SELECT DATEADD ( ww, - 1, DATEADD ( d, 1, TIMEFROMPARTS ( 21, 45, 32, 0, 0 ) ) );"
+                );
+        }
     }
 }
 

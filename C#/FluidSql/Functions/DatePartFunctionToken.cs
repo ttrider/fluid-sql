@@ -13,13 +13,4 @@ namespace TTRider.FluidSql
 
         public Token Token { get; set; }
     }
-
-    public class DateAddFunctionToken : FunctionExpressionToken
-    {
-        public DatePart DatePart { get; set; }
-
-        public Token Number { get; set; }
-
-        public Token Token { get; set; }
-    }
 }

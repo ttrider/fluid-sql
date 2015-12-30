@@ -1293,7 +1293,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
             }
             State.Write(Symbols.Comma);
-            VisitToken(token.Number);
+            VisitToken(token.Subtract ? new UnaryMinusToken {Token = token.Number} : token.Number);
             State.Write(Symbols.Comma);
             VisitToken(token.Token);
             State.Write(Symbols.CloseParenthesis);
@@ -1358,8 +1358,19 @@ namespace TTRider.FluidSql.Providers.SqlServer
             {
                 VisitToken(token.Second);
             }
+            else
+            {
+                State.Write("0");
+            }
             State.Write(Symbols.Comma);
-            State.Write("0");
+            if (token.Millisecond != null)
+            {
+                VisitToken(token.Millisecond);
+            }
+            else
+            {
+                State.Write("0");
+            }
             State.Write(Symbols.CloseParenthesis);
         }
 

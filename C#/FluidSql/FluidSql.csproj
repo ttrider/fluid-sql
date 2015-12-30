@@ -47,6 +47,7 @@
     </Compile>
     <Compile Include="DatePart.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Functions\DateAddFunctionToken.cs" />
     <Compile Include="Functions\NullIfFunctionToken.cs" />
     <Compile Include="Functions\DatePartFunctionToken.cs" />
     <Compile Include="Functions\DurationFunctionToken.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Statements\WaitforTimeStatement.cs" />
     <Compile Include="Tokens\CTEDeclaration.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />
+    <Compile Include="Tokens\DateFunctionExpressionToken.cs" />
     <Compile Include="Tokens\ExpressionToken.cs" />
     <Compile Include="Tokens\FunctionExpressionToken.cs" />
     <Compile Include="Tokens\RecordsetSourceToken.cs" />

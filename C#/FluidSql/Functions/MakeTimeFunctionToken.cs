@@ -7,7 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class MakeTimeFunctionToken : FunctionExpressionToken
+    public class MakeTimeFunctionToken : DateFunctionExpressionToken
     {
         public ExpressionToken Hour { get; set; }
         public ExpressionToken Minute { get; set; }

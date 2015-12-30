@@ -2294,136 +2294,136 @@ namespace TTRider.FluidSql
 
         #endregion Case
 
-        #region
+        #region Date Add
 
-        public static ExpressionToken AddYears(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddYears(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Year };
         }
-        public static ExpressionToken AddYears(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddYears(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Year };
         }
-        public static ExpressionToken AddMonths(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddMonths(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Month };
         }
-        public static ExpressionToken AddMonths(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddMonths(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Month };
         }
-        public static ExpressionToken AddWeeks(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddWeeks(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Week };
         }
-        public static ExpressionToken AddWeeks(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddWeeks(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Week };
         }
-        public static ExpressionToken AddDays(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddDays(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Day };
         }
-        public static ExpressionToken AddDays(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddDays(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Day };
         }
-        public static ExpressionToken AddHours(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddHours(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Hour };
         }
-        public static ExpressionToken AddHours(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddHours(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Hour };
         }
-        public static ExpressionToken AddMinutes(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddMinutes(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Minute };
         }
-        public static ExpressionToken AddMinutes(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddMinutes(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Minute };
         }
-        public static ExpressionToken AddSeconds(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddSeconds(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Second };
         }
-        public static ExpressionToken AddSeconds(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddSeconds(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Second };
         }
-        public static ExpressionToken AddMilliseconds(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken AddMilliseconds(this DateFunctionExpressionToken token, Token number)
         {
             return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Millisecond };
         }
-        public static ExpressionToken AddMilliseconds(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken AddMilliseconds(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Millisecond };
         }
 
-        public static ExpressionToken SubtractYears(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractYears(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Year };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Year };
         }
-        public static ExpressionToken SubtractYears(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractYears(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Year };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Year };
         }
-        public static ExpressionToken SubtractMonths(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Month };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Month };
         }
-        public static ExpressionToken SubtractMonths(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Month };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Month };
         }
-        public static ExpressionToken SubtractWeeks(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Week };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Week };
         }
-        public static ExpressionToken SubtractWeeks(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Week };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Week };
         }
-        public static ExpressionToken SubtractDays(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Day };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Day };
         }
-        public static ExpressionToken SubtractDays(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Day };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Day };
         }
-        public static ExpressionToken SubtractHours(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Hour };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Hour };
         }
-        public static ExpressionToken SubtractHours(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Hour };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Hour };
         }
-        public static ExpressionToken SubtractMinutes(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Minute };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Minute };
         }
-        public static ExpressionToken SubtractMinutes(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Minute };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Minute };
         }
-        public static ExpressionToken SubtractSeconds(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Second };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Second };
         }
-        public static ExpressionToken SubtractSeconds(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Second };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Second };
         }
-        public static ExpressionToken SubtractMilliseconds(ExpressionToken token, Token number)
+        public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Token = token, Number = new UnaryToken { Token = number }, DatePart = DatePart.Millisecond };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Millisecond };
         }
-        public static ExpressionToken SubtractMilliseconds(ExpressionToken token, int number)
+        public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, int number)
         {
-            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(-number), DatePart = DatePart.Millisecond };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Millisecond };
         }
         #endregion
         public static string GetCommandSummary(this IDbCommand command)

@@ -7,7 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class MakeDateFunctionToken : FunctionExpressionToken
+    public class MakeDateFunctionToken : DateFunctionExpressionToken
     {
         public ExpressionToken Year { get; set; }
         public ExpressionToken Month { get; set; }
@@ -15,5 +15,6 @@ namespace TTRider.FluidSql
         public ExpressionToken Hour { get; set; }
         public ExpressionToken Minute { get; set; }
         public ExpressionToken Second { get; set; }
+        public ExpressionToken Millisecond { get; set; }
     }
 }

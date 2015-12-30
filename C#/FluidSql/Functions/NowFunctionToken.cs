@@ -7,7 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class NowFunctionToken : FunctionExpressionToken
+    public class NowFunctionToken : DateFunctionExpressionToken
     {
         public bool Utc { get; set; }
     }
