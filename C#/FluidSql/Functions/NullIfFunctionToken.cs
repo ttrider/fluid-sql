@@ -9,5 +9,8 @@ namespace TTRider.FluidSql
 {
     public class NullIfFunctionToken : FunctionExpressionToken
     {
+        public Token First { get; set; }
+
+        public Token Second { get; set; }
     }
 }

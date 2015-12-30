@@ -312,6 +312,7 @@ namespace TTRider.FluidSql.Providers
                 {typeof (UuidFunctionToken),(v,t)=>v.VisitUuidFunctionToken((UuidFunctionToken)t)},
                 {typeof (IifFunctionToken),(v,t)=>v.VisitIIFFunctionToken((IifFunctionToken)t)},
                 {typeof (DatePartFunctionToken),(v,t)=>v.VisitDatePartFunctionToken((DatePartFunctionToken)t)},
+                {typeof (DateAddFunctionToken),(v,t)=>v.VisitDateAddFunctionToken((DateAddFunctionToken)t)},
                 {typeof (DurationFunctionToken),(v,t)=>v.VisitDurationFunctionToken((DurationFunctionToken)t)},
                 {typeof (MakeDateFunctionToken),(v,t)=>v.VisitMakeDateFunctionToken((MakeDateFunctionToken)t)},
                 {typeof (MakeTimeFunctionToken),(v,t)=>v.VisitMakeTimeFunctionToken((MakeTimeFunctionToken)t)},

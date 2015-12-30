@@ -60,5 +60,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
         protected override void VisitDurationFunctionToken(DurationFunctionToken token) { throw new NotImplementedException(); }
         protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token) { throw new NotImplementedException(); }
         protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token) { throw new NotImplementedException(); }
+        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token) { throw new NotImplementedException(); }
+
     }
 }

@@ -51,6 +51,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         protected class SqlSymbols: Symbols
         {
             public const string d           = "d";
+            public const string DATEADD     = "DATEADD";
             public const string DATEDIFF    = "DATEDIFF";
             public const string DATEPART    = "DATEPART";
             public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
@@ -1270,6 +1271,29 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 case DatePart.Second: State.Write(SqlSymbols.ss); break;
                 case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
             }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Token);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEADD);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Number);
             State.Write(Symbols.Comma);
             VisitToken(token.Token);
             State.Write(Symbols.CloseParenthesis);

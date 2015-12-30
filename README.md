@@ -4,7 +4,7 @@ fluid-sql
 
 Release Notes
 ==
-1.6.4
+1.6.5
 --
 * Adding initial support for functions
 * Bug Fixes
