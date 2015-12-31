@@ -62,7 +62,10 @@ namespace TTRider.FluidSql.Providers
             }
             else
             {
-                State.Write(this.LiteralOpenQuote, value.ToString(), this.LiteralCloseQuote);
+                var stringValue = value.ToString();
+                stringValue = stringValue.Replace(this.LiteralCloseQuote, this.LiteralCloseQuote + this.LiteralCloseQuote);
+
+                State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
             }
         }
 

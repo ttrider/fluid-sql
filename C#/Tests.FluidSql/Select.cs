@@ -17,6 +17,15 @@ namespace FluidSqlTests
                 );
         }
 
+        [TestMethod]
+        public void SelectLiteralString()
+        {
+            AssertSql(
+                Sql.Select.Output(Sql.Scalar("this is the string with ' inside")),
+                "SELECT N'this is the string with '' inside';"
+                );
+        }
+
 
         [TestMethod]
         public void Select1Async()
