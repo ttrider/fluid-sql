@@ -254,9 +254,16 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.END);
         }
 
+        protected virtual void VisitPlaceholderExpressionToken(PlaceholderExpressionToken token)
+        {
+            VisitToken(token.Content);
+        }
+
+
         private static readonly Dictionary<Type, Action<Visitor, Token>> TokenVisitors =
                 new Dictionary<Type, Action<Visitor, Token>>
             {
+                {typeof (PlaceholderExpressionToken),(v,t)=>v.VisitPlaceholderExpressionToken((PlaceholderExpressionToken)t)},
                 {typeof (Scalar),(v,t)=>v.VisitScalarToken((Scalar)t)},
                 {typeof (Name),(v,t)=>v.VisitNameToken((Name)t)},
                 {typeof (Parameter),(v,t)=>v.VisitParameterToken((Parameter)t)},

@@ -76,6 +76,7 @@
     <Compile Include="Statements\CreateOrAlterViewStatement.cs" />
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
+    <Compile Include="Tokens\PlaceholderToken.cs" />
     <Compile Include="Tokens\CTEDeclaration.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />
     <Compile Include="Tokens\DateFunctionExpressionToken.cs" />
