@@ -88,7 +88,7 @@ namespace TTRider.FluidSql
 
         public static IList<ParameterValue> Add(this IList<ParameterValue> list, string name, object value)
         {
-            list.Add(new ParameterValue() {Name = name, Value = value});
+            list.Add(new ParameterValue() { Name = name, Value = value });
             return list;
         }
 
@@ -207,12 +207,12 @@ namespace TTRider.FluidSql
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
-        public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
-            return statement;
-        }
+        //public static T BitwiseNotAssign<T>(this T statement, Parameter target, ExpressionToken expression)
+        //    where T : ISetStatement
+        //{
+        //    statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+        //    return statement;
+        //}
         public static T Assign<T>(this T statement, Name target, ExpressionToken expression)
             where T : ISetStatement
         {
@@ -282,12 +282,12 @@ namespace TTRider.FluidSql
             statement.Set.Add(new MultiplyToken { First = target, Second = expression, Equal = true });
             return statement;
         }
-        public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
-            where T : ISetStatement
-        {
-            statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
-            return statement;
-        }
+        //public static T BitwiseNotAssign<T>(this T statement, Name target, ExpressionToken expression)
+        //    where T : ISetStatement
+        //{
+        //    statement.Set.Add(new BitwiseNotToken { First = target, Second = expression, Equal = true });
+        //    return statement;
+        //}
 
         public static T Output<T>(this T statement, params Name[] columns)
             where T : RecordsetStatement
@@ -712,7 +712,7 @@ namespace TTRider.FluidSql
         public static T InnerJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.Inner, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.Inner, Sql.NameAs(source, alias), on);
         }
 
         public static T LeftOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
@@ -733,7 +733,7 @@ namespace TTRider.FluidSql
         public static T LeftOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.LeftOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.LeftOuter, Sql.NameAs(source, alias), on);
         }
 
         public static T RightOuterJoin<T>(this T statement, RecordsetSourceToken source, ExpressionToken on)
@@ -754,7 +754,7 @@ namespace TTRider.FluidSql
         public static T RightOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.RightOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.RightOuter, Sql.NameAs(source, alias), on);
         }
 
 
@@ -776,7 +776,7 @@ namespace TTRider.FluidSql
         public static T FullOuterJoin<T>(this T statement, string source, string alias, ExpressionToken on)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.FullOuter, Sql.Name(source).As(alias), on);
+            return Join(statement, Joins.FullOuter, Sql.NameAs(source, alias), on);
         }
 
 
@@ -799,7 +799,7 @@ namespace TTRider.FluidSql
         public static T CrossJoin<T>(this T statement, string source, string alias)
             where T : IJoinStatement
         {
-            return Join(statement, Joins.Cross, Sql.Name(source).As(alias), null);
+            return Join(statement, Joins.Cross, Sql.NameAs(source, alias), null);
         }
         #endregion INNER JOIN
 
@@ -897,10 +897,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = second, Equal = true };
         }
 
-        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
-        {
-            return new BitwiseNotToken { First = first, Second = second, Equal = true };
-        }
+        //public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, ExpressionToken second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = second, Equal = true };
+        //}
 
         public static ExpressionToken ModuloEqual(this ExpressionToken first, ExpressionToken second)
         {
@@ -942,9 +942,9 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = second };
         }
 
-        public static ExpressionToken BitwiseNot(this ExpressionToken first, ExpressionToken second)
+        public static ExpressionToken BitwiseNot(this ExpressionToken token)
         {
-            return new BitwiseNotToken { First = first, Second = second };
+            return new BitwiseNotToken { Token = token };
         }
 
         public static ExpressionToken Modulo(this ExpressionToken first, ExpressionToken second)
@@ -1038,10 +1038,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = Sql.Name(second), Equal = true };
         }
 
-        public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
-        {
-            return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
-        }
+        //public static ExpressionToken BitwiseNotEqual(this ExpressionToken first, string second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = Sql.Name(second), Equal = true };
+        //}
 
         public static ExpressionToken ModuloEqual(this ExpressionToken first, string second)
         {
@@ -1083,10 +1083,10 @@ namespace TTRider.FluidSql
             return new BitwiseXorToken { First = first, Second = Sql.Name(second) };
         }
 
-        public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
-        {
-            return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
-        }
+        //public static ExpressionToken BitwiseNot(this ExpressionToken first, string second)
+        //{
+        //    return new BitwiseNotToken { First = first, Second = Sql.Name(second) };
+        //}
 
         public static ExpressionToken Modulo(this ExpressionToken first, string second)
         {
@@ -1101,6 +1101,11 @@ namespace TTRider.FluidSql
         public static GroupToken Group(this Token token)
         {
             return new GroupToken { Token = token };
+        }
+
+        public static UnaryMinusToken Minus(this Token token)
+        {
+            return new UnaryMinusToken { Token = token };
         }
 
         public static ExpressionToken Not(this ExpressionToken token)
@@ -2116,7 +2121,7 @@ namespace TTRider.FluidSql
 
         #region CTE
 
-        public static CTEDefinition As(this CTEDeclaration cte, SelectStatement definition)
+        public static CTEDefinition As(this CTEDeclaration cte, ISelectStatement definition)
         {
             return new CTEDefinition
             {
@@ -2220,33 +2225,207 @@ namespace TTRider.FluidSql
         }
         #endregion CTE
 
-
         #region Snippet
 
         public static Snippet Dialect(this Snippet snippet, string value, string dialectName, params string[] additionalDialects)
         {
-            return snippet;
+            return snippet.Dialect(value, Enumerable.Repeat(dialectName, 1).Concat(additionalDialects));
         }
         public static Snippet Dialect(this Snippet snippet, string value, IEnumerable<string> dialects)
         {
+            if (dialects != null)
+            {
+                foreach (var d in dialects
+                    .Where(d => !string.IsNullOrWhiteSpace(d))
+                    .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    snippet.Dialects.Add(d, value);
+                }
+            }
+
             return snippet;
         }
 
         public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, string dialectName, params string[] additionalDialects)
         {
-            return snippetStatement;
+            return snippetStatement.Dialect(value, Enumerable.Repeat(dialectName, 1).Concat(additionalDialects));
         }
         public static SnippetStatement Dialect(this SnippetStatement snippetStatement, string value, IEnumerable<string> dialects)
         {
-
-
+            if (dialects != null)
+            {
+                foreach (var d in dialects
+                    .Where(d => !string.IsNullOrWhiteSpace(d))
+                    .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    snippetStatement.Dialects.Add(d, value);
+                }
+            }
 
             return snippetStatement;
         }
 
         #endregion Snippet
 
+        #region Schema
 
+        public static CreateSchemaStatement Authorization(this CreateSchemaStatement statement, string ownerName)
+        {
+            statement.Owner = ownerName;
+            return statement;
+        }
+        #endregion Schema
+
+        #region Case
+
+        public static CaseToken When(this CaseToken caseToken, ExpressionToken when, ExpressionToken then)
+        {
+            caseToken.WhenConditions.Add(new CaseWhenToken { WhenToken = when, ThenToken = then });
+            return caseToken;
+        }
+
+        public static CaseToken Else(this CaseToken caseToken, ExpressionToken elseToken)
+        {
+            caseToken.ElseToken = elseToken;
+            return caseToken;
+        }
+
+        #endregion Case
+
+        #region Date Add
+
+        public static DateFunctionExpressionToken AddYears(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Year };
+        }
+        public static DateFunctionExpressionToken AddYears(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Year };
+        }
+        public static DateFunctionExpressionToken AddMonths(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Month };
+        }
+        public static DateFunctionExpressionToken AddMonths(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Month };
+        }
+        public static DateFunctionExpressionToken AddWeeks(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Week };
+        }
+        public static DateFunctionExpressionToken AddWeeks(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Week };
+        }
+        public static DateFunctionExpressionToken AddDays(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Day };
+        }
+        public static DateFunctionExpressionToken AddDays(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Day };
+        }
+        public static DateFunctionExpressionToken AddHours(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Hour };
+        }
+        public static DateFunctionExpressionToken AddHours(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Hour };
+        }
+        public static DateFunctionExpressionToken AddMinutes(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Minute };
+        }
+        public static DateFunctionExpressionToken AddMinutes(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Minute };
+        }
+        public static DateFunctionExpressionToken AddSeconds(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Second };
+        }
+        public static DateFunctionExpressionToken AddSeconds(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Second };
+        }
+        public static DateFunctionExpressionToken AddMilliseconds(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = number, DatePart = DatePart.Millisecond };
+        }
+        public static DateFunctionExpressionToken AddMilliseconds(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Millisecond };
+        }
+
+        public static DateFunctionExpressionToken SubtractYears(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Year };
+        }
+        public static DateFunctionExpressionToken SubtractYears(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Year };
+        }
+        public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Month };
+        }
+        public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Month };
+        }
+        public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Week };
+        }
+        public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Week };
+        }
+        public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Day };
+        }
+        public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Day };
+        }
+        public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Hour };
+        }
+        public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Hour };
+        }
+        public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Minute };
+        }
+        public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Minute };
+        }
+        public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Second };
+        }
+        public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Second };
+        }
+        public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, Token number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Millisecond };
+        }
+        public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, int number)
+        {
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Millisecond };
+        }
+        #endregion
         public static string GetCommandSummary(this IDbCommand command)
         {
             if (command == null) return string.Empty;
@@ -2290,5 +2469,6 @@ namespace TTRider.FluidSql
             sb.AppendLine(command.CommandText);
             return sb.ToString();
         }
+
     }
 }

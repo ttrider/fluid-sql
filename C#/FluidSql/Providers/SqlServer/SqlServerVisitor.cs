@@ -13,8 +13,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 {
     internal class SqlServerVisitor : Visitor
     {
-		private static readonly string[] supportedDialects = new [] {"t-sql", "ansi"};
-				
+        private static readonly string[] supportedDialects = new[] { "t-sql", "ansi" };
+
         private readonly string[] DbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
@@ -48,8 +48,28 @@ namespace TTRider.FluidSql.Providers.SqlServer
             "DateTimeOffset" // DateTimeOffset = 28,
         };
 
+        protected class SqlSymbols: Symbols
+        {
+            public const string d           = "d";
+            public const string DATEADD     = "DATEADD";
+            public const string DATEDIFF    = "DATEDIFF";
+            public const string DATEPART    = "DATEPART";
+            public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
+            public const string GETDATE     = "GETDATE";
+            public const string GETUTCDATE  = "GETUTCDATE";
+            public const string hh          = "hh";
+            public const string m           = "m";
+            public const string mi          = "mi";
+            public const string ms          = "ms";
+            public const string NEWID       = "NEWID";
+            public const string s           = "s";
+            public const string ss          = "ss";
+            public const string TIMEFROMPARTS = "TIMEFROMPARTS";
+            public const string ww          = "ww";
+            public const string yy          = "yy";
+        }
 
-		protected override string[] SupportedDialects { get { return supportedDialects;}}
+        protected override string[] SupportedDialects { get { return supportedDialects; } }
 
 
 
@@ -72,7 +92,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             this.LiteralOpenQuote = "N'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
-            this.CommentCloseQuote = "*/";            
+            this.CommentCloseQuote = "*/";
         }
 
         internal static Name GetTempTableName(Name name)
@@ -172,7 +192,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             if (!string.IsNullOrWhiteSpace(statement.Into.Alias))
             {
                 State.Write(Symbols.AS);
-                State.Write(this.IdentifierOpenQuote,statement.Into.Alias, this.IdentifierCloseQuote);
+                State.Write(this.IdentifierOpenQuote, statement.Into.Alias, this.IdentifierCloseQuote);
             }
 
             State.Write(Symbols.USING);
@@ -327,7 +347,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.ROWS);
                 State.Write(Symbols.FETCH);
                 State.Write(Symbols.NEXT);
-                if (statement.Top.Value!=null)
+                if (statement.Top.Value != null)
                 {
                     VisitToken(statement.Top.Value);
                 }
@@ -816,7 +836,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             // columns
             VisitTokenSetInParenthesis(createIndexStatement.Columns);
 
-            VisitTokenSetInParenthesis(createIndexStatement.Include, ()=>State.Write(Symbols.INCLUDE));
+            VisitTokenSetInParenthesis(createIndexStatement.Include, () => State.Write(Symbols.INCLUDE));
 
             VisitWhereToken(createIndexStatement.Where);
 
@@ -1113,6 +1133,269 @@ namespace TTRider.FluidSql.Providers.SqlServer
         protected override void VisitStringifyToken(StringifyToken token)
         {
             Stringify(() => VisitToken(token.Content));
+        }
+
+
+        protected override void VisitCreateSchemaStatement(CreateSchemaStatement statement)
+        {
+            var schemaName = ResolveName(statement.Name);
+
+            if (statement.CheckIfNotExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.NOT);
+                State.Write(Symbols.EXISTS);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.SELECT);
+                State.Write(Symbols.Asterisk);
+                State.Write(Symbols.FROM);
+                State.Write("INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =");
+                State.Write(LiteralOpenQuote, statement.Name.LastPart, LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.BEGIN);
+            }
+            State.Write(Symbols.EXEC);
+            State.Write(Symbols.OpenParenthesis);
+
+            Stringify(() =>
+            {
+                State.Write(Symbols.CREATE);
+                State.Write(Symbols.SCHEMA);
+                State.Write(schemaName);
+                if (!string.IsNullOrWhiteSpace(statement.Owner))
+                {
+                    State.Write(Symbols.AUTHORIZATION);
+                    State.Write(this.IdentifierOpenQuote, statement.Owner, this.IdentifierCloseQuote);
+                }
+            });
+
+            //AUTHORIZATION joe;
+
+            State.Write(Symbols.CloseParenthesis);
+            if (statement.CheckIfNotExists)
+            {
+                State.Write(Symbols.END);
+            }
+
+            State.WriteStatementTerminator();
+        }
+
+        protected override void VisitDropSchemaStatement(DropSchemaStatement statement)
+        {
+            var schemaName = ResolveName(statement.Name);
+
+            if (statement.CheckExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.SELECT);
+                State.Write(Symbols.Asterisk);
+                State.Write(Symbols.FROM);
+                State.Write("INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =");
+                State.Write(LiteralOpenQuote, statement.Name.LastPart, LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.BEGIN);
+            }
+            State.Write(Symbols.EXEC);
+            State.Write(Symbols.OpenParenthesis);
+
+            Stringify(() =>
+            {
+                State.Write(Symbols.DROP);
+                State.Write(Symbols.SCHEMA);
+                State.Write(schemaName);
+            });
+            State.Write(Symbols.CloseParenthesis);
+            if (statement.CheckExists)
+            {
+                State.Write(Symbols.END);
+            }
+
+            State.WriteStatementTerminator();
+        }
+
+
+        /* FUNCTIONS */
+
+        protected override void VisitNowFunctionToken(NowFunctionToken token)
+        {
+            if (token.Utc)
+            {
+                State.Write(SqlSymbols.GETUTCDATE);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.CloseParenthesis);
+            }
+            else
+            {
+                State.Write(SqlSymbols.GETDATE);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(Symbols.CloseParenthesis);
+            }
+        }
+
+        protected override void VisitUuidFunctionToken(UuidFunctionToken token)
+        {
+            State.Write(SqlSymbols.NEWID);
+            State.Write(Symbols.OpenParenthesis);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+
+        protected override void VisitIIFFunctionToken(IifFunctionToken token)
+        {
+            State.Write(Symbols.IIF);
+            State.Write(Symbols.OpenParenthesis);
+            VisitToken(token.ConditionToken);
+            State.Write(Symbols.Comma);
+            VisitToken(token.ThenToken);
+            State.Write(Symbols.Comma);
+            VisitToken(token.ElseToken);
+            State.Write(Symbols.CloseParenthesis);
+
+        }
+
+        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEPART);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Token);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEADD);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Subtract ? new UnaryMinusToken {Token = token.Number} : token.Number);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Token);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATEDIFF);
+            State.Write(Symbols.OpenParenthesis);
+
+            switch (token.DatePart)
+            {
+                case DatePart.Day: State.Write(SqlSymbols.d); break;
+                case DatePart.Year: State.Write(SqlSymbols.yy); break;
+                case DatePart.Month: State.Write(SqlSymbols.m); break;
+                case DatePart.Week: State.Write(SqlSymbols.ww); break;
+                case DatePart.Hour: State.Write(SqlSymbols.hh); break;
+                case DatePart.Minute: State.Write(SqlSymbols.mi); break;
+                case DatePart.Second: State.Write(SqlSymbols.ss); break;
+                case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
+            }
+            State.Write(Symbols.Comma);
+            VisitToken(token.Start);
+            State.Write(Symbols.Comma);
+            VisitToken(token.End);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
+        {
+            State.Write(SqlSymbols.DATETIMEFROMPARTS);
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitToken(token.Year);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Month);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Day);
+            State.Write(Symbols.Comma);
+
+            if (token.Hour != null)
+            {
+                VisitToken(token.Hour);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+
+            if (token.Minute != null)
+            {
+                VisitToken(token.Minute);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+
+            if (token.Second != null)
+            {
+                VisitToken(token.Second);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+            if (token.Millisecond != null)
+            {
+                VisitToken(token.Millisecond);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
+        {
+            State.Write(SqlSymbols.TIMEFROMPARTS);
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitToken(token.Hour);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Minute);
+            State.Write(Symbols.Comma);
+            if (token.Second != null)
+            {
+                VisitToken(token.Second);
+            }
+            else
+            {
+                State.Write("0");
+            }
+            State.Write(Symbols.Comma);
+            State.Write("0");
+            State.Write(Symbols.Comma);
+            State.Write("0");
+            State.Write(Symbols.CloseParenthesis);
         }
     }
 }

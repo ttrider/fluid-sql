@@ -7,9 +7,9 @@
 
 namespace TTRider.FluidSql
 {
-    public class CTEDefinition : Token
+    public class DropSchemaStatement : IStatement
     {
-        public CTEDeclaration Declaration { get; set; }
-        public ISelectStatement Definition { get; set; }
+        public Name Name { get; set; }
+        public bool CheckExists { get; set; }
     }
 }

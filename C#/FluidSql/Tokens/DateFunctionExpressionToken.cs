@@ -7,8 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class MySql : Sql
+    public class DateFunctionExpressionToken : FunctionExpressionToken
     {
-        
     }
 }

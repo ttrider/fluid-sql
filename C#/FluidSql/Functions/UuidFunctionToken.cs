@@ -1,4 +1,4 @@
-﻿// <license>
+// <license>
 // The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
@@ -7,9 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class CTEDefinition : Token
+    public class UuidFunctionToken : FunctionExpressionToken
     {
-        public CTEDeclaration Declaration { get; set; }
-        public ISelectStatement Definition { get; set; }
     }
 }

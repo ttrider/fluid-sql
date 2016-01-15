@@ -8,6 +8,7 @@
 namespace TTRider.FluidSql
 {
     public class CorrelationStatement : RecordsetStatement
+        , ISelectStatement
     {
         private RecordsetStatement first;
 

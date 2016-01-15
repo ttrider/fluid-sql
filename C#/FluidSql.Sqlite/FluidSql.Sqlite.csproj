@@ -47,6 +47,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Sqlite\SqliteVisitor.Functions.cs" />
     <Compile Include="Sqlite.cs" />
     <Compile Include="Providers\Sqlite\SqliteVisitor.DMLStatements.cs" />
     <Compile Include="Providers\Sqlite\SqliteProvider.cs" />

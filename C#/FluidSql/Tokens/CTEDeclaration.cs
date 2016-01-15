@@ -9,16 +9,16 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class Function : FunctionExpressionToken
+    public class CTEDeclaration
     {
-        public Function()
+        public CTEDeclaration()
         {
-            this.Arguments = new List<Token>();
+            this.Columns = new List<Name>();
         }
-
         public string Name { get; set; }
+        public List<Name> Columns { get; set; }
 
-        public List<Token> Arguments { get; private set; }
-
+        public bool Recursive { get; set; }
+        public CTEDefinition PreviousCommonTableExpression { get; set; }
     }
 }

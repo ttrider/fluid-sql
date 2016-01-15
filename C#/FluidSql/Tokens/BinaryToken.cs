@@ -84,7 +84,7 @@ namespace TTRider.FluidSql
     {
     }
 
-    public class BitwiseNotToken : BinaryEqualToken
+    public class BitwiseNotToken : UnaryToken
     {
     }
 
@@ -124,6 +124,9 @@ namespace TTRider.FluidSql
     {
         public Token Token { get; set; }
     }
+    public class UnaryMinusToken : UnaryToken
+    {
+    }
 
     public class GroupToken : UnaryToken
     {
@@ -160,25 +163,24 @@ namespace TTRider.FluidSql
         public ExpressionToken Second { get; set; }
     };
 
-    public class InToken : ExpressionToken
+    public class SequenceToken : ExpressionToken
     {
-        public InToken()
+        public SequenceToken()
         {
             this.Set = new List<Token>();
         }
 
-        public Token Token { get; set; }
         public List<Token> Set { get; private set; }
     };
 
-    public class NotInToken : ExpressionToken
-    {
-        public NotInToken()
-        {
-            this.Set = new List<Token>();
-        }
 
+    public class InToken : SequenceToken
+    {
         public Token Token { get; set; }
-        public List<Token> Set { get; private set; }
+    };
+
+    public class NotInToken : SequenceToken
+    {
+        public Token Token { get; set; }
     }
 }

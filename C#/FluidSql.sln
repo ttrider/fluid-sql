@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D5B0C03D-6AA0-40E4-90FB-9E05BCD55949}"
 	ProjectSection(SolutionItems) = preProject
@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.RequestResponse", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.RequestResponse", "Tests.RequestResponse\Tests.RequestResponse.csproj", "{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluidSql.PostgreSQL", "FluidSql.Postgres\FluidSql.PostgreSQL.csproj", "{14F9FAF4-A111-40B9-ABC4-EB1C73072661}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +43,10 @@ Global
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0059BF9F-EF4E-4EC9-A83B-0B2C320283CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3C18957-4702-4BBF-A478-6AE1D4F42D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1685461-44AE-493B-9F9B-E006F2AA410F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1685461-44AE-493B-9F9B-E006F2AA410F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1685461-44AE-493B-9F9B-E006F2AA410F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,10 +55,6 @@ Global
 		{62DA7EED-CBA3-447D-AEDF-B402D6168A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62DA7EED-CBA3-447D-AEDF-B402D6168A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62DA7EED-CBA3-447D-AEDF-B402D6168A6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE490AAD-3438-4BDD-8365-D8CEFF30E3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5729BF8-94D5-4665-8A61-5AE933561547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5729BF8-94D5-4665-8A61-5AE933561547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5729BF8-94D5-4665-8A61-5AE933561547}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +67,10 @@ Global
 		{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F6EEF2-13EC-44EB-AA7F-83A4742E3799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14F9FAF4-A111-40B9-ABC4-EB1C73072661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14F9FAF4-A111-40B9-ABC4-EB1C73072661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14F9FAF4-A111-40B9-ABC4-EB1C73072661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14F9FAF4-A111-40B9-ABC4-EB1C73072661}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

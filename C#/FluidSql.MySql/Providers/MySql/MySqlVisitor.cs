@@ -5,6 +5,7 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 using System;
+// ReSharper disable InconsistentNaming
 
 
 namespace TTRider.FluidSql.Providers.MySql
@@ -46,7 +47,47 @@ namespace TTRider.FluidSql.Providers.MySql
             "DATETIME" // DateTimeOffset = 28,
         };
 
-		protected override string[] SupportedDialects { get { return supportedDialects;}}
+        protected override void VisitNowFunctionToken(NowFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitUuidFunctionToken(UuidFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitIIFFunctionToken(IifFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string[] SupportedDialects { get { return supportedDialects;}}
 
         public MySqlVisitor()
         {
@@ -62,10 +103,6 @@ namespace TTRider.FluidSql.Providers.MySql
 
         protected override void VisitJoinType(Joins join)
         {
-            //if (join == Joins.RightOuter || join == Joins.FullOuter)
-            //{
-            //    throw new NotImplementedException("join "+join+" is not implemented on SQLite");
-            //}
             State.Write(JoinStrings[(int)join]);
         }
 
@@ -77,23 +114,6 @@ namespace TTRider.FluidSql.Providers.MySql
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }
-
-         protected override void VisitStatement(IStatement statement)
-         {
-             //if (statement is VacuumStatement)
-             //{
-             //    VisitVacuumStatement((VacuumStatement)statement);
-             //    return;
-             //}
-             base.VisitStatement(statement);
-         }
-
-
-        //void VisitVacuumStatement(VacuumStatement statement)
-        //{
-        //    State.Write(SqliteSymbols.VACUUM);
-        //}
-
 
         protected class MySqlSymbols : Symbols
         {

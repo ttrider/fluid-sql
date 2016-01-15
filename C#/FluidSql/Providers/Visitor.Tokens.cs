@@ -62,7 +62,10 @@ namespace TTRider.FluidSql.Providers
             }
             else
             {
-                State.Write(this.LiteralOpenQuote, value.ToString(), this.LiteralCloseQuote);
+                var stringValue = value.ToString();
+                stringValue = stringValue.Replace(this.LiteralCloseQuote, this.LiteralCloseQuote + this.LiteralCloseQuote);
+
+                State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
             }
         }
 
@@ -240,9 +243,10 @@ namespace TTRider.FluidSql.Providers
             VisitBinaryToken(token, token.Equal ? Symbols.BitwiseXorEqVal : Symbols.BitwiseXorVal);
         }
 
-        protected virtual void VisitBitwiseNotToken(BinaryEqualToken token)
+        protected virtual void VisitBitwiseNotToken(BitwiseNotToken token)
         {
-            VisitBinaryToken(token, token.Equal ? Symbols.BitwiseNotEqVal : Symbols.BitwiseNotVal);
+            State.Write(Symbols.BitwiseNotVal);
+            VisitToken(token.Token);
         }
 
         protected virtual void VisitAssignToken(BinaryToken token)
@@ -397,6 +401,12 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.OpenParenthesis);
             VisitToken(token.Token);
             State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected virtual void VisitUnaryMinusToken(UnaryMinusToken token)
+        {
+            State.Write(Symbols.MinusVal);
+            VisitToken(token.Token);
         }
 
         protected virtual void VisitJoin(ICollection<Join> list)

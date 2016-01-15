@@ -15,7 +15,7 @@ namespace FluidSqlTests
         public void SuperMerge()
         {
             var statement = Sql.Merge.Top(10)
-                .Into(Sql.Name("foo.target").As("target"))
+                .Into(Sql.NameAs("foo.target","target"))
                 .Using(Sql.Select.From("foo.source"), "source")
                 .On(Sql.Name("target.id").IsEqual(Sql.Name("source.id")))
                 .WhenMatchedThenDelete(Sql.Name("source.name").IsEqual("somename"))
@@ -33,7 +33,7 @@ namespace FluidSqlTests
         public void SuperMerge2()
         {
             var statement = Sql.Merge.Top(10)
-                .Into(Sql.Name("foo.target").As("target"))
+                .Into(Sql.NameAs("foo.target","target"))
                 .Using("foo.source", "source")
                 .On(Sql.Name("target.id").IsEqual(Sql.Name("source.id")))
                 .WhenMatchedThenDelete(Sql.Name("source.name").IsEqual("somename"))
@@ -51,7 +51,7 @@ namespace FluidSqlTests
         public void SuperMergeWithConditions()
         {
             var statement = Sql.Merge.Top(10)
-                .Into(Sql.Name("foo.target").As("target"))
+                .Into(Sql.NameAs("foo.target","target"))
                 .Using("foo.source", "source")
                 .On(Sql.Name("target.id").IsEqual(Sql.Name("source.id")))
                 .WhenMatchedThenDelete(Sql.Name("source.name").IsEqual("somename"))
@@ -69,7 +69,7 @@ namespace FluidSqlTests
         public void SuperMergeWithConditions2()
         {
             var statement = Sql.Merge.Top(10)
-                .Into(Sql.Name("foo.target").As("target"))
+                .Into(Sql.NameAs("foo.target","target"))
                 .Using("foo.source", "source")
                 .On(Sql.Name("target.id").IsEqual(Sql.Name("source.id")))
                 .WhenMatchedThenDelete(Sql.Name("source.name").IsEqual("somename"))

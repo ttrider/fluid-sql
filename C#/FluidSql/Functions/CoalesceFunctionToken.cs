@@ -1,4 +1,4 @@
-﻿// <license>
+// <license>
 // The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
@@ -9,16 +9,13 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class Function : FunctionExpressionToken
+    public class CoalesceFunctionToken : FunctionExpressionToken
     {
-        public Function()
+        public CoalesceFunctionToken()
         {
             this.Arguments = new List<Token>();
         }
 
-        public string Name { get; set; }
-
         public List<Token> Arguments { get; private set; }
-
     }
 }

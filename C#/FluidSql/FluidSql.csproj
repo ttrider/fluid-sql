@@ -45,11 +45,26 @@
     <Compile Include="..\Shared\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DatePart.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Functions\DateAddFunctionToken.cs" />
+    <Compile Include="Functions\NullIfFunctionToken.cs" />
+    <Compile Include="Functions\DatePartFunctionToken.cs" />
+    <Compile Include="Functions\DurationFunctionToken.cs" />
+    <Compile Include="Functions\CoalesceFunctionToken.cs" />
+    <Compile Include="Functions\IifFunctionToken.cs" />
+    <Compile Include="Functions\MakeDateFunctionToken.cs" />
+    <Compile Include="Functions\MakeTimeFunctionToken.cs" />
+    <Compile Include="Functions\NowFunctionToken.cs" />
+    <Compile Include="Functions\UuidFunctionToken.cs" />
     <Compile Include="Interfaces\IAliasToken.cs" />
     <Compile Include="Interfaces\ICTEStatement.cs" />
     <Compile Include="Interfaces\IOnConflict.cs" />
+    <Compile Include="Interfaces\ISelectStatement.cs" />
+    <Compile Include="Providers\Visitor.Functions.cs" />
     <Compile Include="Statements\CorrelationStatement.cs" />
+    <Compile Include="Statements\CreateSchemaStatement.cs" />
+    <Compile Include="Statements\DropSchemaStatement.cs" />
     <Compile Include="Statements\ExceptStatement.cs" />
     <Compile Include="Statements\IntersectStatement.cs" />
     <Compile Include="Enums\Joins.cs" />
@@ -61,8 +76,11 @@
     <Compile Include="Statements\CreateOrAlterViewStatement.cs" />
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
+    <Compile Include="Tokens\CTEDeclaration.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />
+    <Compile Include="Tokens\DateFunctionExpressionToken.cs" />
     <Compile Include="Tokens\ExpressionToken.cs" />
+    <Compile Include="Tokens\FunctionExpressionToken.cs" />
     <Compile Include="Tokens\RecordsetSourceToken.cs" />
     <Compile Include="Tokens\WhenMatchedToken.cs" />
     <Compile Include="Tokens\WhenMatchedTokenThenDeleteToken.cs" />
@@ -157,6 +175,7 @@
     <None Include="FluidSql.licenseheader" />
     <None Include="TTRider.FluidSql.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <NugetPacking>$(TargetDir)\nugetpack</NugetPacking>

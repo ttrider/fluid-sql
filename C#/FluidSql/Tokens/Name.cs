@@ -69,6 +69,15 @@ namespace TTRider.FluidSql
             this.Add(names);
         }
 
+        public Name As(string alias)
+        {
+            if (!string.IsNullOrWhiteSpace(alias))
+            {
+                return new Name(this.parts) { Alias = alias };
+            }
+            return this;
+        }
+
         public string LastPart
         {
             get { return this.parts.LastOrDefault(); }

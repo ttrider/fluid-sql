@@ -7,9 +7,8 @@
 
 namespace TTRider.FluidSql
 {
-    public class CTEDefinition : Token
+    public class NowFunctionToken : DateFunctionExpressionToken
     {
-        public CTEDeclaration Declaration { get; set; }
-        public ISelectStatement Definition { get; set; }
+        public bool Utc { get; set; }
     }
 }

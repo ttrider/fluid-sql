@@ -174,5 +174,58 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NOT NULL EXEC (N' DROP VIEW [foo];' );", command.CommandText);
         }
+
+        [TestMethod]
+        public void CreateSchema()
+        {
+            var statement = Sql.CreateSchema(Sql.Name("CM"),true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM]' ) END;", command.CommandText);
+        }
+        [TestMethod]
+        public void CreateSchema_Always()
+        {
+            var statement = Sql.CreateSchema(Sql.Name("CM"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXEC (N' CREATE SCHEMA [CM]' );", command.CommandText);
+        }
+        [TestMethod]
+        public void CreateSchema_Auth()
+        {
+            var statement = Sql.CreateSchema(Sql.Name("CM"), true).Authorization("dbo");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM] AUTHORIZATION [dbo]' ) END;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropSchema()
+        {
+            var statement = Sql.DropSchema(Sql.Name("CM"), true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' DROP SCHEMA [CM]' ) END;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void DropSchema_Always()
+        {
+            var statement = Sql.DropSchema(Sql.Name("CM"));
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXEC (N' DROP SCHEMA [CM]' );", command.CommandText);
+        }
     }
 }
