@@ -1507,6 +1507,11 @@ namespace TTRider.FluidSql
             column.DefaultValue = value;
             return column;
         }
+        public static TableColumn Default(this TableColumn column, FunctionExpressionToken value)
+        {
+            column.DefaultValue = value;
+            return column;
+        }
 
         public static TableColumn Sparse(this TableColumn column)
         {

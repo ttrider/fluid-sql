@@ -102,6 +102,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
             public const string now         = "now";
             public const string randomblob  = "randomblob";
             public const string utc         = "utc";
+            public const string current_timestamp = "current_timestamp";
+            
             public const string VACUUM      = "VACUUM";
         }
     
