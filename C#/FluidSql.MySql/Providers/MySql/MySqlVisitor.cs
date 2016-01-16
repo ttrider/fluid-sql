@@ -47,46 +47,6 @@ namespace TTRider.FluidSql.Providers.MySql
             "DATETIME" // DateTimeOffset = 28,
         };
 
-        protected override void VisitNowFunctionToken(NowFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitUuidFunctionToken(UuidFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitIIFFunctionToken(IifFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override string[] SupportedDialects { get { return supportedDialects;}}
 
         public MySqlVisitor()
@@ -99,13 +59,10 @@ namespace TTRider.FluidSql.Providers.MySql
             this.CommentCloseQuote = "*/";            
         }
 
-        
-
         protected override void VisitJoinType(Joins join)
         {
             State.Write(JoinStrings[(int)join]);
         }
-
 
          void VisitType(TypedToken typedToken)
         {

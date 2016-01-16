@@ -47,11 +47,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\PostgreSQL\PostgreSQLProvider.cs" />
     <Compile Include="Providers\PostgreSQL\PostgreSQLVisitor.cs" />
-    <Compile Include="Providers\PostgreSQL\PostgreSQLVisitor.DDLStatements.cs" />
+    <Compile Include="Providers\PostgreSQL\PostgreSQLVisitor.Statements.cs" />
+    <Compile Include="Providers\PostgreSQL\PostgreSQLVisitor.Tokens.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="Providers\PostgreSQL\PostgreSQLVisitor.Functions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Statements\" />

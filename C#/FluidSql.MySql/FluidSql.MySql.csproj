@@ -47,7 +47,9 @@
     <Compile Include="MySql.cs" />
     <Compile Include="Providers\MySql\MySqlProvider.cs" />
     <Compile Include="Providers\MySql\MySqlVisitor.cs" />
-    <Compile Include="Providers\MySql\MySqlVisitor.DDLStatements.cs" />
+    <Compile Include="Providers\MySql\MySqlVisitor.Functions.cs" />
+    <Compile Include="Providers\MySql\MySqlVisitor.Statements.cs" />
+    <Compile Include="Providers\MySql\MySqlVisitor.Tokens.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace TTRider.FluidSql.Providers.PostgreSQL
 {
@@ -105,11 +106,11 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                     var sp = new NpgsqlParameter
                     {
                         ParameterName = p.Name,
-                        Direction = p.Direction
+                        Direction = p.Direction,
                     };
                     if (p.DbType.HasValue)
                     {
-                        sp.DbType = CommonDbTypeToDbType[p.DbType.Value];
+                        sp.NpgsqlDbType = CommonDbTypeToDbType[p.DbType.Value];
                     }
                     if (p.Length.HasValue)
                     {
@@ -130,37 +131,37 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         }
 
 
-        internal static readonly Dictionary<CommonDbType, DbType> CommonDbTypeToDbType = new Dictionary
-            <CommonDbType, DbType>
+        internal static readonly Dictionary<CommonDbType, NpgsqlDbType> CommonDbTypeToDbType = new Dictionary
+            <CommonDbType, NpgsqlDbType>
         {
-            {CommonDbType.BigInt, DbType.Int64},
-            {CommonDbType.Binary, DbType.Binary},
-            {CommonDbType.Bit, DbType.Boolean},
-            {CommonDbType.Char, DbType.AnsiStringFixedLength},
-            {CommonDbType.DateTime, DbType.DateTime},
-            {CommonDbType.Decimal, DbType.Decimal},
-            {CommonDbType.Float, DbType.Single},
-            {CommonDbType.Image, DbType.Binary},
-            {CommonDbType.Int, DbType.Int32},
-            {CommonDbType.Money, DbType.Currency},
-            {CommonDbType.NChar, DbType.StringFixedLength},
-            {CommonDbType.NText, DbType.String},
-            {CommonDbType.NVarChar, DbType.String},
-            {CommonDbType.Real, DbType.Double},
-            {CommonDbType.UniqueIdentifier, DbType.Guid},
-            {CommonDbType.SmallDateTime, DbType.DateTime},
-            {CommonDbType.SmallInt, DbType.Int16},
-            {CommonDbType.SmallMoney, DbType.Single},
-            {CommonDbType.Text, DbType.AnsiString},
-            {CommonDbType.Timestamp, DbType.Decimal},
-            {CommonDbType.TinyInt, DbType.Byte},
-            {CommonDbType.VarBinary, DbType.Binary},
-            {CommonDbType.VarChar, DbType.AnsiString},
-            {CommonDbType.Variant, DbType.Object},
-            {CommonDbType.Xml, DbType.Xml},
-            {CommonDbType.Date, DbType.Date},
-            {CommonDbType.Time, DbType.Time},
-            {CommonDbType.DateTimeOffset, DbType.DateTimeOffset}
+            {CommonDbType.BigInt, NpgsqlDbType.Bigint},
+            {CommonDbType.Binary, NpgsqlDbType.Bytea},
+            {CommonDbType.Bit, NpgsqlDbType.Boolean},
+            {CommonDbType.Char, NpgsqlDbType.Char},
+            {CommonDbType.DateTime, NpgsqlDbType.Timestamp},
+            {CommonDbType.Decimal, NpgsqlDbType.Numeric},
+            {CommonDbType.Float,NpgsqlDbType.Real},
+            {CommonDbType.Image,NpgsqlDbType.Bytea},
+            {CommonDbType.Int,NpgsqlDbType.Integer},
+            {CommonDbType.Money,NpgsqlDbType.Money},
+            {CommonDbType.NChar,NpgsqlDbType.Char},
+            {CommonDbType.NText,NpgsqlDbType.Text},
+            {CommonDbType.NVarChar,NpgsqlDbType.Varchar},
+            {CommonDbType.Real,NpgsqlDbType.Double},
+            {CommonDbType.UniqueIdentifier,NpgsqlDbType.Uuid},
+            {CommonDbType.SmallDateTime,NpgsqlDbType.Timestamp},
+            {CommonDbType.SmallInt,NpgsqlDbType.Smallint},
+            {CommonDbType.SmallMoney,NpgsqlDbType.Real},
+            {CommonDbType.Text,NpgsqlDbType.Text},
+            {CommonDbType.Timestamp,NpgsqlDbType.Timestamp},
+            {CommonDbType.TinyInt,NpgsqlDbType.Smallint},
+            {CommonDbType.VarBinary,NpgsqlDbType.Bytea},
+            {CommonDbType.VarChar,NpgsqlDbType.Varchar},
+            {CommonDbType.Variant,NpgsqlDbType.Unknown},
+            {CommonDbType.Xml,NpgsqlDbType.Xml},
+            {CommonDbType.Date,NpgsqlDbType.Date},
+            {CommonDbType.Time,NpgsqlDbType.Time},
+            {CommonDbType.DateTimeOffset,NpgsqlDbType.TimestampTZ}
         };
     }
 }

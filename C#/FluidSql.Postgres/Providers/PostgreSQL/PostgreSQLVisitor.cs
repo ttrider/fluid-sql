@@ -5,6 +5,9 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 using System;
+using System.Collections.Generic;
+using NpgsqlTypes;
+
 // ReSharper disable InconsistentNaming
 
 
@@ -12,96 +15,52 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 {
     internal partial class PostgreSQLVisitor : Visitor
     {
-		private static readonly string[] supportedDialects = new [] { "npgsql", "postgresql", "postgres", "ansi" };
+        private static readonly string[] supportedDialects = new[] { "npgsql", "postgresql", "postgres", "ansi" };
 
 
         private readonly string[] DbTypeStrings =
         {
-            "BIGINT", // BigInt = 0,
-            "BYTEA", // Binary = 1,
-            "BOOLEAN", // Bit = 2,
-            "CHAR", // Char = 3,
-
-            "DATETIME", // DateTime = 4,
-            "DECIMAL", // Decimal = 5,
-            "FLOAT", // Float = 6,
-            "LONGBLOB", // Image = 7,
-            "INTEGER", // Int = 8,
-            "DECIMAL", // Money = 9,
-            "CHAR", // NChar = 10,
-            "TEXT", // NText = 11,
-            "VARCHAR", // NVarChar = 12,
-            "REAL", // Real = 13,
-            "CHAR ( 38 )", // UniqueIdentifier = 14,
-            "DATETIME", // SmallDateTime = 15,
-            "SMALLINT", // SmallInt = 16,
-            "DECIMAL", // SmallMoney = 17,
-            "TEXT", // Text = 18,
-            "TIMESTAMP", // Timestamp = 19,
-            "TINYINT", // TinyInt = 20,
-            "VARBINARY", // VarBinary = 21,
-            "VARCHAR", // VarChar = 22,
-            "BLOB", // Variant = 23,
-            "LONGTEXT", // Xml = 24,
-            "DATE", // Date = 25,
-            "TIME", // Time = 26,
-            "DATETIME", // DateTime2 = 27,
-            "DATETIME" // DateTimeOffset = 28,
+            "BIGINT",       //NpgsqlDbType.Bigint,
+            "BYTEA",        //NpgsqlDbType.Bytea,
+            "BOOLEAN",      //NpgsqlDbType.Boolean,
+            "CHAR",         //NpgsqlDbType.Char,
+            "TIMESTAMP",    //NpgsqlDbType.Timestamp,
+            "NUMERIC",      //NpgsqlDbType.Numeric,
+            "REAL",         //NpgsqlDbType.Real,
+            "BYTEA",        //NpgsqlDbType.Bytea,
+            "INTEGER",      //NpgsqlDbType.Integer,
+            "MONEY",        //NpgsqlDbType.Money,
+            "CHAR",         //NpgsqlDbType.Char,
+            "TEXT",         //NpgsqlDbType.Text,
+            "VARCHAR",      //NpgsqlDbType.Varchar,
+            "DOUBLE PRECISION",//NpgsqlDbType.Double,
+            "UUID",         //NpgsqlDbType.Uuid,
+            "TIMESTAMP",    //NpgsqlDbType.Timestamp,
+            "SMALLINT",     //NpgsqlDbType.Smallint,
+            "REAL",         //NpgsqlDbType.Real,
+            "TEXT",         //NpgsqlDbType.Text,
+            "TIMESTAMP",    //NpgsqlDbType.Timestamp,
+            "SMALLINT",     //NpgsqlDbType.Smallint,
+            "BYTEA",        //NpgsqlDbType.Bytea,
+            "VARCHAR",      //NpgsqlDbType.Varchar,
+            "Unknown",      //NpgsqlDbType.Unknown,
+            "XM,",          //NpgsqlDbType.Xml,
+            "DATE",         //NpgsqlDbType.Date,
+            "TIME",         //NpgsqlDbType.Time,
+            "TIMESTAMPTZ",  //NpgsqlDbType.TimestampTZ
         };
 
-        protected override void VisitNowFunctionToken(NowFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitUuidFunctionToken(UuidFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitIIFFunctionToken(IifFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override string[] SupportedDialects { get { return supportedDialects;}}
+        protected override string[] SupportedDialects { get { return supportedDialects; } }
 
         public PostgreSQLVisitor()
         {
-            this.IdentifierOpenQuote = "`";
-            this.IdentifierCloseQuote = "`";
+            this.IdentifierOpenQuote = "\"";
+            this.IdentifierCloseQuote = "\"";
             this.LiteralOpenQuote = "'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
-            this.CommentCloseQuote = "*/";            
+            this.CommentCloseQuote = "*/";
         }
-
-        
 
         protected override void VisitJoinType(Joins join)
         {
@@ -109,7 +68,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         }
 
 
-         void VisitType(TypedToken typedToken)
+        void VisitType(TypedToken typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
@@ -117,10 +76,9 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             }
         }
 
-        protected class MySqlSymbols : Symbols
+        protected class PostgrSQLSymbols : Symbols
         {
-            public const string AUTO_INCREMENT = "AUTO_INCREMENT";
+            //public const string AUTO_INCREMENT = "AUTO_INCREMENT";
         }
-    
     }
 }
