@@ -18,29 +18,20 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 State.Write(Symbols.DATETIME);
                 State.Write(Symbols.OpenParenthesis);
-                State.Write(Symbols.SingleQuote);
-                State.Write(SqliteSymbols.now);
-                State.Write(Symbols.SingleQuote);
-                State.Write(Symbols.Comma);
-                State.Write(Symbols.SingleQuote);
-                State.Write(SqliteSymbols.utc);
-                State.Write(Symbols.SingleQuote);
+                State.Write(SqliteSymbols.current_timestamp);
                 State.Write(Symbols.CloseParenthesis);
             }
             else
             {
                 State.Write(Symbols.DATETIME);
                 State.Write(Symbols.OpenParenthesis);
-                State.Write(Symbols.SingleQuote);
-                State.Write(SqliteSymbols.now);
-                State.Write(Symbols.SingleQuote);
+                State.Write(SqliteSymbols.current_timestamp);
                 State.Write(Symbols.Comma);
                 State.Write(Symbols.SingleQuote);
                 State.Write(SqliteSymbols.localtime);
                 State.Write(Symbols.SingleQuote);
                 State.Write(Symbols.CloseParenthesis);
             }
-
         }
 
         protected override void VisitUuidFunctionToken(UuidFunctionToken token)
