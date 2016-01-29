@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing;
 using System.Globalization;
 
 namespace TTRider.FluidSql.Providers.SqlServer
@@ -50,23 +51,24 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected class SqlSymbols: Symbols
         {
-            public const string d           = "d";
-            public const string DATEADD     = "DATEADD";
-            public const string DATEDIFF    = "DATEDIFF";
-            public const string DATEPART    = "DATEPART";
-            public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
-            public const string GETDATE     = "GETDATE";
-            public const string GETUTCDATE  = "GETUTCDATE";
-            public const string hh          = "hh";
-            public const string m           = "m";
-            public const string mi          = "mi";
-            public const string ms          = "ms";
-            public const string NEWID       = "NEWID";
-            public const string s           = "s";
-            public const string ss          = "ss";
-            public const string TIMEFROMPARTS = "TIMEFROMPARTS";
-            public const string ww          = "ww";
-            public const string yy          = "yy";
+            public const string DATEADD             = "DATEADD";
+            public const string DATEDIFF            = "DATEDIFF";
+            public const string DATEPART            = "DATEPART";
+            public const string DATETIMEFROMPARTS   = "DATETIMEFROMPARTS";
+            public const string GETDATE             = "GETDATE";
+            public const string GETUTCDATE          = "GETUTCDATE";
+            public const string IDENTITY_INSERT     = "IDENTITY_INSERT";
+            public const string NEWID               = "NEWID";
+            public const string TIMEFROMPARTS       = "TIMEFROMPARTS";
+            public const string d                   = "d";
+            public const string hh                  = "hh";
+            public const string m                   = "m";
+            public const string mi                  = "mi";
+            public const string ms                  = "ms";
+            public const string s                   = "s";
+            public const string ss                  = "ss";
+            public const string ww                  = "ww";
+            public const string yy                  = "yy";
         }
 
         protected override string[] SupportedDialects { get { return supportedDialects; } }
@@ -428,6 +430,16 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
         protected override void VisitInsert(InsertStatement statement)
         {
+            if (statement.IdentityInsert)
+            {
+                //SET IDENTITY_INSERT my_table ON
+                State.Write(Symbols.SET);
+                State.Write(SqlSymbols.IDENTITY_INSERT);
+                VisitNameToken(statement.Into);
+                State.Write(Symbols.ON);
+                State.WriteStatementTerminator();
+            }
+
             VisitCommonTableExpressions(statement.CommonTableExpressions);
 
             State.Write(Symbols.INSERT);
@@ -460,6 +472,17 @@ namespace TTRider.FluidSql.Providers.SqlServer
             else if (statement.From != null)
             {
                 VisitStatement(statement.From);
+            }
+
+            if (statement.IdentityInsert)
+            {
+                State.WriteStatementTerminator();
+                //SET IDENTITY_INSERT my_table OFF
+                State.Write(Symbols.SET);
+                State.Write(SqlSymbols.IDENTITY_INSERT);
+                VisitNameToken(statement.Into);
+                State.Write(Symbols.OFF);
+                State.WriteStatementTerminator();
             }
         }
 

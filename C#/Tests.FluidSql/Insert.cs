@@ -139,5 +139,23 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("INSERT INTO [foo].[bar] ( [id], [value] ) VALUES ( 123, N'val0' ), ( 234, N'val1' ), ( 345, N'val2' ), ( 345, N'val2' ), ( 345, N'val2' );", command.CommandText);
         }
+
+        [TestMethod]
+        public void InsertIdentityColumnsValues()
+        {
+            var statement = Sql.Insert.Into(Sql.Name("foo.bar"))
+                .IdentityInsert()
+                .Columns(Sql.Name("id"), Sql.Name("value"))
+                .Values(Sql.Scalar(123), Sql.Scalar("val0"))
+                .Values(234, "val1")
+                .Values(new List<Scalar> { Sql.Scalar(345), Sql.Scalar("val2") })
+                .Values(new List<object> { Sql.Scalar(345), Sql.Scalar("val2") })
+                .Values(new List<object> { 345, "val2" });
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SET IDENTITY_INSERT [foo].[bar] ON;\r\nINSERT INTO [foo].[bar] ( [id], [value] ) VALUES ( 123, N'val0' ), ( 234, N'val1' ), ( 345, N'val2' ), ( 345, N'val2' ), ( 345, N'val2' );\r\nSET IDENTITY_INSERT [foo].[bar] OFF;", command.CommandText);
+        }
     }
 }
