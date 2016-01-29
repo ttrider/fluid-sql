@@ -647,6 +647,12 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static InsertStatement IdentityInsert(this InsertStatement statement, bool value = true)
+        {
+            statement.IdentityInsert = value;
+            return statement;
+        }
+
         public static UnionStatement Union(this RecordsetStatement statement, RecordsetStatement with)
         {
             return new UnionStatement(statement, with);
@@ -1548,6 +1554,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        
 
         #region PrimaryKey
 

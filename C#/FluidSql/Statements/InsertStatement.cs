@@ -30,5 +30,6 @@ namespace TTRider.FluidSql
         public Top Top { get; set; }
         public OnConflict? Conflict { get; set; }
         public List<CTEDefinition> CommonTableExpressions { get; set; }
+        public bool IdentityInsert { get; set; }
     }
 }
