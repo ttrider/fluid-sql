@@ -23,12 +23,24 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitBeginTransaction(BeginTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCommitTransaction(CommitTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitRollbackTransaction(RollbackTransactionStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitStatementsStatement(StatementsStatement statement) { throw new NotImplementedException(); }
+//        protected override void VisitStatementsStatement(StatementsStatement statement) { throw new NotImplementedException(); }
         protected override void VisitSaveTransaction(SaveTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDeclareStatement(DeclareStatement statement) { throw new NotImplementedException(); }
         protected override void VisitIfStatement(IfStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCreateTableStatement(CreateTableStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitDropTableStatement(DropTableStatement statement) { throw new NotImplementedException(); }
+
+        protected override void VisitDropTableStatement(DropTableStatement statement)
+        {
+            //DROP TABLE [ IF EXISTS ] name [, ...] [ CASCADE | RESTRICT ]
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.TABLE);
+            if (statement.CheckExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+            }
+            State.Write(statement.Name.GetFullName(this.IdentifierOpenQuote, this.IdentifierCloseQuote));
+        }
         protected override void VisitCreateIndexStatement(CreateIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitAlterIndexStatement(AlterIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDropIndexStatement(DropIndexStatement statement) { throw new NotImplementedException(); }
