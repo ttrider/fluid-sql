@@ -73,6 +73,20 @@ Console.WriteLine(provider.GenerateStatement(statement));</pre></div>
       } <span class="pl-k">while</span> (reader.NextResult());
    }
 }</pre></div>
+
+<p>By switching to Sqlite provider, you can use the same code to target Sqlite database. Support for MySql and PostgreSQL is coming soon.</p>
+
+<p>Using Fluid-SQL you can not only query data, but also </p>
+
+<ul>
+<li>'CREATE/ALTER/DELETE' tables and views</li>
+<li>Create `IF BEGIN-END ELSE BEGIN_END' blocks</li>
+<li>'INSERT/MERGE/DELETE' data</li>
+<li>Hide certain language differences, like date manipulation functions</li>
+<li>and many more</li>
+</ul>
+
+<p>Fluid-Sql is available on Nuget: <a href="https://www.nuget.org/packages/TTRider.FluidSql.dll/">https://www.nuget.org/packages/TTRider.FluidSql.dll/</a></p>
       </section>
     </div>
 
