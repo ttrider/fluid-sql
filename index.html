@@ -36,13 +36,43 @@
 
 <p>This library allows .NET developers to build  database-independent SQL queries in C# (or other CLR language) using fluid coding style.</p>
 
-<p>For example:</p>
+<p>For example, you can write code like this:</p>
 
-<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> statement = Sql.Select.From(<span class="pl-s"><span class="pl-pds">"</span>mytable<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>)
-                          .Output(<span class="pl-s"><span class="pl-pds">"</span>n.*<span class="pl-pds">"</span></span>)
-                          .Where(
-                              Sql.Name(<span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>).LessOrEqual(Sql.Scalar(<span class="pl-c1">3</span>))
-                           );</pre></div>
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> statement = 
+   Sql.Select.From(<span class="pl-s"><span class="pl-pds">"</span>mytable<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>)
+             .Output(<span class="pl-s"><span class="pl-pds">"</span>n.*<span class="pl-pds">"</span></span>)
+             .Where(Sql.Name(<span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>).LessOrEqual(Sql.Scalar(<span class="pl-c1">3</span>)));</pre></div>
+
+<p>Variable <code>statement</code> contains AST for your query. Now you can simply use one of the language providers to create to get either a corresponding SQL:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> provider = <span class="pl-k">new</span> SqlServerProvider();
+Console.WriteLine(provider.GenerateStatement(statement));</pre></div>
+
+<p>output:</p>
+
+<div class="highlight highlight-source-sql"><pre><span class="pl-k">SELECT</span> [n].<span class="pl-k">*</span> <span class="pl-k">FROM</span> [mytable] <span class="pl-k">AS</span> [n] <span class="pl-k">WHERE</span> [n].[id] <span class="pl-k">&lt;=</span> <span class="pl-c1">3</span>;</pre></div>
+
+<p>or Command object </p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> provider = <span class="pl-k">new</span> SqlServerProvider();
+<span class="pl-k">using</span> (var command = provider.GetCommand(statement, connectionString))
+{
+   <span class="pl-k">using</span> (<span class="pl-k">var</span> reader = command.ExecuteReader(CommandBehavior.CloseConnection))
+   {
+      <span class="pl-k">do</span>
+      {
+         <span class="pl-k">while</span> (reader.Read())
+         {
+            <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; reader.FieldCount; i++)
+            {
+               Trace.Write(reader.GetValue(i));
+               Trace.Write(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span><span class="pl-pds">"</span></span>);
+            }
+         Trace.Write(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\r\n</span><span class="pl-pds">"</span></span>);
+         }
+      } <span class="pl-k">while</span> (reader.NextResult());
+   }
+}</pre></div>
       </section>
     </div>
 
