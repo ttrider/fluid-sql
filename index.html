@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Fluid-sql : Provides an ability to create database-independent SQL statements in C#">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Fluid-sql</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ttrider/fluid-sql">View on GitHub</a>
+
+          <h1 id="project_title">Fluid-sql</h1>
+          <h2 id="project_tagline">Provides an ability to create database-independent SQL statements in C#</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ttrider/fluid-sql/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ttrider/fluid-sql/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a id="welcome-to-fluid-sql" class="anchor" href="#welcome-to-fluid-sql" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to Fluid-SQL</h3>
+
+<p>This library allows .NET developers to build  database-independent SQL queries in C# (or other CLR language) using fluid coding style.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> statement = Sql.Select.From(<span class="pl-s"><span class="pl-pds">"</span>mytable<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>)
+                          .Output(<span class="pl-s"><span class="pl-pds">"</span>n.*<span class="pl-pds">"</span></span>)
+                          .Where(
+                              Sql.Name(<span class="pl-s"><span class="pl-pds">"</span>n<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>).LessOrEqual(Sql.Scalar(<span class="pl-c1">3</span>))
+                           );</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Fluid-sql maintained by <a href="https://github.com/ttrider">ttrider</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
