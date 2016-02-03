@@ -1,6 +1,7 @@
 fluid-sql
 =========
 
+For more information please take a look at http://ttrider.github.io/fluid-sql
 
 Release Notes
 ==
