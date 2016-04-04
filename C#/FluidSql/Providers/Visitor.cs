@@ -237,6 +237,11 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitCaseToken(CaseToken token)
         {
             State.Write(Symbols.CASE);
+            if (token.CaseValueToken != null)
+            {
+                VisitToken(token.CaseValueToken);
+            }
+
             foreach (var whenCondition in token.WhenConditions)
             {
                 State.Write(Symbols.WHEN);

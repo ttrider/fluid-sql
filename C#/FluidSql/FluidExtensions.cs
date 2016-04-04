@@ -2291,6 +2291,11 @@ namespace TTRider.FluidSql
         #endregion Schema
 
         #region Case
+        public static CaseToken On(this CaseToken caseToken, ExpressionToken caseValue)
+        {
+            caseToken.CaseValueToken = caseValue;
+            return caseToken;
+        }
 
         public static CaseToken When(this CaseToken caseToken, ExpressionToken when, ExpressionToken then)
         {

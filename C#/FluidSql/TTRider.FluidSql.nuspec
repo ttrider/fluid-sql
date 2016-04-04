@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>TTRider.FluidSql.dll</id>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <authors>TTRider</authors>
     <owners>TTRider</owners>
     <licenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</licenseUrl>
@@ -11,6 +11,10 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Fluid-style SQL statement generator</description>
     <releaseNotes>
+      1.7.1
+      --
+      * Support for CASE on value
+      * Bug Fixes
       1.7.0
       --
       * Support for Identity insert on Sql Server

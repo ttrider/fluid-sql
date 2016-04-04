@@ -1259,6 +1259,24 @@ namespace FluidSqlTests
                 "SELECT TOP ( 1 ) @foo = [bar] FROM [foo];"
                 );
         }
+
+        [TestMethod]
+        public void CaseOnValue()
+        {
+            AssertSql(
+                Sql.Select.Output(Sql.Case.On(Parameter.Int("@foo")).When(Sql.Scalar(123),Sql.Scalar("123")).When(Sql.Scalar(234), Sql.Scalar("234")).Else(Sql.Scalar("345"))),
+               "SELECT CASE @foo WHEN 123 THEN N'123' WHEN 234 THEN N'234' ELSE N'345' END;"
+                );
+        }
+
+        [TestMethod]
+        public void Case()
+        {
+            AssertSql(
+                Sql.Select.Output(Sql.Case.When(Sql.Scalar(123).IsEqual(Parameter.Int("@foo")), Sql.Scalar("123")).When(Sql.Scalar(234).IsEqual(Parameter.Int("@foo")), Sql.Scalar("234")).Else(Sql.Scalar("345"))),
+               "SELECT CASE WHEN 123 = @foo THEN N'123' WHEN 234 = @foo THEN N'234' ELSE N'345' END;"
+                );
+        }
     }
 }
 
