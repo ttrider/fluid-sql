@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Collections.Generic;
@@ -24,12 +24,12 @@ namespace TTRider.FluidSql.RequestResponse
         public IProvider QueryProvider { get; set; }
 
         public string ConnectionString { get; set; }
-        
+
         public DbRequestMode Mode { get; set; }
-        
+
         public IStatement Statement { get; set; }
-        
-        public IList<IStatement> PrerequisiteStatements { get; private set; }
+
+        public IList<IStatement> PrerequisiteStatements { get; }
 
 
         internal DataRequestProperties Clone()
@@ -39,7 +39,7 @@ namespace TTRider.FluidSql.RequestResponse
                 ConnectionString = this.ConnectionString,
                 Mode = this.Mode,
                 QueryProvider = this.QueryProvider,
-                Statement = this.Statement,
+                Statement = this.Statement
             };
             foreach (var ps in this.PrerequisiteStatements)
             {
@@ -52,13 +52,15 @@ namespace TTRider.FluidSql.RequestResponse
         {
             return this.QueryProvider.GetCommand(this.Statement, this.ConnectionString);
         }
+
         internal Task<IDbCommand> GetCommandAsync()
         {
             return this.QueryProvider.GetCommandAsync(this.Statement, this.ConnectionString);
         }
+
         internal IEnumerable<IDbCommand> GetPrerequiseteCommands()
         {
-            return this.PrerequisiteStatements.Select(ps=>this.QueryProvider.GetCommand(ps));
+            return this.PrerequisiteStatements.Select(ps => this.QueryProvider.GetCommand(ps));
         }
     }
 }

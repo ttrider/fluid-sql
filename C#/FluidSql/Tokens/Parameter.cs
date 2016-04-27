@@ -30,6 +30,7 @@ namespace TTRider.FluidSql
         {
             this.Parameters.Add(this);
         }
+
         public Parameter(string name, CommonDbType dbType, byte precision, byte scale)
             : base(name, dbType, precision, scale)
         {
@@ -57,8 +58,9 @@ namespace TTRider.FluidSql
         public object DefaultValue { get; set; }
 
         public ParameterDirection Direction { get; set; }
+
         /// <summary>
-        /// indicate that procedure's default value needs to be used
+        ///     indicate that procedure's default value needs to be used
         /// </summary>
         public bool UseDefault { get; set; }
 
@@ -90,7 +92,7 @@ namespace TTRider.FluidSql
 
         public static Parameter Any(string name, object defaultValue)
         {
-            return new Parameter(name) {DefaultValue = defaultValue};
+            return new Parameter(name) { DefaultValue = defaultValue };
         }
 
         public static Parameter BigInt(string name)
@@ -245,7 +247,7 @@ namespace TTRider.FluidSql
 
         public Parameter Clone()
         {
-            var copy = (Parameter)MemberwiseClone();
+            var copy = (Parameter) MemberwiseClone();
             copy.Parameters.Clear();
             copy.ParameterValues.Clear();
             return copy;
@@ -432,6 +434,7 @@ namespace TTRider.FluidSql
     public partial class Sql
     {
         private static readonly ParameterFactory ParameterFactory = new ParameterFactory();
+
         public static ParameterFactory Parameter
         {
             get { return ParameterFactory; }

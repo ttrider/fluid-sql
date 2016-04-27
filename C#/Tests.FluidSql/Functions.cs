@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Data.Common;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
@@ -107,7 +112,7 @@ namespace FluidSqlTests
                 Sql.Select.Output(
                     Sql.IIF(
                         Sql.Scalar("a").IsEqual(Sql.Scalar("b")),
-                        Sql.Scalar("a"),Sql.Scalar("b")
+                        Sql.Scalar("a"), Sql.Scalar("b")
                         )),
                 "SELECT IIF ( N'a' = N'b', N'a', N'b' );"
                 );
@@ -118,9 +123,9 @@ namespace FluidSqlTests
         {
             AssertSql(
                 Sql.Select.Output(
-                    Sql.Case.When(Sql.Scalar("a").IsEqual(Sql.Scalar("b")),Sql.Scalar("a"))
-                    .When(Sql.Scalar("a").NotEqual(Sql.Scalar("b")), Sql.Scalar("b"))
-                    .Else(Sql.Scalar("c"))),
+                    Sql.Case.When(Sql.Scalar("a").IsEqual(Sql.Scalar("b")), Sql.Scalar("a"))
+                        .When(Sql.Scalar("a").NotEqual(Sql.Scalar("b")), Sql.Scalar("b"))
+                        .Else(Sql.Scalar("c"))),
                 "SELECT CASE WHEN N'a' = N'b' THEN N'a' WHEN N'a' <> N'b' THEN N'b' ELSE N'c' END;"
                 );
         }
@@ -130,7 +135,7 @@ namespace FluidSqlTests
         {
             AssertSql(
                 Sql.Select.Output(
-                    Sql.MakeDate(2015,1,1)),
+                    Sql.MakeDate(2015, 1, 1)),
                 "SELECT DATETIMEFROMPARTS ( 2015, 1, 1, 0, 0, 0, 0 );"
                 );
         }
@@ -166,7 +171,7 @@ namespace FluidSqlTests
         }
 
         [TestMethod]
-        public void MakeTime3() 
+        public void MakeTime3()
         {
             AssertSql(
                 Sql.Select.Output(
@@ -187,5 +192,3 @@ namespace FluidSqlTests
         }
     }
 }
-
-

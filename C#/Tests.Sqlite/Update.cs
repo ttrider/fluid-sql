@@ -1,4 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.Sqlite;
 
@@ -12,7 +19,8 @@ namespace Tests.Sqlite
         [TestMethod]
         public void UpdateDefault()
         {
-            var statement = Sql.Update("foo.bar").Set(Sql.Name("a"),Sql.Scalar(1)).Where(Sql.Name("z").IsEqual(Sql.Scalar("b")));
+            var statement =
+                Sql.Update("foo.bar").Set(Sql.Name("a"), Sql.Scalar(1)).Where(Sql.Name("z").IsEqual(Sql.Scalar("b")));
 
             var text = Provider.GenerateStatement(statement);
 
@@ -97,11 +105,3 @@ namespace Tests.Sqlite
         }
     }
 }
-
-
-
-
-
-
-
-

@@ -1,4 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.Sqlite;
 
@@ -41,6 +48,5 @@ namespace Tests.Sqlite
             Assert.IsNotNull(text);
             Assert.AreEqual("DELETE FROM \"foo\".\"bar\" WHERE \"f\" = \"b\";", text);
         }
-    
     }
 }

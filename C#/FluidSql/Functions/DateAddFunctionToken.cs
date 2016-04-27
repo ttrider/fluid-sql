@@ -1,3 +1,10 @@
+// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 namespace TTRider.FluidSql
 {
     public class DateAddFunctionToken : DateFunctionExpressionToken
@@ -8,6 +15,6 @@ namespace TTRider.FluidSql
 
         public Token Token { get; set; }
 
-        public bool Subtract { get; set;}
+        public bool Subtract { get; set; }
     }
 }

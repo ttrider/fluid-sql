@@ -12,7 +12,8 @@ namespace FluidSqlTests
         public void CreateProcedure()
         {
             var statement = Sql.CreateProcedure("proc00", true)
-                .Parameters(Parameter.Int("@i01"), Parameter.DateTime("@sd02").DefaultValue(DateTime.Parse("2016-01-01")))
+                .Parameters(Parameter.Int("@i01"),
+                    Parameter.DateTime("@sd02").DefaultValue(DateTime.Parse("2016-01-01")))
                 .InputOutputParameters(Parameter.Int("@i03"))
                 .OutputParameters(Parameter.String("@s04"), Parameter.Bit("@b05"))
                 .ReturnValue(Parameter.Int("@retVal"))
@@ -21,7 +22,7 @@ namespace FluidSqlTests
                     Sql.Set("@s04", Sql.Scalar("outputString")),
                     Sql.Set("@i03", Sql.Name("@i01")),
                     Sql.Return(123)
-                    );
+                );
 
             var command = Utilities.GetCommand(statement);
 
@@ -51,7 +52,8 @@ END;", command.CommandText);
         public void AlterProcedure()
         {
             var statement = Sql.AlterProcedure("proc00", true)
-                .Parameters(Parameter.Int("@i01"), Parameter.DateTime("@sd02").DefaultValue(DateTime.Parse("2016-01-01")))
+                .Parameters(Parameter.Int("@i01"),
+                    Parameter.DateTime("@sd02").DefaultValue(DateTime.Parse("2016-01-01")))
                 .InputOutputParameters(Parameter.Int("@i03"))
                 .OutputParameters(Parameter.String("@s04"), Parameter.Bit("@b05"))
                 .ReturnValue(Parameter.Int("@retVal"))
@@ -60,7 +62,7 @@ END;", command.CommandText);
                     Sql.Set("@s04", Sql.Scalar("outputString")),
                     Sql.Set("@i03", Sql.Name("@i01")),
                     Sql.Return(123)
-                    );
+                );
 
             var command = Utilities.GetCommand(statement);
 
@@ -132,6 +134,5 @@ END;", command.CommandText);
             Assert.IsNotNull(command);
             Assert.AreEqual(@"EXEC @retVal = [proc00] @i01 = @i01, @sd02 = @sd02;", command.CommandText);
         }
-
     }
 }

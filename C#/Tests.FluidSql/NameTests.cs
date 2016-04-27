@@ -1,4 +1,10 @@
-﻿using System;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
@@ -11,7 +17,7 @@ namespace FluidSqlTests
         public void TestNameParsing()
         {
             var name = new Name("p1.[p2].\"p3\".`p4`");
-            for (int i = 0; i < name.Count; i++)
+            for (var i = 0; i < name.Count; i++)
             {
                 Assert.AreEqual("p" + (i + 1), name[i]);
             }
@@ -25,10 +31,10 @@ namespace FluidSqlTests
             var name00 = new Name();
             Assert.IsNull(name00.LastPart);
             Assert.IsNull(name00.FirstPart);
-            Assert.AreEqual("",name00.GetFullName());
+            Assert.AreEqual("", name00.GetFullName());
 
             name00.Add("p1");
-            Assert.AreEqual("[p1]", name00.GetFullName("[","]"));
+            Assert.AreEqual("[p1]", name00.GetFullName("[", "]"));
 
             name00.Add("p2", "p3");
             Assert.AreEqual("[p1].[p2].[p3]", name00.GetFullName("[", "]"));
@@ -52,7 +58,7 @@ namespace FluidSqlTests
             Assert.AreEqual("p4", name02.LastPart);
 
             var name03 = new Name();
-            name03.Add(new []{"p1", "p2", "p3", "p4"});
+            name03.Add("p1", "p2", "p3", "p4");
             Assert.AreEqual("[p1].[p2].[p3].[p4]", name03.GetFullName("[", "]"));
             Assert.AreEqual("p1", name03.FirstPart);
             Assert.AreEqual("p4", name03.LastPart);
@@ -66,31 +72,31 @@ namespace FluidSqlTests
 
             var basename = new Name("b1.b2");
             var name05 = new Name();
-            name05.Add(basename,"p1.p2");
+            name05.Add(basename, "p1.p2");
             Assert.AreEqual("[b1].[b2].[p1].[p2]", name05.GetFullName("[", "]"));
             Assert.AreEqual("b1", name05.FirstPart);
             Assert.AreEqual("p2", name05.LastPart);
 
             name05 = new Name();
-            name05.Add(basename, "p1","p2");
+            name05.Add(basename, "p1", "p2");
             Assert.AreEqual("[b1].[b2].[p1].[p2]", name05.GetFullName("[", "]"));
             Assert.AreEqual("b1", name05.FirstPart);
             Assert.AreEqual("p2", name05.LastPart);
 
             name05 = new Name();
-            name05.Add("p1.p2",basename);
+            name05.Add("p1.p2", basename);
             Assert.AreEqual("[p1].[p2].[b1].[b2]", name05.GetFullName("[", "]"));
             Assert.AreEqual("p1", name05.FirstPart);
             Assert.AreEqual("b2", name05.LastPart);
 
             name05 = new Name();
-            name05.Add("p1","p2", basename);
+            name05.Add("p1", "p2", basename);
             Assert.AreEqual("[p1].[p2].[b1].[b2]", name05.GetFullName("[", "]"));
             Assert.AreEqual("p1", name05.FirstPart);
             Assert.AreEqual("b2", name05.LastPart);
 
             name05 = new Name();
-            name05.Add("p1", "p2","p3", basename);
+            name05.Add("p1", "p2", "p3", basename);
             Assert.AreEqual("[p1].[p2].[p3].[b1].[b2]", name05.GetFullName("[", "]"));
             Assert.AreEqual("p1", name05.FirstPart);
             Assert.AreEqual("b2", name05.LastPart);
@@ -120,7 +126,7 @@ namespace FluidSqlTests
             Assert.AreEqual("p1", name00.FirstPart);
             Assert.AreEqual("p4", name00.LastPart);
 
-            name00 = new Name(new[] { "p1", "p2", "p3", "p4" });
+            name00 = new Name("p1", "p2", "p3", "p4");
             Assert.AreEqual("[p1].[p2].[p3].[p4]", name00.GetFullName("[", "]"));
             Assert.AreEqual("p1", name00.FirstPart);
             Assert.AreEqual("p4", name00.LastPart);

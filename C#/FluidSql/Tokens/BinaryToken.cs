@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Collections.Generic;
@@ -124,6 +124,7 @@ namespace TTRider.FluidSql
     {
         public Token Token { get; set; }
     }
+
     public class UnaryMinusToken : UnaryToken
     {
     }
@@ -161,7 +162,7 @@ namespace TTRider.FluidSql
         public ExpressionToken Token { get; set; }
         public ExpressionToken First { get; set; }
         public ExpressionToken Second { get; set; }
-    };
+    }
 
     public class SequenceToken : ExpressionToken
     {
@@ -171,13 +172,13 @@ namespace TTRider.FluidSql
         }
 
         public List<Token> Set { get; private set; }
-    };
+    }
 
 
     public class InToken : SequenceToken
     {
         public Token Token { get; set; }
-    };
+    }
 
     public class NotInToken : SequenceToken
     {

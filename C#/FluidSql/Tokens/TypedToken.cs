@@ -5,7 +5,6 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
-using System.Collections.Generic;
 using System.Data;
 using TTRider.FluidSql.Providers.SqlServer;
 

@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System;
@@ -11,7 +11,6 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor
     {
-
         protected override void VisitNowFunctionToken(NowFunctionToken token)
         {
             if (token.Utc)
@@ -46,12 +45,34 @@ namespace TTRider.FluidSql.Providers.Sqlite
         }
 
 
-        protected override void VisitIIFFunctionToken(IifFunctionToken token) { throw new NotImplementedException();}
-        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token) { throw new NotImplementedException(); }
-        protected override void VisitDurationFunctionToken(DurationFunctionToken token) { throw new NotImplementedException(); }
-        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token) { throw new NotImplementedException(); }
-        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token) { throw new NotImplementedException(); }
-        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token) { throw new NotImplementedException(); }
+        protected override void VisitIIFFunctionToken(IifFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
 
+        protected override void VisitDatePartFunctionToken(DatePartFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDurationFunctionToken(DurationFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitMakeDateFunctionToken(MakeDateFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDateAddFunctionToken(DateAddFunctionToken token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

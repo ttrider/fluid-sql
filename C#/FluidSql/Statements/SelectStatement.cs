@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Collections.Generic;
@@ -33,15 +33,15 @@ namespace TTRider.FluidSql
         public List<RecordsetSourceToken> From { get; set; }
         public bool Distinct { get; set; }
         public Token Having { get; set; }
-        public Name Into { get; set; }
         public List<Name> GroupBy { get; private set; }
-        public List<Order> OrderBy { get; private set; }
-        public List<Join> Joins { get; private set; }
-        public IList<BinaryEqualToken> Set { get; private set; }
-        public Top Top { get; set; }
-        public Token Where { get; set; }
+        public List<CTEDefinition> CommonTableExpressions { get; set; }
+        public Name Into { get; set; }
+        public List<Join> Joins { get; }
 
         public Token Offset { get; set; }
-        public List<CTEDefinition> CommonTableExpressions { get; set; }
+        public List<Order> OrderBy { get; }
+        public IList<BinaryEqualToken> Set { get; }
+        public Top Top { get; set; }
+        public Token Where { get; set; }
     }
 }

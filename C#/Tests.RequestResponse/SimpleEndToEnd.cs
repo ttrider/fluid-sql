@@ -1,4 +1,11 @@
-﻿using System;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
+using System;
 using System.Data;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +19,8 @@ namespace Tests.DataProvider
     public class SimpleEndToEnd
     {
         private static string connectionString;
-        [ClassInitialize()]
+
+        [ClassInitialize]
         public static void ClassInit(TestContext testcontext)
         {
             connectionString = Utilities.CreateTestDatabase();
@@ -21,14 +29,13 @@ namespace Tests.DataProvider
         [TestMethod]
         public void ExecuteQueryForOutput()
         {
-
             var select =
                 Sql.Select.From(Sql.Name("Person"), "p")
                     .Top(1)
                     .Assign(Sql.Name("@Name"), Sql.Name("p", "Name"))
                     .Where(Sql.Name("p", "Id").IsEqual(Sql.Parameter.Int("@Id")));
             select.Parameters.Add(Sql.Parameter.NVarChar("@Name").ParameterDirection(ParameterDirection.Output));
-            select.ParameterValues.Add(new ParameterValue()
+            select.ParameterValues.Add(new ParameterValue
             {
                 Name = "@Id",
                 Value = 1
@@ -46,14 +53,13 @@ namespace Tests.DataProvider
         [TestMethod]
         public void ExecuteQuery()
         {
-
             var select =
                 Sql.Select.From(Sql.Name("Person"), "p")
                     .Top(1)
                     .Output(Sql.Name("p", "Name"))
                     .Where(Sql.Name("p", "Id").IsEqual(Sql.Parameter.Int("@Id")));
             select.Parameters.Add(Sql.Parameter.NVarChar("@Name").ParameterDirection(ParameterDirection.Output));
-            select.ParameterValues.Add(new ParameterValue()
+            select.ParameterValues.Add(new ParameterValue
             {
                 Name = "@Id",
                 Value = 1
@@ -72,7 +78,6 @@ namespace Tests.DataProvider
         [TestMethod]
         public void ExecuteMultipleRecordsetsQuery()
         {
-
             var select1 =
                 Sql.Select.From(Sql.Name("Person"), "p")
                     .Top(1)
@@ -87,7 +92,7 @@ namespace Tests.DataProvider
                     .Output(Sql.Name("p", "Name"), Sql.Name("p", "Dob"))
                     .Where(Sql.Name("p", "Id").IsEqual(Sql.Parameter.Int("@Id")));
 
-            var s = Sql.Statements(select1,select2);
+            var s = Sql.Statements(select1, select2);
 
             var request = DataRequest.Create<SqlServerProvider>(s, connectionString);
             var response = request.GetResponse();
@@ -98,9 +103,8 @@ namespace Tests.DataProvider
 
             var f2 = response.Records.First();
             Assert.AreEqual("Adam", f2[0]);
-            Assert.AreEqual(new DateTime(1970,11,2), f2[1]);
+            Assert.AreEqual(new DateTime(1970, 11, 2), f2[1]);
             Assert.AreEqual(false, response.HasMoreData);
         }
-    
     }
 }

@@ -7,17 +7,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
 
 namespace TTRider.FluidSql.Providers
 {
     public class VisitorState
     {
+        readonly StringBuilder buffer;
         string stringifyPrefix;
         string stringifySuffix;
-        StringBuilder buffer;
 
         public VisitorState()
         {
@@ -26,7 +24,6 @@ namespace TTRider.FluidSql.Providers
             this.ParameterValues = new List<ParameterValue>();
             this.buffer = new StringBuilder();
         }
-
 
 
         public List<Parameter> Parameters { get; private set; }
@@ -63,6 +60,7 @@ namespace TTRider.FluidSql.Providers
                 this.stringifySuffix = suffix;
             }
         }
+
         public void WriteEndStringify()
         {
             if (string.IsNullOrWhiteSpace(this.stringifyPrefix) || string.IsNullOrWhiteSpace(this.stringifySuffix))
@@ -106,7 +104,7 @@ namespace TTRider.FluidSql.Providers
 
 
         /// <summary>
-        /// Ensures that statement has proper terminating character (;)  
+        ///     Ensures that statement has proper terminating character (;)
         /// </summary>
         public void WriteStatementTerminator(bool addCRLF = true)
         {

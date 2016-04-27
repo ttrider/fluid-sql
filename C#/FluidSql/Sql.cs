@@ -13,6 +13,11 @@ namespace TTRider.FluidSql
 {
     public partial class Sql
     {
+        public static CaseToken Case
+        {
+            get { return new CaseToken(); }
+        }
+
         public static Name Star(string source = null)
         {
             return !String.IsNullOrWhiteSpace(source) ? new Name(source, "*") : new Name("*");
@@ -27,14 +32,17 @@ namespace TTRider.FluidSql
         {
             return new Name(name) { Alias = alias };
         }
+
         public static Name NameAs(string part1, string part2, string alias)
         {
             return new Name(part1, part2) { Alias = alias };
         }
+
         public static Name NameAs(string part1, string part2, string part3, string alias)
         {
             return new Name(part1, part2, part3) { Alias = alias };
         }
+
         public static Name NameAs(string part1, string part2, string part3, string part4, string alias)
         {
             return new Name(part1, part2, part3, part4) { Alias = alias };
@@ -69,6 +77,7 @@ namespace TTRider.FluidSql
             }
             return val;
         }
+
         public static Snippet Template(string value, IEnumerable<Token> arguments)
         {
             var val = new Snippet { Value = value };
@@ -79,7 +88,7 @@ namespace TTRider.FluidSql
                     val.Arguments.Add(argument);
                     if (argument is Parameter)
                     {
-                        val.Parameters.Add((Parameter)argument);
+                        val.Parameters.Add((Parameter) argument);
                     }
                 }
             }
@@ -99,6 +108,7 @@ namespace TTRider.FluidSql
             }
             return snippetStatement;
         }
+
         public static SnippetStatement TemplateStatement(string value, IEnumerable<Token> arguments)
         {
             var snippetStatement = new SnippetStatement
@@ -112,13 +122,14 @@ namespace TTRider.FluidSql
                     snippetStatement.Arguments.Add(argument);
                     if (argument is Parameter)
                     {
-                        snippetStatement.Parameters.Add((Parameter)argument);
+                        snippetStatement.Parameters.Add((Parameter) argument);
                     }
                 }
             }
 
             return snippetStatement;
         }
+
         public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
         {
             var snippetStatement = new SnippetStatement
@@ -134,6 +145,7 @@ namespace TTRider.FluidSql
             }
             return snippetStatement;
         }
+
         public static SnippetStatement TemplateStatement(string value, Token argument, params Token[] arguments)
         {
             return TemplateStatement(value, Enumerable.Repeat(argument, 1).Union(arguments));
@@ -225,6 +237,7 @@ namespace TTRider.FluidSql
                 On = on
             };
         }
+
         public static DropIndexStatement DropIndex(Name name, Name on, bool checkExists)
         {
             return new DropIndexStatement
@@ -234,6 +247,7 @@ namespace TTRider.FluidSql
                 CheckExists = checkExists
             };
         }
+
         public static DropIndexStatement DropIndex(Name name, bool checkExists)
         {
             return new DropIndexStatement
@@ -260,6 +274,7 @@ namespace TTRider.FluidSql
                 On = on
             };
         }
+
         public static AlterIndexStatement Reindex(Name on)
         {
             return new AlterIndexStatement
@@ -278,7 +293,35 @@ namespace TTRider.FluidSql
             }.Rebuild();
         }
 
+
+        public static CTEDeclaration With(string name, params string[] columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Name(n)));
+            }
+            return cte;
+        }
+
+        public static CTEDeclaration With(string name, IEnumerable<string> columnNames)
+        {
+            var cte = new CTEDeclaration
+            {
+                Name = name
+            };
+            if (columnNames != null)
+            {
+                cte.Columns.AddRange(columnNames.Select(n => Name(n)));
+            }
+            return cte;
+        }
+
         #region Set
+
         public static SetStatement Assign(Parameter target, ExpressionToken expression)
         {
             return new SetStatement
@@ -602,19 +645,20 @@ namespace TTRider.FluidSql
         #endregion Set
 
         #region Statements
+
         public static ExecuteStatement Execute(string statement, IEnumerable<Parameter> parameters)
         {
-            return Execute(Sql.SnippetStatement(statement), parameters);
+            return Execute(SnippetStatement(statement), parameters);
         }
 
         public static ExecuteStatement Execute(string statement, params Parameter[] parameters)
         {
-            return Execute(Sql.SnippetStatement(statement), (IEnumerable<Parameter>)parameters);
+            return Execute(SnippetStatement(statement), (IEnumerable<Parameter>) parameters);
         }
 
         public static ExecuteStatement Execute(IStatement statement, params Parameter[] parameters)
         {
-            return Execute(statement, (IEnumerable<Parameter>)parameters);
+            return Execute(statement, (IEnumerable<Parameter>) parameters);
         }
 
         public static ExecuteStatement Execute(IStatement statement, IEnumerable<Parameter> parameters)
@@ -634,12 +678,14 @@ namespace TTRider.FluidSql
             return stat;
         }
 
-        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName, params Parameter[] parameters)
+        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName,
+            params Parameter[] parameters)
         {
-            return ExecuteStoredProcedure(storedProcedureName, (IEnumerable<Parameter>)parameters);
+            return ExecuteStoredProcedure(storedProcedureName, (IEnumerable<Parameter>) parameters);
         }
 
-        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName, IEnumerable<Parameter> parameters)
+        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName,
+            IEnumerable<Parameter> parameters)
         {
             var stat = new ExecuteProcedureStatement
             {
@@ -673,6 +719,7 @@ namespace TTRider.FluidSql
                 CheckIfNotExists = checkIfNotExists
             };
         }
+
         public static AlterProcedureStatement AlterProcedure(Name name, bool createIfNotExists = false)
         {
             return new AlterProcedureStatement
@@ -720,6 +767,7 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+
         public static CommitTransactionStatement ReleaseToSavepoint(Name name)
         {
             return new CommitTransactionStatement
@@ -735,6 +783,7 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+
         public static RollbackTransactionStatement RollbackToSavepoint(Name name)
         {
             return new RollbackTransactionStatement
@@ -750,6 +799,7 @@ namespace TTRider.FluidSql
                 Name = name
             };
         }
+
         public static SaveTransactionStatement SaveTransaction(Parameter parameter)
         {
             return new SaveTransactionStatement
@@ -757,6 +807,7 @@ namespace TTRider.FluidSql
                 Parameter = parameter
             };
         }
+
         public static SaveTransactionStatement Savepoint(Name name = null)
         {
             return new SaveTransactionStatement
@@ -791,7 +842,6 @@ namespace TTRider.FluidSql
             };
         }
 
-
         #endregion Transaction
 
         public static StatementsStatement Statements(params IStatement[] statements)
@@ -800,6 +850,7 @@ namespace TTRider.FluidSql
             statement.Statements.AddRange(statements);
             return statement;
         }
+
         public static StatementsStatement Statements(IStatement statement, params IStatement[] statements)
         {
             var newstatement = new StatementsStatement();
@@ -807,6 +858,7 @@ namespace TTRider.FluidSql
             newstatement.Statements.AddRange(statements);
             return newstatement;
         }
+
         public static StatementsStatement Statements(IEnumerable<IStatement> statements)
         {
             var statement = new StatementsStatement();
@@ -838,7 +890,7 @@ namespace TTRider.FluidSql
         {
             return new UpdateStatement
             {
-                Target = Sql.Name(target)
+                Target = Name(target)
             };
         }
 
@@ -876,6 +928,7 @@ namespace TTRider.FluidSql
         {
             return new CreateSchemaStatement { Name = name, CheckIfNotExists = checkIfNotExists };
         }
+
         public static DropSchemaStatement DropSchema(Name name, bool checkExists = false)
         {
             return new DropSchemaStatement { Name = name, CheckExists = checkExists };
@@ -925,7 +978,8 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
+        public static CreateViewStatement CreateView(Name name, IStatement definitionStatement,
+            bool checkIfNotExists = false)
         {
             return new CreateViewStatement
             {
@@ -934,7 +988,9 @@ namespace TTRider.FluidSql
                 CheckIfNotExists = checkIfNotExists
             };
         }
-        public static CreateViewStatement CreateTemporaryView(Name name, IStatement definitionStatement, bool checkIfNotExists = false)
+
+        public static CreateViewStatement CreateTemporaryView(Name name, IStatement definitionStatement,
+            bool checkIfNotExists = false)
         {
             return new CreateViewStatement
             {
@@ -950,7 +1006,7 @@ namespace TTRider.FluidSql
             return new CreateOrAlterViewStatement
             {
                 Name = name,
-                DefinitionStatement = definitionStatement,
+                DefinitionStatement = definitionStatement
             };
         }
 
@@ -1000,6 +1056,7 @@ namespace TTRider.FluidSql
                 Label = label
             };
         }
+
         public static LabelStatement Label(string label)
         {
             return new LabelStatement
@@ -1013,9 +1070,10 @@ namespace TTRider.FluidSql
         {
             return new ReturnStatement
             {
-                ReturnExpression = Sql.Scalar(value)
+                ReturnExpression = Scalar(value)
             };
         }
+
         public static ReturnStatement Return(Token value = null)
         {
             return new ReturnStatement
@@ -1028,15 +1086,17 @@ namespace TTRider.FluidSql
         {
             return new ThrowStatement();
         }
+
         public static ThrowStatement Throw(int errorNumber, string message, int state)
         {
             return new ThrowStatement
             {
-                ErrorNumber = Sql.Scalar(errorNumber),
-                Message = Sql.Scalar(message),
-                State = Sql.Scalar(state)
+                ErrorNumber = Scalar(errorNumber),
+                Message = Scalar(message),
+                State = Scalar(state)
             };
         }
+
         public static ThrowStatement Throw(Token errorNumber, Token message, Token state)
         {
             return new ThrowStatement
@@ -1064,36 +1124,5 @@ namespace TTRider.FluidSql
         }
 
         #endregion Statements
-
-
-        public static CTEDeclaration With(string name, params string[] columnNames)
-        {
-            var cte = new CTEDeclaration
-            {
-                Name = name,
-            };
-            if (columnNames != null)
-            {
-                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
-            }
-            return cte;
-        }
-        public static CTEDeclaration With(string name, IEnumerable<string> columnNames)
-        {
-            var cte = new CTEDeclaration
-            {
-                Name = name,
-            };
-            if (columnNames != null)
-            {
-                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
-            }
-            return cte;
-        }
-
-        public static CaseToken Case
-        {
-            get { return new CaseToken(); }
-        }
     }
 }

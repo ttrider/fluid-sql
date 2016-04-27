@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers;
 
@@ -20,14 +22,13 @@ namespace Tests.ProvidersEndToEnd
                 {
                     while (reader.Read())
                     {
-                        for (int i = 0; i < reader.FieldCount; i++)
+                        for (var i = 0; i < reader.FieldCount; i++)
                         {
                             Trace.Write(reader.GetValue(i));
                             Trace.Write("\t");
                         }
                         Trace.Write("\r\n");
                     }
-
                 } while (reader.NextResult());
             }
         }
@@ -40,9 +41,8 @@ namespace Tests.ProvidersEndToEnd
 
             using (var command = provider.GetCommand(statement, connectionString))
             {
-                Common.ExecuteCommand(command);
+                ExecuteCommand(command);
             }
-
         }
 
         internal static IStatement CreateSimpleStatement()
@@ -62,8 +62,8 @@ namespace Tests.ProvidersEndToEnd
                 .Columns(
                     TableColumn.Int("id"),
                     TableColumn.VarChar("name", 200))
-                .PrimaryKey(true, new Order() { Column = "id", Direction = Direction.Asc })
-                .IndexOn("IX_name", new Order() { Column = "name" });
+                .PrimaryKey(true, new Order { Column = "id", Direction = Direction.Asc })
+                .IndexOn("IX_name", new Order { Column = "name" });
 
 
             var createTableNote = Sql
@@ -73,17 +73,17 @@ namespace Tests.ProvidersEndToEnd
                     TableColumn.Int("user_id"),
                     TableColumn.VarChar("note"),
                     TableColumn.DateTime("timestamp").Default(Sql.Now()))
-                .IndexOn("IX_user_id", new Order() { Column = "user_id" });
+                .IndexOn("IX_user_id", new Order { Column = "user_id" });
 
             // populate tables
 
             var insertUsers = Sql.Insert.Into(usersTable)
                 .Columns("id", "name")
-                    .Values(1, "James")
-                    .Values(2, "Spock")
-                    .Values(3, "Leonard")
-                    .Values(4, "Montgomery")
-                    .Values(5, "Pavel");
+                .Values(1, "James")
+                .Values(2, "Spock")
+                .Values(3, "Leonard")
+                .Values(4, "Montgomery")
+                .Values(5, "Pavel");
 
             var insertNotes = Sql.Insert.Into(notesTable)
                 .Columns("user_id", "note")
@@ -105,7 +105,8 @@ namespace Tests.ProvidersEndToEnd
                 ;
 
             // select some values
-            var simpleSelect = Sql.Select.From(usersTable, "n").Output("n.*").Where(Sql.Name("n", "id").LessOrEqual(Sql.Scalar(3)));
+            var simpleSelect =
+                Sql.Select.From(usersTable, "n").Output("n.*").Where(Sql.Name("n", "id").LessOrEqual(Sql.Scalar(3)));
 
             var joinSelect = Sql.Select.From(notesTable, "nt")
                 .InnerJoin(usersTable, "nm", Sql.Name("nt", "user_id").IsEqual("nm.id"))
@@ -125,7 +126,6 @@ namespace Tests.ProvidersEndToEnd
                 Sql.DropTable(notesTable, true),
                 Sql.DropTable(usersTable, true)
                 );
-
 
 
             var completeScript = Sql.Statements(

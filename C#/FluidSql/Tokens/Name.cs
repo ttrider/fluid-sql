@@ -1,8 +1,8 @@
 // <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Collections;
@@ -13,11 +13,59 @@ using System.Text.RegularExpressions;
 namespace TTRider.FluidSql
 {
     public class Name : ExpressionToken
-                      , IList<string>
+        , IList<string>
     {
-        private static readonly Regex ParseName = new Regex(@"(\[(?<name>[^\]]*)]\.?)|(\`(?<name>[^\`]*)`\.?)|(\""(?<name>[^\""]*)""\.?)|((?<name>[^\.]*)\.?)", RegexOptions.Compiled);
+        private static readonly Regex ParseName =
+            new Regex(
+                @"(\[(?<name>[^\]]*)]\.?)|(\`(?<name>[^\`]*)`\.?)|(\""(?<name>[^\""]*)""\.?)|((?<name>[^\.]*)\.?)",
+                RegexOptions.Compiled);
 
         private readonly List<string> parts = new List<string>();
+
+        public Name()
+        {
+        }
+
+
+        public Name(params string[] names)
+        {
+            this.Add(names);
+        }
+
+        public Name(string name1, Name name2)
+        {
+            this.Add(name1, name2);
+        }
+
+        public Name(string name1, string name2, Name name3)
+        {
+            this.Add(name1, name2, name3);
+        }
+
+        public Name(string name1, string name2, string name3, Name name4)
+        {
+            this.Add(name1, name2, name3, name4);
+        }
+
+        public Name(Name name, params string[] names)
+        {
+            this.Add(name, names);
+        }
+
+        public Name(IEnumerable<string> names)
+        {
+            this.Add(names);
+        }
+
+        public string LastPart
+        {
+            get { return this.parts.LastOrDefault(); }
+        }
+
+        public string FirstPart
+        {
+            get { return this.parts.FirstOrDefault(); }
+        }
 
         static IEnumerable<string> GetParts(string name)
         {
@@ -37,38 +85,6 @@ namespace TTRider.FluidSql
             }
         }
 
-        public Name()
-        {
-        }
-
-
-        public Name(params string[] names)
-        {
-            this.Add(names);
-        }
-
-        public Name(string name1, Name name2)
-        {
-            this.Add(name1, name2);
-        }
-        public Name(string name1, string name2, Name name3)
-        {
-            this.Add(name1, name2, name3);
-        }
-        public Name(string name1, string name2, string name3, Name name4)
-        {
-            this.Add(name1, name2, name3, name4);
-        }
-        public Name(Name name, params string[] names)
-        {
-            this.Add(name, names);
-        }
-
-        public Name(IEnumerable<string> names)
-        {
-            this.Add(names);
-        }
-
         public Name As(string alias)
         {
             if (!string.IsNullOrWhiteSpace(alias))
@@ -76,15 +92,6 @@ namespace TTRider.FluidSql
                 return new Name(this.parts) { Alias = alias };
             }
             return this;
-        }
-
-        public string LastPart
-        {
-            get { return this.parts.LastOrDefault(); }
-        }
-        public string FirstPart
-        {
-            get { return this.parts.FirstOrDefault(); }
         }
 
 
@@ -136,12 +143,14 @@ namespace TTRider.FluidSql
             this.parts.AddRange(GetParts(name1));
             this.parts.AddRange(name2.parts);
         }
+
         public void Add(string name1, string name2, Name name3)
         {
             this.parts.AddRange(GetParts(name1));
             this.parts.AddRange(GetParts(name2));
             this.parts.AddRange(name3.parts);
         }
+
         public void Add(string name1, string name2, string name3, Name name4)
         {
             this.parts.AddRange(GetParts(name1));
@@ -149,6 +158,7 @@ namespace TTRider.FluidSql
             this.parts.AddRange(GetParts(name3));
             this.parts.AddRange(name4.parts);
         }
+
         public void Add(Name name, params string[] names)
         {
             this.parts.AddRange(name.parts);

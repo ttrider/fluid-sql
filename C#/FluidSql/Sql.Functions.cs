@@ -1,11 +1,12 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Collections.Generic;
+
 // ReSharper disable InconsistentNaming
 
 namespace TTRider.FluidSql
@@ -25,6 +26,7 @@ namespace TTRider.FluidSql
             f.Arguments.AddRange(arguments);
             return f;
         }
+
         public static FunctionExpressionToken IsNull(Token first, Token second)
         {
             var f = new CoalesceFunctionToken();
@@ -32,6 +34,7 @@ namespace TTRider.FluidSql
             f.Arguments.Add(second);
             return f;
         }
+
         public static FunctionExpressionToken IfNull(Token first, Token second)
         {
             var f = new CoalesceFunctionToken();
@@ -39,6 +42,7 @@ namespace TTRider.FluidSql
             f.Arguments.Add(second);
             return f;
         }
+
         public static FunctionExpressionToken Nvl(Token first, Token second)
         {
             var f = new CoalesceFunctionToken();
@@ -86,20 +90,24 @@ namespace TTRider.FluidSql
         {
             return new NowFunctionToken { Utc = utc };
         }
+
         public static NowFunctionToken GetDate(bool utc = false)
         {
             return new NowFunctionToken { Utc = utc };
         }
+
         public static UuidFunctionToken UUID()
         {
             return new UuidFunctionToken();
         }
+
         public static UuidFunctionToken NewId()
         {
             return new UuidFunctionToken();
         }
 
-        public static IifFunctionToken IIF(ExpressionToken conditionToken, ExpressionToken thenToken, ExpressionToken elseToken)
+        public static IifFunctionToken IIF(ExpressionToken conditionToken, ExpressionToken thenToken,
+            ExpressionToken elseToken)
         {
             return new IifFunctionToken
             {
@@ -126,6 +134,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Second
             };
         }
+
         public static DatePartFunctionToken Minute(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -134,6 +143,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Minute
             };
         }
+
         public static DatePartFunctionToken Hour(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -142,6 +152,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Hour
             };
         }
+
         public static DatePartFunctionToken Week(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -150,6 +161,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Week
             };
         }
+
         public static DatePartFunctionToken Day(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -158,6 +170,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Day
             };
         }
+
         public static DatePartFunctionToken Month(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -166,6 +179,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Month
             };
         }
+
         public static DatePartFunctionToken Year(ExpressionToken token)
         {
             return new DatePartFunctionToken
@@ -183,6 +197,7 @@ namespace TTRider.FluidSql
                 DatePart = FluidSql.DatePart.Millisecond
             };
         }
+
         public static DurationFunctionToken Duration(DatePart datePart, ExpressionToken start, ExpressionToken end)
         {
             return new DurationFunctionToken
@@ -192,8 +207,6 @@ namespace TTRider.FluidSql
                 End = end
             };
         }
-
-
 
 
         public static DurationFunctionToken DurationInYears(ExpressionToken start, ExpressionToken end)
@@ -241,7 +254,8 @@ namespace TTRider.FluidSql
             return new DurationFunctionToken { DatePart = FluidSql.DatePart.Millisecond, Start = start, End = end };
         }
 
-        public static MakeDateFunctionToken MakeDate(int year, int month, int day, int hour = 0, int minute = 0, int second = 0)
+        public static MakeDateFunctionToken MakeDate(int year, int month, int day, int hour = 0, int minute = 0,
+            int second = 0)
         {
             return new MakeDateFunctionToken
             {
@@ -253,7 +267,9 @@ namespace TTRider.FluidSql
                 Second = Scalar(second)
             };
         }
-        public static MakeDateFunctionToken MakeDate(ExpressionToken year, ExpressionToken month, ExpressionToken day, ExpressionToken hour = null, ExpressionToken minute = null, ExpressionToken second = null)
+
+        public static MakeDateFunctionToken MakeDate(ExpressionToken year, ExpressionToken month, ExpressionToken day,
+            ExpressionToken hour = null, ExpressionToken minute = null, ExpressionToken second = null)
         {
             return new MakeDateFunctionToken
             {
@@ -276,7 +292,9 @@ namespace TTRider.FluidSql
                 Second = Scalar(second)
             };
         }
-        public static MakeTimeFunctionToken MakeTime(ExpressionToken hour, ExpressionToken minute, ExpressionToken second = null)
+
+        public static MakeTimeFunctionToken MakeTime(ExpressionToken hour, ExpressionToken minute,
+            ExpressionToken second = null)
         {
             return new MakeTimeFunctionToken
             {

@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System;
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace TTRider.FluidSql.Providers
 {
@@ -26,17 +27,17 @@ namespace TTRider.FluidSql.Providers
 
 
 #if _ASYNC_
-        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString,
+        Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString,
             CancellationToken token);
 
-        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString);
+        Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString);
 
         [Obsolete]
-        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
+        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
             CancellationToken token);
 
         [Obsolete]
-        System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement);
+        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement);
 #endif
     }
 }

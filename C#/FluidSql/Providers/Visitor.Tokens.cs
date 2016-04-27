@@ -7,21 +7,33 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor
     {
+        private static readonly Regex SnippetArgumentRegex = new Regex(@"{(?<index>\d+)([,:][^}]*)?}");
 
-        protected virtual void VisitStringifyToken(StringifyToken token) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token) { throw new NotImplementedException(); }
-        protected virtual void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token) { throw new NotImplementedException(); }
+        protected virtual void VisitStringifyToken(StringifyToken token)
+        {
+            throw new NotImplementedException();
+        }
 
+        protected virtual void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token)
+        {
+            throw new NotImplementedException();
+        }
 
+        protected virtual void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token)
+        {
+            throw new NotImplementedException();
+        }
 
+        protected virtual void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token)
+        {
+            throw new NotImplementedException();
+        }
 
 
         protected virtual void VisitScalarToken(Scalar token)
@@ -34,36 +46,39 @@ namespace TTRider.FluidSql.Providers
                 State.Write(Symbols.NULL);
             }
             else if ((value is Boolean)
-                || (value is SByte)
-                || (value is Byte)
-                || (value is Int16)
-                || (value is UInt16)
-                || (value is Int32)
-                || (value is UInt32)
-                || (value is Int64)
-                || (value is UInt64)
-                || (value is Single)
-                || (value is Double)
-                || (value is Decimal))
+                     || (value is SByte)
+                     || (value is Byte)
+                     || (value is Int16)
+                     || (value is UInt16)
+                     || (value is Int32)
+                     || (value is UInt32)
+                     || (value is Int64)
+                     || (value is UInt64)
+                     || (value is Single)
+                     || (value is Double)
+                     || (value is Decimal))
             {
                 State.Write(value.ToString());
             }
             else if (value is TimeSpan)
             {
-                State.Write(this.LiteralOpenQuote, ((TimeSpan)value).ToString("HH:mm:ss"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((TimeSpan) value).ToString("HH:mm:ss"), this.LiteralCloseQuote);
             }
             else if (value is DateTime)
             {
-                State.Write(this.LiteralOpenQuote, ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((DateTime) value).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    this.LiteralCloseQuote);
             }
             else if (value is DateTimeOffset)
             {
-                State.Write(this.LiteralOpenQuote, ((DateTimeOffset)value).ToString("yyyy-MM-ddTHH:mm:ss"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((DateTimeOffset) value).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    this.LiteralCloseQuote);
             }
             else
             {
                 var stringValue = value.ToString();
-                stringValue = stringValue.Replace(this.LiteralCloseQuote, this.LiteralCloseQuote + this.LiteralCloseQuote);
+                stringValue = stringValue.Replace(this.LiteralCloseQuote,
+                    this.LiteralCloseQuote + this.LiteralCloseQuote);
 
                 State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
             }
@@ -91,14 +106,10 @@ namespace TTRider.FluidSql.Providers
         }
 
 
-
         protected virtual void VisitParameterToken(Parameter token)
         {
             State.Write(token.Name);
         }
-
-
-        private static Regex SnippetArgumentRegex = new Regex(@"{(?<index>\d+)([,:][^}]*)?}");
 
 
         protected virtual void VisitSnippetToken(Snippet token)
@@ -313,12 +324,14 @@ namespace TTRider.FluidSql.Providers
             State.Write(Symbols.IN);
             VisitTokenSetInParenthesis(token.Set);
         }
+
         protected virtual void VisitCommentToken(CommentToken token)
         {
             State.Write(this.CommentOpenQuote);
             VisitToken(token.Content);
             State.Write(this.CommentCloseQuote);
         }
+
         protected virtual void VisitFromToken(IEnumerable<Token> recordsets)
         {
             VisitTokenSet(recordsets);

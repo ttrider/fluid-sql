@@ -1,5 +1,10 @@
-﻿using System;
-using System.Data.SQLite;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.Sqlite;
@@ -10,6 +15,7 @@ namespace Tests.Sqlite
     public class Transactions
     {
         public static SqliteProvider Provider = new SqliteProvider();
+
         [TestMethod]
         public IStatement BeginCommitTransactions()
         {
@@ -18,7 +24,8 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("BEGIN TRANSACTION;\r\nCOMMIT TRANSACTION;", text); return statement;
+            Assert.AreEqual("BEGIN TRANSACTION;\r\nCOMMIT TRANSACTION;", text);
+            return statement;
         }
 
         [TestMethod]
@@ -33,8 +40,9 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("BEGIN TRANSACTION;\r\nSAVEPOINT \"foo\";\r\nRELEASE SAVEPOINT \"foo\";\r\nCOMMIT TRANSACTION;", text); return statement;
-
+            Assert.AreEqual(
+                "BEGIN TRANSACTION;\r\nSAVEPOINT \"foo\";\r\nRELEASE SAVEPOINT \"foo\";\r\nCOMMIT TRANSACTION;", text);
+            return statement;
         }
     }
 }

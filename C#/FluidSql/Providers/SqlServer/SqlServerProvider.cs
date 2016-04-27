@@ -8,15 +8,81 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 
 namespace TTRider.FluidSql.Providers.SqlServer
 {
     public class SqlServerProvider : Provider
     {
+        internal static readonly Dictionary<SqlDbType, CommonDbType> SqlDbTypeToCommonDbType = new Dictionary
+            <SqlDbType, CommonDbType>
+        {
+            { SqlDbType.BigInt, CommonDbType.BigInt },
+            { SqlDbType.Binary, CommonDbType.Binary },
+            { SqlDbType.Bit, CommonDbType.Bit },
+            { SqlDbType.Char, CommonDbType.Char },
+            { SqlDbType.DateTime, CommonDbType.DateTime },
+            { SqlDbType.Decimal, CommonDbType.Decimal },
+            { SqlDbType.Float, CommonDbType.Float },
+            { SqlDbType.Image, CommonDbType.Image },
+            { SqlDbType.Int, CommonDbType.Int },
+            { SqlDbType.Money, CommonDbType.Money },
+            { SqlDbType.NChar, CommonDbType.NChar },
+            { SqlDbType.NText, CommonDbType.NText },
+            { SqlDbType.NVarChar, CommonDbType.NVarChar },
+            { SqlDbType.Real, CommonDbType.Real },
+            { SqlDbType.UniqueIdentifier, CommonDbType.UniqueIdentifier },
+            { SqlDbType.SmallDateTime, CommonDbType.SmallDateTime },
+            { SqlDbType.SmallInt, CommonDbType.SmallInt },
+            { SqlDbType.SmallMoney, CommonDbType.SmallMoney },
+            { SqlDbType.Text, CommonDbType.Text },
+            { SqlDbType.Timestamp, CommonDbType.Timestamp },
+            { SqlDbType.TinyInt, CommonDbType.TinyInt },
+            { SqlDbType.VarBinary, CommonDbType.VarBinary },
+            { SqlDbType.VarChar, CommonDbType.VarChar },
+            { SqlDbType.Variant, CommonDbType.Variant },
+            { SqlDbType.Xml, CommonDbType.Xml },
+            { SqlDbType.Date, CommonDbType.Date },
+            { SqlDbType.Time, CommonDbType.Time },
+            { SqlDbType.DateTimeOffset, CommonDbType.DateTimeOffset }
+        };
+
+        internal static readonly Dictionary<CommonDbType, SqlDbType> CommonDbTypeToSqlDbType = new Dictionary
+            <CommonDbType, SqlDbType>
+        {
+            { CommonDbType.BigInt, SqlDbType.BigInt },
+            { CommonDbType.Binary, SqlDbType.Binary },
+            { CommonDbType.Bit, SqlDbType.Bit },
+            { CommonDbType.Char, SqlDbType.Char },
+            { CommonDbType.DateTime, SqlDbType.DateTime },
+            { CommonDbType.Decimal, SqlDbType.Decimal },
+            { CommonDbType.Float, SqlDbType.Float },
+            { CommonDbType.Image, SqlDbType.Image },
+            { CommonDbType.Int, SqlDbType.Int },
+            { CommonDbType.Money, SqlDbType.Money },
+            { CommonDbType.NChar, SqlDbType.NChar },
+            { CommonDbType.NText, SqlDbType.NText },
+            { CommonDbType.NVarChar, SqlDbType.NVarChar },
+            { CommonDbType.Real, SqlDbType.Real },
+            { CommonDbType.UniqueIdentifier, SqlDbType.UniqueIdentifier },
+            { CommonDbType.SmallDateTime, SqlDbType.SmallDateTime },
+            { CommonDbType.SmallInt, SqlDbType.SmallInt },
+            { CommonDbType.SmallMoney, SqlDbType.SmallMoney },
+            { CommonDbType.Text, SqlDbType.Text },
+            { CommonDbType.Timestamp, SqlDbType.Timestamp },
+            { CommonDbType.TinyInt, SqlDbType.TinyInt },
+            { CommonDbType.VarBinary, SqlDbType.VarBinary },
+            { CommonDbType.VarChar, SqlDbType.VarChar },
+            { CommonDbType.Variant, SqlDbType.Variant },
+            { CommonDbType.Xml, SqlDbType.Xml },
+            { CommonDbType.Date, SqlDbType.Date },
+            { CommonDbType.Time, SqlDbType.Time },
+            { CommonDbType.DateTimeOffset, SqlDbType.DateTimeOffset }
+        };
+
         public int CommandTimeout { get; set; }
 
         protected override VisitorState Compile(IStatement statement)
@@ -31,7 +97,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 throw new ArgumentNullException("connectionString");
             }
 
-            var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
+            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
             return new SqlConnection(csb.ConnectionString);
         }
@@ -44,7 +110,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             SqlCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
+                var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
                 var connection = new SqlConnection(csb.ConnectionString);
                 connection.Open();
@@ -78,7 +144,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             var state = this.Compile(statement);
 
-            var csb = new SqlConnectionStringBuilder(connectionString) {AsynchronousProcessing = true};
+            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
 
             var connection = new SqlConnection(csb.ConnectionString);
 
@@ -115,7 +181,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     var sp = new SqlParameter
                     {
                         ParameterName = p.Name,
-                        Direction = p.Direction,
+                        Direction = p.Direction
                     };
                     if (p.DbType.HasValue)
                     {
@@ -148,74 +214,5 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     return sp;
                 });
         }
-
-        internal static readonly Dictionary<SqlDbType, CommonDbType> SqlDbTypeToCommonDbType = new Dictionary
-        <SqlDbType, CommonDbType>
-        {
-            {SqlDbType.BigInt, CommonDbType.BigInt},
-            {SqlDbType.Binary, CommonDbType.Binary},
-            {SqlDbType.Bit, CommonDbType.Bit},
-            {SqlDbType.Char, CommonDbType.Char},
-            {SqlDbType.DateTime, CommonDbType.DateTime},
-            {SqlDbType.Decimal, CommonDbType.Decimal},
-            {SqlDbType.Float, CommonDbType.Float},
-            {SqlDbType.Image, CommonDbType.Image},
-            {SqlDbType.Int, CommonDbType.Int},
-            {SqlDbType.Money, CommonDbType.Money},
-            {SqlDbType.NChar, CommonDbType.NChar},
-            {SqlDbType.NText, CommonDbType.NText},
-            {SqlDbType.NVarChar, CommonDbType.NVarChar},
-            {SqlDbType.Real, CommonDbType.Real},
-            {SqlDbType.UniqueIdentifier, CommonDbType.UniqueIdentifier},
-            {SqlDbType.SmallDateTime, CommonDbType.SmallDateTime},
-            {SqlDbType.SmallInt, CommonDbType.SmallInt},
-            {SqlDbType.SmallMoney, CommonDbType.SmallMoney},
-            {SqlDbType.Text, CommonDbType.Text},
-            {SqlDbType.Timestamp, CommonDbType.Timestamp},
-            {SqlDbType.TinyInt, CommonDbType.TinyInt},
-            {SqlDbType.VarBinary, CommonDbType.VarBinary},
-            {SqlDbType.VarChar, CommonDbType.VarChar},
-            {SqlDbType.Variant, CommonDbType.Variant},
-            {SqlDbType.Xml, CommonDbType.Xml},
-            {SqlDbType.Date, CommonDbType.Date},
-            {SqlDbType.Time, CommonDbType.Time},
-            {SqlDbType.DateTimeOffset, CommonDbType.DateTimeOffset}
-        };
-
-        internal static readonly Dictionary<CommonDbType, SqlDbType> CommonDbTypeToSqlDbType = new Dictionary
-            <CommonDbType, SqlDbType>
-        {
-            {CommonDbType.BigInt, SqlDbType.BigInt},
-            {CommonDbType.Binary, SqlDbType.Binary},
-            {CommonDbType.Bit, SqlDbType.Bit},
-            {CommonDbType.Char, SqlDbType.Char},
-            {CommonDbType.DateTime, SqlDbType.DateTime},
-            {CommonDbType.Decimal, SqlDbType.Decimal},
-            {CommonDbType.Float, SqlDbType.Float},
-            {CommonDbType.Image, SqlDbType.Image},
-            {CommonDbType.Int, SqlDbType.Int},
-            {CommonDbType.Money, SqlDbType.Money},
-            {CommonDbType.NChar, SqlDbType.NChar},
-            {CommonDbType.NText, SqlDbType.NText},
-            {CommonDbType.NVarChar, SqlDbType.NVarChar},
-            {CommonDbType.Real, SqlDbType.Real},
-            {CommonDbType.UniqueIdentifier, SqlDbType.UniqueIdentifier},
-            {CommonDbType.SmallDateTime, SqlDbType.SmallDateTime},
-            {CommonDbType.SmallInt, SqlDbType.SmallInt},
-            {CommonDbType.SmallMoney, SqlDbType.SmallMoney},
-            {CommonDbType.Text, SqlDbType.Text},
-            {CommonDbType.Timestamp, SqlDbType.Timestamp},
-            {CommonDbType.TinyInt, SqlDbType.TinyInt},
-            {CommonDbType.VarBinary, SqlDbType.VarBinary},
-            {CommonDbType.VarChar, SqlDbType.VarChar},
-            {CommonDbType.Variant, SqlDbType.Variant},
-            {CommonDbType.Xml, SqlDbType.Xml},
-            {CommonDbType.Date, SqlDbType.Date},
-            {CommonDbType.Time, SqlDbType.Time},
-            {CommonDbType.DateTimeOffset, SqlDbType.DateTimeOffset}
-        };
-
-    
-    
     }
 }

@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 namespace TTRider.FluidSql
@@ -31,31 +31,30 @@ namespace TTRider.FluidSql
                 }
                 return null;
             }
-            set
-            {
-                this.alias = value;
-            }
+            set { this.alias = value; }
         }
-
-
 
 
         public static implicit operator RecordsetSourceToken(Name source)
         {
-            return new RecordsetSourceToken {Source = source};
+            return new RecordsetSourceToken { Source = source };
         }
+
         public static implicit operator RecordsetSourceToken(Parameter source)
         {
             return new RecordsetSourceToken { Source = source };
         }
+
         public static implicit operator RecordsetSourceToken(RecordsetStatement source)
         {
             return new RecordsetSourceToken { Source = source };
         }
+
         public static implicit operator RecordsetSourceToken(Snippet source)
         {
             return new RecordsetSourceToken { Source = source };
         }
+
         public static implicit operator RecordsetSourceToken(SnippetStatement source)
         {
             return new RecordsetSourceToken { Source = source };

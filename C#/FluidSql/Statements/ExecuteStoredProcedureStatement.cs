@@ -15,6 +15,6 @@ namespace TTRider.FluidSql
 
         public bool Recompile { get; set; }
 
-        public List<Parameter> Parameters { get; } = new List<Parameter>(); 
+        public List<Parameter> Parameters { get; } = new List<Parameter>();
     }
 }

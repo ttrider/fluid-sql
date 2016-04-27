@@ -1,8 +1,8 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
 using System.Data;
@@ -28,6 +28,7 @@ namespace TTRider.FluidSql
         {
             this.Identity = new IdentityOptions();
         }
+
         public TableColumn(string name, CommonDbType dbType, byte precision, byte scale)
             : base(name, dbType, precision, scale)
         {
@@ -57,7 +58,7 @@ namespace TTRider.FluidSql
         public bool RowGuid { get; set; }
 
         public IdentityOptions Identity { get; private set; }
-        
+
         public Direction? PrimaryKeyDirection { get; set; }
         public OnConflict? PrimaryKeyConflict { get; set; }
 
