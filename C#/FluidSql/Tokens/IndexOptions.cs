@@ -23,21 +23,15 @@ namespace TTRider.FluidSql
         public bool? AllowRowLocks { get; set; }
         public bool? AllowPageLocks { get; set; }
         //TODO: DATA_COMPRESSION = { NONE | ROW | PAGE} [ ON PARTITIONS ( { <partition_number_expression> | <range> } [ , ...n ] ) ]
-        public bool IsDefined
-        {
-            get
-            {
-                return this.Online.HasValue ||
-                       this.MaxDegreeOfParallelism.HasValue ||
-                       this.PadIndex.HasValue ||
-                       this.Fillfactor.HasValue ||
-                       this.SortInTempdb.HasValue ||
-                       this.IgnoreDupKey.HasValue ||
-                       this.StatisticsNorecompute.HasValue ||
-                       this.DropExisting.HasValue ||
-                       this.AllowRowLocks.HasValue ||
-                       this.AllowPageLocks.HasValue;
-            }
-        }
+        public bool IsDefined => this.Online.HasValue ||
+                                 this.MaxDegreeOfParallelism.HasValue ||
+                                 this.PadIndex.HasValue ||
+                                 this.Fillfactor.HasValue ||
+                                 this.SortInTempdb.HasValue ||
+                                 this.IgnoreDupKey.HasValue ||
+                                 this.StatisticsNorecompute.HasValue ||
+                                 this.DropExisting.HasValue ||
+                                 this.AllowRowLocks.HasValue ||
+                                 this.AllowPageLocks.HasValue;
     }
 }

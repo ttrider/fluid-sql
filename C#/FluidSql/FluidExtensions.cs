@@ -67,8 +67,8 @@ namespace TTRider.FluidSql
         public static IDataParameterCollection SetValue(this IDataParameterCollection parameterCollection,
             string parameterName, object value)
         {
-            if (parameterCollection == null) throw new ArgumentNullException("parameterCollection");
-            if (string.IsNullOrWhiteSpace(parameterName)) throw new ArgumentNullException("parameterName");
+            if (parameterCollection == null) throw new ArgumentNullException(nameof(parameterCollection));
+            if (string.IsNullOrWhiteSpace(parameterName)) throw new ArgumentNullException(nameof(parameterName));
 
             if (parameterCollection.Contains(parameterName))
             {

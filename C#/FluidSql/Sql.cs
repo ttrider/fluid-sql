@@ -13,10 +13,7 @@ namespace TTRider.FluidSql
 {
     public partial class Sql
     {
-        public static CaseToken Case
-        {
-            get { return new CaseToken(); }
-        }
+        public static CaseToken Case => new CaseToken();
 
         public static Name Star(string source = null)
         {
@@ -729,25 +726,13 @@ namespace TTRider.FluidSql
             };
         }
 
-        public static SelectStatement Select
-        {
-            get { return new SelectStatement(); }
-        }
+        public static SelectStatement Select => new SelectStatement();
 
-        public static DeleteStatement Delete
-        {
-            get { return new DeleteStatement(); }
-        }
+        public static DeleteStatement Delete => new DeleteStatement();
 
-        public static InsertStatement Insert
-        {
-            get { return new InsertStatement(); }
-        }
+        public static InsertStatement Insert => new InsertStatement();
 
-        public static MergeStatement Merge
-        {
-            get { return new MergeStatement(); }
-        }
+        public static MergeStatement Merge => new MergeStatement();
 
         #region Transaction
 
@@ -1039,15 +1024,9 @@ namespace TTRider.FluidSql
             return new CommentStatement { Content = statement };
         }
 
-        public static BreakStatement Break
-        {
-            get { return new BreakStatement(); }
-        }
+        public static BreakStatement Break => new BreakStatement();
 
-        public static ContinueStatement Continue
-        {
-            get { return new ContinueStatement(); }
-        }
+        public static ContinueStatement Continue => new ContinueStatement();
 
         public static GotoStatement Goto(string label)
         {

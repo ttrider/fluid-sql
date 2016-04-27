@@ -184,10 +184,7 @@ namespace TTRider.FluidSql.Providers
 
         protected VisitorState State = new VisitorState();
 
-        protected virtual string[] SupportedDialects
-        {
-            get { return supportedDialects; }
-        }
+        protected virtual string[] SupportedDialects => supportedDialects;
 
         protected abstract void VisitJoinType(Joins join);
 

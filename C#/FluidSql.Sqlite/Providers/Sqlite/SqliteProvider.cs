@@ -60,7 +60,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new ArgumentNullException("connectionString");
+                throw new ArgumentNullException(nameof(connectionString));
             }
             return new SQLiteConnection(connectionString);
         }

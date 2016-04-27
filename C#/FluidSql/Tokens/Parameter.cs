@@ -435,9 +435,6 @@ namespace TTRider.FluidSql
     {
         private static readonly ParameterFactory ParameterFactory = new ParameterFactory();
 
-        public static ParameterFactory Parameter
-        {
-            get { return ParameterFactory; }
-        }
+        public static ParameterFactory Parameter => ParameterFactory;
     }
 }

@@ -11,9 +11,6 @@ namespace TTRider.FluidSql
 {
     public class Sqlite : Sql
     {
-        public static VacuumStatement Vacuum
-        {
-            get { return new VacuumStatement(); }
-        }
+        public static VacuumStatement Vacuum => new VacuumStatement();
     }
 }

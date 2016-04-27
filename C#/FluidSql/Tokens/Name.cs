@@ -57,15 +57,9 @@ namespace TTRider.FluidSql
             this.Add(names);
         }
 
-        public string LastPart
-        {
-            get { return this.parts.LastOrDefault(); }
-        }
+        public string LastPart => this.parts.LastOrDefault();
 
-        public string FirstPart
-        {
-            get { return this.parts.FirstOrDefault(); }
-        }
+        public string FirstPart => this.parts.FirstOrDefault();
 
         static IEnumerable<string> GetParts(string name)
         {
@@ -193,15 +187,9 @@ namespace TTRider.FluidSql
             return this.parts.Remove(item);
         }
 
-        public int Count
-        {
-            get { return this.parts.Count; }
-        }
+        public int Count => this.parts.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public int IndexOf(string item)
         {

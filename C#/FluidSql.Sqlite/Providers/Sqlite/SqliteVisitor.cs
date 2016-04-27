@@ -57,10 +57,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             this.CommentCloseQuote = "*/";
         }
 
-        protected override string[] SupportedDialects
-        {
-            get { return supportedDialects; }
-        }
+        protected override string[] SupportedDialects => supportedDialects;
 
 
         protected override void VisitJoinType(Joins join)

@@ -37,15 +37,9 @@ namespace TTRider.FluidSql
             this.items.Values.CopyTo(array, arrayIndex);
         }
 
-        public int Count
-        {
-            get { return this.items.Count; }
-        }
+        public int Count => this.items.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public bool Remove(Parameter item)
         {

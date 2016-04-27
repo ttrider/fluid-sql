@@ -94,7 +94,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new ArgumentNullException("connectionString");
+                throw new ArgumentNullException(nameof(connectionString));
             }
 
             var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };

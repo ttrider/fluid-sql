@@ -15,9 +15,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 {
     internal class SqlServerVisitor : Visitor
     {
-        private static readonly string[] supportedDialects = { "t-sql", "ansi" };
+        private static readonly string[] SqlSupportedDialects = { "t-sql", "ansi" };
 
-        private readonly string[] DbTypeStrings =
+        private readonly string[] dbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
             "BINARY", // Binary = 1,
@@ -60,10 +60,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             this.CommentCloseQuote = "*/";
         }
 
-        protected override string[] SupportedDialects
-        {
-            get { return supportedDialects; }
-        }
+        protected override string[] SupportedDialects => SqlSupportedDialects;
 
 
         internal static VisitorState Compile(Token token)
@@ -117,7 +114,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (typedToken.DbType.HasValue)
             {
-                State.Write(DbTypeStrings[(int) typedToken.DbType]);
+                State.Write(dbTypeStrings[(int) typedToken.DbType]);
             }
 
             if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
@@ -685,6 +682,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected class SqlSymbols : Symbols
         {
+            // ReSharper disable InconsistentNaming
             public const string DATEADD = "DATEADD";
             public const string DATEDIFF = "DATEDIFF";
             public const string DATEPART = "DATEPART";
@@ -703,6 +701,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             public const string ss = "ss";
             public const string ww = "ww";
             public const string yy = "yy";
+            // ReSharper restore InconsistentNaming
         }
 
         #region Statements
@@ -741,7 +740,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write(Symbols.USING);
             VisitToken(statement.Using);
 
-            if ((statement.Using is IAliasToken) && !string.IsNullOrWhiteSpace(((IAliasToken) (statement.Using)).Alias))
+            if (!string.IsNullOrWhiteSpace((statement.Using as IAliasToken)?.Alias))
             {
                 State.Write(Symbols.AS);
                 State.Write(this.IdentifierOpenQuote, ((IAliasToken) (statement.Using)).Alias, this.IdentifierCloseQuote);
@@ -922,8 +921,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             // if 'FROM' has an alias or joins , we need to re-arrange tokens in a statement
             // even more, if it has joins, it MUST have an alias :)
-            var hasAlias = statement.RecordsetSource != null &&
-                           !string.IsNullOrWhiteSpace(statement.RecordsetSource.Alias);
+            var hasAlias = !string.IsNullOrWhiteSpace(statement.RecordsetSource?.Alias);
 
             if (statement.Joins.Count > 0 || hasAlias)
             {

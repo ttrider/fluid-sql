@@ -50,7 +50,7 @@ namespace TTRider.FluidSql.Providers
 
         public void WriteBeginStringify(string prefix, string suffix = null)
         {
-            if (string.IsNullOrWhiteSpace(prefix)) throw new ArgumentNullException("prefix");
+            if (string.IsNullOrWhiteSpace(prefix)) throw new ArgumentNullException(nameof(prefix));
             if (string.IsNullOrWhiteSpace(suffix)) suffix = prefix;
 
             if (string.IsNullOrWhiteSpace(this.stringifyPrefix) || string.IsNullOrWhiteSpace(this.stringifySuffix))

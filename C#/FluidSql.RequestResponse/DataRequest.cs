@@ -24,27 +24,15 @@ namespace TTRider.FluidSql.RequestResponse
         private DataRequestProperties properties;
 
 
-        public IEnumerable<IDbCommand> PrerequisiteCommands
-        {
-            get
-            {
-                return this.prerequisiteCommands ??
-                       (this.prerequisiteCommands = this.properties.GetPrerequiseteCommands());
-            }
-        }
+        public IEnumerable<IDbCommand> PrerequisiteCommands => this.prerequisiteCommands ??
+                                                               (this.prerequisiteCommands = this.properties.GetPrerequiseteCommands());
 
-        public IDbCommand Command
-        {
-            get { return this.command ?? (this.command = this.properties.GetCommand()); }
-        }
+        public IDbCommand Command => this.command ?? (this.command = this.properties.GetCommand());
 
         /// <summary>
         ///     reuse buffer for each record in recordset
         /// </summary>
-        public DbRequestMode Mode
-        {
-            get { return this.properties.Mode; }
-        }
+        public DbRequestMode Mode => this.properties.Mode;
 
         public IDbResponse GetResponse()
         {
@@ -75,7 +63,7 @@ namespace TTRider.FluidSql.RequestResponse
 
         public static IDbRequest Create(DataRequestProperties properties)
         {
-            if (properties == null) throw new ArgumentNullException("properties");
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
             if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
             if (properties.Statement == null) throw new ArgumentException("properties.Statement");
 
@@ -88,7 +76,7 @@ namespace TTRider.FluidSql.RequestResponse
         public static IDbRequest Create<T>(DataRequestProperties properties)
             where T : IProvider
         {
-            if (properties == null) throw new ArgumentNullException("properties");
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
             if (properties.Statement == null) throw new ArgumentException("properties.Statement");
 
             var prop = properties.Clone();
@@ -104,7 +92,7 @@ namespace TTRider.FluidSql.RequestResponse
             IEnumerable<IStatement> prerequisiteStatements = null)
             where T : IProvider
         {
-            if (statement == null) throw new ArgumentNullException("statement");
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement, mode,
                 connectionString, prerequisiteStatements);
         }
@@ -113,7 +101,7 @@ namespace TTRider.FluidSql.RequestResponse
             IEnumerable<IStatement> prerequisiteStatements = null)
             where T : IProvider
         {
-            if (statement == null) throw new ArgumentNullException("statement");
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
                 DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
         }
@@ -121,8 +109,8 @@ namespace TTRider.FluidSql.RequestResponse
         public static IDbRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null,
             IEnumerable<IStatement> prerequisiteStatements = null)
         {
-            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
-            if (statement == null) throw new ArgumentNullException("statement");
+            if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(queryProvider, statement,
                 DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
         }
@@ -130,8 +118,8 @@ namespace TTRider.FluidSql.RequestResponse
         public static IDbRequest Create(IProvider queryProvider, IStatement statement, DbRequestMode mode,
             string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
         {
-            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
-            if (statement == null) throw new ArgumentNullException("statement");
+            if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
             var properties = new DataRequestProperties
             {
                 Statement = statement,
