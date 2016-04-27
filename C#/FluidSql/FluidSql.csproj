@@ -46,7 +46,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DatePart.cs" />
+    <Compile Include="Statements\AlterProcedureStatement.cs" />
+    <Compile Include="Statements\CreateProcedureStatement.cs" />
+    <Compile Include="Statements\DropProcedureStatement.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Statements\ExecuteStoredProcedureStatement.cs" />
+    <Compile Include="Interfaces\IProcedureStatement.cs" />
     <Compile Include="Tokens\CaseToken.cs" />
     <Compile Include="Tokens\CaseWhenToken.cs" />
     <Compile Include="Functions\DateAddFunctionToken.cs" />

@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace TTRider.FluidSql.Providers
 {
@@ -155,8 +156,9 @@ namespace TTRider.FluidSql.Providers
             }
         }
 
-        protected virtual void VisitTokenSet(IEnumerable<Token> tokens, Action prefix = null,
-            string separator = Symbols.Comma, Action suffix = null)
+        protected virtual void VisitTokenSet<T>(IEnumerable<T> tokens, Action prefix = null,
+                    string separator = Symbols.Comma, Action suffix = null, Action<T> visitToken = null)
+            where T : Token
         {
             if (tokens != null)
             {
@@ -167,12 +169,12 @@ namespace TTRider.FluidSql.Providers
                     {
                         prefix();
                     }
-                    VisitToken(enumerator.Current);
+                    (visitToken ?? VisitToken)(enumerator.Current);
 
                     while (enumerator.MoveNext())
                     {
                         State.Write(separator);
-                        VisitToken(enumerator.Current);
+                        (visitToken ?? VisitToken)(enumerator.Current);
                     }
                     if (suffix != null)
                     {
@@ -182,7 +184,8 @@ namespace TTRider.FluidSql.Providers
             }
         }
 
-        protected virtual void VisitTokenSetInParenthesis(IEnumerable<Token> tokens, Action prefix = null, bool includeAlias = false)
+        protected virtual void VisitTokenSetInParenthesis<T>(IEnumerable<T> tokens, Action prefix = null, bool includeAlias = false, Action<T, bool> visitToken = null)
+            where T : Token
         {
             if (tokens != null)
             {
@@ -194,12 +197,12 @@ namespace TTRider.FluidSql.Providers
                         prefix();
                     }
                     State.Write(Symbols.OpenParenthesis);
-                    VisitToken(enumerator.Current, includeAlias);
+                    (visitToken ?? VisitToken)(enumerator.Current, includeAlias);
 
                     while (enumerator.MoveNext())
                     {
                         State.Write(Symbols.Comma);
-                        VisitToken(enumerator.Current, includeAlias);
+                        (visitToken ?? VisitToken)(enumerator.Current, includeAlias);
                     }
                     State.Write(Symbols.CloseParenthesis);
                 }
@@ -262,6 +265,51 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitPlaceholderExpressionToken(PlaceholderExpressionToken token)
         {
             VisitToken(token.Content);
+        }
+
+
+        protected virtual void VisitValue(object value)
+        {
+            if (value == null)
+            {
+                State.Write(Symbols.NULL);
+            }
+            else if (value is byte[])
+            {
+
+            }
+            else if (value is DBNull)
+            {
+                State.Write(Symbols.NULL);
+            }
+            else if (value is bool)
+            {
+                State.Write((bool)value ? "1" : "0");
+            }
+            else if (value is char || value is string)
+            {
+                State.Write(this.LiteralOpenQuote, value.ToString(), this.LiteralCloseQuote);
+            }
+            else if (value is DateTime)
+            {
+                State.Write(this.LiteralOpenQuote, ((DateTime)value).ToString("s"), this.LiteralCloseQuote);
+            }
+            else if (value is DateTimeOffset)
+            {
+                State.Write(this.LiteralOpenQuote, ((DateTimeOffset)value).ToString("O"), this.LiteralCloseQuote);
+            }
+            else if (value is TimeSpan)
+            {
+                State.Write(this.LiteralOpenQuote, ((TimeSpan)value).ToString("G"), this.LiteralCloseQuote);
+            }
+            else if (value is XNode)
+            {
+                State.Write(this.LiteralOpenQuote, ((XNode)value).ToString(SaveOptions.DisableFormatting), this.LiteralCloseQuote);
+            }
+            else
+            {
+                State.Write(value.ToString());
+            }
         }
 
 
@@ -377,6 +425,11 @@ namespace TTRider.FluidSql.Providers
                 {typeof (ExecuteStatement), (v, stm)=>v.VisitExecuteStatement((ExecuteStatement)stm)},
                 {typeof (DropSchemaStatement), (v, stm)=>v.VisitDropSchemaStatement((DropSchemaStatement)stm)},
                 {typeof (CreateSchemaStatement), (v, stm)=>v.VisitCreateSchemaStatement((CreateSchemaStatement)stm)},
+                {typeof (CreateProcedureStatement), (v, stm)=>v.VisitCreateProcedureStatement((CreateProcedureStatement)stm)},
+                {typeof (AlterProcedureStatement), (v, stm)=>v.VisitAlterProcedureStatement((AlterProcedureStatement)stm)},
+                {typeof (DropProcedureStatement), (v, stm)=>v.VisitDropProcedureStatement((DropProcedureStatement)stm)},
+                {typeof (ExecuteProcedureStatement), (v, stm)=>v.VisitExecuteProcedureStatement((ExecuteProcedureStatement)stm)},
+
             };
 
 

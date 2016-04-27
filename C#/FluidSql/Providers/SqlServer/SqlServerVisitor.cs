@@ -7,8 +7,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Eventing;
 using System.Globalization;
+using System.Linq;
 
 namespace TTRider.FluidSql.Providers.SqlServer
 {
@@ -49,26 +51,26 @@ namespace TTRider.FluidSql.Providers.SqlServer
             "DateTimeOffset" // DateTimeOffset = 28,
         };
 
-        protected class SqlSymbols: Symbols
+        protected class SqlSymbols : Symbols
         {
-            public const string DATEADD             = "DATEADD";
-            public const string DATEDIFF            = "DATEDIFF";
-            public const string DATEPART            = "DATEPART";
-            public const string DATETIMEFROMPARTS   = "DATETIMEFROMPARTS";
-            public const string GETDATE             = "GETDATE";
-            public const string GETUTCDATE          = "GETUTCDATE";
-            public const string IDENTITY_INSERT     = "IDENTITY_INSERT";
-            public const string NEWID               = "NEWID";
-            public const string TIMEFROMPARTS       = "TIMEFROMPARTS";
-            public const string d                   = "d";
-            public const string hh                  = "hh";
-            public const string m                   = "m";
-            public const string mi                  = "mi";
-            public const string ms                  = "ms";
-            public const string s                   = "s";
-            public const string ss                  = "ss";
-            public const string ww                  = "ww";
-            public const string yy                  = "yy";
+            public const string DATEADD = "DATEADD";
+            public const string DATEDIFF = "DATEDIFF";
+            public const string DATEPART = "DATEPART";
+            public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
+            public const string GETDATE = "GETDATE";
+            public const string GETUTCDATE = "GETUTCDATE";
+            public const string IDENTITY_INSERT = "IDENTITY_INSERT";
+            public const string NEWID = "NEWID";
+            public const string TIMEFROMPARTS = "TIMEFROMPARTS";
+            public const string d = "d";
+            public const string hh = "hh";
+            public const string m = "m";
+            public const string mi = "mi";
+            public const string ms = "ms";
+            public const string s = "s";
+            public const string ss = "ss";
+            public const string ww = "ww";
+            public const string yy = "yy";
         }
 
         protected override string[] SupportedDialects { get { return supportedDialects; } }
@@ -835,6 +837,52 @@ namespace TTRider.FluidSql.Providers.SqlServer
             this.Stringify(statement.Target);
             State.Write(Symbols.CloseParenthesis);
         }
+
+        protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
+        {
+            State.Write(Symbols.EXEC);
+
+            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+            if (retVal != null)
+            {
+                State.Write(retVal.Name);
+                State.Write(Symbols.AssignVal);
+
+                State.Parameters.Add(retVal.Clone().ParameterDirection(ParameterDirection.Output));
+            }
+
+            VisitNameToken(statement.Name);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue), visitToken: parameter =>
+            {
+                if (parameter.UseDefault)
+                {
+                    State.Write(parameter.Name);
+                    State.Write(Symbols.DEFAULT);
+                }
+                else
+                {
+                    State.Write(parameter.Name);
+                    State.Write(Symbols.AssignVal);
+                    State.Write(parameter.Name);
+                    if (parameter.Direction == ParameterDirection.Input ||
+                        parameter.Direction == ParameterDirection.InputOutput)
+                    {
+                        State.Write(Symbols.OUTPUT);
+                    }
+                }
+
+                State.Parameters.Add(parameter);
+
+            });
+
+            if (statement.Recompile)
+            {
+                State.Write(Symbols.WITH, Symbols.RECOMPILE);
+            }
+        }
+
+
         protected override void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement)
         {
             State.Write(Symbols.CREATE);
@@ -1316,7 +1364,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 case DatePart.Millisecond: State.Write(SqlSymbols.ms); break;
             }
             State.Write(Symbols.Comma);
-            VisitToken(token.Subtract ? new UnaryMinusToken {Token = token.Number} : token.Number);
+            VisitToken(token.Subtract ? new UnaryMinusToken { Token = token.Number } : token.Number);
             State.Write(Symbols.Comma);
             VisitToken(token.Token);
             State.Write(Symbols.CloseParenthesis);
@@ -1419,6 +1467,179 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write(Symbols.Comma);
             State.Write("0");
             State.Write(Symbols.CloseParenthesis);
+        }
+
+
+        protected override void VisitCreateProcedureStatement(CreateProcedureStatement statement)
+        {
+            VisitConditional(
+                statement.CheckIfNotExists,
+                statement.Name,
+                "P",
+                false,
+                () =>
+                    {
+                        State.Write(Symbols.CREATE);
+                        VisitProcedureParametersAndBody(statement);
+                    }
+                );
+        }
+
+        protected override void VisitDropProcedureStatement(DropProcedureStatement statement)
+        {
+            VisitConditional(
+                statement.CheckExists,
+                statement.Name,
+                "P",
+                true,
+                () =>
+                {
+                    State.Write(Symbols.DROP);
+                    State.Write(Symbols.PROCEDURE);
+                    VisitNameToken(statement.Name);
+                }
+                );
+        }
+
+        protected override void VisitAlterProcedureStatement(AlterProcedureStatement statement)
+        {
+            VisitConditional(
+                statement.CreateIfNotExists,
+                statement.Name,
+                "P",
+                false,
+                () =>
+                {
+                    State.Write(Symbols.CREATE);
+                    VisitProcedureParametersAndBody(statement);
+                },
+                () =>
+                {
+                    State.Write(Symbols.ALTER);
+                    VisitProcedureParametersAndBody(statement);
+                }
+                );
+        }
+
+        private void VisitProcedureParametersAndBody(IProcedureStatement s)
+        {
+            State.Write(Symbols.PROCEDURE);
+
+            VisitNameToken(s.Name);
+            State.WriteCRLF();
+
+            var separator = Symbols.OpenParenthesis;
+            foreach (var p in s.Parameters
+                .Where(p => p.Direction != ParameterDirection.ReturnValue))
+            {
+                State.Write(separator);
+                State.WriteCRLF();
+                separator = Symbols.Comma;
+
+                VisitNameToken(p.Name);
+                VisitType(p);
+
+                if (p.DefaultValue != null)
+                {
+                    State.Write(Symbols.AssignVal);
+                    VisitValue(p.DefaultValue);
+                }
+                if (p.Direction != ParameterDirection.Input)
+                {
+                    State.Write(Symbols.OUTPUT);
+                }
+                if (p.ReadOnly)
+                {
+                    State.Write(Symbols.READONLY);
+                }
+            }
+            if (separator == Symbols.Comma)
+            {
+                State.WriteCRLF();
+                State.Write(Symbols.CloseParenthesis);
+                State.WriteCRLF();
+            }
+
+            if (s.Recompile)
+            {
+                State.Write(Symbols.WITH, Symbols.RECOMPILE);
+                State.WriteCRLF();
+            }
+
+            State.Write(Symbols.AS);
+            State.WriteCRLF();
+            State.Write(Symbols.BEGIN);
+            State.WriteStatementTerminator();
+            VisitStatement(s.Body);
+            State.Write(Symbols.END);
+            State.WriteStatementTerminator();
+        }
+
+
+        private void VisitConditional(bool doCheck, Name name, string objectType, bool inverse, Action isNullAction, Action isNotNullAction = null)
+        {
+            if (doCheck)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.OBJECT_ID);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(LiteralOpenQuote, ResolveName(name), LiteralCloseQuote);
+                State.Write(Symbols.Comma);
+                State.Write(LiteralOpenQuote, objectType, LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.IS);
+                if (inverse)
+                {
+                    State.Write(Symbols.NOT);
+                }
+                State.Write(Symbols.NULL);
+                State.WriteCRLF();
+                State.Write(Symbols.BEGIN);
+                State.WriteStatementTerminator();
+
+                State.Write(Symbols.EXEC);
+                State.Write(Symbols.OpenParenthesis);
+                State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
+
+                isNullAction();
+
+                State.WriteEndStringify();
+                State.Write(Symbols.CloseParenthesis);
+                State.WriteStatementTerminator();
+
+                State.Write(Symbols.END);
+                State.WriteStatementTerminator();
+
+                if (isNotNullAction != null)
+                {
+                    State.Write(Symbols.ELSE);
+                    State.Write(Symbols.BEGIN);
+                    State.WriteStatementTerminator();
+
+                    State.Write(Symbols.EXEC);
+                    State.Write(Symbols.OpenParenthesis);
+                    State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
+
+                    isNotNullAction();
+
+                    State.WriteEndStringify();
+                    State.Write(Symbols.CloseParenthesis);
+                    State.WriteStatementTerminator();
+
+
+                    State.Write(Symbols.END);
+                    State.WriteStatementTerminator();
+                }
+            }
+            else
+            {
+                isNullAction();
+            }
+
+
+
+
+
         }
     }
 }

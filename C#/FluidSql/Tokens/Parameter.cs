@@ -57,6 +57,12 @@ namespace TTRider.FluidSql
         public object DefaultValue { get; set; }
 
         public ParameterDirection Direction { get; set; }
+        /// <summary>
+        /// indicate that procedure's default value needs to be used
+        /// </summary>
+        public bool UseDefault { get; set; }
+
+        public bool ReadOnly { get; set; }
 
         public bool Equals(Parameter obj)
         {
@@ -236,6 +242,14 @@ namespace TTRider.FluidSql
         {
             return new Parameter(name, CommonDbType.DateTimeOffset, length);
         } //0..7
+
+        public Parameter Clone()
+        {
+            var copy = (Parameter)MemberwiseClone();
+            copy.Parameters.Clear();
+            copy.ParameterValues.Clear();
+            return copy;
+        }
     }
 
     public class ParameterEqualityComparer : EqualityComparer<Parameter>

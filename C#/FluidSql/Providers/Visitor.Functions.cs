@@ -7,8 +7,6 @@
 
 // ReSharper disable InconsistentNaming
 
-using System.Linq;
-
 namespace TTRider.FluidSql.Providers
 {
     public abstract partial class Visitor

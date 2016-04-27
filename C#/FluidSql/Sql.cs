@@ -25,7 +25,7 @@ namespace TTRider.FluidSql
 
         public static Name NameAs(string name, string alias)
         {
-            return new Name(name) {Alias = alias};
+            return new Name(name) { Alias = alias };
         }
         public static Name NameAs(string part1, string part2, string alias)
         {
@@ -42,7 +42,7 @@ namespace TTRider.FluidSql
 
         public static Snippet Snippet(string value, params Parameter[] parameters)
         {
-            var val = new Snippet {Value = value};
+            var val = new Snippet { Value = value };
 
             foreach (var p in parameters)
             {
@@ -58,7 +58,7 @@ namespace TTRider.FluidSql
 
         public static Snippet Snippet(string value, IEnumerable<Parameter> parameters)
         {
-            var val = new Snippet {Value = value};
+            var val = new Snippet { Value = value };
 
             if (parameters != null)
             {
@@ -79,7 +79,7 @@ namespace TTRider.FluidSql
                     val.Arguments.Add(argument);
                     if (argument is Parameter)
                     {
-                        val.Parameters.Add((Parameter)argument);    
+                        val.Parameters.Add((Parameter)argument);
                     }
                 }
             }
@@ -116,7 +116,7 @@ namespace TTRider.FluidSql
                     }
                 }
             }
-           
+
             return snippetStatement;
         }
         public static SnippetStatement SnippetStatement(string value, params Parameter[] parameters)
@@ -145,7 +145,7 @@ namespace TTRider.FluidSql
             {
                 return value as Scalar;
             }
-            return new Scalar {Value = value};
+            return new Scalar { Value = value };
         }
 
         public static UnaryMinusToken Minus(Token value)
@@ -155,17 +155,17 @@ namespace TTRider.FluidSql
 
         public static GroupToken Group(Token value)
         {
-            return new GroupToken {Token = value};
+            return new GroupToken { Token = value };
         }
 
         public static ExpressionToken Exists(ExpressionToken value)
         {
-            return new ExistsToken {Token = value};
+            return new ExistsToken { Token = value };
         }
 
         public static ExpressionToken NotExists(ExpressionToken value)
         {
-            return new ExistsToken {Token = value}.Not();
+            return new ExistsToken { Token = value }.Not();
         }
 
         public static ExpressionToken Not(ExpressionToken value)
@@ -175,28 +175,28 @@ namespace TTRider.FluidSql
 
         public static ExpressionToken All(SelectStatement subQuery)
         {
-            return new AllToken {Token = subQuery};
+            return new AllToken { Token = subQuery };
         }
 
         public static ExpressionToken Any(SelectStatement subQuery)
         {
-            return new AnyToken {Token = subQuery};
+            return new AnyToken { Token = subQuery };
         }
 
         public static ExpressionToken Some(SelectStatement subQuery)
         {
-            return new AnyToken {Token = subQuery};
+            return new AnyToken { Token = subQuery };
         }
 
 
         public static Order Order(Name column, Direction direction = Direction.Asc)
         {
-            return new Order {Column = column, Direction = direction};
+            return new Order { Column = column, Direction = direction };
         }
 
         public static Order Order(string column, Direction direction = Direction.Asc)
         {
-            return new Order {Column = new Name(column), Direction = direction};
+            return new Order { Column = new Name(column), Direction = direction };
         }
 
         public static CreateIndexStatement CreateIndex(Name name, Name on = null)
@@ -283,7 +283,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new AssignToken {First = target, Second = expression}
+                Assign = new AssignToken { First = target, Second = expression }
             };
         }
 
@@ -291,7 +291,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -299,7 +299,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -307,7 +307,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -315,7 +315,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -323,7 +323,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -331,7 +331,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -347,7 +347,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -355,7 +355,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -363,7 +363,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new AssignToken {First = target, Second = expression}
+                Assign = new AssignToken { First = target, Second = expression }
             };
         }
 
@@ -371,7 +371,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new PlusToken {First = target, Second = expression, Equal = true}
+                Assign = new PlusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -379,7 +379,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MinusToken {First = target, Second = expression, Equal = true}
+                Assign = new MinusToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -387,7 +387,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new DivideToken {First = target, Second = expression, Equal = true}
+                Assign = new DivideToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -395,7 +395,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseAndToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseAndToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -403,7 +403,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseOrToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseOrToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -411,7 +411,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new BitwiseXorToken {First = target, Second = expression, Equal = true}
+                Assign = new BitwiseXorToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -427,7 +427,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new ModuloToken {First = target, Second = expression, Equal = true}
+                Assign = new ModuloToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -435,7 +435,7 @@ namespace TTRider.FluidSql
         {
             return new SetStatement
             {
-                Assign = new MultiplyToken {First = target, Second = expression, Equal = true}
+                Assign = new MultiplyToken { First = target, Second = expression, Equal = true }
             };
         }
 
@@ -602,22 +602,85 @@ namespace TTRider.FluidSql
         #endregion Set
 
         #region Statements
-
-        public static ExecuteStatement Execute(string statement)
+        public static ExecuteStatement Execute(string statement, IEnumerable<Parameter> parameters)
         {
-            return new ExecuteStatement
-            {
-                Target = Sql.SnippetStatement(statement)
-            };
+            return Execute(Sql.SnippetStatement(statement), parameters);
         }
-        public static ExecuteStatement Execute(IStatement statement)
+
+        public static ExecuteStatement Execute(string statement, params Parameter[] parameters)
         {
-            return new ExecuteStatement
+            return Execute(Sql.SnippetStatement(statement), (IEnumerable<Parameter>)parameters);
+        }
+
+        public static ExecuteStatement Execute(IStatement statement, params Parameter[] parameters)
+        {
+            return Execute(statement, (IEnumerable<Parameter>)parameters);
+        }
+
+        public static ExecuteStatement Execute(IStatement statement, IEnumerable<Parameter> parameters)
+        {
+            var stat = new ExecuteStatement
             {
                 Target = statement
             };
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    stat.Parameters.Add(parameter);
+                }
+            }
+            return stat;
         }
 
+        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName, params Parameter[] parameters)
+        {
+            return ExecuteStoredProcedure(storedProcedureName, (IEnumerable<Parameter>)parameters);
+        }
+
+        public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName, IEnumerable<Parameter> parameters)
+        {
+            var stat = new ExecuteProcedureStatement
+            {
+                Name = storedProcedureName
+            };
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    stat.Parameters.Add(parameter);
+                }
+            }
+            return stat;
+        }
+
+        public static DropProcedureStatement DropProcedure(Name name, bool checkExists = false)
+        {
+            return new DropProcedureStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
+        }
+
+        public static CreateProcedureStatement CreateProcedure(Name name, bool checkIfNotExists = false)
+        {
+            return new CreateProcedureStatement
+            {
+                Name = name,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+        public static AlterProcedureStatement AlterProcedure(Name name, bool createIfNotExists = false)
+        {
+            return new AlterProcedureStatement
+            {
+                Name = name,
+                CreateIfNotExists = createIfNotExists
+            };
+        }
 
         public static SelectStatement Select
         {
@@ -737,7 +800,13 @@ namespace TTRider.FluidSql
             statement.Statements.AddRange(statements);
             return statement;
         }
-
+        public static StatementsStatement Statements(IStatement statement, params IStatement[] statements)
+        {
+            var newstatement = new StatementsStatement();
+            newstatement.Statements.Add(statement);
+            newstatement.Statements.AddRange(statements);
+            return newstatement;
+        }
         public static StatementsStatement Statements(IEnumerable<IStatement> statements)
         {
             var statement = new StatementsStatement();
@@ -815,7 +884,7 @@ namespace TTRider.FluidSql
 
         public static DropTableStatement DropTable(Name name, bool checkExists = false)
         {
-            return new DropTableStatement {Name = name, CheckExists = checkExists};
+            return new DropTableStatement { Name = name, CheckExists = checkExists };
         }
 
         public static DropTableStatement DropTemporaryTable(Name name, bool checkExists = false)
@@ -906,12 +975,12 @@ namespace TTRider.FluidSql
 
         public static CommentToken Comment(string comment)
         {
-            return new CommentToken {Content = Snippet(comment)};
+            return new CommentToken { Content = Snippet(comment) };
         }
 
         public static CommentStatement Comment(IStatement statement)
         {
-            return new CommentStatement {Content = statement};
+            return new CommentStatement { Content = statement };
         }
 
         public static BreakStatement Break
@@ -1005,11 +1074,11 @@ namespace TTRider.FluidSql
             };
             if (columnNames != null)
             {
-                cte.Columns.AddRange(columnNames.Select(n=>Sql.Name(n)));
+                cte.Columns.AddRange(columnNames.Select(n => Sql.Name(n)));
             }
             return cte;
         }
-        public static CTEDeclaration With(string name, IEnumerable<string>columnNames)
+        public static CTEDeclaration With(string name, IEnumerable<string> columnNames)
         {
             var cte = new CTEDeclaration
             {
@@ -1024,7 +1093,7 @@ namespace TTRider.FluidSql
 
         public static CaseToken Case
         {
-            get {  return new CaseToken();}
+            get { return new CaseToken(); }
         }
     }
 }

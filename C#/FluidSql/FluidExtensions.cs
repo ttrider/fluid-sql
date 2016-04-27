@@ -85,7 +85,16 @@ namespace TTRider.FluidSql
             parameter.Direction = direction;
             return parameter;
         }
-
+        public static Parameter UseDefault(this Parameter parameter, bool useDefault = true)
+        {
+            parameter.UseDefault = useDefault;
+            return parameter;
+        }
+        public static Parameter ReadOnly(this Parameter parameter, bool readOnly = true)
+        {
+            parameter.ReadOnly = readOnly;
+            return parameter;
+        }
         public static IList<ParameterValue> Add(this IList<ParameterValue> list, string name, object value)
         {
             list.Add(new ParameterValue() { Name = name, Value = value });
@@ -1554,7 +1563,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        
+
 
         #region PrimaryKey
 
@@ -2388,7 +2397,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Month };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Month };
         }
         public static DateFunctionExpressionToken SubtractMonths(this DateFunctionExpressionToken token, int number)
         {
@@ -2396,7 +2405,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Week };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Week };
         }
         public static DateFunctionExpressionToken SubtractWeeks(this DateFunctionExpressionToken token, int number)
         {
@@ -2404,7 +2413,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Day };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Day };
         }
         public static DateFunctionExpressionToken SubtractDays(this DateFunctionExpressionToken token, int number)
         {
@@ -2412,7 +2421,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Hour };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Hour };
         }
         public static DateFunctionExpressionToken SubtractHours(this DateFunctionExpressionToken token, int number)
         {
@@ -2420,7 +2429,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Minute };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Minute };
         }
         public static DateFunctionExpressionToken SubtractMinutes(this DateFunctionExpressionToken token, int number)
         {
@@ -2428,7 +2437,7 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Second };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Second };
         }
         public static DateFunctionExpressionToken SubtractSeconds(this DateFunctionExpressionToken token, int number)
         {
@@ -2436,13 +2445,117 @@ namespace TTRider.FluidSql
         }
         public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, Token number)
         {
-            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number , DatePart = DatePart.Millisecond };
+            return new DateAddFunctionToken { Subtract = true, Token = token, Number = number, DatePart = DatePart.Millisecond };
         }
         public static DateFunctionExpressionToken SubtractMilliseconds(this DateFunctionExpressionToken token, int number)
         {
             return new DateAddFunctionToken { Subtract = true, Token = token, Number = Sql.Scalar(number), DatePart = DatePart.Millisecond };
         }
         #endregion
+
+        #region Stored Procedure
+
+        public static T As<T>(this T statement, IStatement body) where T : IProcedureStatement
+        {
+            statement.Body = body;
+            return statement;
+        }
+        public static T As<T>(this T statement, IStatement body, params IStatement[] additionalBodyStatements) where T : IProcedureStatement
+        {
+            statement.Body = (additionalBodyStatements.Length > 0) ? Sql.Statements(body, additionalBodyStatements) : body;
+            return statement;
+        }
+
+        public static T Parameters<T>(this T statement, Parameter parameter, params Parameter[] parameters) where T : IProcedureStatement
+        {
+            statement.Parameters.Add(parameter);
+            foreach (var p in parameters)
+            {
+                statement.Parameters.Add(p);
+            }
+            return statement;
+        }
+
+        public static T Parameters<T>(this T statement, ParameterDirection direction, Parameter parameter, params Parameter[] parameters) where T : IProcedureStatement
+        {
+            parameter.Direction = direction;
+            statement.Parameters.Add(parameter);
+            foreach (var p in parameters)
+            {
+                parameter.Direction = direction;
+                statement.Parameters.Add(p);
+            }
+            return statement;
+        }
+
+        public static T InputParameters<T>(this T statement, Parameter parameter, params Parameter[] parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.Input, parameter, parameters);
+        }
+        public static T InputOutputParameters<T>(this T statement, Parameter parameter, params Parameter[] parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.InputOutput, parameter, parameters);
+        }
+        public static T OutputParameters<T>(this T statement, Parameter parameter, params Parameter[] parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.Output, parameter, parameters);
+        }
+        public static T ReturnValue<T>(this T statement, Parameter parameter) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.ReturnValue, parameter);
+        }
+
+        public static T Parameters<T>(this T statement, IEnumerable<Parameter> parameters) where T : IProcedureStatement
+        {
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    statement.Parameters.Add(p);
+                }
+            }
+            return statement;
+        }
+
+        public static T Parameters<T>(this T statement, ParameterDirection direction, IEnumerable<Parameter> parameters) where T : IProcedureStatement
+        {
+            if (parameters != null)
+            {
+                foreach (var p in parameters)
+                {
+                    p.Direction = direction;
+                    statement.Parameters.Add(p);
+                }
+            }
+            return statement;
+        }
+
+        public static T InputParameters<T>(this T statement, IEnumerable<Parameter> parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.Input, parameters);
+        }
+        public static T InputOutputParameters<T>(this T statement, IEnumerable<Parameter> parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.InputOutput, parameters);
+        }
+        public static T OutputParameters<T>(this T statement, IEnumerable<Parameter> parameters) where T : IProcedureStatement
+        {
+            return statement.Parameters(System.Data.ParameterDirection.Output, parameters);
+        }
+
+        public static T Recompile<T>(this T statement, bool recompile = true) where T : IProcedureStatement
+        {
+            statement.Recompile = recompile;
+            return statement;
+        }
+        public static ExecuteProcedureStatement Recompile(this ExecuteProcedureStatement statement, bool recompile = true)
+        {
+            statement.Recompile = recompile;
+            return statement;
+        }
+
+
+        #endregion Stored Procedure
         public static string GetCommandSummary(this IDbCommand command)
         {
             if (command == null) return string.Empty;

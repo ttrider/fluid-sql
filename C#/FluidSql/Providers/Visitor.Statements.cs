@@ -113,7 +113,11 @@ namespace TTRider.FluidSql.Providers
         protected virtual void VisitAlterViewStatement(AlterViewStatement statement){ throw new NotImplementedException();}
         protected virtual void VisitDropViewStatement(DropViewStatement statement){ throw new NotImplementedException();}
         protected virtual void VisitExecuteStatement(ExecuteStatement statement){ throw new NotImplementedException(); }
+        protected virtual void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement) { throw new NotImplementedException(); }
         protected virtual void VisitCreateSchemaStatement(CreateSchemaStatement statement) { throw new NotImplementedException(); }
         protected virtual void VisitDropSchemaStatement(DropSchemaStatement statement) { throw new NotImplementedException(); }
+        protected virtual void VisitCreateProcedureStatement(CreateProcedureStatement statement) { throw new NotImplementedException(); }
+        protected virtual void VisitDropProcedureStatement(DropProcedureStatement statement) { throw new NotImplementedException(); }
+        protected virtual void VisitAlterProcedureStatement(AlterProcedureStatement statement) { throw new NotImplementedException(); }
     }
 }
