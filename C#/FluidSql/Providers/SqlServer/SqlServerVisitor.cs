@@ -1423,7 +1423,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                         State.Write(parameter.Name);
                         State.Write(Symbols.AssignVal);
                         State.Write(parameter.Name);
-                        if (parameter.Direction == ParameterDirection.Input ||
+                        if (parameter.Direction == ParameterDirection.Output ||
                             parameter.Direction == ParameterDirection.InputOutput)
                         {
                             State.Write(Symbols.OUTPUT);

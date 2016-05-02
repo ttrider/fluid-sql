@@ -5,7 +5,7 @@ For more information please take a look at http://ttrider.github.io/fluid-sql
 
 Release Notes
 ==
-1.8.0
+1.8.1
 --
 * Support for EXECUTE Stored Procedures 
 * Bug Fixes
