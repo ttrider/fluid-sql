@@ -110,7 +110,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
 
 
-        private void VisitType(TypedToken typedToken)
+        protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
@@ -731,20 +731,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             VisitInto(statement.Into);
 
-            if (!string.IsNullOrWhiteSpace(statement.Into.Alias))
-            {
-                State.Write(Symbols.AS);
-                State.Write(this.IdentifierOpenQuote, statement.Into.Alias, this.IdentifierCloseQuote);
-            }
+            VisitAlias(statement.Into.Alias);
 
             State.Write(Symbols.USING);
             VisitToken(statement.Using);
 
-            if (!string.IsNullOrWhiteSpace((statement.Using as IAliasToken)?.Alias))
-            {
-                State.Write(Symbols.AS);
-                State.Write(this.IdentifierOpenQuote, ((IAliasToken) (statement.Using)).Alias, this.IdentifierCloseQuote);
-            }
+            VisitAlias((statement.Using as IAliasToken)?.Alias);
 
             State.Write(Symbols.ON);
 

@@ -2898,5 +2898,36 @@ namespace TTRider.FluidSql
         }
 
         #endregion Stored Procedure
+
+        #region CAST
+
+        public static CastToken CastAs(this ExpressionToken token, CommonDbType type)
+        {
+            return new CastToken
+            {
+                Token = token,
+                DbType = type
+            };
+        }
+        public static CastToken CastAs(this ExpressionToken token, CommonDbType type, int length)
+        {
+            return new CastToken
+            {
+                Token = token,
+                DbType = type,
+                Length = length
+            };
+        }
+        public static CastToken CastAs(this ExpressionToken token, CommonDbType type, byte precision, byte scale)
+        {
+            return new CastToken
+            {
+                Token = token,
+                DbType = type,
+                Precision = precision,
+                Scale = scale
+            };
+        }
+        #endregion CAST
     }
 }

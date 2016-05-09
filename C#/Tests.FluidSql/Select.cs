@@ -1409,5 +1409,15 @@ namespace FluidSqlTests
                 "SELECT CASE WHEN 123 = @foo THEN N'123' WHEN 234 = @foo THEN N'234' ELSE N'345' END;"
                 );
         }
+
+        [TestMethod]
+        public void Cast()
+        {
+            AssertSql(
+                Sql.Select.Output(
+                    Sql.Scalar(123).CastAs(CommonDbType.Int).As("foo"))
+                    ,
+                "SELECT CAST ( 123 AS INT ) AS [foo];");
+        }
     }
 }

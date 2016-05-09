@@ -82,6 +82,7 @@ namespace TTRider.FluidSql.Providers
                 { typeof (CTEDefinition), (v, t) => v.VisitCommonTableExpression((CTEDefinition) t) },
                 { typeof (RecordsetSourceToken), (v, t) => v.VisitFromToken((RecordsetSourceToken) t) },
                 { typeof (CaseToken), (v, t) => v.VisitCaseToken((CaseToken) t) },
+                { typeof (CastToken), (v, t) => v.VisitCastToken((CastToken) t) },
                 /*functions*/
                 { typeof (NowFunctionToken), (v, t) => v.VisitNowFunctionToken((NowFunctionToken) t) },
                 { typeof (UuidFunctionToken), (v, t) => v.VisitUuidFunctionToken((UuidFunctionToken) t) },
@@ -187,6 +188,7 @@ namespace TTRider.FluidSql.Providers
         protected virtual string[] SupportedDialects => supportedDialects;
 
         protected abstract void VisitJoinType(Joins join);
+        protected abstract void VisitType(ITyped typedToken);
 
         protected virtual string ResolveName(Name name)
         {
@@ -222,15 +224,20 @@ namespace TTRider.FluidSql.Providers
             }
             if (includeAlias && token is IAliasToken)
             {
-                if (!string.IsNullOrWhiteSpace(((IAliasToken) token).Alias))
-                {
-                    State.Write(Symbols.AS);
-                    State.Write(this.IdentifierOpenQuote, ((IAliasToken) token).Alias, this.IdentifierCloseQuote);
-                }
+                VisitAlias(((IAliasToken) token).Alias);
             }
 
             State.Parameters.AddRange(token.Parameters);
             State.ParameterValues.AddRange(token.ParameterValues);
+        }
+
+        protected virtual void VisitAlias(string alias)
+        {
+            if (!string.IsNullOrWhiteSpace(alias))
+            {
+                State.Write(Symbols.AS);
+                State.Write(this.IdentifierOpenQuote, alias, this.IdentifierCloseQuote);
+            }
         }
 
         protected virtual void VisitStatement(IStatement statement)
@@ -421,6 +428,17 @@ namespace TTRider.FluidSql.Providers
 
             State.Write(Symbols.END);
         }
+
+        protected virtual void VisitCastToken(CastToken token)
+        {
+            State.Write(Symbols.CAST);
+            State.Write(Symbols.OpenParenthesis);
+            VisitToken(token.Token);
+            State.Write(Symbols.AS);
+            VisitType(token);
+            State.Write(Symbols.CloseParenthesis);
+        }
+        
 
         protected virtual void VisitPlaceholderExpressionToken(PlaceholderExpressionToken token)
         {

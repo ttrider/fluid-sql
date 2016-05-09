@@ -70,7 +70,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
         }
 
 
-        void VisitType(TypedToken typedToken)
+        protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {

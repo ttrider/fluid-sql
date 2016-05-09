@@ -5,6 +5,10 @@ For more information please take a look at http://ttrider.github.io/fluid-sql
 
 Release Notes
 ==
+1.9.0
+--
+* Support for CAST function
+* Bug Fixes
 1.8.1
 --
 * Support for EXECUTE Stored Procedures 

@@ -46,6 +46,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DatePart.cs" />
+    <Compile Include="Interfaces\ITyped.cs" />
     <Compile Include="Statements\AlterProcedureStatement.cs" />
     <Compile Include="Statements\CreateProcedureStatement.cs" />
     <Compile Include="Statements\DropProcedureStatement.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Statements\CreateOrAlterViewStatement.cs" />
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
+    <Compile Include="Tokens\CastToken.cs" />
     <Compile Include="Tokens\PlaceholderToken.cs" />
     <Compile Include="Tokens\CTEDeclaration.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />

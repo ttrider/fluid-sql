@@ -37,6 +37,7 @@ namespace TTRider.FluidSql.Providers
             public const string BREAK = "BREAK";
             public const string BY = "BY";
             public const string CASE = "CASE";
+            public const string CAST = "CAST";
             public const string CATCH = "CATCH";
             public const string CLUSTERED = "CLUSTERED";
             public const string COALESCE = "COALESCE";
