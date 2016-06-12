@@ -252,6 +252,34 @@ namespace TTRider.FluidSql
             copy.ParameterValues.Clear();
             return copy;
         }
+
+        public static CommonDbType GetCommonDbTypeFromValue(object value)
+        {
+            if (value == null) return CommonDbType.Variant;
+
+            if (value is byte) return CommonDbType.TinyInt;
+            if (value is int) return CommonDbType.Int;
+            if (value is short) return CommonDbType.SmallInt;
+            if (value is long) return CommonDbType.BigInt;
+
+            if (value is double) return CommonDbType.Real;
+            if (value is float) return CommonDbType.Float;
+            if (value is decimal) return CommonDbType.Decimal;
+
+            if (value is char) return CommonDbType.Char;
+            if (value is string) return CommonDbType.NVarChar;
+
+            if (value is bool) return CommonDbType.Bit;
+
+            if (value is DateTime) return CommonDbType.DateTime;
+            if (value is DateTimeOffset) return CommonDbType.DateTimeOffset;
+
+            if (value is Guid) return CommonDbType.UniqueIdentifier;
+
+            if (value is System.Xml.XmlElement) return CommonDbType.Xml;
+
+            return CommonDbType.Variant;
+        }
     }
 
     public class ParameterEqualityComparer : EqualityComparer<Parameter>
@@ -270,6 +298,9 @@ namespace TTRider.FluidSql
 
     public class ParameterFactory
     {
+        
+
+
         public Parameter FromValue(string name, object value)
         {
             if (value == null) return Any(name);

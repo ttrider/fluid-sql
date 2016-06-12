@@ -178,6 +178,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 .Except(state.Variables, ParameterEqualityComparer.Default)
                 .Select(p =>
                 {
+                    var inferType = false;
                     var sp = new SqlParameter
                     {
                         ParameterName = p.Name,
@@ -191,6 +192,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         sp.Size = p.Length.Value;
                     }
+                    else
+                    {
+                        inferType = true;
+                    }
 
                     if (p.Precision.HasValue)
                     {
@@ -203,13 +208,23 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     }
 
                     var value = state.ParameterValues.FirstOrDefault(pp => string.Equals(pp.Name, p.Name));
-                    if (value != null && value.Value != null)
+                    if (value?.Value != null)
                     {
                         sp.Value = value.Value;
+
+                        if (inferType)
+                        {
+                            sp.SqlDbType = CommonDbTypeToSqlDbType[Parameter.GetCommonDbTypeFromValue(sp.Value)];
+                        }
                     }
                     else if (p.DefaultValue != null)
                     {
                         sp.Value = p.DefaultValue;
+
+                        if (inferType)
+                        {
+                            sp.SqlDbType = CommonDbTypeToSqlDbType[Parameter.GetCommonDbTypeFromValue(sp.Value)];
+                        }
                     }
                     return sp;
                 });
