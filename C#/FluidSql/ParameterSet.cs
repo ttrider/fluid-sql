@@ -128,10 +128,10 @@ namespace TTRider.FluidSql
             return p;
         }
 
-        public Parameter AddDecimal(string name, int length, byte precision = 18, byte scale = 0,
+        public Parameter AddDecimal(string name, byte precision = 18, byte scale = 0,
             ParameterDirection direction = ParameterDirection.Input)
         {
-            var p = Sql.Parameter.Decimal(name, length, precision, scale);
+            var p = Sql.Parameter.Decimal(name, precision, scale);
             this.Add(p, direction);
             return p;
         }
