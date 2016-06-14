@@ -188,13 +188,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     {
                         sp.SqlDbType = CommonDbTypeToSqlDbType[p.DbType.Value];
                     }
-                    if (p.Length.HasValue)
-                    {
-                        sp.Size = p.Length.Value;
-                    }
                     else
                     {
                         inferType = true;
+                    }
+
+                    if (p.Length.HasValue)
+                    {
+                        sp.Size = p.Length.Value;
                     }
 
                     if (p.Precision.HasValue)
