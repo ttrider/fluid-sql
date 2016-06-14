@@ -12,5 +12,6 @@ namespace TTRider.FluidSql
         public Name Name { get; set; }
         public bool CheckExists { get; set; }
         public bool IsTemporary { get; set; }
+        public bool? IsCascade { get; set; }
     }
 }
