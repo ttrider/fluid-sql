@@ -817,7 +817,15 @@ namespace TTRider.FluidSql
         {
             return new DropTableStatement {Name = name, CheckExists = checkExists};
         }
-
+        public static DropTableStatement DropTable(Name name, bool isCascade, bool checkExists = false)
+        {
+            return new DropTableStatement
+            {
+                Name = name,
+                CheckExists = checkExists,
+                IsCascade = isCascade
+            };
+        }
         public static DropTableStatement DropTemporaryTable(Name name, bool checkExists = false)
         {
             return new DropTableStatement

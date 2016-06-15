@@ -36,6 +36,7 @@ namespace TTRider.FluidSql.Providers
             public const string BETWEEN = "BETWEEN";
             public const string BREAK = "BREAK";
             public const string BY = "BY";
+            public const string CASCADE = "CASCADE";
             public const string CASE = "CASE";
             public const string CATCH = "CATCH";
             public const string CLUSTERED = "CLUSTERED";
@@ -114,6 +115,7 @@ namespace TTRider.FluidSql.Providers
             public const string RELEASE = "RELEASE";
             public const string REORGANIZE = "REORGANIZE";
             public const string REPLACE = "REPLACE";
+            public const string RESTRICT = "RESTRICT";
             public const string RETURN = "RETURN";
             public const string ROLLBACK = "ROLLBACK";
             public const string ROWGUIDCOL = "ROWGUIDCOL";
