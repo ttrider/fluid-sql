@@ -146,7 +146,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {CommonDbType.Money,NpgsqlDbType.Money},
             {CommonDbType.NChar,NpgsqlDbType.Char},
             {CommonDbType.NText,NpgsqlDbType.Text},
-            {CommonDbType.NVarChar,NpgsqlDbType.Varchar},
+            {CommonDbType.NVarChar,NpgsqlDbType.Text},
             {CommonDbType.Real,NpgsqlDbType.Double},
             {CommonDbType.UniqueIdentifier,NpgsqlDbType.Uuid},
             {CommonDbType.SmallDateTime,NpgsqlDbType.Timestamp},
@@ -161,7 +161,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {CommonDbType.Xml,NpgsqlDbType.Xml},
             {CommonDbType.Date,NpgsqlDbType.Date},
             {CommonDbType.Time,NpgsqlDbType.Time},
-            {CommonDbType.DateTimeOffset,NpgsqlDbType.TimestampTZ}
+            {CommonDbType.DateTimeOffset,NpgsqlDbType.TimestampTZ},
         };
     }
 }

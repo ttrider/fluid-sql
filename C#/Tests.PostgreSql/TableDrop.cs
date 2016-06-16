@@ -5,7 +5,7 @@ using TTRider.FluidSql.Providers.PostgreSQL;
 namespace Tests.PostgreSql
 {
     [TestClass]
-    public partial class TableTests
+    public partial class TableDrop
     {
         PostgreSQLProvider provider = new PostgreSQLProvider();
 
@@ -32,7 +32,7 @@ namespace Tests.PostgreSql
         [TestMethod]
         public void DropTableCascade()
         {
-            var statement = Sql.DropTable("table1", true, true);
+            var statement = Sql.DropTable("table1", true).Cascade();
 
             var postgresql = provider.GenerateStatement(statement);
 
@@ -42,7 +42,7 @@ namespace Tests.PostgreSql
         [TestMethod]
         public void DropTableRestrict()
         {
-            var statement = Sql.DropTable("table1", false, true);
+            var statement = Sql.DropTable("table1",true).Restrict();
 
             var postgresql = provider.GenerateStatement(statement);
 

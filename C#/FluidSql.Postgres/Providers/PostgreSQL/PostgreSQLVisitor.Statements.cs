@@ -17,23 +17,61 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.FROM);
 
+            if (statement.Only)
+            {
+                State.Write(Symbols.ONLY);
+            }
+
             VisitFromToken(statement.RecordsetSource);
 
-            VisitWhereToken(statement.Where);            
+            VisitCRUDJoinToken(statement.Joins);
+
+            VisitUsingToken(statement.UsingList);
+
+            VisitWhereToken(statement.Where);
+
+            VisitCRUDJoinOnToken(statement.Joins, (statement.Where != null));
+
+            if (statement.Top != null)
+            {
+                VisitTopToken(statement.RecordsetSource, statement.Top, (statement.Where != null));
+            }
+
+            VisitWhereCurrentOfToken(statement.CursorName);
+
+            VisitReturningToken(statement.Output);
         }
 
         protected override void VisitUpdate(UpdateStatement statement)
         {
-            
             State.Write(Symbols.UPDATE);
 
-            VisitNameToken(statement.Target);
-
+            if (statement.Only)
+            {
+                State.Write(Symbols.ONLY);
+            }
+            
+            VisitToken(statement.Target, true);
+            
             State.Write(Symbols.SET);
 
             VisitTokenSet(statement.Set);
+            
+            if (statement.RecordsetSource != null)
+            {
+                State.Write(Symbols.FROM);
+                VisitFromToken(statement.RecordsetSource);
+            }
+
+            VisitCRUDJoinToken(statement.Joins, true);
 
             VisitWhereToken(statement.Where);
+
+            VisitCRUDJoinOnToken(statement.Joins, (statement.Where != null));
+
+            VisitWhereCurrentOfToken(statement.CursorName);
+
+            VisitReturningToken(statement.Output, statement.OutputInto);
         }
 
         protected override void VisitInsert(InsertStatement statement)
@@ -42,9 +80,14 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.INTO);
 
-            VisitNameToken(statement.Into);
+            VisitToken(statement.Into, true);
 
-            if (statement.Columns.Count > 0)
+            if (statement.DefaultValues)
+            {
+                State.Write(Symbols.DEFAULT);
+                State.Write(Symbols.VALUES);
+            }
+            else if (statement.Columns.Count > 0)
             {
                 var separator = Symbols.OpenParenthesis;
                 foreach (var valuesSet in statement.Columns)
@@ -66,15 +109,38 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
                     VisitTokenSetInParenthesis(valuesSet);
                 }
-            }            
+            }
+            else if (statement.From != null)
+            {
+                VisitStatement(statement.From);
+                if (statement.Top != null)
+                {
+                    State.Write(Symbols.LIMIT);
+                    VisitToken(Sql.Scalar(statement.Top.IntValue));
+                }
+            }
+
+            if (statement.Conflict.HasValue)
+            {
+                State.Write(Symbols.ON);
+                State.Write(Symbols.CONFLICT);
+                switch (statement.Conflict.Value)
+                {
+                    case OnConflict.Ignore:
+                        State.Write(Symbols.DO);
+                        State.Write(Symbols.NOTHING);
+                        break;
+                }
+            }
+
+            VisitReturningToken(statement.Output, statement.OutputInto);
         }
 
         protected override void VisitSelect(SelectStatement statement)
         {
-            
             State.Write(Symbols.SELECT);
-            
-            // output columns
+
+           // output columns
             if (statement.Output.Count == 0)
             {
                 State.Write(Symbols.Asterisk);
@@ -91,6 +157,8 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 VisitFromToken(statement.From);
             }
 
+            VisitJoin(statement.Joins);
+
             VisitWhereToken(statement.Where);
 
             VisitGroupByToken(statement.GroupBy);
@@ -98,11 +166,42 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitHavingToken(statement.Having);
 
             VisitOrderByToken(statement.OrderBy);
-            
+
+            if (statement.Top != null)
+            {
+                State.Write(Symbols.LIMIT);
+
+                if (statement.Top.Value != null)
+                {
+                    if (statement.Top.Percent)
+                    {
+                        State.Write(Symbols.OpenParenthesis);
+                        State.Write(Symbols.SELECT);
+                        VisitToken(Sql.Select.Output(Sql.Function("COUNT", Sql.Star())).From(statement.From));
+                        //calculate percent value - * percent / 100
+                        State.Write(Symbols.MultiplyVal);
+                        VisitToken(Sql.Scalar(statement.Top.Value));
+                        State.Write(Symbols.DivideVal);
+                        State.Write("100");
+
+                        State.Write(Symbols.CloseParenthesis);
+                    }
+                    else
+                    {
+                        VisitToken(statement.Top.Value);
+                    }
+                }
+            }
+
+            if (statement.Offset != null)
+            {
+                State.Write(Symbols.OFFSET);
+                VisitToken(statement.Offset);
+            }
         }
+
         protected override void VisitMerge(MergeStatement statement) { throw new NotImplementedException(); }
         protected override void VisitSet(SetStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitUnionStatement(UnionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitIntersectStatement(IntersectStatement statement) { throw new NotImplementedException(); }
         protected override void VisitExceptStatement(ExceptStatement statement) { throw new NotImplementedException(); }
         protected override void VisitBeginTransaction(BeginTransactionStatement statement) { throw new NotImplementedException(); }
@@ -111,7 +210,95 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitSaveTransaction(SaveTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDeclareStatement(DeclareStatement statement) { throw new NotImplementedException(); }
         protected override void VisitIfStatement(IfStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitCreateTableStatement(CreateTableStatement statement) { throw new NotImplementedException(); }
+
+        protected override void VisitCreateTableStatement(CreateTableStatement statement)
+        {
+            State.Write(Symbols.CREATE);
+
+            if (statement.IsTableVariable || statement.IsTemporary)
+            {
+                State.Write(Symbols.TEMPORARY);
+            }            
+            State.Write(Symbols.TABLE);
+
+            if (statement.CheckIfNotExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.NOT);
+                State.Write(Symbols.EXISTS);
+            }
+
+            VisitNameToken(statement.Name);
+
+            var separator = Symbols.OpenParenthesis;
+            if (statement.Columns.Count == 0)
+            {
+                State.Write(separator);
+            }
+            else
+            {
+                foreach (var column in statement.Columns)
+                {
+                    State.Write(separator);
+                    separator = Symbols.Comma;
+                    VisitNameToken(column.Name);
+
+                    if (column.Identity.On)
+                    {
+                        column.DbType = CommonDbType.Serial;
+                    }
+
+                    VisitType(column);
+                    
+                    if (column.Null.HasValue)
+                    {
+                        if (!column.Null.Value)
+                        {
+                            State.Write(Symbols.NOT);
+                        }
+                        State.Write(Symbols.NULL);
+                        VisitConflict(column.NullConflict);
+                    }
+
+                    if (column.DefaultValue != null)
+                    {
+                        State.Write(Symbols.DEFAULT);
+                        VisitToken(column.DefaultValue);
+                    }
+                }
+            }
+            if (statement.PrimaryKey != null)
+            {
+                if (statement.PrimaryKey.Name != null)
+                {
+                    State.Write(Symbols.Comma);
+                    State.Write(Symbols.CONSTRAINT);
+                    VisitNameToken(statement.PrimaryKey.Name);
+                }
+                State.Write(Symbols.PRIMARY);
+                State.Write(Symbols.KEY);
+                VisitTokenSetInParenthesis(statement.PrimaryKey.ColumnsName);
+            }
+            foreach (var unique in statement.UniqueConstrains)
+            {
+                State.Write(Symbols.Comma);
+                State.Write(Symbols.CONSTRAINT);
+                VisitNameToken(unique.Name);
+                State.Write(Symbols.UNIQUE);
+                VisitTokenSetInParenthesis(unique.ColumnsName);
+            }
+
+            State.Write(Symbols.CloseParenthesis);
+
+            if (statement.Indicies.Count > 0)
+            {
+                foreach (var createIndexStatement in statement.Indicies)
+                {
+                    State.WriteStatementTerminator();
+                    VisitCreateIndexStatement(createIndexStatement);
+                }
+            }
+        }
 
         protected override void VisitDropTableStatement(DropTableStatement statement)
         {
@@ -137,7 +324,23 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             }
         }
 
-        protected override void VisitCreateIndexStatement(CreateIndexStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement)
+        {
+            State.Write(Symbols.CREATE);
+            
+            State.Write(Symbols.INDEX);
+
+            VisitToken(createIndexStatement.Name);
+
+            State.Write(Symbols.ON);
+
+            VisitToken(createIndexStatement.On);
+
+            VisitTokenSetInParenthesis(createIndexStatement.Columns);
+
+            State.Write(Symbols.Semicolon);
+        }
+        
         protected override void VisitAlterIndexStatement(AlterIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDropIndexStatement(DropIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCommentStatement(CommentStatement statement) { throw new NotImplementedException(); }

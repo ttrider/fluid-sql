@@ -84,6 +84,7 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("SELECT * FROM [sys].[objects] AS [O];", command.CommandText);
         }
+
         [TestMethod]
         public void SelectSkipSchema()
         {

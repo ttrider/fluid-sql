@@ -19,6 +19,8 @@ namespace TTRider.FluidSql
 
         private readonly List<string> parts = new List<string>();
 
+        private bool isNeedQuote = true;
+
         static IEnumerable<string> GetParts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -87,6 +89,10 @@ namespace TTRider.FluidSql
             get { return this.parts.FirstOrDefault(); }
         }
 
+        public bool IsNeedQuote
+        {
+            set { this.isNeedQuote = value; }
+        }
 
         public string GetFullName(string openQuote = null, string closeQuote = null)
         {
@@ -99,7 +105,8 @@ namespace TTRider.FluidSql
                         item =>
                             string.IsNullOrWhiteSpace(item) ||
                             string.Equals(item, "*") ||
-                            item.TrimStart().StartsWith("@")
+                            item.TrimStart().StartsWith("@") ||
+                            !this.isNeedQuote
                                 ? item
                                 : openQuote + item + closeQuote));
         }

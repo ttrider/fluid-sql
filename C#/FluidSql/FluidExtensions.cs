@@ -426,8 +426,19 @@ namespace TTRider.FluidSql
             statement.From.Add(token.As(alias));
             return statement;
         }
-
+        
+        public static SelectStatement From(this SelectStatement statement, List<RecordsetSourceToken> token, string alias = null)
+        {
+            statement.From.AddRange(token);
+            return statement;
+        }
         public static DeleteStatement From(this DeleteStatement statement, Token token)
+        {
+            statement.RecordsetSource = new RecordsetSourceToken { Source = token };
+            return statement;
+        }
+
+        public static UpdateStatement From(this UpdateStatement statement, Token token)
         {
             statement.RecordsetSource = new RecordsetSourceToken { Source = token };
             return statement;
@@ -1568,6 +1579,24 @@ namespace TTRider.FluidSql
 
             statement.PrimaryKey.Name = name;
             statement.PrimaryKey.Columns.AddRange(columns);
+            foreach(Order columnName in columns)
+            {
+                statement.PrimaryKey.ColumnsName.Add(new Name(columnName.Column));
+            }
+            return statement;
+        }
+
+        //for postgresql
+       public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name,
+            params Name[] columns)
+        {
+            if (statement.PrimaryKey == null)
+            {
+                statement.PrimaryKey = new ConstrainDefinition();
+            }
+
+            statement.PrimaryKey.Name = name;
+            statement.PrimaryKey.ColumnsName.AddRange(columns);
             return statement;
         }
 
@@ -1628,6 +1657,10 @@ namespace TTRider.FluidSql
             }
             statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Columns.AddRange(columns);
+            foreach (Order columnName in columns)
+            {
+                statement.PrimaryKey.ColumnsName.Add(new Name(columnName.Column));
+            }
             return statement;
         }
 
@@ -1812,6 +1845,10 @@ namespace TTRider.FluidSql
         {
             var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
             index.Columns.AddRange(columns);
+            foreach (Order columnName in columns)
+            {
+                index.ColumnsName.Add(new Name(columnName.Column));
+            }
             statement.UniqueConstrains.Add(index);
             return statement;
         }
@@ -2116,6 +2153,14 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T Limit<T>(this T statement, int value, bool percent)
+            where T : ITopStatement
+        {
+            statement.Top = new Top(value, percent, false);
+
+            return statement;
+        }
+
         public static T Offset<T>(this T statement, int value)
             where T : IOffsetStatement
         {
@@ -2203,6 +2248,24 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static DeleteStatement Only(this DeleteStatement statement)
+        {
+            statement.Only = true;
+            return statement;
+        }
+
+        public static DeleteStatement WhereCurrentOf(this DeleteStatement statement, Name token)
+        {
+            statement.CursorName = token;
+            return statement;
+        }
+
+        public static DeleteStatement Using(this DeleteStatement statement, params Name[] token)
+        {
+            statement.UsingList.AddRange(token);
+            return statement;
+        }
+
         public static InsertStatement Insert(this CTEDefinition cte)
         {
             var statement = new InsertStatement();
@@ -2225,6 +2288,11 @@ namespace TTRider.FluidSql
             statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
             return statement;
         }
+        public static UpdateStatement WhereCurrentOf(this UpdateStatement statement, Name token)
+        {
+            statement.CursorName = token;
+            return statement;
+        }
 
         public static UpdateStatement Update(this CTEDefinition cte, Name target)
         {
@@ -2233,6 +2301,24 @@ namespace TTRider.FluidSql
                 Target = target
             };
             statement.CommonTableExpressions.AddRange(GetCteDefinitions(cte));
+            return statement;
+        }
+
+        public static UpdateStatement Only(this UpdateStatement statement)
+        {
+            statement.Only = true;
+            return statement;
+        }
+
+        public static DropTableStatement Cascade(this DropTableStatement statement)
+        {
+            statement.IsCascade = true;
+            return statement;
+        }
+
+        public static DropTableStatement Restrict(this DropTableStatement statement)
+        {
+            statement.IsCascade = false;
             return statement;
         }
         #endregion CTE
