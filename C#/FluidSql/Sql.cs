@@ -18,6 +18,13 @@ namespace TTRider.FluidSql
             return !String.IsNullOrWhiteSpace(source) ? new Name(source, "*") : new Name("*");
         }
 
+        public static Name Default(string source = null)
+        {
+            Name token = !String.IsNullOrWhiteSpace(source) ? new Name(source, "DEFAULT") : new Name("DEFAULT");
+            token.IsNeedQuote = false;
+            return token;
+        }
+
         public static Name Name(params string[] names)
         {
             return new Name(names);
@@ -817,15 +824,7 @@ namespace TTRider.FluidSql
         {
             return new DropTableStatement {Name = name, CheckExists = checkExists};
         }
-        public static DropTableStatement DropTable(Name name, bool isCascade, bool checkExists = false)
-        {
-            return new DropTableStatement
-            {
-                Name = name,
-                CheckExists = checkExists,
-                IsCascade = isCascade
-            };
-        }
+
         public static DropTableStatement DropTemporaryTable(Name name, bool checkExists = false)
         {
             return new DropTableStatement

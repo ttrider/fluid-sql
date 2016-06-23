@@ -15,6 +15,7 @@ namespace TTRider.FluidSql
         public Top(int value, bool percent, bool withTies)
         {
             if (value < 1) throw new ArgumentException("value");
+            this.IntValue = value;
             this.Value = Sql.Scalar(value);
             this.Percent = percent;
             this.WithTies = withTies;
@@ -22,6 +23,7 @@ namespace TTRider.FluidSql
 
         public Top(Parameter value, bool percent, bool withTies)
         {
+            this.IntValue = -1;
             this.Parameters.Add(value);
             this.Value = value;
             this.Percent = percent;
@@ -29,6 +31,7 @@ namespace TTRider.FluidSql
         }
 
         public Token Value { get; set; }
+        public int IntValue { get; set; }
         public bool Percent { get; set; }
         public bool WithTies { get; set; }
     }

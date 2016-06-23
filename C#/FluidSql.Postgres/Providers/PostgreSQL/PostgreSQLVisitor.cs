@@ -32,7 +32,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             "MONEY",        //NpgsqlDbType.Money,
             "CHAR",         //NpgsqlDbType.Char,
             "TEXT",         //NpgsqlDbType.Text,
-            "VARCHAR",      //NpgsqlDbType.Varchar,
+            "TEXT",      //NpgsqlDbType.Varchar,
             "DOUBLE PRECISION",//NpgsqlDbType.Double,
             "UUID",         //NpgsqlDbType.Uuid,
             "TIMESTAMP",    //NpgsqlDbType.Timestamp,
@@ -48,6 +48,8 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             "DATE",         //NpgsqlDbType.Date,
             "TIME",         //NpgsqlDbType.Time,
             "TIMESTAMPTZ",  //NpgsqlDbType.TimestampTZ
+            "DATETIMEOFFSET", 
+            "SERIAL",       //NpgsqlDbType.Serial
         };
 
         protected override string[] SupportedDialects { get { return supportedDialects; } }

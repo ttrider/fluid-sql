@@ -34,5 +34,9 @@ namespace TTRider.FluidSql
         public Token Where { get; set; }
         public OnConflict? Conflict { get; set; }
         public List<CTEDefinition> CommonTableExpressions { get; set; }
+        
+        //supported on Postgresql
+        public bool Only { get; set; }
+        public Name CursorName { get; set; }
     }
 }

@@ -27,6 +27,7 @@ namespace TTRider.FluidSql.Providers
             public const string ALTER = "ALTER";
             public const string AND = "AND";
             public const string ANY = "ANY";
+            public const string ARRAY = "ARRAY";
             public const string AS = "AS";
             public const string ASC = "ASC";
             public const string AUTHORIZATION = "AUTHORIZATION";
@@ -46,6 +47,7 @@ namespace TTRider.FluidSql.Providers
             public const string CONSTRAINT = "CONSTRAINT";
             public const string CONTINUE = "CONTINUE";
             public const string CREATE = "CREATE";
+            public const string CURRENT = "CURRENT";
             public const string DATETIME = "DATETIME";
             public const string DECLARE = "DECLARE";
             public const string DEFAULT = "DEFAULT";
@@ -55,6 +57,7 @@ namespace TTRider.FluidSql.Providers
             public const string DESC = "DESC";
             public const string DISABLE = "DISABLE";
             public const string DISTINCT = "DISTINCT";
+            public const string DO = "DO";
             public const string DROP = "DROP";
             public const string DROP_EXISTING = "DROP_EXISTING";
             public const string ELSE = "ELSE";
@@ -95,9 +98,11 @@ namespace TTRider.FluidSql.Providers
             public const string NEXT = "NEXT";
             public const string NONCLUSTERED = "NONCLUSTERED";
             public const string NOT = "NOT";
+            public const string NOTHING = "NOTHING";
             public const string NULL = "NULL";
             public const string NULLIF = "NULLIF";
             public const string OBJECT_ID = "OBJECT_ID";
+            public const string OF = "OF";
             public const string OFF = "OFF";
             public const string OFFSET = "OFFSET";
             public const string ON = "ON";
@@ -117,6 +122,7 @@ namespace TTRider.FluidSql.Providers
             public const string REPLACE = "REPLACE";
             public const string RESTRICT = "RESTRICT";
             public const string RETURN = "RETURN";
+            public const string RETURNING = "RETURNING";
             public const string ROLLBACK = "ROLLBACK";
             public const string ROWGUIDCOL = "ROWGUIDCOL";
             public const string ROWS = "ROWS";
@@ -161,6 +167,7 @@ namespace TTRider.FluidSql.Providers
             public const string Asterisk = "*";
             public const string Pound = "#";
             public const string At = "@";
+            public const string Empty = "";
 
             public const string EqualsVal = "=";
             public const string AssignVal = "=";
@@ -194,6 +201,9 @@ namespace TTRider.FluidSql.Providers
 
             public const string SingleQuote = "'";
             public const string DoubleQuote = "\"";
+
+            //for postgresql
+            public const string TechId = "ctid";
         }
     }
 }

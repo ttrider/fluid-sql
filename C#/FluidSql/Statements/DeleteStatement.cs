@@ -23,6 +23,8 @@ namespace TTRider.FluidSql
             this.Joins = new List<Join>();
             this.OrderBy = new List<Order>();
             this.CommonTableExpressions = new List<CTEDefinition>();
+            this.UsingList = new List<Name>();
+            this.Returning = new List<ExpressionToken>();
         }   
 
         public RecordsetSourceToken RecordsetSource { get; set; }
@@ -34,5 +36,11 @@ namespace TTRider.FluidSql
         public Token Offset { get; set; }
         public List<Order> OrderBy { get; private set; }
         public List<CTEDefinition> CommonTableExpressions { get; set; }
+
+        //supported on Postgresql
+        public bool Only { get; set; }
+        public Name CursorName { get; set; }
+        public List<Name> UsingList { get; set; }
+        public List<ExpressionToken> Returning { get; private set; }
     }
 }

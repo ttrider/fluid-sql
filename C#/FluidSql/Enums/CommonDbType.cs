@@ -40,5 +40,6 @@ namespace TTRider.FluidSql
         Time = 26,
         DateTime2 = 27,
         DateTimeOffset = 28,
+        Serial = 29,
     }
 }
