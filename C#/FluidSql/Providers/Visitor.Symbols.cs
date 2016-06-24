@@ -43,6 +43,7 @@ namespace TTRider.FluidSql.Providers
             public const string CLUSTERED = "CLUSTERED";
             public const string COALESCE  = "COALESCE";
             public const string COMMIT = "COMMIT";
+            public const string COMMITED = "COMMITED";
             public const string CONFLICT = "CONFLICT";
             public const string CONSTRAINT = "CONSTRAINT";
             public const string CONTINUE = "CONTINUE";
@@ -87,7 +88,9 @@ namespace TTRider.FluidSql.Providers
             public const string INTERSECT = "INTERSECT";
             public const string INTO = "INTO";
             public const string IS = "IS";
+            public const string ISOLATION = "ISOLATION";
             public const string KEY = "KEY";
+            public const string LEVEL = "LEVEL";
             public const string LIKE = "LIKE";
             public const string LIMIT = "LIMIT";
             public const string MARK = "MARK";
@@ -114,11 +117,13 @@ namespace TTRider.FluidSql.Providers
             public const string PAD_INDEX = "PAD_INDEX";
             public const string PERCENT = "PERCENT";
             public const string PRIMARY = "PRIMARY";
+            public const string READ = "READ";
             public const string REBUILD = "REBUILD";
             public const string RECURSIVE = "RECURSIVE";
             public const string REINDEX = "REINDEX";
             public const string RELEASE = "RELEASE";
             public const string REORGANIZE = "REORGANIZE";
+            public const string REPEATABLE = "REPEATABLE";
             public const string REPLACE = "REPLACE";
             public const string RESTRICT = "RESTRICT";
             public const string RETURN = "RETURN";
@@ -130,6 +135,7 @@ namespace TTRider.FluidSql.Providers
             public const string SAVEPOINT = "SAVEPOINT";
             public const string SCHEMA = "SCHEMA";
             public const string SELECT = "SELECT";
+            public const string SERIALIZABLE = "SERIALIZABLE";
             public const string SET = "SET";
             public const string SORT_IN_TEMPDB = "SORT_IN_TEMPDB";
             public const string SOURCE = "SOURCE";
@@ -146,6 +152,7 @@ namespace TTRider.FluidSql.Providers
             public const string TOP = "TOP";
             public const string TRANSACTION = "TRANSACTION";
             public const string TRY = "TRY";
+            public const string UNCOMMITED = "UNCOMMITED";
             public const string UNION = "UNION";
             public const string UNIQUE = "UNIQUE";
             public const string UPDATE = "UPDATE";
@@ -157,6 +164,7 @@ namespace TTRider.FluidSql.Providers
             public const string WHERE = "WHERE";
             public const string WHILE = "WHILE";
             public const string WITH = "WITH";
+            public const string WRITE = "WRITE";
             public const string Comma = ",";
             public const string CloseParenthesis = ")";
             public const string OpenParenthesis = "(";

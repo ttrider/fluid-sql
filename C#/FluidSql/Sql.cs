@@ -657,6 +657,66 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static BeginTransactionStatement BeginSerializableTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                IsolationLevel = IsolationLevelType.Serializable
+            };
+        }
+
+        public static BeginTransactionStatement BeginRepeatebleReadTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                IsolationLevel = IsolationLevelType.RepeatableRead
+            };
+        }
+
+        public static BeginTransactionStatement BeginReadCommitedTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                IsolationLevel = IsolationLevelType.ReadCommited
+            };
+        }
+
+        public static BeginTransactionStatement BeginReadUnCommitedTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                IsolationLevel = IsolationLevelType.ReadUnCommited
+            };
+        }
+
+        public static BeginTransactionStatement BeginReadOnlyTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                AccessType = TransactionAccessType.ReadOnly
+            };
+        }
+
+        public static BeginTransactionStatement BeginReadWriteTransaction(Name name = null, string description = null)
+        {
+            return new BeginTransactionStatement
+            {
+                Name = name,
+                Description = description,
+                AccessType = TransactionAccessType.ReadWrite
+            };
+        }
+
         public static CommitTransactionStatement CommitTransaction(Name name = null)
         {
             return new CommitTransactionStatement

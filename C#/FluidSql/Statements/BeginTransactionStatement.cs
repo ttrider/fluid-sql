@@ -11,6 +11,10 @@ namespace TTRider.FluidSql
     {
         public string Description { get; set; }
 
+        public IsolationLevelType? IsolationLevel { get; set; }
+
         public TransactionType? Type { get; set; }
+
+        public TransactionAccessType? AccessType { get; set; }
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="Select.cs" />
     <Compile Include="TableDrop.cs" />
     <Compile Include="TableCreate.cs" />
+    <Compile Include="Transactions.cs" />
     <Compile Include="Update.cs" />
   </ItemGroup>
   <ItemGroup>
