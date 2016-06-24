@@ -138,9 +138,16 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
         protected override void VisitSelect(SelectStatement statement)
         {
+            VisitCommonTableExpressions(statement.CommonTableExpressions, true);
+
             State.Write(Symbols.SELECT);
 
-           // output columns
+            if (statement.Distinct)
+            {
+                State.Write(Symbols.DISTINCT);
+            }
+
+            // output columns
             if (statement.Output.Count == 0)
             {
                 State.Write(Symbols.Asterisk);
@@ -150,6 +157,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
             }
 
+            VisitIntoToken(statement.Into);
 
             if (statement.From.Count > 0)
             {
@@ -167,31 +175,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             VisitOrderByToken(statement.OrderBy);
 
-            if (statement.Top != null)
-            {
-                State.Write(Symbols.LIMIT);
-
-                if (statement.Top.Value != null)
-                {
-                    if (statement.Top.Percent)
-                    {
-                        State.Write(Symbols.OpenParenthesis);
-                        State.Write(Symbols.SELECT);
-                        VisitToken(Sql.Select.Output(Sql.Function("COUNT", Sql.Star())).From(statement.From));
-                        //calculate percent value - * percent / 100
-                        State.Write(Symbols.MultiplyVal);
-                        VisitToken(Sql.Scalar(statement.Top.Value));
-                        State.Write(Symbols.DivideVal);
-                        State.Write("100");
-
-                        State.Write(Symbols.CloseParenthesis);
-                    }
-                    else
-                    {
-                        VisitToken(statement.Top.Value);
-                    }
-                }
-            }
+            VisitTopToken(statement);
 
             if (statement.Offset != null)
             {
@@ -200,10 +184,34 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             }
         }
 
+        protected override void VisitExceptStatement(ExceptStatement statement)
+        {
+            VisitStatement(statement.First);
+
+            State.Write(Symbols.EXCEPT);
+
+            if (statement.All)
+            {
+                State.Write(Symbols.ALL);
+            }
+
+            VisitStatement(statement.Second);
+        }
+        protected override void VisitIntersectStatement(IntersectStatement statement)
+        {
+            VisitStatement(statement.First);
+            State.Write(Symbols.INTERSECT);
+
+            if (statement.All)
+            {
+                State.Write(Symbols.ALL);
+            }
+
+            VisitStatement(statement.Second);
+        }
+
         protected override void VisitMerge(MergeStatement statement) { throw new NotImplementedException(); }
         protected override void VisitSet(SetStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitIntersectStatement(IntersectStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitExceptStatement(ExceptStatement statement) { throw new NotImplementedException(); }
         protected override void VisitBeginTransaction(BeginTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCommitTransaction(CommitTransactionStatement statement) { throw new NotImplementedException(); }
         protected override void VisitRollbackTransaction(RollbackTransactionStatement statement) { throw new NotImplementedException(); }
