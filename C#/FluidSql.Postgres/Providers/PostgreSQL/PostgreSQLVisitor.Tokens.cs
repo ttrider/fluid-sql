@@ -12,8 +12,8 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitBitwiseNotToken(BitwiseNotToken token) { throw new NotImplementedException(); }
         protected override void VisitUnaryMinusToken(UnaryMinusToken token) { throw new NotImplementedException(); }
         protected override void VisitNotToken(NotToken token) { throw new NotImplementedException(); }
-        protected override void VisitIsNullToken(IsNullToken token) { throw new NotImplementedException(); }
-        protected override void VisitIsNotNullToken(IsNotNullToken token) { throw new NotImplementedException(); }
+        //protected override void VisitIsNullToken(IsNullToken token) { throw new NotImplementedException(); }
+        //protected override void VisitIsNotNullToken(IsNotNullToken token) { throw new NotImplementedException(); }
         protected override void VisitExistsToken(ExistsToken token) { throw new NotImplementedException(); }
         protected override void VisitAllToken(AllToken token) { throw new NotImplementedException(); }
         protected override void VisitAnyToken(AnyToken token) { throw new NotImplementedException(); }
@@ -24,7 +24,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token) { throw new NotImplementedException(); }
-        protected override void VisitCommonTableExpression(CTEDefinition token) { throw new NotImplementedException(); }
+        //protected override void VisitCommonTableExpression(CTEDefinition token) { throw new NotImplementedException(); }
         protected override void VisitCaseToken(CaseToken token) { throw new NotImplementedException(); }
 
         protected void VisitWhereCurrentOfToken(Name cursorName)
@@ -155,6 +155,56 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             
             State.Write(Symbols.CloseParenthesis);
 
+        }
+
+        protected void VisitIntoToken(Name intoToken)
+        {
+            if(intoToken != null)
+            {
+                State.Write(Symbols.INTO);
+                VisitNameToken(intoToken);
+            }
+        }
+
+        protected void VisitFetchNextToken(Top fetchToken)
+        {
+            if (fetchToken != null)
+            {
+                State.Write(Symbols.FETCH);
+                State.Write(Symbols.NEXT);
+                VisitToken(fetchToken);
+                State.Write(Symbols.ROWS);
+                State.Write(Symbols.ONLY);
+            }
+        }
+
+        protected void VisitTopToken(SelectStatement statement)
+        {
+            if (statement.Top != null)
+            {
+                State.Write(Symbols.LIMIT);
+
+                if (statement.Top.Value != null)
+                {
+                    if (statement.Top.Percent)
+                    {
+                        State.Write(Symbols.OpenParenthesis);
+                        State.Write(Symbols.SELECT);
+                        VisitToken(Sql.Select.Output(Sql.Function("COUNT", Sql.Star())).From(statement.From));
+                        //calculate percent value - * percent / 100
+                        State.Write(Symbols.MultiplyVal);
+                        VisitToken(Sql.Scalar(statement.Top.Value));
+                        State.Write(Symbols.DivideVal);
+                        State.Write("100");
+
+                        State.Write(Symbols.CloseParenthesis);
+                    }
+                    else
+                    {
+                        VisitToken(statement.Top.Value);
+                    }
+                }
+            }
         }
 
         private readonly string[] PredefinedTemporaryTables =

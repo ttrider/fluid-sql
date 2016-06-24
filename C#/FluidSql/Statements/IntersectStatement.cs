@@ -9,9 +9,12 @@ namespace TTRider.FluidSql
 {
     public class IntersectStatement : CorrelationStatement
     {
-        public IntersectStatement(RecordsetStatement source1, RecordsetStatement source2)
+        public IntersectStatement(RecordsetStatement source1, RecordsetStatement source2, bool all)
             : base(source1, source2)
         {
+            this.All = all;
         }
+
+        public bool All { get; set; }
     }
 }

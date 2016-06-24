@@ -13,4 +13,19 @@ namespace TTRider.FluidSql
         Immediate, 
         Exclusive
     }
+
+    public enum IsolationLevelType
+    {
+        Serializable,
+        RepeatableRead,
+        ReadCommited,
+        ReadUnCommited
+    }
+
+    public enum TransactionAccessType
+    {
+        None,
+        ReadWrite,
+        ReadOnly       
+    }
 }
