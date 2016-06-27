@@ -17,6 +17,7 @@ namespace TTRider.FluidSql
         , IOffsetStatement
         , IOrderByStatement
         , ICTEStatement
+        , ISelectStatement
     {
         public DeleteStatement()
         {

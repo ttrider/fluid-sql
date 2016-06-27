@@ -152,6 +152,17 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T Set<T>(this T statement, IList<BinaryEqualToken> setList)
+            where T : ISetStatement
+        {
+            if (setList != null)
+            {
+                foreach(BinaryEqualToken item in setList)
+                statement.Set.Add(item);
+            }
+            return statement;
+        }
+
         public static T PlusAssign<T>(this T statement, Parameter target, ExpressionToken expression)
             where T : ISetStatement
         {
@@ -559,6 +570,7 @@ namespace TTRider.FluidSql
             statement.WhenNotMatched.Add(wm);
             return statement;
         }
+
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, Token andCondition, IEnumerable<Name> columns)
         {
             var wm = new WhenNotMatchedTokenThenInsertToken
@@ -575,6 +587,7 @@ namespace TTRider.FluidSql
             statement.WhenNotMatched.Add(wm);
             return statement;
         }
+
         public static MergeStatement WhenNotMatchedThenInsert(this MergeStatement statement, IEnumerable<Name> columns, IEnumerable<Name> values)
         {
             var wm = new WhenNotMatchedTokenThenInsertToken();
@@ -1859,6 +1872,12 @@ namespace TTRider.FluidSql
             {
                 statement.PrimaryKey.Columns.AddRange(columns);
             }
+            return statement;
+        }
+
+        public static CreateTableStatement As(this CreateTableStatement statement, ISelectStatement selectStatement)
+        {
+            statement.AsSelectStatement = selectStatement;
             return statement;
         }
         #endregion PrimaryKey

@@ -22,8 +22,7 @@ namespace FluidSqlTests
                 .WhenMatchedThenUpdateSet(Sql.Name("target.a").SetTo(Sql.Name("source.a")), Sql.Name("target.b").SetTo(Sql.Name("source.b")))
                 .WhenNotMatchedThenInsert(Sql.Name("source.name").IsEqual("somename"), "name1","name2")
                 .WhenNotMatchedThenInsert(new Name[] { "target.a", "target.b" }, new Name[] { "source.a", "source.b" })
-                .WhenNotMatchedBySourceThenDelete()
-                ;
+                .WhenNotMatchedBySourceThenDelete();
             var command = Utilities.GetCommand(statement);
             Assert.IsNotNull(command);
             Assert.AreEqual("MERGE TOP ( 10 ) INTO [foo].[target] AS [target] USING ( SELECT * FROM [foo].[source] ) AS [source] ON [target].[id] = [source].[id] WHEN MATCHED AND [source].[name] = [somename] THEN DELETE WHEN MATCHED THEN UPDATE SET [target].[a] = [source].[a], [target].[b] = [source].[b] WHEN NOT MATCHED BY TARGET AND [source].[name] = [somename] THEN INSERT ( [name1], [name2] ) DEFAULT VALUES WHEN NOT MATCHED BY TARGET THEN INSERT ( [target].[a], [target].[b] ) VALUES ( [source].[a], [source].[b] ) WHEN NOT MATCHED BY SOURCE THEN DELETE;", command.CommandText);

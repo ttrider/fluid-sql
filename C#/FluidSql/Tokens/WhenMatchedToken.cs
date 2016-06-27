@@ -10,5 +10,7 @@ namespace TTRider.FluidSql
     public class WhenMatchedToken : Token
     {
         public Token AndCondition { get; set; }
+
+        public bool IsDeleteMatched { get; set; }
     }
 }
