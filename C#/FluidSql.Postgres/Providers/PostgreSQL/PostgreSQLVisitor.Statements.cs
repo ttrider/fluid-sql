@@ -50,13 +50,13 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {
                 State.Write(Symbols.ONLY);
             }
-            
+
             VisitToken(statement.Target, true);
-            
+
             State.Write(Symbols.SET);
 
             VisitTokenSet(statement.Set);
-            
+
             if (statement.RecordsetSource != null)
             {
                 State.Write(Symbols.FROM);
@@ -219,7 +219,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 State.Write(Symbols.BEGIN);
                 State.Write(Symbols.TRANSACTION);
                 VisitTransactionName(statement);
-                
+
                 if (statement.IsolationLevel != null)
                 {
                     State.Write(Symbols.ISOLATION);
@@ -295,7 +295,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             if (statement.IsTableVariable || statement.IsTemporary)
             {
                 State.Write(Symbols.TEMPORARY);
-            }            
+            }
             State.Write(Symbols.TABLE);
 
             if (statement.CheckIfNotExists)
@@ -326,7 +326,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                     }
 
                     VisitType(column);
-                    
+
                     if (column.Null.HasValue)
                     {
                         if (!column.Null.Value)
@@ -386,11 +386,11 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {
                 State.Write(Symbols.IF);
                 State.Write(Symbols.EXISTS);
-            }            
+            }
             State.Write(statement.Name.GetFullName(this.IdentifierOpenQuote, this.IdentifierCloseQuote));
-            if(statement.IsCascade.HasValue)
+            if (statement.IsCascade.HasValue)
             {
-                if(statement.IsCascade.Value)
+                if (statement.IsCascade.Value)
                 {
                     State.Write(Symbols.CASCADE);
                 }
@@ -404,7 +404,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement)
         {
             State.Write(Symbols.CREATE);
-            
+
             State.Write(Symbols.INDEX);
 
             VisitToken(createIndexStatement.Name);
@@ -417,7 +417,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.Semicolon);
         }
-        
+
         protected override void VisitAlterIndexStatement(AlterIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDropIndexStatement(DropIndexStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCommentStatement(CommentStatement statement) { throw new NotImplementedException(); }
@@ -440,6 +440,8 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitExecuteStatement(ExecuteStatement statement) { throw new NotImplementedException(); }
         protected override void VisitDropSchemaStatement(DropSchemaStatement statement) { throw new NotImplementedException(); }
         protected override void VisitCreateSchemaStatement(CreateSchemaStatement statement) { throw new NotImplementedException(); }
-
+        protected override void VisitCreateProcedureStatement(CreateProcedureStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitDropProcedureStatement(DropProcedureStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitAlterProcedureStatement(AlterProcedureStatement statement) { throw new NotImplementedException(); }
     }
 }
