@@ -27,10 +27,8 @@ namespace TTRider.FluidSql
         }
 
         public Name Target { get; set; }
-        public List<CTEDefinition> CommonTableExpressions { get; set; }
         public RecordsetSourceToken RecordsetSource { get; set; }
         public List<Join> Joins { get; }
-        public OnConflict? Conflict { get; set; }
         public IList<BinaryEqualToken> Set { get; }
         public Top Top { get; set; }
         public Token Where { get; set; }

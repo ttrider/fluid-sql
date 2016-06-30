@@ -27,13 +27,9 @@ namespace TTRider.FluidSql
             this.Returning = new List<ExpressionToken>();
         }   
 
-        public List<CTEDefinition> CommonTableExpressions { get; set; }
-
         public RecordsetSourceToken RecordsetSource { get; set; }
         public List<Join> Joins { get; }
 
-        public Token Offset { get; set; }
-        public List<Order> OrderBy { get; }
         public Top Top { get; set; }
         public Token Where { get; set; }
 

@@ -24,23 +24,7 @@ namespace TTRider.FluidSql
 
         private bool isNeedQuote = true;
 
-        static IEnumerable<string> GetParts(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                yield return string.Empty;
-                yield break;
-            }
-            var match = ParseName.Match(name);
-            while (match.Success)
-            {
-                if (match.Length > 0)
-                {
-                    yield return match.Groups["name"].Value;
-                }
-                match = match.NextMatch();
-            }
-        }
+        
 
         public Name()
         {
@@ -81,6 +65,7 @@ namespace TTRider.FluidSql
 
         public string FirstPart => this.parts.FirstOrDefault();
 
+        
         static IEnumerable<string> GetParts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

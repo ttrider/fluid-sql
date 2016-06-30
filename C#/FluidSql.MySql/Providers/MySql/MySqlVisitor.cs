@@ -64,13 +64,14 @@ namespace TTRider.FluidSql.Providers.MySql
             State.Write(JoinStrings[(int)join]);
         }
 
-         void VisitType(TypedToken typedToken)
+        protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
         }
+
 
         protected class MySqlSymbols : Symbols
         {
