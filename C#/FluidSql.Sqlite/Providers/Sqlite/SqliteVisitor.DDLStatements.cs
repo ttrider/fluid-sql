@@ -1,9 +1,10 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
+
 namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor
@@ -247,6 +248,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             State.Write(Symbols.AS);
             VisitStatement(statement.DefinitionStatement);
         }
+
         protected override void VisitDropViewStatement(DropViewStatement statement)
         {
             State.Write(Symbols.DROP);
@@ -259,6 +261,5 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
             VisitNameToken(statement.Name);
         }
-
     }
 }

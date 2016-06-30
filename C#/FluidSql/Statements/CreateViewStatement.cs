@@ -7,7 +7,6 @@
 
 namespace TTRider.FluidSql
 {
-
     public class CreateViewStatement : IStatement
     {
         public Name Name { get; set; }

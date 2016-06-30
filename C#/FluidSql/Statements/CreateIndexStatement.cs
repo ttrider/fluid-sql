@@ -52,11 +52,11 @@ namespace TTRider.FluidSql
         }
 
         public ICreateOrAlterIndexOptions With { get; private set; }
-        public Token Where { get; set; }
         public bool CheckIfNotExists { get; set; }
-
-        //TODO:[ ON { partition_scheme_name ( column_name ) | filegroup_name | default }
+        public Token Where { get; set; }
 
         //TODO [ FILESTREAM_ON { filestream_filegroup_name | partition_scheme_name | "NULL" } ]
+
+        //TODO:[ ON { partition_scheme_name ( column_name ) | filegroup_name | default }
     }
 }

@@ -1,13 +1,9 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
-
-// ReSharper disable InconsistentNaming
-
-using System.Linq;
 
 namespace TTRider.FluidSql.Providers
 {
@@ -21,6 +17,7 @@ namespace TTRider.FluidSql.Providers
         protected abstract void VisitDurationFunctionToken(DurationFunctionToken token);
         protected abstract void VisitMakeDateFunctionToken(MakeDateFunctionToken token);
         protected abstract void VisitMakeTimeFunctionToken(MakeTimeFunctionToken token);
+
         protected virtual void VisitCoalesceFunctionToken(CoalesceFunctionToken token)
         {
             State.Write(Symbols.COALESCE);

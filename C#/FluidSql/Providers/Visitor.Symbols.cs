@@ -39,9 +39,10 @@ namespace TTRider.FluidSql.Providers
             public const string BY = "BY";
             public const string CASCADE = "CASCADE";
             public const string CASE = "CASE";
+            public const string CAST = "CAST";
             public const string CATCH = "CATCH";
             public const string CLUSTERED = "CLUSTERED";
-            public const string COALESCE  = "COALESCE";
+            public const string COALESCE = "COALESCE";
             public const string COMMIT = "COMMIT";
             public const string COMMITED = "COMMITED";
             public const string CONFLICT = "CONFLICT";
@@ -117,8 +118,11 @@ namespace TTRider.FluidSql.Providers
             public const string PAD_INDEX = "PAD_INDEX";
             public const string PERCENT = "PERCENT";
             public const string PRIMARY = "PRIMARY";
+            public const string PROCEDURE = "PROCEDURE";
+            public const string READONLY = "READONLY";
             public const string READ = "READ";
             public const string REBUILD = "REBUILD";
+            public const string RECOMPILE = "RECOMPILE";
             public const string RECURSIVE = "RECURSIVE";
             public const string REINDEX = "REINDEX";
             public const string RELEASE = "RELEASE";

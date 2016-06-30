@@ -52,13 +52,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Create.cs" />
     <Compile Include="Insert.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Merge.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="Select.cs" />
     <Compile Include="Index.cs" />
-    <Compile Include="Create.cs" />
+    <Compile Include="Procedure.cs" />
     <Compile Include="NameTests.cs" />
     <Compile Include="SqlProviderTests.cs" />
     <Compile Include="Update.cs" />

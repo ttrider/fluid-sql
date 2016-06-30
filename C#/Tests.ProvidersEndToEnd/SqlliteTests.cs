@@ -7,8 +7,8 @@ namespace Tests.ProvidersEndToEnd
     [TestClass]
     public class SqliteTests
     {
-        static readonly IProvider Provider = new SqliteProvider();
         private const string ConnectionString = @"Data Source =:memory:; Version = 3; New = True;";
+        static readonly IProvider Provider = new SqliteProvider();
 
 
         [TestMethod]

@@ -1,8 +1,13 @@
-﻿using System;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
-using TTRider.FluidSql.Providers.Sqlite;
 
 namespace Tests.Sqlite
 {
@@ -14,7 +19,8 @@ namespace Tests.Sqlite
         [ClassInitialize]
         public static void Init(TestContext context)
         {
-            ConnectionString = string.Format(ConnectionStringFormat, Path.Combine(context.TestResultsDirectory, "CreateTable.db"));
+            ConnectionString = string.Format(ConnectionStringFormat,
+                Path.Combine(context.TestResultsDirectory, "CreateTable.db"));
         }
 
         public static void Execute(IStatement statement)
@@ -38,7 +44,6 @@ namespace Tests.Sqlite
         public void CreateTableWithIndexExec()
         {
             Execute(this.CreateTableWithIndex());
-            
         }
 
         [TestMethod]
@@ -46,6 +51,5 @@ namespace Tests.Sqlite
         {
             Execute(CreateTableWithIndexIfNotExists());
         }
-
     }
 }

@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.SqlServer;
@@ -32,9 +34,10 @@ namespace FluidSqlTests
             Assert.IsNotNull(actual);
             Assert.AreEqual(expectedOutcome, actual);
         }
+
         public static void AssertSqlToken(Token statement, string expectedOutcome)
         {
-            var actual = TTRider.FluidSql.Providers.SqlServer.SqlServerVisitor.Compile(statement).Value;
+            var actual = SqlServerVisitor.Compile(statement).Value;
             Assert.IsNotNull(actual);
             Assert.AreEqual(expectedOutcome, actual);
         }

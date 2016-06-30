@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
 namespace FluidSqlTests
@@ -15,13 +13,15 @@ namespace FluidSqlTests
                 .Columns(
                     TableColumn.Int("C1").Identity().NotNull()
                     , TableColumn.NVarChar("C2").Null())
-                .PrimaryKey("PK_tbl", new Order() { Column = Sql.Name("C1"), Direction = Direction.Asc })
+                .PrimaryKey("PK_tbl", new Order { Column = Sql.Name("C1"), Direction = Direction.Asc })
                 ;
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );", command.CommandText);
+            Assert.AreEqual(
+                "CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -38,7 +38,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE NONCLUSTERED ( [C2] ASC ) );", command.CommandText);
+            Assert.AreEqual(
+                "CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE NONCLUSTERED ( [C2] ASC ) );",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -55,7 +57,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE CLUSTERED ( [C2] ASC ) );", command.CommandText);
+            Assert.AreEqual(
+                "CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ), CONSTRAINT [UC_tbl] UNIQUE CLUSTERED ( [C2] ASC ) );",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -72,7 +76,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;", command.CommandText);
+            Assert.AreEqual(
+                "CREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -89,7 +95,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[tbl]', N'U' ) IS NULL\r\nBEGIN;\r\nCREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;\r\nEND;", command.CommandText);
+            Assert.AreEqual(
+                "IF OBJECT_ID ( N'[tbl]', N'U' ) IS NULL\r\nBEGIN;\r\nCREATE TABLE [tbl] ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] NVARCHAR ( MAX ) NULL, CONSTRAINT [PK_tbl] PRIMARY KEY ( [C1] ASC ) );\r\nCREATE NONCLUSTERED INDEX [IX_tbl] ON [tbl] ( [C2] ASC ) ;\r\nEND;",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -99,14 +107,16 @@ namespace FluidSqlTests
                 .Columns(
                     TableColumn.Int("C1").Identity().NotNull()
                     , TableColumn.Int("C2").NotNull())
-                .PrimaryKey(new Order() { Column = Sql.Name("C1"), Direction = Direction.Asc })
+                .PrimaryKey(new Order { Column = Sql.Name("C1"), Direction = Direction.Asc })
                 .UniqueConstrainOn("UC_tbl", new Order { Column = Sql.Name("C2") })
                 ;
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DECLARE @tbl TABLE ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] INT NOT NULL, PRIMARY KEY ( [C1] ASC ), UNIQUE NONCLUSTERED ( [C2] ASC ) );", command.CommandText);
+            Assert.AreEqual(
+                "DECLARE @tbl TABLE ( [C1] INT NOT NULL IDENTITY ( 1, 1 ), [C2] INT NOT NULL, PRIMARY KEY ( [C1] ASC ), UNIQUE NONCLUSTERED ( [C2] ASC ) );",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -146,13 +156,15 @@ namespace FluidSqlTests
         [TestMethod]
         public void CreateViewIfNotExists()
         {
-            var statement  = Sql.CreateView(Sql.Name("foo"), Sql.Select.From("bar"), true);
+            var statement = Sql.CreateView(Sql.Name("foo"), Sql.Select.From("bar"), true);
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );",
+                command.CommandText);
         }
+
         [TestMethod]
         public void CreateOrAlterView()
         {
@@ -161,7 +173,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );\r\nELSE EXEC (N' ALTER VIEW [foo] AS SELECT * FROM [bar]' );", command.CommandText);
+            Assert.AreEqual(
+                "IF OBJECT_ID ( N'[foo]' ) IS NULL EXEC (N' CREATE VIEW [foo] AS SELECT * FROM [bar]' );\r\nELSE EXEC (N' ALTER VIEW [foo] AS SELECT * FROM [bar]' );",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -178,13 +192,16 @@ namespace FluidSqlTests
         [TestMethod]
         public void CreateSchema()
         {
-            var statement = Sql.CreateSchema(Sql.Name("CM"),true);
+            var statement = Sql.CreateSchema(Sql.Name("CM"), true);
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM]' ) END;", command.CommandText);
+            Assert.AreEqual(
+                "IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM]' ) END;",
+                command.CommandText);
         }
+
         [TestMethod]
         public void CreateSchema_Always()
         {
@@ -195,6 +212,7 @@ namespace FluidSqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("EXEC (N' CREATE SCHEMA [CM]' );", command.CommandText);
         }
+
         [TestMethod]
         public void CreateSchema_Auth()
         {
@@ -203,7 +221,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM] AUTHORIZATION [dbo]' ) END;", command.CommandText);
+            Assert.AreEqual(
+                "IF NOT EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' CREATE SCHEMA [CM] AUTHORIZATION [dbo]' ) END;",
+                command.CommandText);
         }
 
         [TestMethod]
@@ -214,7 +234,9 @@ namespace FluidSqlTests
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' DROP SCHEMA [CM]' ) END;", command.CommandText);
+            Assert.AreEqual(
+                "IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = N'CM' ) BEGIN EXEC (N' DROP SCHEMA [CM]' ) END;",
+                command.CommandText);
         }
 
         [TestMethod]

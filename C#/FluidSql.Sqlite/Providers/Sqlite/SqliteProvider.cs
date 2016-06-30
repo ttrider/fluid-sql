@@ -1,9 +1,10 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +18,39 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     public class SqliteProvider : Provider
     {
+        internal static readonly Dictionary<CommonDbType, DbType> CommonDbTypeToDbType = new Dictionary
+            <CommonDbType, DbType>
+        {
+            { CommonDbType.BigInt, DbType.Int64 },
+            { CommonDbType.Binary, DbType.Binary },
+            { CommonDbType.Bit, DbType.Boolean },
+            { CommonDbType.Char, DbType.AnsiStringFixedLength },
+            { CommonDbType.DateTime, DbType.DateTime },
+            { CommonDbType.Decimal, DbType.Decimal },
+            { CommonDbType.Float, DbType.Single },
+            { CommonDbType.Image, DbType.Binary },
+            { CommonDbType.Int, DbType.Int32 },
+            { CommonDbType.Money, DbType.Currency },
+            { CommonDbType.NChar, DbType.StringFixedLength },
+            { CommonDbType.NText, DbType.String },
+            { CommonDbType.NVarChar, DbType.String },
+            { CommonDbType.Real, DbType.Double },
+            { CommonDbType.UniqueIdentifier, DbType.Guid },
+            { CommonDbType.SmallDateTime, DbType.DateTime },
+            { CommonDbType.SmallInt, DbType.Int16 },
+            { CommonDbType.SmallMoney, DbType.Single },
+            { CommonDbType.Text, DbType.AnsiString },
+            { CommonDbType.Timestamp, DbType.Decimal },
+            { CommonDbType.TinyInt, DbType.Byte },
+            { CommonDbType.VarBinary, DbType.Binary },
+            { CommonDbType.VarChar, DbType.AnsiString },
+            { CommonDbType.Variant, DbType.Object },
+            { CommonDbType.Xml, DbType.Xml },
+            { CommonDbType.Date, DbType.Date },
+            { CommonDbType.Time, DbType.Time },
+            { CommonDbType.DateTimeOffset, DbType.DateTimeOffset }
+        };
+
         protected override VisitorState Compile(IStatement statement)
         {
             return new SqliteVisitor().Compile(statement);
@@ -26,7 +60,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new ArgumentNullException("connectionString");
+                throw new ArgumentNullException(nameof(connectionString));
             }
             return new SQLiteConnection(connectionString);
         }
@@ -127,39 +161,5 @@ namespace TTRider.FluidSql.Providers.Sqlite
                     return sp;
                 });
         }
-
-
-        internal static readonly Dictionary<CommonDbType, DbType> CommonDbTypeToDbType = new Dictionary
-            <CommonDbType, DbType>
-        {
-            {CommonDbType.BigInt, DbType.Int64},
-            {CommonDbType.Binary, DbType.Binary},
-            {CommonDbType.Bit, DbType.Boolean},
-            {CommonDbType.Char, DbType.AnsiStringFixedLength},
-            {CommonDbType.DateTime, DbType.DateTime},
-            {CommonDbType.Decimal, DbType.Decimal},
-            {CommonDbType.Float, DbType.Single},
-            {CommonDbType.Image, DbType.Binary},
-            {CommonDbType.Int, DbType.Int32},
-            {CommonDbType.Money, DbType.Currency},
-            {CommonDbType.NChar, DbType.StringFixedLength},
-            {CommonDbType.NText, DbType.String},
-            {CommonDbType.NVarChar, DbType.String},
-            {CommonDbType.Real, DbType.Double},
-            {CommonDbType.UniqueIdentifier, DbType.Guid},
-            {CommonDbType.SmallDateTime, DbType.DateTime},
-            {CommonDbType.SmallInt, DbType.Int16},
-            {CommonDbType.SmallMoney, DbType.Single},
-            {CommonDbType.Text, DbType.AnsiString},
-            {CommonDbType.Timestamp, DbType.Decimal},
-            {CommonDbType.TinyInt, DbType.Byte},
-            {CommonDbType.VarBinary, DbType.Binary},
-            {CommonDbType.VarChar, DbType.AnsiString},
-            {CommonDbType.Variant, DbType.Object},
-            {CommonDbType.Xml, DbType.Xml},
-            {CommonDbType.Date, DbType.Date},
-            {CommonDbType.Time, DbType.Time},
-            {CommonDbType.DateTimeOffset, DbType.DateTimeOffset}
-        };
     }
 }

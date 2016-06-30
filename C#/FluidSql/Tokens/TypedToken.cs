@@ -5,13 +5,12 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
-using System.Collections.Generic;
 using System.Data;
 using TTRider.FluidSql.Providers.SqlServer;
 
 namespace TTRider.FluidSql
 {
-    public class TypedToken : ExpressionToken
+    public class TypedToken : ExpressionToken, ITyped
     {
         public TypedToken(string name, SqlDbType sqlDbType, byte precision, byte scale)
             : this(name, sqlDbType)

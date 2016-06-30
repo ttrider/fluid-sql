@@ -18,127 +18,21 @@ namespace TTRider.FluidSql.RequestResponse
     public class DataRequest : IDbRequest
     {
         static readonly ConcurrentDictionary<Type, IProvider> Providers = new ConcurrentDictionary<Type, IProvider>();
+        private IDbCommand command;
+        private IEnumerable<IDbCommand> prerequisiteCommands;
 
         private DataRequestProperties properties;
-        private IEnumerable<IDbCommand> prerequisiteCommands;
-        private IDbCommand command;
 
 
-        public static IDbRequest Create(DataRequestProperties properties)
-        {
-            if (properties == null) throw new ArgumentNullException("properties");
-            if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
-            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
+        public IEnumerable<IDbCommand> PrerequisiteCommands => this.prerequisiteCommands ??
+                                                               (this.prerequisiteCommands = this.properties.GetPrerequiseteCommands());
 
-            return new DataRequest()
-            {
-                properties = properties.Clone()
-            };
-        }
-
-        public static IDbRequest Create<T>(DataRequestProperties properties)
-            where T : IProvider
-        {
-            if (properties == null) throw new ArgumentNullException("properties");
-            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
-
-            var prop = properties.Clone();
-            prop.QueryProvider = Providers.GetOrAdd(typeof(T), t => Activator.CreateInstance<T>());
-            return new DataRequest()
-            {
-                properties = prop
-            };
-        }
-
-
-        public static IDbRequest Create<T>(IStatement statement, DbRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
-            where T : IProvider
-        {
-            if (statement == null) throw new ArgumentNullException("statement");
-            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement, mode,
-                connectionString, prerequisiteStatements);
-        }
-
-        public static IDbRequest Create<T>(IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
-            where T : IProvider
-        {
-            if (statement == null) throw new ArgumentNullException("statement");
-            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
-                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
-        }
-
-        public static IDbRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
-        {
-            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
-            if (statement == null) throw new ArgumentNullException("statement");
-            return Create(queryProvider, statement,
-                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
-        }
-
-        public static IDbRequest Create(IProvider queryProvider, IStatement statement, DbRequestMode mode, string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
-        {
-            if (queryProvider == null) throw new ArgumentNullException("queryProvider");
-            if (statement == null) throw new ArgumentNullException("statement");
-            var properties = new DataRequestProperties
-            {
-                Statement = statement,
-                Mode = mode,
-                ConnectionString = connectionString,
-                QueryProvider = queryProvider
-            };
-            if (prerequisiteStatements != null)
-            {
-                foreach (var ps in prerequisiteStatements)
-                {
-                    properties.PrerequisiteStatements.Add(ps);
-                }
-            }
-            return new DataRequest()
-            {
-                properties = properties
-            };
-        }
-
-
-        public IDbRequest CreateNew(string connectionString = null, DbRequestMode? mode = null)
-        {
-            var dr = new DataRequest
-            {
-                properties = this.properties.Clone()
-            };
-            if (!string.IsNullOrWhiteSpace(connectionString))
-            {
-                dr.properties.ConnectionString = connectionString;
-            }
-            if (mode.HasValue)
-            {
-                dr.properties.Mode = mode.Value;
-            }
-            return dr;
-        }
-
-
-        public IEnumerable<IDbCommand> PrerequisiteCommands
-        {
-            get
-            {
-                return this.prerequisiteCommands ??
-                       (this.prerequisiteCommands = this.properties.GetPrerequiseteCommands());
-            }
-        }
-
-        public IDbCommand Command
-        {
-            get { return this.command ?? (this.command = this.properties.GetCommand()); }
-        }
+        public IDbCommand Command => this.command ?? (this.command = this.properties.GetCommand());
 
         /// <summary>
-        /// reuse buffer for each record in recordset
+        ///     reuse buffer for each record in recordset
         /// </summary>
-        public DbRequestMode Mode 
-        {
-            get { return this.properties.Mode; } 
-        }
+        public DbRequestMode Mode => this.properties.Mode;
 
         public IDbResponse GetResponse()
         {
@@ -164,6 +58,104 @@ namespace TTRider.FluidSql.RequestResponse
             }
 
             return await DbResponse.GetResponseAsync(this);
+        }
+
+
+        public static IDbRequest Create(DataRequestProperties properties)
+        {
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+            if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
+            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
+
+            return new DataRequest
+            {
+                properties = properties.Clone()
+            };
+        }
+
+        public static IDbRequest Create<T>(DataRequestProperties properties)
+            where T : IProvider
+        {
+            if (properties == null) throw new ArgumentNullException(nameof(properties));
+            if (properties.Statement == null) throw new ArgumentException("properties.Statement");
+
+            var prop = properties.Clone();
+            prop.QueryProvider = Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>());
+            return new DataRequest
+            {
+                properties = prop
+            };
+        }
+
+
+        public static IDbRequest Create<T>(IStatement statement, DbRequestMode mode, string connectionString = null,
+            IEnumerable<IStatement> prerequisiteStatements = null)
+            where T : IProvider
+        {
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement, mode,
+                connectionString, prerequisiteStatements);
+        }
+
+        public static IDbRequest Create<T>(IStatement statement, string connectionString = null,
+            IEnumerable<IStatement> prerequisiteStatements = null)
+            where T : IProvider
+        {
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+        }
+
+        public static IDbRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null,
+            IEnumerable<IStatement> prerequisiteStatements = null)
+        {
+            if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            return Create(queryProvider, statement,
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+        }
+
+        public static IDbRequest Create(IProvider queryProvider, IStatement statement, DbRequestMode mode,
+            string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+        {
+            if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            var properties = new DataRequestProperties
+            {
+                Statement = statement,
+                Mode = mode,
+                ConnectionString = connectionString,
+                QueryProvider = queryProvider
+            };
+            if (prerequisiteStatements != null)
+            {
+                foreach (var ps in prerequisiteStatements)
+                {
+                    properties.PrerequisiteStatements.Add(ps);
+                }
+            }
+            return new DataRequest
+            {
+                properties = properties
+            };
+        }
+
+
+        public IDbRequest CreateNew(string connectionString = null, DbRequestMode? mode = null)
+        {
+            var dr = new DataRequest
+            {
+                properties = this.properties.Clone()
+            };
+            if (!string.IsNullOrWhiteSpace(connectionString))
+            {
+                dr.properties.ConnectionString = connectionString;
+            }
+            if (mode.HasValue)
+            {
+                dr.properties.Mode = mode.Value;
+            }
+            return dr;
         }
     }
 }

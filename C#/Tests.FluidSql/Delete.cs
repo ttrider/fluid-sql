@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 
@@ -25,7 +27,7 @@ namespace FluidSqlTests
         [TestMethod]
         public void Delete1P()
         {
-            var statement = Sql.Delete.Top(1, true).From(Sql.NameAs("foo.bar","f"));
+            var statement = Sql.Delete.Top(1, true).From(Sql.NameAs("foo.bar", "f"));
 
             var command = Utilities.GetCommand(statement);
 
@@ -47,7 +49,8 @@ namespace FluidSqlTests
         [TestMethod]
         public void DeleteOutput2()
         {
-            var statement = Sql.Delete.From(Sql.NameAs("foo.bar","s")).Output(Sql.Name("INSERTED.*"), Sql.Name("DELETED.*"));
+            var statement = Sql.Delete.From(Sql.NameAs("foo.bar", "s"))
+                .Output(Sql.Name("INSERTED.*"), Sql.Name("DELETED.*"));
 
             var command = Utilities.GetCommand(statement);
 
@@ -73,17 +76,18 @@ namespace FluidSqlTests
             var sourceTable = Sql.NameAs("foo", "bar");
 
             var statement = Sql.Delete.From(sourceTable)
-                .InnerJoin(Sql.NameAs("reftable", "ref"), Sql.Name("bar","id").IsEqual(Sql.Name("ref", "id")))
+                .InnerJoin(Sql.NameAs("reftable", "ref"), Sql.Name("bar", "id").IsEqual(Sql.Name("ref", "id")))
                 .Top(5)
-                .Output(Sql.Name("deleted","*"))
-                .Where(Sql.Name("ref","id").NotEqual(Sql.Scalar(10)));
-                
+                .Output(Sql.Name("deleted", "*"))
+                .Where(Sql.Name("ref", "id").NotEqual(Sql.Scalar(10)));
+
 
             var command = Utilities.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DELETE TOP ( 5 ) [bar] OUTPUT [deleted].* FROM [foo] AS [bar] INNER JOIN [reftable] AS [ref] ON [bar].[id] = [ref].[id] WHERE [ref].[id] <> 10;", command.CommandText);
+            Assert.AreEqual(
+                "DELETE TOP ( 5 ) [bar] OUTPUT [deleted].* FROM [foo] AS [bar] INNER JOIN [reftable] AS [ref] ON [bar].[id] = [ref].[id] WHERE [ref].[id] <> 10;",
+                command.CommandText);
         }
-    
     }
 }

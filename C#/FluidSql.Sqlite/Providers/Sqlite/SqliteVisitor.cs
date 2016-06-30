@@ -1,9 +1,10 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
+
 using System;
 using TTRider.FluidSql.Statements;
 
@@ -11,8 +12,8 @@ namespace TTRider.FluidSql.Providers.Sqlite
 {
     internal partial class SqliteVisitor : Visitor
     {
-		private static readonly string[] supportedDialects = new [] {"sqlite", "ansi"};
-		
+        private static readonly string[] supportedDialects = { "sqlite", "ansi" };
+
         private readonly string[] DbTypeStrings =
         {
             "BIGINT", // BigInt = 0,
@@ -46,8 +47,6 @@ namespace TTRider.FluidSql.Providers.Sqlite
             "DateTimeOffset" // DateTimeOffset = 28,
         };
 
-		protected override string[] SupportedDialects { get { return supportedDialects;}}
-
         public SqliteVisitor()
         {
             this.IdentifierOpenQuote = "\"";
@@ -55,38 +54,39 @@ namespace TTRider.FluidSql.Providers.Sqlite
             this.LiteralOpenQuote = "'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
-            this.CommentCloseQuote = "*/";            
+            this.CommentCloseQuote = "*/";
         }
 
-        
+        protected override string[] SupportedDialects => supportedDialects;
+
 
         protected override void VisitJoinType(Joins join)
         {
             if (join == Joins.RightOuter || join == Joins.FullOuter)
             {
-                throw new NotImplementedException("join "+join+" is not implemented on SQLite");
+                throw new NotImplementedException("join " + join + " is not implemented on SQLite");
             }
-            State.Write(JoinStrings[(int)join]);
+            State.Write(JoinStrings[(int) join]);
         }
 
 
-         void VisitType(TypedToken typedToken)
+        protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
-                State.Write(DbTypeStrings[(int)typedToken.DbType]);
+                State.Write(DbTypeStrings[(int) typedToken.DbType]);
             }
         }
 
-         protected override void VisitStatement(IStatement statement)
-         {
-             if (statement is VacuumStatement)
-             {
-                 VisitVacuumStatement((VacuumStatement)statement);
-                 return;
-             }
-             base.VisitStatement(statement);
-         }
+        protected override void VisitStatement(IStatement statement)
+        {
+            if (statement is VacuumStatement)
+            {
+                VisitVacuumStatement((VacuumStatement) statement);
+                return;
+            }
+            base.VisitStatement(statement);
+        }
 
 
         void VisitVacuumStatement(VacuumStatement statement)
@@ -97,15 +97,14 @@ namespace TTRider.FluidSql.Providers.Sqlite
 
         protected class SqliteSymbols : Symbols
         {
-            public const string hex         = "hex";
-            public const string localtime   = "localtime";
-            public const string now         = "now";
-            public const string randomblob  = "randomblob";
-            public const string utc         = "utc";
+            public const string hex = "hex";
+            public const string localtime = "localtime";
+            public const string now = "now";
+            public const string randomblob = "randomblob";
+            public const string utc = "utc";
             public const string current_timestamp = "current_timestamp";
-            
-            public const string VACUUM      = "VACUUM";
+
+            public const string VACUUM = "VACUUM";
         }
-    
     }
 }

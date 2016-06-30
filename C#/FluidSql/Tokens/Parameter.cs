@@ -30,6 +30,7 @@ namespace TTRider.FluidSql
         {
             this.Parameters.Add(this);
         }
+
         public Parameter(string name, CommonDbType dbType, byte precision, byte scale)
             : base(name, dbType, precision, scale)
         {
@@ -58,6 +59,13 @@ namespace TTRider.FluidSql
 
         public ParameterDirection Direction { get; set; }
 
+        /// <summary>
+        ///     indicate that procedure's default value needs to be used
+        /// </summary>
+        public bool UseDefault { get; set; }
+
+        public bool ReadOnly { get; set; }
+
         public bool Equals(Parameter obj)
         {
             if (obj == null) return false;
@@ -84,7 +92,7 @@ namespace TTRider.FluidSql
 
         public static Parameter Any(string name, object defaultValue)
         {
-            return new Parameter(name) {DefaultValue = defaultValue};
+            return new Parameter(name) { DefaultValue = defaultValue };
         }
 
         public static Parameter BigInt(string name)
@@ -112,7 +120,7 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.DateTime);
         }
 
-        public static Parameter Decimal(string name, int length, byte precision = 18, byte scale = 0)
+        public static Parameter Decimal(string name, byte precision = 18, byte scale = 0)
         {
             return new Parameter(name, CommonDbType.Decimal, precision, scale);
         }
@@ -236,6 +244,42 @@ namespace TTRider.FluidSql
         {
             return new Parameter(name, CommonDbType.DateTimeOffset, length);
         } //0..7
+
+        public Parameter Clone()
+        {
+            var copy = (Parameter)MemberwiseClone();
+            copy.Parameters.Clear();
+            copy.ParameterValues.Clear();
+            return copy;
+        }
+
+        public static CommonDbType GetCommonDbTypeFromValue(object value)
+        {
+            if (value == null) return CommonDbType.Variant;
+
+            if (value is byte) return CommonDbType.TinyInt;
+            if (value is int) return CommonDbType.Int;
+            if (value is short) return CommonDbType.SmallInt;
+            if (value is long) return CommonDbType.BigInt;
+
+            if (value is double) return CommonDbType.Real;
+            if (value is float) return CommonDbType.Float;
+            if (value is decimal) return CommonDbType.Decimal;
+
+            if (value is char) return CommonDbType.Char;
+            if (value is string) return CommonDbType.NVarChar;
+
+            if (value is bool) return CommonDbType.Bit;
+
+            if (value is DateTime) return CommonDbType.DateTime;
+            if (value is DateTimeOffset) return CommonDbType.DateTimeOffset;
+
+            if (value is Guid) return CommonDbType.UniqueIdentifier;
+
+            if (value is System.Xml.XmlElement) return CommonDbType.Xml;
+
+            return CommonDbType.Variant;
+        }
     }
 
     public class ParameterEqualityComparer : EqualityComparer<Parameter>
@@ -254,6 +298,38 @@ namespace TTRider.FluidSql
 
     public class ParameterFactory
     {
+        
+
+
+        public Parameter FromValue(string name, object value)
+        {
+            if (value == null) return Any(name);
+
+            if (value is byte) return TinyInt(name).DefaultValue(value);
+            if (value is int) return Int(name).DefaultValue(value);
+            if (value is short) return SmallInt(name).DefaultValue(value);
+            if (value is long) return BigInt(name).DefaultValue(value);
+
+            if (value is double) return Real(name).DefaultValue(value);
+            if (value is float) return Float(name).DefaultValue(value);
+            if (value is decimal) return Decimal(name).DefaultValue(value);
+
+            if (value is char) return Char(name, 1).DefaultValue(value);
+            if (value is string) return String(name).DefaultValue(value);
+
+            if (value is bool) return Bit(name).DefaultValue(value);
+
+            if (value is DateTime) return DateTime(name).DefaultValue(value);
+            if (value is DateTimeOffset) return DateTimeOffset(name).DefaultValue(value);
+
+            if (value is Guid) return UniqueIdentifier(name).DefaultValue(value);
+
+            if (value is System.Xml.XmlElement) return Xml(name).DefaultValue(value);
+
+            return Variant(name).DefaultValue(value);
+        }
+
+
         public Parameter Any(string name)
         {
             return new Parameter(name);
@@ -289,7 +365,7 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.DateTime);
         }
 
-        public Parameter Decimal(string name, int length, byte precision = 18, byte scale = 0)
+        public Parameter Decimal(string name, byte precision = 18, byte scale = 0)
         {
             return new Parameter(name, CommonDbType.Decimal, precision, scale);
         }
@@ -418,9 +494,7 @@ namespace TTRider.FluidSql
     public partial class Sql
     {
         private static readonly ParameterFactory ParameterFactory = new ParameterFactory();
-        public static ParameterFactory Parameter
-        {
-            get { return ParameterFactory; }
-        }
+
+        public static ParameterFactory Parameter => ParameterFactory;
     }
 }

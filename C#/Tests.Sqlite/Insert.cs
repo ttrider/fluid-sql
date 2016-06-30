@@ -1,4 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.Sqlite;
 
@@ -45,7 +52,9 @@ namespace Tests.Sqlite
         [TestMethod]
         public void InsertColumnsFrom00()
         {
-            var statement = Sql.Insert.Into(Sql.Name("foo.bar")).From(Sql.Select.From(Sql.Name("bar.foo"))).Columns("id", "value");
+            var statement = Sql.Insert.Into(Sql.Name("foo.bar"))
+                .From(Sql.Select.From(Sql.Name("bar.foo")))
+                .Columns("id", "value");
 
             var text = Provider.GenerateStatement(statement);
 
@@ -56,7 +65,10 @@ namespace Tests.Sqlite
         [TestMethod]
         public void InsertColumnsFrom01()
         {
-            var statement = Sql.Insert.Into(Sql.Name("foo.bar")).From(Sql.Select.From(Sql.Name("bar.foo"))).Columns(Sql.Name("id"), Sql.Name("value"));
+            var statement =
+                Sql.Insert.Into(Sql.Name("foo.bar"))
+                    .From(Sql.Select.From(Sql.Name("bar.foo")))
+                    .Columns(Sql.Name("id"), Sql.Name("value"));
 
             var text = Provider.GenerateStatement(statement);
 
@@ -104,7 +116,9 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("INSERT INTO \"foo\".\"bar\" ( \"id\", \"value\" ) VALUES ( 123, 'val0' ), ( 234, 'val1' ), ( 345, 'val2' );", text);
+            Assert.AreEqual(
+                "INSERT INTO \"foo\".\"bar\" ( \"id\", \"value\" ) VALUES ( 123, 'val0' ), ( 234, 'val1' ), ( 345, 'val2' );",
+                text);
         }
 
 

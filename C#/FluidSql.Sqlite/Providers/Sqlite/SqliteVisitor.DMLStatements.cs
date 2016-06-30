@@ -1,11 +1,11 @@
 ﻿// <license>
-// The MIT License (MIT)
+//     The MIT License (MIT)
 // </license>
 // <copyright company="TTRider, L.L.C.">
-// Copyright (c) 2014-2015 All Rights Reserved
+//     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
+
 using System;
-using System.Globalization;
 
 namespace TTRider.FluidSql.Providers.Sqlite
 {
@@ -37,7 +37,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             }
             else
             {
-                VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
+                VisitAliasedTokenSet(statement.Output, null, Symbols.Comma, null);
             }
 
 
@@ -178,7 +178,6 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 State.Write(Symbols.DEFAULT);
                 State.Write(Symbols.VALUES);
-
             }
             else if (statement.Values.Count > 0)
             {

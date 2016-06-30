@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.SqlServer;
 
@@ -17,8 +19,9 @@ namespace FluidSqlTests
 
         public static IDbCommand GetCommand(IStatement statement)
         {
-            return  SqlProvider.GetCommand(statement, ConnectionString);
+            return SqlProvider.GetCommand(statement, ConnectionString);
         }
+
         public static IDbCommand GetCommandAsync(IStatement statement)
         {
             var t = SqlProvider.GetCommandAsync(ConnectionString, statement);

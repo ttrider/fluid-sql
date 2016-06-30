@@ -1,5 +1,10 @@
-﻿using System;
-using System.Data.SQLite;
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider, L.L.C.">
+//     Copyright (c) 2014-2016 All Rights Reserved
+// </copyright>
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TTRider.FluidSql;
 using TTRider.FluidSql.Providers.Sqlite;
@@ -24,7 +29,9 @@ namespace Tests.Sqlite
 
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE \"tbl\" ( \"C1\" INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, \"C2\" NVARCHAR NULL DEFAULT ( 'foo' ) );", text);
+            Assert.AreEqual(
+                "CREATE TABLE \"tbl\" ( \"C1\" INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, \"C2\" NVARCHAR NULL DEFAULT ( 'foo' ) );",
+                text);
             return statement;
         }
 
@@ -41,7 +48,9 @@ namespace Tests.Sqlite
 
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE \"tbl2\" ( \"C1\" INTEGER PRIMARY KEY ASC ON CONFLICT IGNORE AUTOINCREMENT NOT NULL, \"C2\" NVARCHAR NULL ON CONFLICT FAIL );", text);
+            Assert.AreEqual(
+                "CREATE TABLE \"tbl2\" ( \"C1\" INTEGER PRIMARY KEY ASC ON CONFLICT IGNORE AUTOINCREMENT NOT NULL, \"C2\" NVARCHAR NULL ON CONFLICT FAIL );",
+                text);
             return statement;
         }
 
@@ -59,7 +68,9 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
 
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE \"tbl3\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl3\" ( \"C2\" ASC );", text);
+            Assert.AreEqual(
+                "CREATE TABLE \"tbl3\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl3\" ( \"C2\" ASC );",
+                text);
             return statement;
         }
 
@@ -70,12 +81,14 @@ namespace Tests.Sqlite
                 .Columns(
                     TableColumn.Int("C1").NotNull()
                     , TableColumn.NVarChar("C2").Null())
-                    .IndexOn("IX_tbl", new Order { Column = Sql.Name("C2") })
+                .IndexOn("IX_tbl", new Order { Column = Sql.Name("C2") })
                 ;
 
             var text = Provider.GenerateStatement(statement);
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX IF NOT EXISTS \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );", text);
+            Assert.AreEqual(
+                "CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" INTEGER NOT NULL, \"C2\" NVARCHAR NULL );\r\nCREATE INDEX IF NOT EXISTS \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );",
+                text);
             return statement;
         }
 
@@ -204,7 +217,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("CREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
-
         }
 
         [TestMethod]
@@ -221,7 +233,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
-
         }
 
 
@@ -237,8 +248,9 @@ namespace Tests.Sqlite
 
             var text = Provider.GenerateStatement(statement);
             Assert.IsNotNull(text);
-            Assert.AreEqual("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC ) WHERE \"col1\" >= 123;", text);
-
+            Assert.AreEqual(
+                "CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC ) WHERE \"col1\" >= 123;",
+                text);
         }
 
         [TestMethod]
@@ -249,7 +261,6 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
             Assert.IsNotNull(text);
             Assert.AreEqual("DROP INDEX \"foo\".\"if\";", text);
-
         }
 
         [TestMethod]
@@ -260,7 +271,6 @@ namespace Tests.Sqlite
             var text = Provider.GenerateStatement(statement);
             Assert.IsNotNull(text);
             Assert.AreEqual("DROP INDEX IF EXISTS \"foo\".\"if\";", text);
-
         }
 
         [TestMethod]
@@ -272,7 +282,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("REINDEX \"foo\".\"if\";", text);
-
         }
 
         [TestMethod]
@@ -284,7 +293,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("REINDEX \"foo\".\"bar\";", text);
-
         }
 
         [TestMethod]
@@ -296,7 +304,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("REINDEX \"foo\".\"if\";", text);
-
         }
 
         [TestMethod]
@@ -308,7 +315,6 @@ namespace Tests.Sqlite
 
             Assert.IsNotNull(text);
             Assert.AreEqual("REINDEX \"foo\".\"bar\";", text);
-
         }
     }
 }
