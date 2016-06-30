@@ -5,6 +5,7 @@
 //     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,8 @@ namespace TTRider.FluidSql
                 RegexOptions.Compiled);
 
         private readonly List<string> parts = new List<string>();
+        private readonly HashSet<string> noQuotes = new HashSet<string>(new[] { "*" }, StringComparer.OrdinalIgnoreCase);
 
-        private bool isNeedQuote = true;
-
-        
 
         public Name()
         {
@@ -65,7 +64,7 @@ namespace TTRider.FluidSql
 
         public string FirstPart => this.parts.FirstOrDefault();
 
-        
+
         static IEnumerable<string> GetParts(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -93,11 +92,12 @@ namespace TTRider.FluidSql
             return this;
         }
 
-
-        public bool IsNeedQuote
+        public Name NoQuotes(string noQuotesName)
         {
-            set { this.isNeedQuote = value; }
+            this.noQuotes.Add(noQuotesName);
+            return this;
         }
+
 
         public string GetFullName(string openQuote = null, string closeQuote = null)
         {
@@ -111,7 +111,7 @@ namespace TTRider.FluidSql
                             string.IsNullOrWhiteSpace(item) ||
                             string.Equals(item, "*") ||
                             item.TrimStart().StartsWith("@") ||
-                            !this.isNeedQuote
+                            this.noQuotes.Contains(item)
                                 ? item
                                 : openQuote + item + closeQuote));
         }

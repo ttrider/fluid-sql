@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 
 namespace TTRider.FluidSql
@@ -22,9 +23,11 @@ namespace TTRider.FluidSql
 
         public static Name Default(string source = null)
         {
-            Name token = !String.IsNullOrWhiteSpace(source) ? new Name(source, "DEFAULT") : new Name("DEFAULT");
-            token.IsNeedQuote = false;
-            return token;
+            const string defaultToken = "DEFAULT";
+            var token = 
+                !String.IsNullOrWhiteSpace(source) ? new Name(source, defaultToken) 
+                : new Name(defaultToken);
+            return token.NoQuotes(defaultToken);
         }
 
         public static Name Name(params string[] names)
