@@ -7,12 +7,12 @@
 
 namespace TTRider.FluidSql
 {
-    public class DropSchemaStatement : IStatement
+    public class AlterSchemaStatement : IStatement
     {
         public Name Name { get; set; }
-        public bool CheckExists { get; set; }
 
-        //for postgresqls
-        public bool? IsCascade { get; set; }
+        public Name NewName { get; set; }
+
+        public Name NewOwner { get; set; }
     }
 }

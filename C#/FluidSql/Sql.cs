@@ -24,8 +24,8 @@ namespace TTRider.FluidSql
         public static Name Default(string source = null)
         {
             const string defaultToken = "DEFAULT";
-            var token = 
-                !String.IsNullOrWhiteSpace(source) ? new Name(source, defaultToken) 
+            var token =
+                !String.IsNullOrWhiteSpace(source) ? new Name(source, defaultToken)
                 : new Name(defaultToken);
             return token.NoQuotes(defaultToken);
         }
@@ -95,7 +95,7 @@ namespace TTRider.FluidSql
                     val.Arguments.Add(argument);
                     if (argument is Parameter)
                     {
-                        val.Parameters.Add((Parameter) argument);
+                        val.Parameters.Add((Parameter)argument);
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace TTRider.FluidSql
                     snippetStatement.Arguments.Add(argument);
                     if (argument is Parameter)
                     {
-                        snippetStatement.Parameters.Add((Parameter) argument);
+                        snippetStatement.Parameters.Add((Parameter)argument);
                     }
                 }
             }
@@ -660,12 +660,12 @@ namespace TTRider.FluidSql
 
         public static ExecuteStatement Execute(string statement, params Parameter[] parameters)
         {
-            return Execute(SnippetStatement(statement), (IEnumerable<Parameter>) parameters);
+            return Execute(SnippetStatement(statement), (IEnumerable<Parameter>)parameters);
         }
 
         public static ExecuteStatement Execute(IStatement statement, params Parameter[] parameters)
         {
-            return Execute(statement, (IEnumerable<Parameter>) parameters);
+            return Execute(statement, (IEnumerable<Parameter>)parameters);
         }
 
         public static ExecuteStatement Execute(IStatement statement, IEnumerable<Parameter> parameters)
@@ -685,10 +685,18 @@ namespace TTRider.FluidSql
             return stat;
         }
 
+        public static PerformStatement Perform(string query)
+        {
+            return new PerformStatement
+            {
+                Query = query
+            };
+        }
+
         public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName,
             params Parameter[] parameters)
         {
-            return ExecuteStoredProcedure(storedProcedureName, (IEnumerable<Parameter>) parameters);
+            return ExecuteStoredProcedure(storedProcedureName, (IEnumerable<Parameter>)parameters);
         }
 
         public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName,
@@ -988,7 +996,10 @@ namespace TTRider.FluidSql
         {
             return new DropSchemaStatement { Name = name, CheckExists = checkExists };
         }
-
+        public static AlterSchemaStatement AlterSchema(Name name)
+        {
+            return new AlterSchemaStatement { Name = name };
+        }
 
         public static DropTableStatement DropTable(Name name, bool checkExists = false)
         {
@@ -1098,6 +1109,8 @@ namespace TTRider.FluidSql
 
         public static ContinueStatement Continue => new ContinueStatement();
 
+        public static ExitStatement Exit => new ExitStatement();
+
         public static GotoStatement Goto(string label)
         {
             return new GotoStatement
@@ -1145,7 +1158,13 @@ namespace TTRider.FluidSql
                 State = Scalar(state)
             };
         }
-
+        public static ThrowStatement Throw(string message)
+        {
+            return new ThrowStatement
+            {
+                Message = Sql.Scalar(message)
+            };
+        }
         public static ThrowStatement Throw(Token errorNumber, Token message, Token state)
         {
             return new ThrowStatement

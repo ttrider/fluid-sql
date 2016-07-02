@@ -54,14 +54,20 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Delete.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="ControlStructures.cs" />
+    <Compile Include="Indexes.cs" />
     <Compile Include="Insert.cs" />
+    <Compile Include="Merge.cs" />
     <Compile Include="PostgreSqlProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schemas.cs" />
     <Compile Include="Select.cs" />
     <Compile Include="TableDrop.cs" />
     <Compile Include="TableCreate.cs" />
     <Compile Include="Transactions.cs" />
     <Compile Include="Update.cs" />
+    <Compile Include="Views.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluidSql.Postgres\FluidSql.PostgreSQL.csproj">

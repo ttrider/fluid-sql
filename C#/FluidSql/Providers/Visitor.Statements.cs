@@ -183,6 +183,11 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitExitStatement(ExitStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitGotoStatement(GotoStatement statement)
         {
             throw new NotImplementedException();
@@ -243,6 +248,11 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitPerformStatement(PerformStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitExecuteStatement(ExecuteStatement statement)
         {
             throw new NotImplementedException();
@@ -259,6 +269,11 @@ namespace TTRider.FluidSql.Providers
         }
 
         protected virtual void VisitDropSchemaStatement(DropSchemaStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitAlterSchemaStatement(AlterSchemaStatement statement)
         {
             throw new NotImplementedException();
         }

@@ -30,6 +30,7 @@ namespace TTRider.FluidSql.Providers
             public const string ARRAY = "ARRAY";
             public const string AS = "AS";
             public const string ASC = "ASC";
+            public const string AT = "AT";
             public const string AUTHORIZATION = "AUTHORIZATION";
             public const string AUTOINCREMENT = "AUTOINCREMENT";
             public const string BEGIN = "BEGIN";
@@ -65,14 +66,18 @@ namespace TTRider.FluidSql.Providers
             public const string ELSE = "ELSE";
             public const string END = "END";
             public const string EXCEPT = "EXCEPT";
+            public const string EXCEPTION = "EXCEPTION";
             public const string EXCLUSIVE = "EXCLUSIVE";
             public const string EXEC = "EXEC";
             public const string EXISTS = "EXISTS";
+            public const string EXIT = "EXIT";
             public const string FAIL = "FAIL";
             public const string FETCH = "FETCH";
             public const string FILETABLE = "FILETABLE";
             public const string FILLFACTOR = "FILLFACTOR";
             public const string FROM = "FROM";
+            public const string FUNCTION = "FUNCTION";
+            public const string GO = "GO";
             public const string GOTO = "GOTO";
             public const string GROUP_BY = "GROUP BY";
             public const string HAVING = "HAVING";
@@ -87,6 +92,7 @@ namespace TTRider.FluidSql.Providers
             public const string INDEX = "INDEX";
             public const string INSERT = "INSERT";
             public const string INTERSECT = "INTERSECT";
+            public const string INTERVAL = "INTERVAL";
             public const string INTO = "INTO";
             public const string IS = "IS";
             public const string ISOLATION = "ISOLATION";
@@ -94,6 +100,7 @@ namespace TTRider.FluidSql.Providers
             public const string LEVEL = "LEVEL";
             public const string LIKE = "LIKE";
             public const string LIMIT = "LIMIT";
+            public const string LOOP = "LOOP";
             public const string MARK = "MARK";
             public const string MATCHED = "MATCHED";
             public const string MAX = "MAX";
@@ -103,6 +110,7 @@ namespace TTRider.FluidSql.Providers
             public const string NONCLUSTERED = "NONCLUSTERED";
             public const string NOT = "NOT";
             public const string NOTHING = "NOTHING";
+            public const string NOW = "NOW";
             public const string NULL = "NULL";
             public const string NULLIF = "NULLIF";
             public const string OBJECT_ID = "OBJECT_ID";
@@ -115,10 +123,13 @@ namespace TTRider.FluidSql.Providers
             public const string OR = "OR";
             public const string ORDER_BY = "ORDER BY";
             public const string OUTPUT = "OUTPUT";
+            public const string OWNER = "OWNER";
             public const string PAD_INDEX = "PAD_INDEX";
             public const string PERCENT = "PERCENT";
+            public const string PERFORM = "PERFORM";
             public const string PRIMARY = "PRIMARY";
             public const string PROCEDURE = "PROCEDURE";
+			public const string RAISE = "RAISE";
             public const string READONLY = "READONLY";
             public const string READ = "READ";
             public const string REBUILD = "REBUILD";
@@ -126,11 +137,13 @@ namespace TTRider.FluidSql.Providers
             public const string RECURSIVE = "RECURSIVE";
             public const string REINDEX = "REINDEX";
             public const string RELEASE = "RELEASE";
+            public const string RENAME = "RENAME";
             public const string REORGANIZE = "REORGANIZE";
             public const string REPEATABLE = "REPEATABLE";
             public const string REPLACE = "REPLACE";
             public const string RESTRICT = "RESTRICT";
             public const string RETURN = "RETURN";
+            public const string RETURNS = "RETURNS";
             public const string RETURNING = "RETURNING";
             public const string ROLLBACK = "ROLLBACK";
             public const string ROWGUIDCOL = "ROWGUIDCOL";
@@ -155,6 +168,7 @@ namespace TTRider.FluidSql.Providers
             public const string TO = "TO";
             public const string TOP = "TOP";
             public const string TRANSACTION = "TRANSACTION";
+            public const string TRUNC = "TRUNC";
             public const string TRY = "TRY";
             public const string UNCOMMITED = "UNCOMMITED";
             public const string UNION = "UNION";
@@ -169,6 +183,8 @@ namespace TTRider.FluidSql.Providers
             public const string WHILE = "WHILE";
             public const string WITH = "WITH";
             public const string WRITE = "WRITE";
+            public const string UTC = "UTC";
+            public const string ZONE = "ZONE";
             public const string Comma = ",";
             public const string CloseParenthesis = ")";
             public const string OpenParenthesis = "(";
@@ -180,6 +196,7 @@ namespace TTRider.FluidSql.Providers
             public const string Pound = "#";
             public const string At = "@";
             public const string Empty = "";
+            public const string Space = " ";
 
             public const string EqualsVal = "=";
             public const string AssignVal = "=";
@@ -216,6 +233,8 @@ namespace TTRider.FluidSql.Providers
 
             //for postgresql
             public const string TechId = "ctid";
+            public const string CurrentSetting = "current_setting";
+            public const string TimeZone = "TimeZone";
         }
     }
 }

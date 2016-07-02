@@ -136,6 +136,7 @@ namespace TTRider.FluidSql.Providers
                 { typeof (SnippetStatement), (v, stm) => v.VisitSnippetStatement((SnippetStatement) stm) },
                 { typeof (BreakStatement), (v, stm) => v.VisitBreakStatement((BreakStatement) stm) },
                 { typeof (ContinueStatement), (v, stm) => v.VisitContinueStatement((ContinueStatement) stm) },
+                {typeof (ExitStatement), (v, stm)=>v.VisitExitStatement((ExitStatement)stm)},
                 { typeof (GotoStatement), (v, stm) => v.VisitGotoStatement((GotoStatement) stm) },
                 { typeof (ReturnStatement), (v, stm) => v.VisitReturnStatement((ReturnStatement) stm) },
                 { typeof (ThrowStatement), (v, stm) => v.VisitThrowStatement((ThrowStatement) stm) },
@@ -154,6 +155,8 @@ namespace TTRider.FluidSql.Providers
                 { typeof (AlterViewStatement), (v, stm) => v.VisitAlterViewStatement((AlterViewStatement) stm) },
                 { typeof (DropViewStatement), (v, stm) => v.VisitDropViewStatement((DropViewStatement) stm) },
                 { typeof (ExecuteStatement), (v, stm) => v.VisitExecuteStatement((ExecuteStatement) stm) },
+                { typeof (PerformStatement), (v, stm)=>v.VisitPerformStatement((PerformStatement)stm)},
+                { typeof (AlterSchemaStatement), (v, stm) => v.VisitAlterSchemaStatement((AlterSchemaStatement) stm) },
                 { typeof (DropSchemaStatement), (v, stm) => v.VisitDropSchemaStatement((DropSchemaStatement) stm) },
                 {
                     typeof (CreateSchemaStatement), (v, stm) => v.VisitCreateSchemaStatement((CreateSchemaStatement) stm)
@@ -211,7 +214,7 @@ namespace TTRider.FluidSql.Providers
         {
             if (token is IStatement)
             {
-                VisitStatementToken((IStatement) token);
+                VisitStatementToken((IStatement)token);
             }
             else
             {
@@ -224,7 +227,7 @@ namespace TTRider.FluidSql.Providers
             }
             if (includeAlias && token is IAliasToken)
             {
-                VisitAlias(((IAliasToken) token).Alias);
+                VisitAlias(((IAliasToken)token).Alias);
             }
 
             State.Parameters.AddRange(token.Parameters);
@@ -251,7 +254,7 @@ namespace TTRider.FluidSql.Providers
 
             if (statement is Token)
             {
-                var token = (Token) statement;
+                var token = (Token)statement;
                 State.Parameters.AddRange(token.Parameters);
                 State.ParameterValues.AddRange(token.ParameterValues);
             }
@@ -438,7 +441,7 @@ namespace TTRider.FluidSql.Providers
             VisitType(token);
             State.Write(Symbols.CloseParenthesis);
         }
-        
+
 
         protected virtual void VisitPlaceholderExpressionToken(PlaceholderExpressionToken token)
         {
@@ -461,7 +464,7 @@ namespace TTRider.FluidSql.Providers
             }
             else if (value is bool)
             {
-                State.Write((bool) value ? "1" : "0");
+                State.Write((bool)value ? "1" : "0");
             }
             else if (value is char || value is string)
             {
@@ -469,19 +472,19 @@ namespace TTRider.FluidSql.Providers
             }
             else if (value is DateTime)
             {
-                State.Write(this.LiteralOpenQuote, ((DateTime) value).ToString("s"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((DateTime)value).ToString("s"), this.LiteralCloseQuote);
             }
             else if (value is DateTimeOffset)
             {
-                State.Write(this.LiteralOpenQuote, ((DateTimeOffset) value).ToString("O"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((DateTimeOffset)value).ToString("O"), this.LiteralCloseQuote);
             }
             else if (value is TimeSpan)
             {
-                State.Write(this.LiteralOpenQuote, ((TimeSpan) value).ToString("G"), this.LiteralCloseQuote);
+                State.Write(this.LiteralOpenQuote, ((TimeSpan)value).ToString("G"), this.LiteralCloseQuote);
             }
             else if (value is XNode)
             {
-                State.Write(this.LiteralOpenQuote, ((XNode) value).ToString(SaveOptions.DisableFormatting),
+                State.Write(this.LiteralOpenQuote, ((XNode)value).ToString(SaveOptions.DisableFormatting),
                     this.LiteralCloseQuote);
             }
             else

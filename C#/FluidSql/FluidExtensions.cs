@@ -243,6 +243,17 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T Set<T>(this T statement, IList<BinaryEqualToken> setList)
+            where T : ISetStatement
+        {
+            if (setList != null)
+            {
+                foreach (BinaryEqualToken item in setList)
+                    statement.Set.Add(item);
+            }
+            return statement;
+        }
+
         public static T PlusAssign<T>(this T statement, Name target, ExpressionToken expression)
             where T : ISetStatement
         {
@@ -1545,6 +1556,41 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static DropSchemaStatement Cascade(this DropSchemaStatement statement)
+        {
+            statement.IsCascade = true;
+            return statement;
+        }
+
+        public static DropSchemaStatement Restrict(this DropSchemaStatement statement)
+        {
+            statement.IsCascade = false;
+            return statement;
+        }
+
+        public static AlterSchemaStatement RenameTo(this AlterSchemaStatement statement, string newName)
+        {
+            statement.NewName = Sql.Name(newName);
+            return statement;
+        }
+
+        public static AlterSchemaStatement RenameTo(this AlterSchemaStatement statement, Name newName)
+        {
+            statement.NewName = newName;
+            return statement;
+        }
+
+        public static AlterSchemaStatement OwnerTo(this AlterSchemaStatement statement, string newOwner)
+        {
+            statement.NewOwner = Sql.Name(newOwner);
+            return statement;
+        }
+
+        public static AlterSchemaStatement OwnerTo(this AlterSchemaStatement statement, Name newOwner)
+        {
+            statement.NewOwner = newOwner;
+            return statement;
+        }
         #endregion Schema
 
         public static string GetCommandSummary(this IDbCommand command)
@@ -2047,6 +2093,11 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static CreateTableStatement As(this CreateTableStatement statement, ISelectStatement selectStatement)
+        {
+            statement.AsSelectStatement = selectStatement;
+            return statement;
+        }
         #endregion PrimaryKey
 
         #region UniqueConstrainOn
@@ -2620,6 +2671,38 @@ namespace TTRider.FluidSql
         {
             caseToken.ElseToken = elseToken;
             return caseToken;
+        }
+
+        #endregion Case
+
+        #region Continue
+
+        public static ContinueStatement Label(this ContinueStatement continueStatement, string label)
+        {
+            continueStatement.Label = label;
+            return continueStatement;
+        }
+
+        public static ContinueStatement When(this ContinueStatement continueStatement, ExpressionToken whenToken)
+        {
+            continueStatement.When = whenToken;
+            return continueStatement;
+        }
+
+        #endregion Case
+
+        #region Exit
+
+        public static ExitStatement Label(this ExitStatement exitStatement, string label)
+        {
+            exitStatement.Label = label;
+            return exitStatement;
+        }
+
+        public static ExitStatement When(this ExitStatement exitStatement, ExpressionToken whenToken)
+        {
+            exitStatement.When = whenToken;
+            return exitStatement;
         }
 
         #endregion Case
