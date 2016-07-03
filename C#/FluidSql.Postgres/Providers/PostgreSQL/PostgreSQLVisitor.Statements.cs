@@ -6,7 +6,10 @@
 // </copyright>
 
 using System;
+using System.Data;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace TTRider.FluidSql.Providers.PostgreSQL
 {
@@ -216,7 +219,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         {
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
             State.WriteCRLF();
@@ -313,7 +316,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.END);
             State.WriteStatementTerminator();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
         }
 
         protected override void VisitSet(SetStatement statement)
@@ -419,7 +422,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             //DO $do$ BEGIN
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
 
@@ -429,7 +432,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.END);
             State.WriteCRLF();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
         }
 
         protected override void VisitCreateTableStatement(CreateTableStatement statement)
@@ -556,34 +559,15 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
         protected override void VisitCreateIndexStatement(CreateIndexStatement statement)
         {
-            State.Write(Symbols.CREATE);
-
-            if (statement.Unique)
-            {
-                State.Write(Symbols.UNIQUE);
-            }
-
-            State.Write(Symbols.INDEX);
-
-            if (statement.CheckIfNotExists)
-            {
-                State.Write(Symbols.IF);
-                State.Write(Symbols.NOT);
-                State.Write(Symbols.EXISTS);
-            }
-
-            VisitToken(statement.Name);
-
-            State.Write(Symbols.ON);
-
-            VisitToken(statement.On);
-
-            // columns
-            VisitTokenSetInParenthesis(statement.Columns);
-            VisitWhereToken(statement.Where);
+            CreateIndex(statement);
         }
 
-        protected override void VisitAlterIndexStatement(AlterIndexStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitAlterIndexStatement(AlterIndexStatement statement)
+        {
+            VisitStatement(Sql.DropIndex(statement.Name, true));
+            State.WriteStatementTerminator();
+            CreateIndex(statement);
+        }
 
         protected override void VisitDropIndexStatement(DropIndexStatement statement)
         {
@@ -611,8 +595,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         {
             this.Stringify(statement.Content);
         }
-
-        protected override void VisitSnippetStatement(SnippetStatement statement) { throw new NotImplementedException(); }
 
         //There is no BREAK in PL/pgSQL.
         //EXIT terminates the loop.
@@ -708,6 +690,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitStatement(Sql.Perform(query));
         }
 
+        //PL/PgSQL does not have Wait fo rTimeStatement operator
         protected override void VisitWaitforTimeStatement(WaitforTimeStatement statement) { throw new NotImplementedException(); }
 
         protected override void VisitWhileStatement(WhileStatement statement)
@@ -764,13 +747,37 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitNameToken(statement.Name);
         }
 
-        protected override void VisitExecuteStatement(ExecuteStatement statement) { throw new NotImplementedException(); }
+        //TODO: Add parameters to prepare
+        protected override void VisitPrepareStatement(IExecutableStatement statement)
+        {
+            State.Write(Symbols.PREPARE);
+            if (String.IsNullOrEmpty(statement.Name))
+            {
+                statement.Name = RandomString(5);
+            }
+            State.Write(statement.Name);
+            State.Write(Symbols.AS);
+            this.Stringify(statement.Target, false);
+            State.WriteStatementTerminator();
+        }
+
+        protected override void VisitExecuteStatement(ExecuteStatement statement)
+        {
+            VisitPrepareStatement(statement);
+            State.Write(Symbols.EXECUTE);
+            State.Write(statement.Name);
+            State.WriteStatementTerminator();
+
+            State.Write(Symbols.DEALLOCATE);
+            State.Write(statement.Name);
+            State.WriteStatementTerminator();
+        }
 
         protected override void VisitPerformStatement(PerformStatement statement)
         {
             State.Write(Symbols.PERFORM);
 
-            if(!string.IsNullOrEmpty(statement.Query))
+            if (!string.IsNullOrEmpty(statement.Query))
             {
                 State.Write(statement.Query);
             }
@@ -851,11 +858,109 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             }
         }
 
+        //PL/PgSQL does not have Stored Procedure operator.
+        protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        //PL/PgSQL does not have Stored Procedure operator.
+        protected override void VisitCreateProcedureStatement(CreateProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        //PL/PgSQL does not have Stored Procedure operator.
+        protected override void VisitAlterProcedureStatement(AlterProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        //PL/PgSQL does not have Stored Procedure operator.
+        protected override void VisitDropProcedureStatement(DropProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitCreateFunctionStatement(CreateFunctionStatement statement)
+        {
+            CreateOrReplaceFunction(statement);
+        }
+
+        //not like in postgresql
+        protected override void VisitAlterFunctionStatement(AlterFunctionStatement statement)
+        {
+            CreateOrReplaceFunction(statement);
+        }
+
+
+        protected override void VisitDropFunctionStatement(DropFunctionStatement statement)
+        {
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.FUNCTION);
+
+            if (statement.CheckExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+            }
+            VisitNameToken(statement.Name);
+
+            State.Write(Symbols.OpenParenthesis);
+            if (statement.ReturnValue != null)
+            {
+                VisitType(statement.ReturnValue);
+            }
+            State.Write(Symbols.CloseParenthesis);
+            if (statement.IsCascade.HasValue)
+            {
+                if (statement.IsCascade.Value)
+                {
+                    State.Write(Symbols.CASCADE);
+                }
+                else
+                {
+                    State.Write(Symbols.RESTRICT);
+                }
+            }
+        }
+
+        protected override void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
+        {
+            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+            if (retVal != null)
+            {
+                State.Write(retVal.Name);
+                State.Write(Symbols.AssignVal);
+            }
+
+            State.Write(statement.Name.GetFullNameWithoutQuotes());
+
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
+                visitToken: parameter =>
+                {
+                    if (parameter.Value != null)
+                    {
+                        VisitValue(parameter.Value);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+
+            State.Write(Symbols.CloseParenthesis);
+        }
+
         private void AlterView(Name tokenName, IStatement definitionStatement)
         {
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
 
@@ -869,7 +974,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             State.Write(Symbols.END);
             State.WriteCRLF();
-            State.Write(TempFunctionName);
+            State.Write(TempName);
         }
 
         private void OnlyIfStatement(IfStatement statement)
@@ -891,9 +996,16 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.Write(Symbols.IF);
         }
 
-        private void Stringify(IStatement statement)
+        private void Stringify(IStatement statement, bool needQuote = true)
         {
-            Stringify(() => VisitStatement(statement));
+            if (needQuote)
+            {
+                Stringify(() => VisitStatement(statement));
+            }
+            else
+            {
+                StringifyWithoutQuotes(() => VisitStatement(statement));
+            }
         }
 
         private void Stringify(Action fragment)
@@ -903,7 +1015,132 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.WriteEndStringify();
         }
 
-        private string TempFunctionName = "$do$";
+        private void StringifyWithoutQuotes(Action fragment)
+        {
+            fragment();
+        }
+        private void CreateOrReplaceFunction(IProcedureStatement statement)
+        {
+            State.Write(Symbols.CREATE);
+            State.Write(Symbols.OR);
+            State.Write(Symbols.REPLACE);
+            State.Write(Symbols.FUNCTION);
+
+            VisitNameToken(statement.Name);
+            var separator = String.Empty;
+            string returnValueName = TempName;
+
+            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+
+            State.Write(Symbols.OpenParenthesis);
+            foreach (var p in statement.Parameters
+                .Where(p => p.Direction != ParameterDirection.ReturnValue))
+            {
+                State.Write(separator);
+                separator = Symbols.Comma;
+
+                VisitNameToken(p.Name);
+                VisitType(p);
+
+                if (p.DefaultValue != null)
+                {
+                    State.Write(Symbols.AssignVal);
+                    VisitValue(p.DefaultValue);
+                }
+                if ((p.Direction != 0) && (p.Direction != ParameterDirection.Input))
+                {
+                    State.Write(Symbols.OUTPUT);
+                }
+                if (p.ReadOnly)
+                {
+                    State.Write(Symbols.READONLY);
+                }
+            }
+
+            State.Write(Symbols.CloseParenthesis);
+            State.WriteCRLF();
+
+            State.Write(Symbols.RETURNS);
+            if (retVal == null)
+            {
+                State.Write(Symbols.VOID);
+            }
+            else
+            {
+                VisitType(retVal);
+                returnValueName = retVal.Name;
+            }
+            State.Write(Symbols.AS);
+            State.Write(returnValueName);
+            State.WriteCRLF();
+
+            if (statement.Declarations.Count != 0)
+            {
+                State.Write(Symbols.DECLARE);
+                State.WriteCRLF();
+
+                foreach (Parameter p in statement.Declarations)
+                {
+                    VisitNameToken(p.Name);
+                    VisitType(p);
+                    State.WriteStatementTerminator();
+                }
+            }
+
+            State.Write(Symbols.BEGIN);
+            State.WriteCRLF();
+            VisitStatement(statement.Body);
+            State.WriteStatementTerminator();
+            State.Write(Symbols.END);
+            State.WriteStatementTerminator();
+            State.Write(String.Format(EndFunction, returnValueName));
+        }
+
+        private void CreateIndex(IIndex statement)
+        {
+            State.Write(Symbols.CREATE);
+
+            if (statement.Unique)
+            {
+                State.Write(Symbols.UNIQUE);
+            }
+
+            State.Write(Symbols.INDEX);
+
+            if (statement.CheckIfNotExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.NOT);
+                State.Write(Symbols.EXISTS);
+            }
+
+            VisitToken(statement.Name);
+
+            State.Write(Symbols.ON);
+
+            VisitToken(statement.On);
+
+            // columns
+            VisitTokenSetInParenthesis(statement.Columns);
+            VisitWhereToken(statement.Where);
+        }
+
+        private string RandomString(int size)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
+        }
+
+        private string TempName = "$do$";
+        private string EndFunction = "{0} LANGUAGE plpgsql;";
         private string TopAlias = "top_alias";
     }
 }

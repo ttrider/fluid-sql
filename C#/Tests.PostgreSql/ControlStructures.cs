@@ -110,6 +110,28 @@ namespace Tests.PostgreSql
         }
 
         [TestMethod]
+        public void Snippet01()
+        {
+            var statement = Sql.SnippetStatement("SELECT * FROM sys.objects");
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT * FROM sys.objects;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Snippet02()
+        {
+            var statement = Sql.TemplateStatement("SELECT {0},{0} FROM sys.objects", Sql.Name("foo"));
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT  \"foo\", \"foo\"  FROM sys.objects;", command.CommandText);
+        }
+
+        [TestMethod]
         public void Throw()
         {
             var statement = Sql.Throw("test message");
@@ -129,6 +151,17 @@ namespace Tests.PostgreSql
 
             Assert.IsNotNull(command);
             Assert.AreEqual("BEGIN\r\nSELECT 1;\r\nEXCEPTION WHEN other THEN RAISE;\r\nEND;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void Execute()
+        {
+            var statement = Sql.Execute("SELECT * FROM table_tbl").Name("test");
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("PREPARE test AS SELECT * FROM table_tbl;\r\nEXECUTE test;\r\nDEALLOCATE test;", command.CommandText);
         }
     }
 }

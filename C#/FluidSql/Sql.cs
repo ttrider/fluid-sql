@@ -693,6 +693,38 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static PerformStatement Perform(string statement, IEnumerable<Parameter> parameters)
+        {
+            return Perform(SnippetStatement(statement), parameters);
+        }
+
+        public static PerformStatement Perform(string statement, params Parameter[] parameters)
+        {
+            return Perform(SnippetStatement(statement), (IEnumerable<Parameter>)parameters);
+        }
+
+        public static PerformStatement Perform(IStatement statement, params Parameter[] parameters)
+        {
+            return Perform(statement, (IEnumerable<Parameter>)parameters);
+        }
+
+        public static PerformStatement Perform(IStatement statement, IEnumerable<Parameter> parameters)
+        {
+            var stat = new PerformStatement
+            {
+                Target = statement
+            };
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    stat.Parameters.Add(parameter);
+                }
+            }
+            return stat;
+        }
+
         public static ExecuteProcedureStatement ExecuteStoredProcedure(Name storedProcedureName,
             params Parameter[] parameters)
         {
@@ -742,6 +774,58 @@ namespace TTRider.FluidSql
                 Name = name,
                 CreateIfNotExists = createIfNotExists
             };
+        }
+
+        public static CreateFunctionStatement CreateFunction(Name name, bool checkIfNotExists = false)
+        {
+            return new CreateFunctionStatement
+            {
+                Name = name,
+                CheckIfNotExists = checkIfNotExists
+            };
+        }
+
+        public static AlterFunctionStatement AlterFunction(Name name, bool checkIfNotExists = false)
+        {
+            return new AlterFunctionStatement
+            {
+                Name = name,
+                CheckIfNotExists = checkIfNotExists
+            };
+
+        }
+
+        public static DropFunctionStatement DropFunction(Name name, bool checkExists = false)
+        {
+            return new DropFunctionStatement
+            {
+                Name = name,
+                CheckExists = checkExists
+            };
+        }
+
+        public static ExecuteFunctionStatement ExecuteFunction(Name storedProcedureName,
+           params Parameter[] parameters)
+        {
+            return ExecuteFunction(storedProcedureName, (IEnumerable<Parameter>)parameters);
+        }
+
+        public static ExecuteFunctionStatement ExecuteFunction(Name storedProcedureName,
+            IEnumerable<Parameter> parameters)
+        {
+            var stat = new ExecuteFunctionStatement
+            {
+                Name = storedProcedureName
+            };
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    stat.Parameters.Add(parameter);
+                }
+            }
+            return stat;
         }
 
         public static SelectStatement Select => new SelectStatement();

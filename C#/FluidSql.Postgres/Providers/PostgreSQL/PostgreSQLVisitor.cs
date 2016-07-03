@@ -99,16 +99,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             public const string other = "other";
             public const string AssignValSign = ":=";
 
-            public const string dq = "'day'";
-            public const string hhq = "'hour'";
-            public const string mq = "'month'";
-            public const string miq = "'minute'";
-            public const string msq = "'microsecond'";
-            //public const string s = "s";
-            public const string ssq = "'second'";
-            public const string wwq = "'week'";
-            public const string yyq = "'year'";
-
             public const string d = "day";
             public const string hh = "hour";
             public const string m = "month";

@@ -155,6 +155,7 @@ namespace TTRider.FluidSql.Providers
                 { typeof (AlterViewStatement), (v, stm) => v.VisitAlterViewStatement((AlterViewStatement) stm) },
                 { typeof (DropViewStatement), (v, stm) => v.VisitDropViewStatement((DropViewStatement) stm) },
                 { typeof (ExecuteStatement), (v, stm) => v.VisitExecuteStatement((ExecuteStatement) stm) },
+                { typeof (PrepareStatement), (v, stm) => v.VisitPrepareStatement((IExecutableStatement) stm) },
                 { typeof (PerformStatement), (v, stm)=>v.VisitPerformStatement((PerformStatement)stm)},
                 { typeof (AlterSchemaStatement), (v, stm) => v.VisitAlterSchemaStatement((AlterSchemaStatement) stm) },
                 { typeof (DropSchemaStatement), (v, stm) => v.VisitDropSchemaStatement((DropSchemaStatement) stm) },
@@ -176,6 +177,22 @@ namespace TTRider.FluidSql.Providers
                 {
                     typeof (ExecuteProcedureStatement),
                     (v, stm) => v.VisitExecuteProcedureStatement((ExecuteProcedureStatement) stm)
+                },
+                {
+                    typeof (CreateFunctionStatement),
+                    (v, stm) => v.VisitCreateFunctionStatement((CreateFunctionStatement) stm)
+                },
+                {
+                    typeof (AlterFunctionStatement),
+                    (v, stm) => v.VisitAlterFunctionStatement((AlterFunctionStatement) stm)
+                },
+                {
+                    typeof (DropFunctionStatement),
+                    (v, stm) => v.VisitDropFunctionStatement((DropFunctionStatement) stm)
+                },
+                {
+                    typeof (ExecuteFunctionStatement),
+                    (v, stm) => v.VisitExecuteFunctionStatement((ExecuteFunctionStatement) stm)
                 }
             };
 

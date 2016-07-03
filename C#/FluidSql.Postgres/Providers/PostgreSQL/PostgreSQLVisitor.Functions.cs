@@ -41,13 +41,13 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
                 switch (token.DatePart)
                 {
-                    case DatePart.Day: State.Write(PostgrSQLSymbols.dq); break;
-                    case DatePart.Year: State.Write(PostgrSQLSymbols.yyq); break;
-                    case DatePart.Month: State.Write(PostgrSQLSymbols.mq); break;
-                    case DatePart.Week: State.Write(PostgrSQLSymbols.wwq); break;
-                    case DatePart.Hour: State.Write(PostgrSQLSymbols.hhq); break;
-                    case DatePart.Minute: State.Write(PostgrSQLSymbols.miq); break;
-                    case DatePart.Second: State.Write(PostgrSQLSymbols.ssq); break;
+                    case DatePart.Day: State.Write(AddSingleQuotes(PostgrSQLSymbols.d)); break;
+                    case DatePart.Year: State.Write(AddSingleQuotes(PostgrSQLSymbols.yy)); break;
+                    case DatePart.Month: State.Write(AddSingleQuotes(PostgrSQLSymbols.m)); break;
+                    case DatePart.Week: State.Write(AddSingleQuotes(PostgrSQLSymbols.ww)); break;
+                    case DatePart.Hour: State.Write(AddSingleQuotes(PostgrSQLSymbols.hh)); break;
+                    case DatePart.Minute: State.Write(AddSingleQuotes(PostgrSQLSymbols.mi)); break;
+                    case DatePart.Second: State.Write(AddSingleQuotes(PostgrSQLSymbols.ss)); break;
                 }
                 State.Write(Symbols.Comma);
                 VisitToken(token.Token);
@@ -60,7 +60,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 State.Write(Symbols.OpenParenthesis);
                 State.Write(PostgrSQLSymbols.DATEPART);
                 State.Write(Symbols.OpenParenthesis);
-                State.Write(PostgrSQLSymbols.msq); 
+                State.Write(AddSingleQuotes(PostgrSQLSymbols.ms)); 
                 State.Write(Symbols.Comma);
                 VisitToken(token.Token);
                 State.Write(Symbols.CloseParenthesis);
@@ -280,28 +280,28 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             switch (datePart)
             {
                 case DatePart.Day:
-                    State.Write(PostgrSQLSymbols.dq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.d));
                     break;
                 case DatePart.Year:
-                    State.Write(PostgrSQLSymbols.yyq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.yy));
                     break;
                 case DatePart.Month:
-                    State.Write(PostgrSQLSymbols.mq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.m));
                     break;
                 case DatePart.Week:
-                    State.Write(PostgrSQLSymbols.wwq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ww));
                     break;
                 case DatePart.Hour:
-                    State.Write(PostgrSQLSymbols.hhq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.hh));
                     break;
                 case DatePart.Minute:
-                    State.Write(PostgrSQLSymbols.miq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.mi));
                     break;
                 case DatePart.Second:
-                    State.Write(PostgrSQLSymbols.ssq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ss));
                     break;
                 case DatePart.Millisecond:
-                    State.Write(PostgrSQLSymbols.msq);
+                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ms));
                     break;
             }
             State.Write(Symbols.Comma);
@@ -310,6 +310,15 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitToken(token.End);
             State.Write(Symbols.CloseParenthesis);
             State.Write(Symbols.CloseParenthesis);
+        }
+
+        private string AddSingleQuotes(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Symbols.SingleQuote);
+            sb.Append(str);
+            sb.Append(Symbols.SingleQuote);
+            return sb.ToString();
         }
         private string uuidGeneration = "uuid_in(md5(random()::text || now()::text)::cstring)";
 

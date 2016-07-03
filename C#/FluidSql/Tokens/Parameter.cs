@@ -57,6 +57,8 @@ namespace TTRider.FluidSql
 
         public object DefaultValue { get; set; }
 
+        public object Value { get; set; }
+
         public ParameterDirection Direction { get; set; }
 
         /// <summary>
@@ -85,7 +87,7 @@ namespace TTRider.FluidSql
         }
 
 
-        public static Parameter Any(string name)
+        public static Parameter Any(string name = "")
         {
             return new Parameter(name);
         }
@@ -95,7 +97,12 @@ namespace TTRider.FluidSql
             return new Parameter(name) { DefaultValue = defaultValue };
         }
 
-        public static Parameter BigInt(string name)
+        public static Parameter Any(object defaultValue)
+        {
+            return new Parameter(string.Empty) { DefaultValue = defaultValue };
+        }
+
+        public static Parameter BigInt(string name = "")
         {
             return new Parameter(name, CommonDbType.BigInt);
         }
@@ -105,7 +112,12 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.Binary, length);
         }
 
-        public static Parameter Bit(string name)
+        public static Parameter Binary(int length)
+        {
+            return new Parameter(string.Empty, CommonDbType.Binary, length);
+        }
+
+        public static Parameter Bit(string name = "")
         {
             return new Parameter(name, CommonDbType.Bit);
         }
@@ -115,32 +127,37 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.Char, length);
         }
 
-        public static Parameter DateTime(string name)
+        public static Parameter Char(int length)
+        {
+            return new Parameter(string.Empty, CommonDbType.Char, length);
+        }
+
+        public static Parameter DateTime(string name = "")
         {
             return new Parameter(name, CommonDbType.DateTime);
         }
 
-        public static Parameter Decimal(string name, byte precision = 18, byte scale = 0)
+        public static Parameter Decimal(string name = "", byte precision = 18, byte scale = 0)
         {
             return new Parameter(name, CommonDbType.Decimal, precision, scale);
         }
 
-        public static Parameter Float(string name)
+        public static Parameter Float(string name = "")
         {
             return new Parameter(name, CommonDbType.Float);
         }
 
-        public static Parameter Image(string name)
+        public static Parameter Image(string name = "")
         {
             return new Parameter(name, CommonDbType.Image);
         }
 
-        public static Parameter Int(string name)
+        public static Parameter Int(string name = "")
         {
             return new Parameter(name, CommonDbType.Int);
         }
 
-        public static Parameter Money(string name)
+        public static Parameter Money(string name = "")
         {
             return new Parameter(name, CommonDbType.Money);
         }
@@ -150,7 +167,12 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.NChar, length);
         }
 
-        public static Parameter NText(string name)
+        public static Parameter NChar(int length)
+        {
+            return new Parameter(string.Empty, CommonDbType.NChar, length);
+        }
+
+        public static Parameter NText(string name = "")
         {
             return new Parameter(name, CommonDbType.NText);
         }
@@ -160,47 +182,52 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.NVarChar, length);
         }
 
-        public static Parameter String(string name)
+        public static Parameter NVarChar(int length = -1)
+        {
+            return new Parameter(string.Empty, CommonDbType.NVarChar, length);
+        }
+
+        public static Parameter String(string name = "")
         {
             return new Parameter(name, CommonDbType.NVarChar, -1);
         }
 
-        public static Parameter Real(string name)
+        public static Parameter Real(string name = "")
         {
             return new Parameter(name, CommonDbType.Real);
         }
 
-        public static Parameter UniqueIdentifier(string name)
+        public static Parameter UniqueIdentifier(string name = "")
         {
             return new Parameter(name, CommonDbType.UniqueIdentifier);
         }
 
-        public static Parameter SmallDateTime(string name)
+        public static Parameter SmallDateTime(string name = "")
         {
             return new Parameter(name, CommonDbType.SmallDateTime);
         }
 
-        public static Parameter SmallInt(string name)
+        public static Parameter SmallInt(string name = "")
         {
             return new Parameter(name, CommonDbType.SmallInt);
         }
 
-        public static Parameter SmallMoney(string name)
+        public static Parameter SmallMoney(string name = "")
         {
             return new Parameter(name, CommonDbType.SmallMoney);
         }
 
-        public static Parameter Text(string name)
+        public static Parameter Text(string name = "")
         {
             return new Parameter(name, CommonDbType.Text);
         }
 
-        public static Parameter Timestamp(string name)
+        public static Parameter Timestamp(string name = "")
         {
             return new Parameter(name, CommonDbType.Timestamp);
         }
 
-        public static Parameter TinyInt(string name)
+        public static Parameter TinyInt(string name = "")
         {
             return new Parameter(name, CommonDbType.TinyInt);
         }
@@ -210,37 +237,47 @@ namespace TTRider.FluidSql
             return new Parameter(name, CommonDbType.VarBinary, length);
         }
 
+        public static Parameter VarBinary(int length = -1)
+        {
+            return new Parameter(string.Empty, CommonDbType.VarBinary, length);
+        }
+
         public static Parameter VarChar(string name, int length = -1)
         {
             return new Parameter(name, CommonDbType.VarChar, length);
         }
 
-        public static Parameter Variant(string name)
+        public static Parameter VarChar(int length = -1)
+        {
+            return new Parameter(string.Empty, CommonDbType.VarChar, length);
+        }
+
+        public static Parameter Variant(string name = "")
         {
             return new Parameter(name, CommonDbType.Variant);
         }
 
-        public static Parameter Xml(string name)
+        public static Parameter Xml(string name = "")
         {
             return new Parameter(name, CommonDbType.Xml);
         }
 
-        public static Parameter Date(string name)
+        public static Parameter Date(string name = "")
         {
             return new Parameter(name, CommonDbType.Date);
         }
 
-        public static Parameter Time(string name, int length = 7)
+        public static Parameter Time(string name = "", int length = 7)
         {
             return new Parameter(name, CommonDbType.Time, length);
         }
 
-        public static Parameter DateTime2(string name, int length = 7)
+        public static Parameter DateTime2(string name = "", int length = 7)
         {
             return new Parameter(name, CommonDbType.DateTime2, length);
         } //0..7
 
-        public static Parameter DateTimeOffset(string name, int length = 7)
+        public static Parameter DateTimeOffset(string name = "", int length = 7)
         {
             return new Parameter(name, CommonDbType.DateTimeOffset, length);
         } //0..7

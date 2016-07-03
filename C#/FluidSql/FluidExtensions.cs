@@ -84,6 +84,12 @@ namespace TTRider.FluidSql
             return parameter;
         }
 
+        public static Parameter Value(this Parameter parameter, object Value)
+        {
+            parameter.Value = Value;
+            return parameter;
+        }
+
         public static Parameter ParameterDirection(this Parameter parameter, ParameterDirection direction)
         {
             parameter.Direction = direction;
@@ -1332,6 +1338,14 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
 
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column,
             Direction direction = Direction.Asc)
@@ -1340,7 +1354,21 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, Name column,
+            Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column,
+            Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, string column,
             Direction direction = Direction.Asc)
         {
             statement.Columns.Add(Sql.Order(column, direction));
@@ -1353,7 +1381,19 @@ namespace TTRider.FluidSql
             return OnColumn(statement, ToOrders(column, columns));
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, Order column,
+            params Order[] columns)
+        {
+            return OnColumn(statement, ToOrders(column, columns));
+        }
+
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column,
+            params string[] columns)
+        {
+            return OnColumn(statement, ToOrders(column, columns));
+        }
+
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, string column,
             params string[] columns)
         {
             return OnColumn(statement, ToOrders(column, columns));
@@ -3009,6 +3049,30 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T Declarations<T>(this T statement, Parameter parameter, params Parameter[] parameters)
+            where T : IProcedureStatement
+        {
+            statement.Declarations.Add(parameter);
+            foreach (var p in parameters)
+            {
+                statement.Declarations.Add(p);
+            }
+            return statement;
+        }
+
+        public static T Declarations<T>(this T statement, ParameterDirection direction, Parameter parameter,
+            params Parameter[] parameters) where T : IProcedureStatement
+        {
+            parameter.Direction = direction;
+            statement.Declarations.Add(parameter);
+            foreach (var p in parameters)
+            {
+                parameter.Direction = direction;
+                statement.Declarations.Add(p);
+            }
+            return statement;
+        }
+
         public static T InputParameters<T>(this T statement, Parameter parameter, params Parameter[] parameters)
             where T : IProcedureStatement
         {
@@ -3089,6 +3153,23 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static DropFunctionStatement Cascade(this DropFunctionStatement statement)
+        {
+            statement.IsCascade = true;
+            return statement;
+        }
+
+        public static DropFunctionStatement Restrict(this DropFunctionStatement statement)
+        {
+            statement.IsCascade = false;
+            return statement;
+        }
+
+        public static DropFunctionStatement ReturnValue(this DropFunctionStatement statement, Parameter parameter)
+        {
+            statement.ReturnValue = parameter;
+            return statement;
+        }
         #endregion Stored Procedure
 
         #region CAST
@@ -3121,5 +3202,12 @@ namespace TTRider.FluidSql
             };
         }
         #endregion CAST
+
+        public static ExecuteStatement Name(this ExecuteStatement statement,
+            string name)
+        {
+            statement.Name = name;
+            return statement;
+        }
     }
 }

@@ -52,6 +52,7 @@ namespace TTRider.FluidSql.Providers
             public const string CREATE = "CREATE";
             public const string CURRENT = "CURRENT";
             public const string DATETIME = "DATETIME";
+            public const string DEALLOCATE = "DEALLOCATE";
             public const string DECLARE = "DECLARE";
             public const string DEFAULT = "DEFAULT";
             public const string DEFERRED = "DEFERRED";
@@ -69,6 +70,7 @@ namespace TTRider.FluidSql.Providers
             public const string EXCEPTION = "EXCEPTION";
             public const string EXCLUSIVE = "EXCLUSIVE";
             public const string EXEC = "EXEC";
+            public const string EXECUTE = "EXECUTE";
             public const string EXISTS = "EXISTS";
             public const string EXIT = "EXIT";
             public const string FAIL = "FAIL";
@@ -127,6 +129,7 @@ namespace TTRider.FluidSql.Providers
             public const string PAD_INDEX = "PAD_INDEX";
             public const string PERCENT = "PERCENT";
             public const string PERFORM = "PERFORM";
+            public const string PREPARE = "PREPARE";
             public const string PRIMARY = "PRIMARY";
             public const string PROCEDURE = "PROCEDURE";
 			public const string RAISE = "RAISE";
@@ -177,6 +180,7 @@ namespace TTRider.FluidSql.Providers
             public const string USING = "USING";
             public const string VALUES = "VALUES";
             public const string VIEW = "VIEW";
+            public const string VOID = "VOID";
             public const string WAITFOR = "WAITFOR";
             public const string WHEN = "WHEN";
             public const string WHERE = "WHERE";

@@ -114,7 +114,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             if (typedToken.DbType.HasValue)
             {
-                State.Write(dbTypeStrings[(int) typedToken.DbType]);
+                State.Write(dbTypeStrings[(int)typedToken.DbType]);
             }
 
             if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
@@ -511,7 +511,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write(Symbols.CloseParenthesis);
         }
 
-
         protected override void VisitCreateProcedureStatement(CreateProcedureStatement statement)
         {
             VisitConditional(
@@ -561,6 +560,134 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitProcedureParametersAndBody(statement);
                 }
                 );
+        }
+
+        protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
+        {
+            State.Write(Symbols.EXEC);
+
+            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+            if (retVal != null)
+            {
+                State.Write(retVal.Name);
+                State.Write(Symbols.AssignVal);
+
+                State.Parameters.Add(retVal.Clone().ParameterDirection(ParameterDirection.Output));
+            }
+
+            VisitNameToken(statement.Name);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
+                visitToken: parameter =>
+                {
+                    if (parameter.UseDefault)
+                    {
+                        State.Write(parameter.Name);
+                        State.Write(Symbols.DEFAULT);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                        State.Write(Symbols.AssignVal);
+                        State.Write(parameter.Name);
+                        if (parameter.Direction == ParameterDirection.Output ||
+                            parameter.Direction == ParameterDirection.InputOutput)
+                        {
+                            State.Write(Symbols.OUTPUT);
+                        }
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+
+            if (statement.Recompile)
+            {
+                State.Write(Symbols.WITH, Symbols.RECOMPILE);
+            }
+        }
+
+        protected override void VisitCreateFunctionStatement(CreateFunctionStatement statement)
+        {
+            VisitConditional(
+                statement.CheckIfNotExists,
+                statement.Name,
+                "FN",
+                false,
+                () =>
+                {
+                    State.Write(Symbols.CREATE);
+                    VisitFunctionParametersAndBody(statement);
+                }
+                );
+        }
+
+        protected override void VisitAlterFunctionStatement(AlterFunctionStatement statement)
+        {
+            VisitConditional(
+                statement.CheckIfNotExists,
+                statement.Name,
+                "FN",
+                false,
+                () =>
+                {
+                    State.Write(Symbols.CREATE);
+                    VisitProcedureParametersAndBody(statement);
+                },
+                () =>
+                {
+                    State.Write(Symbols.ALTER);
+                    VisitProcedureParametersAndBody(statement);
+                }
+                );
+        }
+
+        protected override void VisitDropFunctionStatement(DropFunctionStatement statement)
+        {
+            VisitConditional(
+                statement.CheckExists,
+                statement.Name,
+                "FN",
+                true,
+                () =>
+                {
+                    State.Write(Symbols.DROP);
+                    State.Write(Symbols.FUNCTION);
+                    VisitNameToken(statement.Name);
+                }
+                );
+        }
+
+        protected override void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
+        {
+            State.Write(Symbols.EXEC);
+
+            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+            if (retVal != null)
+            {
+                State.Write(retVal.Name);
+                State.Write(Symbols.AssignVal);
+            }
+
+            VisitNameToken(statement.Name);
+
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
+                visitToken: parameter =>
+                {
+                    if (parameter.Value != null)
+                    {
+                        VisitValue(parameter.Value);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+
+            State.Write(Symbols.CloseParenthesis);
         }
 
         private void VisitProcedureParametersAndBody(IProcedureStatement s)
@@ -617,6 +744,69 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.WriteStatementTerminator();
         }
 
+        private void VisitFunctionParametersAndBody(IProcedureStatement s)
+        {
+            State.Write(Symbols.FUNCTION);
+
+            VisitNameToken(s.Name);
+            State.WriteCRLF();
+
+            var separator = Symbols.OpenParenthesis;
+            Parameter returnParam = s.Parameters
+                .Where(p => p.Direction == ParameterDirection.ReturnValue).FirstOrDefault();
+
+            foreach (var p in s.Parameters
+                .Where(p => p.Direction != ParameterDirection.ReturnValue))
+            {
+                State.Write(separator);
+                State.WriteCRLF();
+                separator = Symbols.Comma;
+
+                VisitNameToken(p.Name);
+                VisitType(p);
+
+                if (p.DefaultValue != null)
+                {
+                    State.Write(Symbols.AssignVal);
+                    VisitValue(p.DefaultValue);
+                }
+                if ((p.Direction != 0) && (p.Direction != ParameterDirection.Input))
+                {
+                    State.Write(Symbols.OUTPUT);
+                }
+                if (p.ReadOnly)
+                {
+                    State.Write(Symbols.READONLY);
+                }
+            }
+            if (separator == Symbols.Comma)
+            {
+                State.WriteCRLF();
+                State.Write(Symbols.CloseParenthesis);
+                State.WriteCRLF();
+            }
+            if (returnParam != null)
+            {
+                State.Write(Symbols.RETURNS);
+                VisitNameToken(returnParam.Name);
+                VisitType(returnParam);
+                State.WriteCRLF();
+            }
+
+            if (s.Recompile)
+            {
+                State.Write(Symbols.WITH, Symbols.RECOMPILE);
+                State.WriteCRLF();
+            }
+
+            State.Write(Symbols.AS);
+            State.WriteCRLF();
+            State.Write(Symbols.BEGIN);
+            State.WriteStatementTerminator();
+            VisitStatement(s.Body);
+            State.Write(Symbols.END);
+            State.WriteStatementTerminator();
+        }
 
         private void VisitConditional(bool doCheck, Name name, string objectType, bool inverse, Action isNullAction,
             Action isNotNullAction = null)
@@ -708,7 +898,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected override void VisitJoinType(Joins join)
         {
-            State.Write(JoinStrings[(int) join]);
+            State.Write(JoinStrings[(int)join]);
         }
 
         protected override void VisitSet(SetStatement statement)
@@ -1386,51 +1576,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
             this.Stringify(statement.Target);
             State.Write(Symbols.CloseParenthesis);
         }
-
-        protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
-        {
-            State.Write(Symbols.EXEC);
-
-            var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
-            if (retVal != null)
-            {
-                State.Write(retVal.Name);
-                State.Write(Symbols.AssignVal);
-
-                State.Parameters.Add(retVal.Clone().ParameterDirection(ParameterDirection.Output));
-            }
-
-            VisitNameToken(statement.Name);
-
-            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
-                visitToken: parameter =>
-                {
-                    if (parameter.UseDefault)
-                    {
-                        State.Write(parameter.Name);
-                        State.Write(Symbols.DEFAULT);
-                    }
-                    else
-                    {
-                        State.Write(parameter.Name);
-                        State.Write(Symbols.AssignVal);
-                        State.Write(parameter.Name);
-                        if (parameter.Direction == ParameterDirection.Output ||
-                            parameter.Direction == ParameterDirection.InputOutput)
-                        {
-                            State.Write(Symbols.OUTPUT);
-                        }
-                    }
-
-                    State.Parameters.Add(parameter);
-                });
-
-            if (statement.Recompile)
-            {
-                State.Write(Symbols.WITH, Symbols.RECOMPILE);
-            }
-        }
-
 
         protected override void VisitCreateIndexStatement(CreateIndexStatement createIndexStatement)
         {

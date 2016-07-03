@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class CreateIndexStatement : IStatement
+    public class CreateIndexStatement : IIndex, IStatement
         , IWhereStatement
     {
         public CreateIndexStatement()

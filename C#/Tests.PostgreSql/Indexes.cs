@@ -17,10 +17,25 @@ namespace Tests.PostgreSql
                 .OnColumn(Sql.Name("col2"), Direction.Desc)
                 ;
 
-            var text = Provider.GenerateStatement(statement);
+            var text = Provider.GenerateStatement((CreateIndexStatement)statement);
 
             Assert.IsNotNull(text);
             Assert.AreEqual("CREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
+
+        }
+
+        [TestMethod]
+        public void AlterIndex()
+        {
+            var statement = Sql.AlterIndex("if", "foo.bar")
+                .OnColumn("col1")
+                .OnColumn(Sql.Name("col2"), Direction.Desc)
+                ;
+
+            var text = Provider.GenerateStatement(statement);
+
+            Assert.IsNotNull(text);
+            Assert.AreEqual("DROP INDEX IF EXISTS \"if\";\r\nCREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
 
         }
 
@@ -34,7 +49,7 @@ namespace Tests.PostgreSql
                 .OnColumn(Sql.Name("col2"), Direction.Desc)
                 ;
 
-            var text = Provider.GenerateStatement(statement);
+            var text = Provider.GenerateStatement((CreateIndexStatement)statement);
 
             Assert.IsNotNull(text);
             Assert.AreEqual("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);

@@ -258,6 +258,11 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitPrepareStatement(IExecutableStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
         {
             throw new NotImplementedException();
@@ -283,12 +288,37 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitAlterProcedureStatement(CreateProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitDropProcedureStatement(DropProcedureStatement statement)
         {
             throw new NotImplementedException();
         }
 
         protected virtual void VisitAlterProcedureStatement(AlterProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitCreateFunctionStatement(CreateFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitAlterFunctionStatement(AlterFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitDropFunctionStatement(DropFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
         {
             throw new NotImplementedException();
         }
