@@ -14,6 +14,7 @@ namespace TTRider.FluidSql
         , IIntoStatement
         , ICTEStatement
         , IOnConflict
+        , ISelectStatement
     {
         public InsertStatement()
         {
@@ -22,6 +23,7 @@ namespace TTRider.FluidSql
             this.CommonTableExpressions = new List<CTEDefinition>();
         }
 
+        public Name Into { get; set; }
         public RecordsetStatement From { get; set; }
         public bool DefaultValues { get; set; }
         public List<Name> Columns { get; private set; }
@@ -29,7 +31,6 @@ namespace TTRider.FluidSql
         public bool IdentityInsert { get; set; }
         public List<CTEDefinition> CommonTableExpressions { get; set; }
 
-        public Name Into { get; set; }
         public OnConflict? Conflict { get; set; }
         public Top Top { get; set; }
     }

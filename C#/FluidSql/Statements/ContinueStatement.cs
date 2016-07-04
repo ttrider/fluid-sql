@@ -9,5 +9,7 @@ namespace TTRider.FluidSql
 {
     public class ContinueStatement : Token, IStatement
     {
+        public string Label { get; set; }
+        public ExpressionToken When { get; set; }
     }
 }

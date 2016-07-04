@@ -17,6 +17,7 @@ namespace TTRider.FluidSql
         , IWhereStatement
         , ICTEStatement
         , IOnConflict
+        , ISelectStatement
 
     {
         public UpdateStatement()

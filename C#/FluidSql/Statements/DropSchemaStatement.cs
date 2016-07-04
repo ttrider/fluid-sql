@@ -11,5 +11,8 @@ namespace TTRider.FluidSql
     {
         public Name Name { get; set; }
         public bool CheckExists { get; set; }
+
+        //for postgresqls
+        public bool? IsCascade { get; set; }
     }
 }

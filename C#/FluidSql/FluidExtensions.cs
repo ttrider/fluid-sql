@@ -84,6 +84,12 @@ namespace TTRider.FluidSql
             return parameter;
         }
 
+        public static Parameter Value(this Parameter parameter, object Value)
+        {
+            parameter.Value = Value;
+            return parameter;
+        }
+
         public static Parameter ParameterDirection(this Parameter parameter, ParameterDirection direction)
         {
             parameter.Direction = direction;
@@ -240,6 +246,17 @@ namespace TTRider.FluidSql
             where T : ISetStatement
         {
             statement.Set.Add(new AssignToken { First = target, Second = expression });
+            return statement;
+        }
+
+        public static T Set<T>(this T statement, IList<BinaryEqualToken> setList)
+            where T : ISetStatement
+        {
+            if (setList != null)
+            {
+                foreach (BinaryEqualToken item in setList)
+                    statement.Set.Add(item);
+            }
             return statement;
         }
 
@@ -1321,6 +1338,14 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, IEnumerable<Order> columns)
+        {
+            if (columns != null)
+            {
+                statement.Columns.AddRange(columns);
+            }
+            return statement;
+        }
 
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, Name column,
             Direction direction = Direction.Asc)
@@ -1329,7 +1354,21 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, Name column,
+            Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column,
+            Direction direction = Direction.Asc)
+        {
+            statement.Columns.Add(Sql.Order(column, direction));
+            return statement;
+        }
+
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, string column,
             Direction direction = Direction.Asc)
         {
             statement.Columns.Add(Sql.Order(column, direction));
@@ -1342,7 +1381,19 @@ namespace TTRider.FluidSql
             return OnColumn(statement, ToOrders(column, columns));
         }
 
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, Order column,
+            params Order[] columns)
+        {
+            return OnColumn(statement, ToOrders(column, columns));
+        }
+
         public static CreateIndexStatement OnColumn(this CreateIndexStatement statement, string column,
+            params string[] columns)
+        {
+            return OnColumn(statement, ToOrders(column, columns));
+        }
+
+        public static AlterIndexStatement OnColumn(this AlterIndexStatement statement, string column,
             params string[] columns)
         {
             return OnColumn(statement, ToOrders(column, columns));
@@ -1545,6 +1596,41 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static DropSchemaStatement Cascade(this DropSchemaStatement statement)
+        {
+            statement.IsCascade = true;
+            return statement;
+        }
+
+        public static DropSchemaStatement Restrict(this DropSchemaStatement statement)
+        {
+            statement.IsCascade = false;
+            return statement;
+        }
+
+        public static AlterSchemaStatement RenameTo(this AlterSchemaStatement statement, string newName)
+        {
+            statement.NewName = Sql.Name(newName);
+            return statement;
+        }
+
+        public static AlterSchemaStatement RenameTo(this AlterSchemaStatement statement, Name newName)
+        {
+            statement.NewName = newName;
+            return statement;
+        }
+
+        public static AlterSchemaStatement OwnerTo(this AlterSchemaStatement statement, string newOwner)
+        {
+            statement.NewOwner = Sql.Name(newOwner);
+            return statement;
+        }
+
+        public static AlterSchemaStatement OwnerTo(this AlterSchemaStatement statement, Name newOwner)
+        {
+            statement.NewOwner = newOwner;
+            return statement;
+        }
         #endregion Schema
 
         public static string GetCommandSummary(this IDbCommand command)
@@ -2047,6 +2133,11 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static CreateTableStatement As(this CreateTableStatement statement, ISelectStatement selectStatement)
+        {
+            statement.AsSelectStatement = selectStatement;
+            return statement;
+        }
         #endregion PrimaryKey
 
         #region UniqueConstrainOn
@@ -2624,6 +2715,38 @@ namespace TTRider.FluidSql
 
         #endregion Case
 
+        #region Continue
+
+        public static ContinueStatement Label(this ContinueStatement continueStatement, string label)
+        {
+            continueStatement.Label = label;
+            return continueStatement;
+        }
+
+        public static ContinueStatement When(this ContinueStatement continueStatement, ExpressionToken whenToken)
+        {
+            continueStatement.When = whenToken;
+            return continueStatement;
+        }
+
+        #endregion Case
+
+        #region Exit
+
+        public static ExitStatement Label(this ExitStatement exitStatement, string label)
+        {
+            exitStatement.Label = label;
+            return exitStatement;
+        }
+
+        public static ExitStatement When(this ExitStatement exitStatement, ExpressionToken whenToken)
+        {
+            exitStatement.When = whenToken;
+            return exitStatement;
+        }
+
+        #endregion Case
+
         #region Date Add
 
         public static DateFunctionExpressionToken AddYears(this DateFunctionExpressionToken token, Token number)
@@ -2926,6 +3049,30 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T Declarations<T>(this T statement, Parameter parameter, params Parameter[] parameters)
+            where T : IProcedureStatement
+        {
+            statement.Declarations.Add(parameter);
+            foreach (var p in parameters)
+            {
+                statement.Declarations.Add(p);
+            }
+            return statement;
+        }
+
+        public static T Declarations<T>(this T statement, ParameterDirection direction, Parameter parameter,
+            params Parameter[] parameters) where T : IProcedureStatement
+        {
+            parameter.Direction = direction;
+            statement.Declarations.Add(parameter);
+            foreach (var p in parameters)
+            {
+                parameter.Direction = direction;
+                statement.Declarations.Add(p);
+            }
+            return statement;
+        }
+
         public static T InputParameters<T>(this T statement, Parameter parameter, params Parameter[] parameters)
             where T : IProcedureStatement
         {
@@ -3006,6 +3153,23 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static DropFunctionStatement Cascade(this DropFunctionStatement statement)
+        {
+            statement.IsCascade = true;
+            return statement;
+        }
+
+        public static DropFunctionStatement Restrict(this DropFunctionStatement statement)
+        {
+            statement.IsCascade = false;
+            return statement;
+        }
+
+        public static DropFunctionStatement ReturnValue(this DropFunctionStatement statement, Parameter parameter)
+        {
+            statement.ReturnValue = parameter;
+            return statement;
+        }
         #endregion Stored Procedure
 
         #region CAST
@@ -3038,5 +3202,12 @@ namespace TTRider.FluidSql
             };
         }
         #endregion CAST
+
+        public static ExecuteStatement Name(this ExecuteStatement statement,
+            string name)
+        {
+            statement.Name = name;
+            return statement;
+        }
     }
 }

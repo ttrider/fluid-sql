@@ -46,13 +46,20 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DatePart.cs" />
+    <Compile Include="Interfaces\IExecutableStatement.cs" />
+    <Compile Include="Interfaces\IIndex.cs" />
     <Compile Include="Interfaces\ITyped.cs" />
+    <Compile Include="Statements\AlterFunctionStatement.cs" />
     <Compile Include="Statements\AlterProcedureStatement.cs" />
+    <Compile Include="Statements\CreateFunctionStatement.cs" />
     <Compile Include="Statements\CreateProcedureStatement.cs" />
+    <Compile Include="Statements\DropFunctionStatement.cs" />
     <Compile Include="Statements\DropProcedureStatement.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
+    <Compile Include="Statements\ExecuteFunctionStatement.cs" />
     <Compile Include="Statements\ExecuteStoredProcedureStatement.cs" />
     <Compile Include="Interfaces\IProcedureStatement.cs" />
+    <Compile Include="Statements\PrepareStatement.cs" />
     <Compile Include="Tokens\CaseToken.cs" />
     <Compile Include="Tokens\CaseWhenToken.cs" />
     <Compile Include="Functions\DateAddFunctionToken.cs" />
@@ -70,10 +77,12 @@
     <Compile Include="Interfaces\IOnConflict.cs" />
     <Compile Include="Interfaces\ISelectStatement.cs" />
     <Compile Include="Providers\Visitor.Functions.cs" />
+    <Compile Include="Statements\AlterSchemaStatement.cs" />
     <Compile Include="Statements\CorrelationStatement.cs" />
     <Compile Include="Statements\CreateSchemaStatement.cs" />
     <Compile Include="Statements\DropSchemaStatement.cs" />
     <Compile Include="Statements\ExceptStatement.cs" />
+    <Compile Include="Statements\ExitStatement.cs" />
     <Compile Include="Statements\IntersectStatement.cs" />
     <Compile Include="Enums\Joins.cs" />
     <Compile Include="OnConflict.cs" />
@@ -82,6 +91,7 @@
     <Compile Include="Statements\AlterViewStatement.cs" />
     <Compile Include="Statements\BeginTransactionStatement.cs" />
     <Compile Include="Statements\CreateOrAlterViewStatement.cs" />
+    <Compile Include="Statements\PerformStatement.cs" />
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
     <Compile Include="Tokens\CastToken.cs" />

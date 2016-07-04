@@ -116,6 +116,10 @@ namespace TTRider.FluidSql
                                 : openQuote + item + closeQuote));
         }
 
+        public string GetFullNameWithoutQuotes()
+        {
+            return string.Join(".", this.parts);
+        }
         public static implicit operator Name(string value)
         {
             return new Name(value);

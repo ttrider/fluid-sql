@@ -183,6 +183,11 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitExitStatement(ExitStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitGotoStatement(GotoStatement statement)
         {
             throw new NotImplementedException();
@@ -243,7 +248,17 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitPerformStatement(PerformStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitExecuteStatement(ExecuteStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitPrepareStatement(IExecutableStatement statement)
         {
             throw new NotImplementedException();
         }
@@ -263,7 +278,17 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitAlterSchemaStatement(AlterSchemaStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected virtual void VisitCreateProcedureStatement(CreateProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitAlterProcedureStatement(CreateProcedureStatement statement)
         {
             throw new NotImplementedException();
         }
@@ -274,6 +299,26 @@ namespace TTRider.FluidSql.Providers
         }
 
         protected virtual void VisitAlterProcedureStatement(AlterProcedureStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitCreateFunctionStatement(CreateFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitAlterFunctionStatement(AlterFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitDropFunctionStatement(DropFunctionStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
         {
             throw new NotImplementedException();
         }

@@ -116,7 +116,7 @@ namespace Tests.PostgreSql
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE \"tbl\" ( \"C1\" SERIAL NOT NULL, \"C2\" TEXT NULL, CONSTRAINT \"PK_tbl\" PRIMARY KEY ( \"C1\" ) );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC ) ;", command.CommandText);
+            Assert.AreEqual("CREATE TABLE \"tbl\" ( \"C1\" SERIAL NOT NULL, \"C2\" TEXT NULL, CONSTRAINT \"PK_tbl\" PRIMARY KEY ( \"C1\" ) );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );", command.CommandText);
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace Tests.PostgreSql
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" SERIAL NOT NULL, \"C2\" TEXT NULL, CONSTRAINT \"PK_tbl\" PRIMARY KEY ( \"C1\" ) );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC ) ;", command.CommandText);
+            Assert.AreEqual("CREATE TABLE IF NOT EXISTS \"tbl\" ( \"C1\" SERIAL NOT NULL, \"C2\" TEXT NULL, CONSTRAINT \"PK_tbl\" PRIMARY KEY ( \"C1\" ) );\r\nCREATE INDEX \"IX_tbl\" ON \"tbl\" ( \"C2\" ASC );", command.CommandText);
         }
 
         [TestMethod]
