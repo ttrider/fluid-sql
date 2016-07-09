@@ -61,6 +61,7 @@ namespace TTRider.FluidSql.Providers
             public const string DESC = "DESC";
             public const string DISABLE = "DISABLE";
             public const string DISTINCT = "DISTINCT";
+            public const string DIV = "DIV";
             public const string DO = "DO";
             public const string DROP = "DROP";
             public const string DROP_EXISTING = "DROP_EXISTING";
@@ -161,6 +162,7 @@ namespace TTRider.FluidSql.Providers
             public const string SOURCE = "SOURCE";
             public const string SPARSE = "SPARSE";
             public const string STATISTICS_NORECOMPUTE = "STATISTICS_NORECOMPUTE";
+            public const string START = "START";
             public const string TABLE = "TABLE";
             public const string TARGET = "TARGET";
             public const string TEMPORARY = "TEMPORARY";

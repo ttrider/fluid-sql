@@ -12,7 +12,7 @@ namespace Tests.MySqlTests
          *  grant select, insert, delete, update on fluidsqltests.* to 'fluidsqluser'@'localhost' identified by 'fluidsqlpwd';
          */
 
-        [TestMethod]
+        /*[TestMethod]
         public void EndToEnd00()
         {
             var create = CreateTable00();
@@ -34,6 +34,6 @@ namespace Tests.MySqlTests
 
             cmd.ExecuteNonQuery();
 
-        }
+        }*/
     }
 }

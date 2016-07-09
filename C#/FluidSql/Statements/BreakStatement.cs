@@ -9,5 +9,6 @@ namespace TTRider.FluidSql
 {
     public class BreakStatement : Token, IStatement
     {
+        public string Label { get; set; }
     }
 }
