@@ -85,12 +85,12 @@ namespace Tests.MySqlTests
         [TestMethod]
         public void UpdateDefault()
         {
-            var statement = Sql.Update("tbl1").Set(Sql.Name("C1"), Sql.Scalar(100)).Where(Sql.Name("C1").IsEqual(Sql.Scalar(1)));
+            var statement = Sql.Update("t1").Set(Sql.Name("id"), Sql.Scalar(100)).Where(Sql.Name("id").IsEqual(Sql.Scalar(1)));
 
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("UPDATE \"tbl1\" SET \"C1\" = 100 WHERE \"C1\" = 1;", command.CommandText);
+            Assert.AreEqual("UPDATE `t1` SET `id` = 100 WHERE `id` = 1;", command.CommandText);
         }
 
         /*[TestMethod]
@@ -137,24 +137,23 @@ namespace Tests.MySqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("UPDATE \"foo\".\"bar\" SET \"a\" = 1 WHERE \"z\" = 'b' RETURNING \"a\" INTO \"tempt\";", command.CommandText);
-        }
+        }*/
 
         [TestMethod]
         public void UpdateJoinOutputInto()
         {
-            var statement = Sql.Update("tbl1")
-                .Set(Sql.Name("C1"), Sql.Scalar(44))
-                .Set(Sql.Name("C2"), Sql.Scalar(33))
-                .Where(Sql.Name("tbl1.C1").IsEqual(Sql.Scalar(2)))
-                .OutputInto("@tempt", Sql.Name("inserted", "C1"))
-                .InnerJoin(Sql.Name("tbl2"), Sql.Name("tbl1", "C1").IsEqual("tbl2.C1"))
+            var statement = Sql.Update("t1")
+                .Set(Sql.Name("t1.id"), Sql.Scalar(44))
+                .Set(Sql.Name("t1.name"), Sql.Scalar("test44"))
+                .Where(Sql.Name("t1.id").IsEqual(Sql.Scalar(2)))
+                .InnerJoin(Sql.Name("t2"), Sql.Name("t1", "id").IsEqual("t2.id"))
                 ;
 
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("UPDATE \"tbl1\" SET \"C1\" = 44, \"C2\" = 33 FROM \"tbl2\" WHERE \"tbl1\".\"C1\" = 2 AND \"tbl1\".\"C1\" = \"tbl2\".\"C1\" RETURNING \"C1\" INTO \"tempt\";", command.CommandText);
-        }*/
+            Assert.AreEqual("UPDATE `t1` INNER JOIN `t2` ON `t1`.`id` = `t2`.`id` SET `t1`.`id` = 44, `t1`.`name` = N'test44' WHERE `t1`.`id` = 2;", command.CommandText);
+        }
         #endregion
     }
 }

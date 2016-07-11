@@ -57,11 +57,11 @@ namespace TTRider.FluidSql.Providers.MySql
 
             VisitToken(statement.Target, true);
 
+            VisitJoin(statement.Joins);
+
             State.Write(Symbols.SET);
 
             VisitTokenSet(statement.Set);
-
-            VisitJoin(statement.Joins);
 
             VisitWhereToken(statement.Where);
 
