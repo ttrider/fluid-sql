@@ -14,7 +14,7 @@ namespace Tests.ProvidersEndToEnd
         [TestMethod]
         public void SimpleStatement()
         {
-            var statement = Common.CreateSimpleStatement();
+            var statement = Common.CreateSimpleStatements();
             Common.GenerateAndExecute(Provider, statement, ConnectionString);
         }
     }

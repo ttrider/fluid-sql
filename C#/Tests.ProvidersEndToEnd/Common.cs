@@ -5,6 +5,7 @@
 //     Copyright (c) 2014-2016 All Rights Reserved
 // </copyright>
 
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using TTRider.FluidSql;
@@ -33,19 +34,23 @@ namespace Tests.ProvidersEndToEnd
             }
         }
 
-        internal static void GenerateAndExecute(IProvider provider, IStatement statement, string connectionString)
+        internal static void GenerateAndExecute(IProvider provider, IEnumerable<IStatement> statements, string connectionString)
         {
-            Trace.WriteLine("---------------------------------");
-            var script = provider.GenerateStatement(statement);
-            Trace.WriteLine(script);
 
-            using (var command = provider.GetCommand(statement, connectionString))
+            foreach (var statement in statements)
             {
-                ExecuteCommand(command);
+                Trace.WriteLine("---------------------------------");
+                var script = provider.GenerateStatement(statement);
+                Trace.WriteLine(script);
+
+                using (var command = provider.GetCommand(statement, connectionString))
+                {
+                    ExecuteCommand(command);
+                }
             }
         }
 
-        internal static IStatement CreateSimpleStatement()
+        internal static IEnumerable<IStatement> CreateSimpleStatements()
         {
             var notesTable = Sql.Name("notes");
             var usersTable = Sql.Name("users");
@@ -76,6 +81,13 @@ namespace Tests.ProvidersEndToEnd
                 .IndexOn("IX_user_id", new Order { Column = "user_id" });
 
             // populate tables
+
+            yield return Sql.Statements(
+                predropTables,
+                createTableUser,
+                createTableNote
+                
+                );
 
             var insertUsers = Sql.Insert.Into(usersTable)
                 .Columns("id", "name")
@@ -108,6 +120,16 @@ namespace Tests.ProvidersEndToEnd
             var simpleSelect =
                 Sql.Select.From(usersTable, "n").Output("n.*").Where(Sql.Name("n", "id").LessOrEqual(Sql.Scalar(3)));
 
+            yield return Sql.Statements(
+
+                insertUsers,
+                insertNotes,
+                simpleSelect
+                );
+
+           
+
+
             var joinSelect = Sql.Select.From(notesTable, "nt")
                 .InnerJoin(usersTable, "nm", Sql.Name("nt", "user_id").IsEqual("nm.id"))
                 .Output("nt.timestamp", Sql.Name("nm", "name"), "nt.note");
@@ -129,19 +151,13 @@ namespace Tests.ProvidersEndToEnd
 
 
             var completeScript = Sql.Statements(
-                predropTables,
-                createTableUser,
-                createTableNote,
-                insertUsers,
-                insertNotes,
-                simpleSelect,
                 joinSelect,
                 updateValues,
                 deleteValues,
                 dropTables
                 );
 
-            return completeScript;
+            yield return completeScript;
         }
     }
 }
