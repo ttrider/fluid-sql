@@ -510,7 +510,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 }
                 State.Write(Symbols.PRIMARY);
                 State.Write(Symbols.KEY);
-                VisitTokenSetInParenthesis(statement.PrimaryKey.ColumnsName);
+                VisitTokenSetInParenthesis(statement.PrimaryKey.Columns.Select(c => c.Column));
             }
             foreach (var unique in statement.UniqueConstrains)
             {
@@ -518,7 +518,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 State.Write(Symbols.CONSTRAINT);
                 VisitNameToken(unique.Name);
                 State.Write(Symbols.UNIQUE);
-                VisitTokenSetInParenthesis(unique.ColumnsName);
+                VisitTokenSetInParenthesis(unique.Columns.Select(c => c.Column));
             }
 
             State.Write(Symbols.CloseParenthesis);

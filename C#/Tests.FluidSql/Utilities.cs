@@ -19,8 +19,8 @@ namespace FluidSqlTests
 
         public static IDbCommand GetCommand(IStatement statement)
         {
-            //return SqlProvider.GetCommand(statement, ConnectionString);
-            return SqlProvider.GetCommand(statement, string.Empty);
+            return SqlProvider.GetCommand(statement, ConnectionString);
+            //return SqlProvider.GetCommand(statement, string.Empty);
         }
 
         public static IDbCommand GetCommandAsync(IStatement statement)

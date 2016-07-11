@@ -14,7 +14,6 @@ namespace TTRider.FluidSql
         public ConstrainDefinition()
         {
             this.Columns = new List<Order>();
-            this.ColumnsName = new List<Name>();
         }
 
         public Name Name { get; set; }
@@ -25,7 +24,5 @@ namespace TTRider.FluidSql
 
         public bool? Clustered { get; set; }
         public OnConflict? Conflict { get; set; }
-
-        public List<Name> ColumnsName { get; private set; }
     }
 }

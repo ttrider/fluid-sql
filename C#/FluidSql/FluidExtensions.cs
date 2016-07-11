@@ -1871,10 +1871,6 @@ namespace TTRider.FluidSql
 
             statement.PrimaryKey.Name = name;
             statement.PrimaryKey.Columns.AddRange(columns);
-            foreach(Order columnName in columns)
-            {
-                statement.PrimaryKey.ColumnsName.Add(new Name(columnName.Column));
-            }
             return statement;
         }
 
@@ -1888,7 +1884,10 @@ namespace TTRider.FluidSql
             }
 
             statement.PrimaryKey.Name = name;
-            statement.PrimaryKey.ColumnsName.AddRange(columns);
+            foreach (var columnName in columns)
+            {
+                statement.PrimaryKey.Columns.Add(new Order {Column = columnName});
+            }
             return statement;
         }
 
@@ -1948,10 +1947,6 @@ namespace TTRider.FluidSql
             }
             statement.PrimaryKey.Name = Sql.Name("PK_" + statement.Name.LastPart);
             statement.PrimaryKey.Columns.AddRange(columns);
-            foreach (Order columnName in columns)
-            {
-                statement.PrimaryKey.ColumnsName.Add(new Name(columnName.Column));
-            }
             return statement;
         }
 
@@ -2147,10 +2142,6 @@ namespace TTRider.FluidSql
         {
             var index = new ConstrainDefinition { Clustered = false, Name = Sql.Name(name) };
             index.Columns.AddRange(columns);
-            foreach (Order columnName in columns)
-            {
-                index.ColumnsName.Add(new Name(columnName.Column));
-            }
             statement.UniqueConstrains.Add(index);
             return statement;
         }
