@@ -97,7 +97,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 throw new ArgumentNullException(nameof(connectionString));
             }
 
-            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+            var csb = new SqlConnectionStringBuilder(connectionString);
 
             return new SqlConnection(csb.ConnectionString);
         }
@@ -110,12 +110,14 @@ namespace TTRider.FluidSql.Providers.SqlServer
             SqlCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+                var csb = new SqlConnectionStringBuilder(connectionString);
 
                 var connection = new SqlConnection(csb.ConnectionString);
                 connection.Open();
                 command = connection.CreateCommand();
+#if !BUILD_CORECLR
                 command.Disposed += (s, o) => connection.Close();
+#endif
             }
             else
             {
