@@ -84,6 +84,13 @@ namespace TTRider.FluidSql.Providers
                 this.buffer.Append(" ");
             }
 
+            AddToTheEnd(value, values);
+        }
+
+        public void AddToTheEnd(string value, params string[] values)
+        {
+            if (value == null) return;
+
             if (!string.IsNullOrWhiteSpace(this.stringifySuffix))
             {
                 this.buffer.Append(value.Replace(this.stringifySuffix, this.stringifySuffix + this.stringifySuffix));
@@ -101,8 +108,6 @@ namespace TTRider.FluidSql.Providers
                 }
             }
         }
-
-
         /// <summary>
         ///     Ensures that statement has proper terminating character (;)
         /// </summary>

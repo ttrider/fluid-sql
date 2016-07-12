@@ -319,10 +319,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.Write(TempName);
         }
 
-        protected override void VisitSet(SetStatement statement)
-        {
-            throw new NotImplementedException();
-        }
+        protected override void VisitSet(SetStatement statement) { throw new NotImplementedException(); }
 
         protected override void VisitBeginTransaction(BeginTransactionStatement statement)
         {
@@ -1019,6 +1016,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         {
             fragment();
         }
+
         private void CreateOrReplaceFunction(IProcedureStatement statement)
         {
             State.Write(Symbols.CREATE);

@@ -2720,7 +2720,17 @@ namespace TTRider.FluidSql
             return continueStatement;
         }
 
-        #endregion Case
+        #endregion Continue
+
+        #region Break
+
+        public static BreakStatement Label(this BreakStatement breakStatement, string label)
+        {
+            breakStatement.Label = label;
+            return breakStatement;
+        }
+
+        #endregion Break
 
         #region Exit
 

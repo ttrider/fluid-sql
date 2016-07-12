@@ -52,6 +52,7 @@ namespace Tests.MySqlTests
 
             return statement;
         }
+
         [TestMethod]
         public IStatement DropTemporaryTable00()
         {

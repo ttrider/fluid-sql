@@ -12,7 +12,7 @@ namespace TTRider.FluidSql.Providers.MySql
 {
     internal partial class MySqlVisitor : Visitor
     {
-		private static readonly string[] supportedDialects = new [] {"mysql", "ansi"};
+        private static readonly string[] supportedDialects = new[] { "mysql", "ansi" };
 
         private readonly string[] DbTypeStrings =
         {
@@ -47,16 +47,16 @@ namespace TTRider.FluidSql.Providers.MySql
             "DATETIME" // DateTimeOffset = 28,
         };
 
-        protected override string[] SupportedDialects { get { return supportedDialects;}}
+        protected override string[] SupportedDialects { get { return supportedDialects; } }
 
         public MySqlVisitor()
         {
             this.IdentifierOpenQuote = "`";
             this.IdentifierCloseQuote = "`";
-            this.LiteralOpenQuote = "'";
+            this.LiteralOpenQuote = "N'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
-            this.CommentCloseQuote = "*/";            
+            this.CommentCloseQuote = "*/";
         }
 
         protected override void VisitJoinType(Joins join)
@@ -76,7 +76,31 @@ namespace TTRider.FluidSql.Providers.MySql
         protected class MySqlSymbols : Symbols
         {
             public const string AUTO_INCREMENT = "AUTO_INCREMENT";
+            public const string UTC_TIMESTAMP = "UTC_TIMESTAMP";
+            public const string UUID = "UUID";
+
+            public const string YEAR = "YEAR";
+            public const string MONTH = "MONTH";
+            public const string DAY = "DAY";
+            public const string WEEK = "WEEK";
+            public const string HOUR = "HOUR";
+            public const string MINUTE = "MINUTE";
+            public const string SECOND = "SECOND";
+            public const string MICROSECOND = "MICROSECOND";
+
+            public const string TIMESTAMPDIFF = "TIMESTAMPDIFF";
+            public const string MAKEDATE = "MAKEDATE";
+            public const string MAKETIME = "MAKETIME";
+            public const string TIMESTAMP = "TIMESTAMP";
+
+            public const string DATE_ADD = "DATE_ADD";
+            public const string DATE_SUB = "DATE_SUB";
+
+            public const string milisecondInSecond = "1000";
+
+            public const string ITERATE = "ITERATE";
+            public const string LEAVE = "LEAVE";
         }
-    
+
     }
 }
