@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace TTRider.FluidSql.Providers.MySql
 {
@@ -56,6 +58,15 @@ namespace TTRider.FluidSql.Providers.MySql
             State.Write(Symbols.UPDATE);
 
             VisitToken(statement.Target, true);
+
+            if (statement.RecordsetSource != null)
+            {
+                if (statement.RecordsetSource.Source is Name)
+                {
+                    State.Write(Symbols.Comma);
+                    VisitToken(statement.RecordsetSource);
+                }
+            }
 
             VisitJoin(statement.Joins);
 
@@ -145,7 +156,7 @@ namespace TTRider.FluidSql.Providers.MySql
                 VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
             }
 
-            //VisitIntoToken(statement.Into);
+            VisitIntoToken(statement.Into);
 
             if (statement.From.Count > 0)
             {
@@ -172,7 +183,103 @@ namespace TTRider.FluidSql.Providers.MySql
             }
         }
 
-        protected override void VisitMerge(MergeStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitMerge(MergeStatement statement)
+        {
+            VisitStatement(Sql.BeginTransaction());
+            State.WriteStatementTerminator();
+
+            bool isTop = false;
+            string prefixToAlias = "alias_";
+            IList<string> tempUpdateAliases = new List<string>();
+
+            string targetTable = statement.Into.GetFullName();
+            string targetAlias = (String.IsNullOrEmpty(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
+
+            string sourceTable = ((Name)statement.Using).GetFullName();
+            string sourceAlias = (String.IsNullOrEmpty(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
+
+            string targetColumnOn = string.Empty;
+            string sourceColumnOn = string.Empty;
+
+            string firstOn = ((Name)((BinaryToken)statement.On).First).FirstPart;
+
+            if ((firstOn).Equals(targetTable) || (firstOn).Equals(targetAlias))
+            {
+                targetColumnOn = ((Name)((BinaryToken)statement.On).First).LastPart;
+                sourceColumnOn = ((Name)((BinaryToken)statement.On).Second).LastPart;
+            }
+            else
+            {
+                sourceColumnOn = ((Name)((BinaryToken)statement.On).First).LastPart;
+                targetColumnOn = ((Name)((BinaryToken)statement.On).Second).LastPart;
+            }
+
+            ((BinaryToken)statement.On).First = Sql.Name(targetAlias, targetColumnOn);
+            ((BinaryToken)statement.On).Second = Sql.Name(sourceAlias, sourceColumnOn);
+
+            if (statement.Top != null)
+            {
+                CreateTableStatement createTable = Sql.CreateTemporaryTable(Sql.Name(TopAlias), true).As(Sql.Select.Output(Sql.Name(targetColumnOn)).From(Sql.Name(targetTable)).Top(((int)((Scalar)statement.Top.Value).Value), statement.Top.Percent));
+                isTop = true;
+                VisitStatement(createTable);
+                State.WriteStatementTerminator();
+            }
+
+            VisitWhenMatchedUpdateToken(statement
+                , tempUpdateAliases
+                , targetAlias
+                , targetTable
+                , targetColumnOn
+                , sourceAlias
+                , sourceTable
+                , sourceColumnOn
+                , isTop);
+
+            VisitWhenMatchedDeleteToken(statement
+                , targetAlias
+                , targetTable
+                , targetColumnOn
+                , sourceAlias
+                , sourceTable
+                , sourceColumnOn
+                , isTop);
+
+            VisitWhenNotMatchedBySourceToken(statement
+                 , targetAlias
+                 , targetTable
+                 , targetColumnOn
+                 , sourceAlias
+                 , sourceTable
+                 , sourceColumnOn
+                 , isTop);
+
+            VisitWhenNotMatchedThenInsertToken(statement
+                 , tempUpdateAliases
+                 , targetAlias
+                 , targetColumnOn
+                 , targetTable
+                 , sourceAlias
+                 , sourceTable
+                 , sourceColumnOn);
+            
+            if (tempUpdateAliases.Count != 0)
+            {
+                foreach (string tempTable in tempUpdateAliases)
+                {
+                    DropTableStatement dropTable = Sql.DropTemporaryTable(tempTable, true);
+                    VisitStatement(dropTable);
+                    State.WriteStatementTerminator();
+                }
+            }
+            if (isTop)
+            {
+                DropTableStatement dropTable = Sql.DropTemporaryTable(TopAlias, true);
+                VisitStatement(dropTable);
+                State.WriteStatementTerminator();
+            }
+
+            VisitStatement(Sql.CommitTransaction());
+        }
 
         protected override void VisitSet(SetStatement statement)
         {
@@ -274,45 +381,52 @@ namespace TTRider.FluidSql.Providers.MySql
             }
 
             VisitNameToken(statement.Name);
-
-            var separator = "(";
-            foreach (var column in statement.Columns)
+            if (statement.AsSelectStatement != null)
             {
-                State.Write(separator);
-                separator = ",";
-
-                State.Write("`", column.Name, "`");
-
-                VisitType(column);
-
-                if (column.Null.HasValue)
+                State.Write(Symbols.AS);
+                State.Write(Symbols.OpenParenthesis);
+                VisitStatement(statement.AsSelectStatement);
+            }
+            else
+            {
+                var separator = "(";
+                foreach (var column in statement.Columns)
                 {
-                    if (!column.Null.Value)
+                    State.Write(separator);
+                    separator = ",";
+
+                    State.Write("`", column.Name, "`");
+
+                    VisitType(column);
+
+                    if (column.Null.HasValue)
                     {
-                        State.Write(Symbols.NOT);
+                        if (!column.Null.Value)
+                        {
+                            State.Write(Symbols.NOT);
+                        }
+                        State.Write(Symbols.NULL);
+                        VisitConflict(column.NullConflict);
                     }
-                    State.Write(Symbols.NULL);
-                    VisitConflict(column.NullConflict);
-                }
 
-                if (column.DefaultValue != null)
-                {
-                    State.Write(Symbols.DEFAULT);
-                    VisitToken(column.DefaultValue);
-                }
+                    if (column.DefaultValue != null)
+                    {
+                        State.Write(Symbols.DEFAULT);
+                        VisitToken(column.DefaultValue);
+                    }
 
-                if (column.Identity.On)
-                {
-                    State.Write(MySqlSymbols.AUTO_INCREMENT);
-                }
+                    if (column.Identity.On)
+                    {
+                        State.Write(MySqlSymbols.AUTO_INCREMENT);
+                    }
 
-                if (column.PrimaryKeyDirection.HasValue)
-                {
-                    State.Write(Symbols.PRIMARY);
-                    State.Write(Symbols.KEY);
+                    if (column.PrimaryKeyDirection.HasValue)
+                    {
+                        State.Write(Symbols.PRIMARY);
+                        State.Write(Symbols.KEY);
+                    }
                 }
             }
-
             State.Write(Symbols.CloseParenthesis);
         }
 
@@ -517,6 +631,334 @@ namespace TTRider.FluidSql.Providers.MySql
             State.Write(schemaName);
         }
 
+        protected override void VisitCreateProcedureStatement(CreateProcedureStatement statement)
+        {
+            VisitProcedureAndBodyParameters(statement, true, statement.CheckIfNotExists);
+        }
+
+        protected override void VisitDropProcedureStatement(DropProcedureStatement statement)
+        {
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.PROCEDURE);
+            if(statement.CheckExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+            }
+            VisitNameToken(statement.Name);
+        }
+
+        protected override void VisitAlterProcedureStatement(AlterProcedureStatement statement)
+        {
+            VisitProcedureAndBodyParameters(statement, true, true);
+        }
+
+        protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
+        {
+            State.Write(Symbols.CALL);
+
+            State.Write(statement.Name.GetFullNameWithoutQuotes());
+
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
+                visitToken: parameter =>
+                {
+                    if (parameter.Value != null)
+                    {
+                        VisitValue(parameter.Value);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitCreateFunctionStatement(CreateFunctionStatement statement)
+        {
+            VisitProcedureAndBodyParameters(statement, false, statement.CheckIfNotExists);
+        }
+
+        protected override void VisitAlterFunctionStatement(AlterFunctionStatement statement)
+        {
+            VisitProcedureAndBodyParameters(statement, false, true);
+        }
+
+        protected override void VisitDropFunctionStatement(DropFunctionStatement statement)
+        {
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.FUNCTION);
+            if (statement.CheckExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+            }
+            VisitNameToken(statement.Name);
+        }
+
+        protected override void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
+        {
+            State.Write(statement.Name.GetFullNameWithoutQuotes());
+
+            State.Write(Symbols.OpenParenthesis);
+
+            VisitTokenSet(statement.Parameters.Where(p => p.Direction != ParameterDirection.ReturnValue),
+                visitToken: parameter =>
+                {
+                    if (parameter.Value != null)
+                    {
+                        VisitValue(parameter.Value);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        private void VisitProcedureAndBodyParameters(IProcedureStatement statement, bool isProcedure, bool checkIfNotExists)
+        {
+            if (checkIfNotExists)
+            {
+                if (isProcedure)
+                {
+                    VisitStatement(Sql.DropProcedure(statement.Name, true));
+                }
+                else
+                {
+                    VisitStatement(Sql.DropFunction(statement.Name, true));
+                }
+                State.WriteStatementTerminator();
+            }
+            State.Write(MySqlSymbols.DELIMITER);
+            State.Write(DelimiterSymbol);
+            State.WriteCRLF();
+            State.Write(Symbols.CREATE);
+
+            if (isProcedure)
+            {
+                State.Write(Symbols.PROCEDURE);
+            }
+            else
+            {
+                State.Write(Symbols.FUNCTION);
+            }
+            VisitNameToken(statement.Name);
+            State.WriteCRLF();
+
+            VisitProcedureParameters(statement);
+            if(!isProcedure)
+            {
+                VisitFunctionReturnParameters(statement);
+            }
+
+            State.Write(Symbols.BEGIN);
+            State.WriteCRLF();
+            VisitStatement(statement.Body);
+            State.WriteStatementTerminator();
+            State.Write(Symbols.END);
+
+            State.Write(String.Empty);
+            State.Write(DelimiterSymbol);
+            State.WriteStatementTerminator();
+            State.Write(MySqlSymbols.DELIMITER);
+            State.Write(String.Empty);
+            State.WriteStatementTerminator();
+        }
+
+        private void VisitProcedureParameters(IProcedureStatement s)
+        {
+            var separator = Symbols.OpenParenthesis;
+            State.Write(separator);
+            foreach (var p in s.Parameters
+                .Where(p => p.Direction != ParameterDirection.ReturnValue))
+            {
+                if (separator == Symbols.Comma)
+                {
+                    State.Write(separator);
+                }
+                State.WriteCRLF();
+                separator = Symbols.Comma;
+
+                switch(p.Direction)
+                {
+                    case ParameterDirection.Input:
+                        State.Write(Symbols.IN);
+                        break;
+                    case ParameterDirection.InputOutput:
+                        State.Write(Symbols.INOUT);
+                        break;
+                    case ParameterDirection.Output:
+                        State.Write(Symbols.OUT);
+                        break;
+                    default:
+                        State.Write(Symbols.IN);
+                        break;
+
+                }
+                
+                VisitNameToken(p.Name);
+                VisitType(p);
+            }
+            if (separator == Symbols.Comma)
+            {
+                State.WriteCRLF();
+            }
+            State.Write(Symbols.CloseParenthesis);
+            State.WriteCRLF();
+        }
+
+        private void VisitFunctionReturnParameters(IProcedureStatement s)
+        {
+            var retVal = s.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+
+            State.Write(Symbols.RETURNS);
+            if (retVal == null)
+            {
+                State.Write(Symbols.VOID);
+            }
+            else
+            {
+                VisitType(retVal);
+            }
+            State.WriteCRLF();
+        }
+
+        private void VisitFunctionParametersAndBody(IProcedureStatement s)
+        {
+            State.Write(Symbols.FUNCTION);
+
+            VisitNameToken(s.Name);
+            State.WriteCRLF();
+
+            var separator = Symbols.OpenParenthesis;
+            Parameter returnParam = s.Parameters
+                .Where(p => p.Direction == ParameterDirection.ReturnValue).FirstOrDefault();
+
+            foreach (var p in s.Parameters
+                .Where(p => p.Direction != ParameterDirection.ReturnValue))
+            {
+                State.Write(separator);
+                State.WriteCRLF();
+                separator = Symbols.Comma;
+
+                VisitNameToken(p.Name);
+                VisitType(p);
+
+                if (p.DefaultValue != null)
+                {
+                    State.Write(Symbols.AssignVal);
+                    VisitValue(p.DefaultValue);
+                }
+                if ((p.Direction != 0) && (p.Direction != ParameterDirection.Input))
+                {
+                    State.Write(Symbols.OUTPUT);
+                }
+                if (p.ReadOnly)
+                {
+                    State.Write(Symbols.READONLY);
+                }
+            }
+            if (separator == Symbols.Comma)
+            {
+                State.WriteCRLF();
+                State.Write(Symbols.CloseParenthesis);
+                State.WriteCRLF();
+            }
+            if (returnParam != null)
+            {
+                State.Write(Symbols.RETURNS);
+                VisitNameToken(returnParam.Name);
+                VisitType(returnParam);
+                State.WriteCRLF();
+            }
+
+            if (s.Recompile)
+            {
+                State.Write(Symbols.WITH, Symbols.RECOMPILE);
+                State.WriteCRLF();
+            }
+
+            State.Write(Symbols.AS);
+            State.WriteCRLF();
+            State.Write(Symbols.BEGIN);
+            State.WriteStatementTerminator();
+            VisitStatement(s.Body);
+            State.Write(Symbols.END);
+            State.WriteStatementTerminator();
+        }
+
+        private void VisitConditional(bool doCheck, Name name, string objectType, bool inverse, Action isNullAction,
+            Action isNotNullAction = null)
+        {
+            if (doCheck)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.OBJECT_ID);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(LiteralOpenQuote, ResolveName(name), LiteralCloseQuote);
+                State.Write(Symbols.Comma);
+                State.Write(LiteralOpenQuote, objectType, LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.IS);
+                if (inverse)
+                {
+                    State.Write(Symbols.NOT);
+                }
+                State.Write(Symbols.NULL);
+                State.WriteCRLF();
+                State.Write(Symbols.BEGIN);
+                State.WriteStatementTerminator();
+
+                State.Write(Symbols.EXEC);
+                State.Write(Symbols.OpenParenthesis);
+                State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
+
+                isNullAction();
+
+                State.WriteEndStringify();
+                State.Write(Symbols.CloseParenthesis);
+                State.WriteStatementTerminator();
+
+                State.Write(Symbols.END);
+                State.WriteStatementTerminator();
+
+                if (isNotNullAction != null)
+                {
+                    State.Write(Symbols.ELSE);
+                    State.Write(Symbols.BEGIN);
+                    State.WriteStatementTerminator();
+
+                    State.Write(Symbols.EXEC);
+                    State.Write(Symbols.OpenParenthesis);
+                    State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
+
+                    isNotNullAction();
+
+                    State.WriteEndStringify();
+                    State.Write(Symbols.CloseParenthesis);
+                    State.WriteStatementTerminator();
+
+
+                    State.Write(Symbols.END);
+                    State.WriteStatementTerminator();
+                }
+            }
+            else
+            {
+                isNullAction();
+            }
+        }
+
         private void CreateIndex(IIndex statement)
         {
             State.Write(Symbols.CREATE);
@@ -581,6 +1023,9 @@ namespace TTRider.FluidSql.Providers.MySql
             }
             return usingList;
         }
+
+        private string TopAlias = "top_alias";
+        private string DelimiterSymbol = "$$";
 
     }
 }

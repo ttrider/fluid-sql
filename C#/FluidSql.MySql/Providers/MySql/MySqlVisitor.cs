@@ -100,6 +100,8 @@ namespace TTRider.FluidSql.Providers.MySql
 
             public const string ITERATE = "ITERATE";
             public const string LEAVE = "LEAVE";
+
+            public const string DELIMITER = "DELIMITER";
         }
 
     }
