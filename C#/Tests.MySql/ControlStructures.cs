@@ -161,6 +161,18 @@ namespace Tests.MySqlTests
 
             Assert.IsNotNull(command);
             Assert.AreEqual("RETURN 2;", command.CommandText);
-        }        
+        }
+
+        [TestMethod]
+        public void While()
+        {
+            var statement =
+                Sql.While(Sql.Name("@i").Less(Sql.Scalar(10))).Do(Sql.Set("@i", Sql.Name("@i").Plus(Sql.Scalar(1))));
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("WHILE @i < 10\r\nDO\r\nSET @i = @i + 1;\r\nEND WHILE;", command.CommandText);
+        }
     }
 }

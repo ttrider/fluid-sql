@@ -55,7 +55,7 @@ namespace Tests.MySqlTests
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual("DROP PROCEDURE IF EXISTS `SelectWhereProc`;\r\nDELIMITER $$\r\nCREATE PROCEDURE `SelectWhereProc`\r\n(\r\nIN `nameValue` TEXT,\r\nOUT `idCount` INTEGER\r\n)\r\nBEGIN\r\nSELECT COUNT( * ) FROM `t1` WHERE `name` = `nameValue`;\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
+            Assert.AreEqual("DROP PROCEDURE IF EXISTS `SelectWhereProc`;\r\nDELIMITER $$\r\nCREATE PROCEDURE `SelectWhereProc`\r\n(\r\nIN `nameValue` TEXT,\r\nOUT `idCount` INTEGER\r\n)\r\nBEGIN\r\nSELECT COUNT( * ) INTO `idCount` FROM `t1` WHERE `name` = `nameValue`;\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
         }
 
         [TestMethod]
@@ -135,71 +135,38 @@ namespace Tests.MySqlTests
             Assert.AreEqual("DROP FUNCTION IF EXISTS `func00`;\r\nDELIMITER $$\r\nCREATE FUNCTION `func00`\r\n( )\r\nRETURNS INTEGER\r\nBEGIN\r\nRETURN 1;\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
         }
 
-       /* [TestMethod]
-        public void CreateFunctionWithInputParam()
+        [TestMethod]
+        public void CreateHelloFunction()
         {
-            var statement = Sql.CreateFunction("func00", true)
-                .Parameters(Parameter.Int("@i01"),
-                    Parameter.DateTime("@sd02"))
-                /*.InputOutputParameters(Parameter.Int("@i03"))
-                .OutputParameters(Parameter.String("@s04"), Parameter.Bit("@b05"))
-                .ReturnValue(Parameter.Int("@retVal"))*/
-                /*.As(
-                    Sql.Select.Output(Sql.Star()).From("target_tbl"),
-                    Sql.Select.Output(Sql.Star()).From("source_tbl")
+            var statement = Sql.CreateFunction("hello", true)
+                .ReturnValue(Parameter.Text())
+                .As(
+                    Sql.Return(Sql.Scalar("Hello world!"))
                 );
 
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual(@"IF OBJECT_ID ( N'[func00]', N'FN' ) IS NULL
-BEGIN;
-EXEC (N' CREATE FUNCTION [func00]
-(
-@i01 INT,
-@sd02 DATETIME
-)
-AS
-BEGIN;
-SELECT * FROM [target_tbl];
-SELECT * FROM [source_tbl];
-END;
-' );
-END;", command.CommandText);
+            Assert.AreEqual("DROP FUNCTION IF EXISTS `hello`;\r\nDELIMITER $$\r\nCREATE FUNCTION `hello`\r\n( )\r\nRETURNS TEXT\r\nBEGIN\r\nRETURN N'Hello world!';\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
         }
 
         [TestMethod]
-        public void CreateFunctionWithReturnsParam()
+        public void CreateHelloWithInputFunction()
         {
-            var statement = Sql.CreateFunction("func00", true)
-                .Parameters(Parameter.Int("@i01"),
-                    Parameter.DateTime("@sd02"))
-                .ReturnValue(Parameter.Int())
+            var statement = Sql.CreateFunction("hello", true)
+                .InputParameters(Parameter.Text("text_value"))
+                .ReturnValue(Parameter.Text())
                 .As(
-                    Sql.Select.Output(Sql.Star()).From("target_tbl"),
-                    Sql.Select.Output(Sql.Star()).From("source_tbl")
+                    Sql.Return(Sql.Function("CONCAT", Parameter.Text().Value("Hello "), Parameter.Text("text_value"))
+                    )
                 );
 
             var command = Provider.GetCommand(statement);
 
             Assert.IsNotNull(command);
-            Assert.AreEqual(@"IF OBJECT_ID ( N'[func00]', N'FN' ) IS NULL
-BEGIN;
-EXEC (N' CREATE FUNCTION [func00]
-(
-@i01 INT,
-@sd02 DATETIME
-)
-RETURNS  INT
-AS
-BEGIN;
-SELECT * FROM [target_tbl];
-SELECT * FROM [source_tbl];
-END;
-' );
-END;", command.CommandText);
-        }*/
-
+            Assert.AreEqual("DROP FUNCTION IF EXISTS `hello`;\r\nDELIMITER $$\r\nCREATE FUNCTION `hello`\r\n(\r\n`text_value` TEXT\r\n)\r\nRETURNS TEXT\r\nBEGIN\r\nRETURN CONCAT( N'Hello ', text_value );\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
+        }
+        
         [TestMethod]
         public void AlterFunction()
         {
@@ -239,6 +206,56 @@ END;", command.CommandText);
 
             Assert.IsNotNull(command);
             Assert.AreEqual("func00 ( 123, @sd02 );", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteHelloFunction()
+        {
+            var statement = Sql.Select.Output(Sql.Function("hello"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("SELECT hello( );", command.CommandText);
+        }
+
+        [TestMethod]
+        public void PrepareStatement()
+        {
+            AssertSql(Sql.Prepare().Name(Sql.Name("tempStr")).From(Sql.Select.Output(Sql.Now())), "PREPARE `tempStr` FROM ' SELECT NOW()';");
+            AssertSql(Sql.Prepare(Sql.Name("tempStr"), Sql.Select.Output(Sql.Now())), "PREPARE `tempStr` FROM ' SELECT NOW()';");
+            
+            AssertSql(Sql.Prepare().Name(Sql.Name("tempStr")).From(Sql.Name("@str_temp")), "PREPARE `tempStr` FROM @str_temp;");
+            AssertSql(Sql.Prepare(Sql.Name("tempStr"), Sql.Name("@str_temp")), "PREPARE `tempStr` FROM @str_temp;");
+        }
+
+        [TestMethod]
+        public void ExecuteFromVariable()
+        {
+            var statement = Sql.Execute(Sql.Name("temp_statement"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXECUTE `temp_statement`;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteFromVariableWithParam()
+        {
+            var statement = Sql.Execute(Sql.Name("temp_statement"), Parameter.Any("@a1"), Parameter.Any("@a2"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXECUTE `temp_statement` USING @a1, @a2;", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteFromStatement()
+        {
+            var statement = Sql.Execute(Sql.Select.Output(Sql.Now()));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("PREPARE `temp_execute` FROM ' SELECT NOW()';\r\nEXECUTE `temp_execute`;\r\nDEALLOCATE PREPARE `temp_execute`;", command.CommandText);
         }
     }
 }

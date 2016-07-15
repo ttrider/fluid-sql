@@ -25,7 +25,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
             if (isSingleDelete)
             {
-                if ((statement.RecordsetSource.Source is ExpressionToken) && (!String.IsNullOrEmpty(((ExpressionToken)statement.RecordsetSource.Source).Alias)))
+                if ((statement.RecordsetSource.Source is ExpressionToken) && (!String.IsNullOrWhiteSpace(((ExpressionToken)statement.RecordsetSource.Source).Alias)))
                 {
                     VisitNameToken(Sql.Name(((ExpressionToken)statement.RecordsetSource.Source).Alias));
                 }
@@ -35,7 +35,7 @@ namespace TTRider.FluidSql.Providers.MySql
             else
             {
                 State.Write(Symbols.FROM);
-                if ((statement.RecordsetSource.Source is ExpressionToken) && (!String.IsNullOrEmpty(((ExpressionToken)statement.RecordsetSource.Source).Alias)))
+                if ((statement.RecordsetSource.Source is ExpressionToken) && (!String.IsNullOrWhiteSpace(((ExpressionToken)statement.RecordsetSource.Source).Alias)))
                 {
                     VisitNameToken(Sql.Name(((ExpressionToken)statement.RecordsetSource.Source).Alias));
                 }
@@ -52,7 +52,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
             VisitTopToken(statement.Top);
         }
-
+        
         protected override void VisitUpdate(UpdateStatement statement)
         {
             State.Write(Symbols.UPDATE);
@@ -193,10 +193,10 @@ namespace TTRider.FluidSql.Providers.MySql
             IList<string> tempUpdateAliases = new List<string>();
 
             string targetTable = statement.Into.GetFullName();
-            string targetAlias = (String.IsNullOrEmpty(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
+            string targetAlias = (String.IsNullOrWhiteSpace(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
 
             string sourceTable = ((Name)statement.Using).GetFullName();
-            string sourceAlias = (String.IsNullOrEmpty(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
+            string sourceAlias = (String.IsNullOrWhiteSpace(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
 
             string targetColumnOn = string.Empty;
             string sourceColumnOn = string.Empty;
@@ -488,7 +488,7 @@ namespace TTRider.FluidSql.Providers.MySql
         protected override void VisitBreakStatement(BreakStatement statement)
         {
             State.Write(MySqlSymbols.LEAVE);
-            if (!String.IsNullOrEmpty(statement.Label))
+            if (!String.IsNullOrWhiteSpace(statement.Label))
             {
                 State.Write(statement.Label);
             }
@@ -497,7 +497,7 @@ namespace TTRider.FluidSql.Providers.MySql
         protected override void VisitContinueStatement(ContinueStatement statement)
         {
             State.Write(MySqlSymbols.ITERATE);
-            if (!String.IsNullOrEmpty(statement.Label))
+            if (!String.IsNullOrWhiteSpace(statement.Label))
             {
                 State.Write(statement.Label);
             }
@@ -533,7 +533,29 @@ namespace TTRider.FluidSql.Providers.MySql
         }
 
         protected override void VisitWaitforTimeStatement(WaitforTimeStatement statement) { throw new NotImplementedException(); }
-        protected override void VisitWhileStatement(WhileStatement statement) { throw new NotImplementedException(); }
+
+        protected override void VisitWhileStatement(WhileStatement statement)
+        { 
+            if (statement.Condition != null)
+            {
+                State.Write(Symbols.WHILE);
+                VisitToken(statement.Condition);
+
+                if (statement.Do != null)
+                {
+                    State.WriteCRLF();
+                    State.Write(Symbols.DO);
+                    State.WriteCRLF();
+
+                    VisitStatement(statement.Do);
+                    State.WriteStatementTerminator();
+
+                    State.Write(Symbols.END);
+                    State.Write(Symbols.WHILE);
+                    State.WriteStatementTerminator();
+                }
+            }
+        }
 
         //TODO: Create Or Replace statement
         //TODO: Check If Exist
@@ -600,7 +622,55 @@ namespace TTRider.FluidSql.Providers.MySql
             VisitNameToken(statement.Name);
         }
 
-        protected override void VisitExecuteStatement(ExecuteStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitExecuteStatement(ExecuteStatement statement)
+        {
+            bool needDeallocate = false;
+
+            if(statement.Name == null)
+            {
+                if (statement.Target.Target != null)
+                {
+                    PrepareStatement prepStatement = Sql.Prepare().Name(Sql.Name(TempExecute)).From(statement.Target.Target);
+                    VisitStatement(prepStatement);
+                    State.WriteStatementTerminator();
+                    statement.Name = Sql.Name(TempExecute);
+                    needDeallocate = true;
+                }
+            }
+
+            State.Write(Symbols.EXECUTE);
+            VisitToken(statement.Name);
+            if(statement.Parameters.Count != 0)
+            {
+                State.Write(Symbols.USING);
+                VisitTokenSet(statement.Parameters, visitToken: parameter =>
+               {
+                   if (parameter.Value != null)
+                   {
+                       VisitValue(parameter.Value);
+                   }
+                   else
+                   {
+                       State.Write(parameter.Name);
+                   }
+
+                   State.Parameters.Add(parameter);
+               });
+            }
+
+            if (needDeallocate)
+            {
+                State.WriteStatementTerminator();
+                VisitStatement(Sql.Deallocate(statement.Name));
+            }
+        }
+
+        protected override void VisitDeallocateStatement(DeallocateStatement statement)
+        {
+            State.Write(Symbols.DEALLOCATE);
+            State.Write(Symbols.PREPARE);
+            VisitToken(statement.Name);
+        }
 
         protected override void VisitDropSchemaStatement(DropSchemaStatement statement)
         {
@@ -725,6 +795,24 @@ namespace TTRider.FluidSql.Providers.MySql
             State.Write(Symbols.CloseParenthesis);
         }
 
+        protected override void VisitPrepareStatement(IExecutableStatement statement)
+        {
+            State.Write(Symbols.PREPARE);
+            VisitNameToken(statement.Name);
+            State.Write(Symbols.FROM);
+
+            if (statement.Target.Name != null)
+            {
+                VisitNameToken(statement.Target.Name);
+            }
+            else if (statement.Target.Target != null)
+            {
+                State.Write(String.Empty);
+                this.Stringify(statement.Target.Target, true);
+            }            
+            State.WriteStatementTerminator();
+        }
+
         private void VisitProcedureAndBodyParameters(IProcedureStatement statement, bool isProcedure, bool checkIfNotExists)
         {
             if (checkIfNotExists)
@@ -755,10 +843,15 @@ namespace TTRider.FluidSql.Providers.MySql
             VisitNameToken(statement.Name);
             State.WriteCRLF();
 
-            VisitProcedureParameters(statement);
+            
             if(!isProcedure)
             {
+                VisitProcedureAndFunctionParameters(statement, false);
                 VisitFunctionReturnParameters(statement);
+            }
+            else
+            {
+                VisitProcedureAndFunctionParameters(statement);
             }
 
             State.Write(Symbols.BEGIN);
@@ -775,7 +868,7 @@ namespace TTRider.FluidSql.Providers.MySql
             State.WriteStatementTerminator();
         }
 
-        private void VisitProcedureParameters(IProcedureStatement s)
+        private void VisitProcedureAndFunctionParameters(IProcedureStatement s, bool IsProcedure = true)
         {
             var separator = Symbols.OpenParenthesis;
             State.Write(separator);
@@ -789,23 +882,25 @@ namespace TTRider.FluidSql.Providers.MySql
                 State.WriteCRLF();
                 separator = Symbols.Comma;
 
-                switch(p.Direction)
+                if (IsProcedure)
                 {
-                    case ParameterDirection.Input:
-                        State.Write(Symbols.IN);
-                        break;
-                    case ParameterDirection.InputOutput:
-                        State.Write(Symbols.INOUT);
-                        break;
-                    case ParameterDirection.Output:
-                        State.Write(Symbols.OUT);
-                        break;
-                    default:
-                        State.Write(Symbols.IN);
-                        break;
+                    switch (p.Direction)
+                    {
+                        case ParameterDirection.Input:
+                            State.Write(Symbols.IN);
+                            break;
+                        case ParameterDirection.InputOutput:
+                            State.Write(Symbols.INOUT);
+                            break;
+                        case ParameterDirection.Output:
+                            State.Write(Symbols.OUT);
+                            break;
+                        default:
+                            State.Write(Symbols.IN);
+                            break;
 
+                    }
                 }
-                
                 VisitNameToken(p.Name);
                 VisitType(p);
             }
@@ -1025,7 +1120,9 @@ namespace TTRider.FluidSql.Providers.MySql
         }
 
         private string TopAlias = "top_alias";
+        private string TempExecute = "temp_execute";
         private string DelimiterSymbol = "$$";
 
     }
 }
+ 

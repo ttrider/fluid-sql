@@ -7,7 +7,17 @@ namespace TTRider.FluidSql.Providers.MySql
     {
         //protected override void VisitScalarToken(Scalar token) { throw new NotImplementedException(); }
         //protected override void VisitNameToken(Name token) { throw new NotImplementedException(); }
-        protected override void VisitParameterToken(Parameter token) { throw new NotImplementedException(); }
+        protected override void VisitParameterToken(Parameter token)
+        {
+            if (token.Value != null)
+            {
+                VisitValue(token.Value);
+            }
+            else
+            {
+                State.Write(token.Name);
+            }
+        }
         protected override void VisitSnippetToken(Snippet token) { throw new NotImplementedException(); }
         //protected override void VisitFunctionToken(Function token) { throw new NotImplementedException(); }
         protected override void VisitBitwiseNotToken(BitwiseNotToken token) { throw new NotImplementedException(); }

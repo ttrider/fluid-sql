@@ -80,7 +80,14 @@ namespace TTRider.FluidSql.Providers
                 stringValue = stringValue.Replace(this.LiteralCloseQuote,
                     this.LiteralCloseQuote + this.LiteralCloseQuote);
 
-                State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
+                if (!stringValue.StartsWith("$") && !stringValue.StartsWith("?"))
+                {
+                    State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
+                }
+                else
+                {
+                    State.Write(stringValue);
+                }
             }
         }
 

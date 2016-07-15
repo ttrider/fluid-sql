@@ -151,18 +151,7 @@ namespace Tests.PostgreSql
 
             Assert.IsNotNull(command);
             Assert.AreEqual("BEGIN\r\nSELECT 1;\r\nEXCEPTION WHEN other THEN RAISE;\r\nEND;", command.CommandText);
-        }
-
-        [TestMethod]
-        public void Execute()
-        {
-            var statement = Sql.Execute("SELECT * FROM table_tbl").Name("test");
-
-            var command = Provider.GetCommand(statement);
-
-            Assert.IsNotNull(command);
-            Assert.AreEqual("PREPARE test AS SELECT * FROM table_tbl;\r\nEXECUTE test;\r\nDEALLOCATE test;", command.CommandText);
-        }
+        }        
     }
 }
  

@@ -102,6 +102,10 @@ namespace TTRider.FluidSql.Providers.SqlServer
             Stringify(() => VisitStatement(statement));
         }
 
+        private void Stringify(RecordsetSourceToken statement)
+        {
+            Stringify(() => VisitToken(statement));
+        }
         private void Stringify(Action fragment)
         {
             State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
@@ -1573,7 +1577,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
         {
             State.Write(Symbols.EXEC);
             State.Write(Symbols.OpenParenthesis);
-            this.Stringify(statement.Target);
+            this.Stringify(statement.Target.Target);
             State.Write(Symbols.CloseParenthesis);
         }
 

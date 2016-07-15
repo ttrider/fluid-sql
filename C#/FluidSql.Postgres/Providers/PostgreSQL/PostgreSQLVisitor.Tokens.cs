@@ -102,7 +102,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
                     if (PredefinedTemporaryTables.Contains(returningItem.FirstPart.ToUpper()))
                     {
-                        if (String.IsNullOrEmpty(returningItem.Alias))
+                        if (String.IsNullOrWhiteSpace(returningItem.Alias))
                         {
                             VisitToken(Sql.Name(returningItem.LastPart));
                         }
@@ -136,7 +136,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {
                 State.Write(Symbols.AND);
             }
-            if (!String.IsNullOrEmpty(recordsetSource.Alias))
+            if (!String.IsNullOrWhiteSpace(recordsetSource.Alias))
             {
                 VisitToken(Sql.Name(recordsetSource.Alias, Symbols.TechId));
             }

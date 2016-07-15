@@ -16,8 +16,7 @@ namespace FluidSqlTests
     {
         public static SqlServerProvider SqlProvider = new SqlServerProvider();
         public static string ConnectionString = @"Data Source=.;Integrated Security=True";
-
-
+        
         public static IDbCommand GetCommand(IStatement statement)
         {
             return SqlProvider.GetCommand(statement, ConnectionString);
