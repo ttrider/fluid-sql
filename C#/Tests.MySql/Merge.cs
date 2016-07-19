@@ -281,5 +281,30 @@ namespace Tests.MySqlTests
             Assert.AreEqual("START TRANSACTION;\r\nCREATE TEMPORARY TABLE IF NOT EXISTS `top_alias` AS ( SELECT `id` FROM `target_tbl` LIMIT 10 );\r\nCREATE TEMPORARY TABLE `tmp_0` AS ( SELECT `target`.`id` FROM `target_tbl` AS `target` INNER JOIN `source_tbl` AS `source` ON `target`.`id` = `source`.`id` WHERE `target`.`id` = `source`.`id` AND `target`.`column_value` IS NULL AND `target`.`id` IN ( ( SELECT `id` FROM `top_alias` ) ) );\r\nUPDATE `target_tbl` AS `target`, `source_tbl` AS `source` SET `target`.`id` = `source`.`id`, `target`.`column_value` = `source`.`column_value` WHERE `target`.`id` = `source`.`id` AND `target`.`column_value` IS NULL AND `target`.`id` IN ( ( SELECT `id` FROM `top_alias` ) );\r\nDELETE `target` FROM `target_tbl` AS `target` WHERE `target`.`id` IN ( ( SELECT `id` FROM `source_tbl` WHERE `source_tbl`.`column_value` = N'somename' ) ) AND `target`.`id` IN ( ( SELECT `id` FROM `top_alias` ) );\r\nCREATE TEMPORARY TABLE `tmp_source` AS ( SELECT * FROM `source_tbl` AS `source` WHERE `source`.`id` NOT IN ( ( SELECT `id` FROM `target_tbl` ) ) AND `source`.`column_value` = N'somename' );\r\nINSERT INTO `target_tbl` ( `id` ) SELECT `id` FROM `tmp_source`;\r\nDROP TABLE IF EXISTS `tmp_source`;\r\nDROP TEMPORARY TABLE IF EXISTS `tmp_0`;\r\nDROP TEMPORARY TABLE IF EXISTS `top_alias`;\r\nCOMMIT;", command.CommandText);
         }
         #endregion
+
+        /*MERGE dbo.FactBuyingHabits AS Target
+USING (SELECT CustomerID, ProductID, PurchaseDate FROM dbo.Purchases) AS Source
+ON(Target.ProductID = Source.ProductID AND Target.CustomerID = Source.CustomerID)
+WHEN MATCHED THEN
+    UPDATE SET Target.LastPurchaseDate = Source.PurchaseDate
+WHEN NOT MATCHED BY TARGET THEN
+    INSERT (CustomerID, ProductID, LastPurchaseDate)
+    VALUES(Source.CustomerID, Source.ProductID, Source.PurchaseDate)
+OUTPUT $action, Inserted.*, Deleted.*; */
+
+        /*[TestMethod]
+        public void MergeExample1()
+        {
+            var statement = Sql.Merge
+                .Into(Sql.NameAs("FactBuyingHabits", "Target"))
+                .Using(Sql.NameAs("Purchases", "Source"))
+                .On((Sql.Name("Target.ProductID").IsEqual(Sql.Name("Source.ProductID"))).And((Sql.Name("Target.CustomerID").IsEqual(Sql.Name("Source.CustomerID")))))
+                .WhenMatchedThenUpdateSet(Sql.Name("Target.ProductID").SetTo(Sql.Name("Source.ProductID")), Sql.Name("Target.CustomerID").SetTo(Sql.Name("Source.CustomerID")))
+                .WhenNotMatchedThenInsert(new Name[] { "CustomerID", "ProductID", "LastPurchaseDate" }, new Name[] { "Source.CustomerID", "Source.ProductID", "Source.PurchaseDate" });
+
+            var command = Provider.GetCommand(statement);
+            Assert.IsNotNull(command);
+            Assert.AreEqual("START TRANSACTION;\r\nCREATE TEMPORARY TABLE `tmp_alias_source_tbl` AS ( SELECT * FROM `source_tbl` AS `alias_source_tbl` WHERE `alias_source_tbl`.`id` NOT IN ( ( SELECT `id` FROM `target_tbl` ) ) );\r\nINSERT INTO `target_tbl` ( `id`, `column_value` ) SELECT `id`, `column_value` FROM `tmp_alias_source_tbl`;\r\nDROP TABLE IF EXISTS `tmp_alias_source_tbl`;\r\nCOMMIT;", command.CommandText);
+        }*/
     }
 }

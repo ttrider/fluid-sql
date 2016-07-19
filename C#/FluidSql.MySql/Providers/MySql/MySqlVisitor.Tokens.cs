@@ -141,9 +141,9 @@ namespace TTRider.FluidSql.Providers.MySql
                     if (!(item is WhenMatchedTokenThenDeleteToken))
                     {
 
-                         SelectStatement tempTableSelectStatement = Sql.Select.Output(Sql.Name(targetAlias, targetColumnOn))
-                                             .From(targetTable, targetAlias)
-                                             .InnerJoin(Sql.Name(sourceTable).As(sourceAlias), Sql.Name(targetAlias, targetColumnOn).IsEqual(Sql.Name(sourceAlias, sourceColumnOn)));
+                        SelectStatement tempTableSelectStatement = Sql.Select.Output(Sql.Name(targetAlias, targetColumnOn))
+                                            .From(targetTable, targetAlias)
+                                            .InnerJoin(Sql.Name(sourceTable).As(sourceAlias), Sql.Name(targetAlias, targetColumnOn).IsEqual(Sql.Name(sourceAlias, sourceColumnOn)));
 
 
                         string tempAlias = "tmp_" + counter;
@@ -152,15 +152,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                         if (item.AndCondition != null)
                         {
-                            if (item.AndCondition is BinaryToken)
-                            {
-                                ((BinaryToken)item.AndCondition).First = Sql.Name(targetAlias, ((Name)((BinaryToken)item.AndCondition).First).LastPart);
-                            }
-                            else if (item.AndCondition is UnaryToken)
-                            {
-                                ((UnaryToken)item.AndCondition).Token = Sql.Name(targetAlias, ((Name)((UnaryToken)item.AndCondition).Token).LastPart);
-                            }
-                            tempExpression = tempExpression.And((ExpressionToken)item.AndCondition);
+                            tempExpression = tempExpression.And(AddPrefixToExpressionToken((ExpressionToken)item.AndCondition, targetAlias));
                         }
 
                         if (isTop)
@@ -257,15 +249,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                     if ((item.AndCondition != null) && isTargetCondition)
                     {
-                        if (item.AndCondition is BinaryToken)
-                        {
-                            ((BinaryToken)item.AndCondition).First = Sql.Name(targetAlias, ((Name)((BinaryToken)item.AndCondition).First).LastPart);
-                        }
-                        else if (item.AndCondition is UnaryToken)
-                        {
-                            ((UnaryToken)item.AndCondition).Token = Sql.Name(targetAlias, ((Name)((UnaryToken)item.AndCondition).Token).LastPart);
-                        }
-                        tempExpression = tempExpression.And((ExpressionToken)item.AndCondition);
+                        tempExpression = tempExpression.And(AddPrefixToExpressionToken((ExpressionToken)item.AndCondition, targetAlias));
                     }
 
                     if (isTop)
@@ -306,15 +290,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                     if (item.AndCondition != null)
                     {
-                        if (item.AndCondition is BinaryToken)
-                        {
-                            ((BinaryToken)item.AndCondition).First = Sql.Name(targetAlias, ((Name)((BinaryToken)item.AndCondition).First).LastPart);
-                        }
-                        else if (item.AndCondition is UnaryToken)
-                        {
-                            ((UnaryToken)item.AndCondition).Token = Sql.Name(targetAlias, ((Name)((UnaryToken)item.AndCondition).Token).LastPart);
-                        }
-                        tempExpression = tempExpression.And((ExpressionToken)item.AndCondition);
+                        tempExpression = tempExpression.And(AddPrefixToExpressionToken((ExpressionToken)item.AndCondition, targetAlias));
                     }
 
                     if (isTop)
@@ -355,15 +331,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                     if (item.AndCondition != null)
                     {
-                        if (item.AndCondition is BinaryToken)
-                        {
-                            ((BinaryToken)item.AndCondition).First = Sql.Name(sourceAlias, ((Name)((BinaryToken)item.AndCondition).First).LastPart);
-                        }
-                        else if (item.AndCondition is UnaryToken)
-                        {
-                            ((UnaryToken)item.AndCondition).Token = Sql.Name(sourceAlias, ((Name)((UnaryToken)item.AndCondition).Token).LastPart);
-                        }
-                        tempExpression = tempExpression.And((ExpressionToken)item.AndCondition);
+                        tempExpression = tempExpression.And(AddPrefixToExpressionToken((ExpressionToken)item.AndCondition, sourceAlias));
                     }
 
                     CreateTableStatement createTempTable =
@@ -441,6 +409,19 @@ namespace TTRider.FluidSql.Providers.MySql
                     separator = Symbols.Comma;
                 }
             }
+        }
+
+        protected ExpressionToken AddPrefixToExpressionToken(ExpressionToken token, string prefix)
+        {
+            if (token is BinaryToken)
+            {
+                ((BinaryToken)token).First = Sql.Name(prefix, ((Name)((BinaryToken)token).First).LastPart);
+            }
+            else if (token is UnaryToken)
+            {
+                ((UnaryToken)token).Token = Sql.Name(prefix, ((Name)((UnaryToken)token).Token).LastPart);
+            }
+            return token;
         }
     }
 }

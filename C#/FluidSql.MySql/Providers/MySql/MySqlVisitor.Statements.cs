@@ -52,7 +52,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
             VisitTopToken(statement.Top);
         }
-        
+
         protected override void VisitUpdate(UpdateStatement statement)
         {
             State.Write(Symbols.UPDATE);
@@ -79,7 +79,7 @@ namespace TTRider.FluidSql.Providers.MySql
             VisitTopToken(statement.Top);
 
             //VisitFromToken(statement.RecordsetSource);
-       }
+        }
 
         //TODO: The INSERT syntax doesn't allow for aliases
         //TODO: The INSERT syntax doesn't allow for returning values
@@ -132,13 +132,28 @@ namespace TTRider.FluidSql.Providers.MySql
         }
 
         //TODO: TOP PERCENT Statement should be implemented after PREPARE Statement
-        //TODO: FULL OUTER JOIN Statement should be implemented after UNION Statement AS UNION LEFT and RIGHT Joins
         //TODO: MySQL Server doesn't support the SELECT ... INTO TABLE Sybase SQL extension
         //TODO: MySQL doesn't support the WITH clause
         protected override void VisitSelect(SelectStatement statement)
         {
             VisitCommonTableExpressions(statement.CommonTableExpressions, true);
 
+            if (statement.Joins.Count == 1)
+            {
+                if ((statement.Joins[0]).Type == Joins.FullOuter)
+                {
+                    statement.Joins[0].Type = Joins.LeftOuter;
+                    VisitStatement(statement);
+
+                    State.Write(Symbols.UNION);
+                    State.Write(Symbols.ALL);
+
+                    statement.Joins[0].Type = Joins.RightOuter;
+                    VisitStatement(statement);
+
+                    return;
+                }
+            }
             State.Write(Symbols.SELECT);
 
             if (statement.Distinct)
@@ -261,7 +276,7 @@ namespace TTRider.FluidSql.Providers.MySql
                  , sourceAlias
                  , sourceTable
                  , sourceColumnOn);
-            
+
             if (tempUpdateAliases.Count != 0)
             {
                 foreach (string tempTable in tempUpdateAliases)
@@ -290,14 +305,17 @@ namespace TTRider.FluidSql.Providers.MySql
             }
         }
 
-        //TODO: MySQL Server doesn't support the INTERSECT statement
-        protected override void VisitIntersectStatement(IntersectStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitIntersectStatement(IntersectStatement statement)
+        {
+            VisitCorrelationStatement(statement, "EXISTS");
+        }
 
-        //TODO: MySQL Server doesn't support the EXCEPT statement
-        protected override void VisitExceptStatement(ExceptStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitExceptStatement(ExceptStatement statement)
+        {
+            VisitCorrelationStatement(statement, "NOT EXISTS");
+        }
 
         //TODO: Add transaction characteristic
-        // no tested on db
         protected override void VisitBeginTransaction(BeginTransactionStatement statement)
         {
             State.Write(Symbols.START);
@@ -305,14 +323,12 @@ namespace TTRider.FluidSql.Providers.MySql
         }
 
         //TODO: Add [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
-        // no tested on db
         protected override void VisitCommitTransaction(CommitTransactionStatement statement)
         {
             State.Write(Symbols.COMMIT);
         }
 
         //TODO: Add [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
-        // no tested on db
         protected override void VisitRollbackTransaction(RollbackTransactionStatement statement)
         {
             State.Write(Symbols.ROLLBACK);
@@ -324,7 +340,6 @@ namespace TTRider.FluidSql.Providers.MySql
             }
         }
 
-        // no tested on db
         protected override void VisitSaveTransaction(SaveTransactionStatement statement)
         {
             State.Write(Symbols.SAVEPOINT);
@@ -426,6 +441,20 @@ namespace TTRider.FluidSql.Providers.MySql
                         State.Write(Symbols.KEY);
                     }
                 }
+
+                if (statement.PrimaryKey != null)
+                {
+                    State.Write(Symbols.Comma);
+                    if (!statement.IsTableVariable)
+                    {
+                        State.Write(Symbols.CONSTRAINT);
+                        VisitNameToken(statement.PrimaryKey.Name);
+                    }
+
+                    State.Write(Symbols.PRIMARY);
+                    State.Write(Symbols.KEY);
+                    VisitTokenSetInParenthesis(statement.PrimaryKey.Columns);
+                }
             }
             State.Write(Symbols.CloseParenthesis);
         }
@@ -506,7 +535,7 @@ namespace TTRider.FluidSql.Providers.MySql
         //There is no GOTO statement in MySQL
         protected override void VisitGotoStatement(GotoStatement statement) { throw new NotImplementedException(); }
 
-        //TODO: check retirn a variable
+        //TODO: check return a variable
         protected override void VisitReturnStatement(ReturnStatement statement)
         {
             State.Write(Symbols.RETURN);
@@ -524,7 +553,6 @@ namespace TTRider.FluidSql.Providers.MySql
         //Label is used like a block statement (with begin and end)
         protected override void VisitLabelStatement(LabelStatement statement) { throw new NotImplementedException(); }
 
-        //There are no any appropriate function in SQL.cs
         protected override void VisitWaitforDelayStatement(WaitforDelayStatement statement)
         {
             State.Write(Symbols.WAITFOR);
@@ -532,10 +560,11 @@ namespace TTRider.FluidSql.Providers.MySql
             State.Write(LiteralOpenQuote, statement.Delay.ToString("HH:mm:ss"), LiteralCloseQuote);
         }
 
+        //There are no any appropriate function in SQL.cs
         protected override void VisitWaitforTimeStatement(WaitforTimeStatement statement) { throw new NotImplementedException(); }
 
         protected override void VisitWhileStatement(WhileStatement statement)
-        { 
+        {
             if (statement.Condition != null)
             {
                 State.Write(Symbols.WHILE);
@@ -626,7 +655,7 @@ namespace TTRider.FluidSql.Providers.MySql
         {
             bool needDeallocate = false;
 
-            if(statement.Name == null)
+            if (statement.Name == null)
             {
                 if (statement.Target.Target != null)
                 {
@@ -640,7 +669,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
             State.Write(Symbols.EXECUTE);
             VisitToken(statement.Name);
-            if(statement.Parameters.Count != 0)
+            if (statement.Parameters.Count != 0)
             {
                 State.Write(Symbols.USING);
                 VisitTokenSet(statement.Parameters, visitToken: parameter =>
@@ -710,7 +739,7 @@ namespace TTRider.FluidSql.Providers.MySql
         {
             State.Write(Symbols.DROP);
             State.Write(Symbols.PROCEDURE);
-            if(statement.CheckExists)
+            if (statement.CheckExists)
             {
                 State.Write(Symbols.IF);
                 State.Write(Symbols.EXISTS);
@@ -809,7 +838,7 @@ namespace TTRider.FluidSql.Providers.MySql
             {
                 State.Write(String.Empty);
                 this.Stringify(statement.Target.Target, true);
-            }            
+            }
             State.WriteStatementTerminator();
         }
 
@@ -843,8 +872,8 @@ namespace TTRider.FluidSql.Providers.MySql
             VisitNameToken(statement.Name);
             State.WriteCRLF();
 
-            
-            if(!isProcedure)
+
+            if (!isProcedure)
             {
                 VisitProcedureAndFunctionParameters(statement, false);
                 VisitFunctionReturnParameters(statement);
@@ -1119,10 +1148,65 @@ namespace TTRider.FluidSql.Providers.MySql
             return usingList;
         }
 
+        private void VisitCorrelationStatement(CorrelationStatement statement, string functionName)
+        {
+            SelectStatement statement1 = (SelectStatement)statement.First;
+            SelectStatement statement2 = (SelectStatement)statement.Second;
+
+            if (((statement1.From.Count != 1) && (!(statement1.From[0].Source is Name))) ||
+                ((statement2.From.Count != 1) && (!(statement2.From[0].Source is Name))))
+            {
+                throw new NotImplementedException();
+            }
+            else if ((statement1.Output.Count != statement2.Output.Count) && (statement1.Output.Count == 0))
+            {
+                throw new NotImplementedException();
+            }
+
+            string table1 = ((Name)(statement1.From[0].Source)).LastPart;
+            string table2 = ((Name)(statement2.From[0].Source)).LastPart;
+
+            ExpressionToken whereExpression = null;
+            List<ExpressionToken> expressions1 = new List<ExpressionToken>();
+            List<ExpressionToken> expressions2 = new List<ExpressionToken>();
+
+            for (int i = 0; i < statement1.Output.Count; i++)
+            {
+                if ((!(statement1.Output[i] is Name)) && (!(statement2.Output[i] is Name)))
+                {
+                    throw new NotImplementedException();
+                }
+                expressions1.Add(Sql.Name(table1, ((Name)(statement1.Output[i])).LastPart));
+                expressions2.Add(Sql.Name(table2, ((Name)(statement2.Output[i])).LastPart));
+                if (whereExpression == null)
+                {
+                    whereExpression = expressions1[i].IsEqual(expressions2[i]);
+                }
+                else
+                {
+                    whereExpression = whereExpression.And(expressions1[i].IsEqual(expressions2[i]));
+                }
+            }
+            if (statement2.Where != null)
+            {
+                whereExpression = whereExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement2.Where), table2));
+            }
+
+            ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2).Where(whereExpression));
+            if (statement1.Where != null)
+            {
+                tempExpression = tempExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement1.Where), table1));
+            }            
+
+            SelectStatement correlationStatement =
+                Sql.Select.Output(expressions1).From(table1)
+                .Where(tempExpression);
+            VisitStatement(correlationStatement);
+        }
+
         private string TopAlias = "top_alias";
         private string TempExecute = "temp_execute";
         private string DelimiterSymbol = "$$";
 
     }
 }
- 

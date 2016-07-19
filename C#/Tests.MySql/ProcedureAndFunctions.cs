@@ -166,7 +166,31 @@ namespace Tests.MySqlTests
             Assert.IsNotNull(command);
             Assert.AreEqual("DROP FUNCTION IF EXISTS `hello`;\r\nDELIMITER $$\r\nCREATE FUNCTION `hello`\r\n(\r\n`text_value` TEXT\r\n)\r\nRETURNS TEXT\r\nBEGIN\r\nRETURN CONCAT( N'Hello ', text_value );\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
         }
-        
+
+        [TestMethod]
+        public void CreateHelloWithInputWithMainTypesFunction()
+        {
+            var statement = Sql.CreateFunction("hello", true)
+                .InputParameters(Parameter.Text("text_value"))
+                .InputParameters(Parameter.Int("int_value"))
+                .InputParameters(Parameter.DateTime("date_time_value"))
+                .InputParameters(Parameter.VarChar("varchar_value", 45))
+                .InputParameters(Parameter.VarChar("varchar_max_value"))
+                .InputParameters(Parameter.Bit("bit_value"))
+                .InputParameters(Parameter.Real("real_value"))
+                .InputParameters(Parameter.Money("money_value"))
+                .ReturnValue(Parameter.Text())
+                .As(
+                    Sql.Return(Sql.Function("CONCAT", Parameter.Text().Value("Hello "), Parameter.Text("text_value"))
+                    )
+                );
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("DROP FUNCTION IF EXISTS `hello`;\r\nDELIMITER $$\r\nCREATE FUNCTION `hello`\r\n(\r\n`text_value` TEXT,\r\n`int_value` INTEGER,\r\n`date_time_value` DATETIME,\r\n`varchar_value` VARCHAR ( 45 ),\r\n`varchar_max_value` VARCHAR ( 65535 ),\r\n`bit_value` BIT,\r\n`real_value` REAL,\r\n`money_value` DECIMAL\r\n)\r\nRETURNS TEXT\r\nBEGIN\r\nRETURN CONCAT( N'Hello ', text_value );\r\nEND  $$;\r\nDELIMITER ;", command.CommandText);
+        }
+
         [TestMethod]
         public void AlterFunction()
         {
