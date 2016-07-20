@@ -26,18 +26,9 @@ namespace TTRider.FluidSql.Providers
         Name GetTemporaryTableName(Name name = null);
 
 
-#if _ASYNC_
         Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString,
             CancellationToken token);
 
         Task<IDbCommand> GetCommandAsync(IStatement statement, string connectionString);
-
-        [Obsolete]
-        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
-            CancellationToken token);
-
-        [Obsolete]
-        Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement);
-#endif
     }
 }

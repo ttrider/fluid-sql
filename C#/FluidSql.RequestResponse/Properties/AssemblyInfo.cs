@@ -16,6 +16,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright("Copyright © 2014-2016 TTRider, L.L.C.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.4.0")]
-[assembly: AssemblyFileVersion("1.0.4.0")]
-[assembly: InternalsVisibleTo("Tests.RequestResponse", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("Tests.RequestResponse")]

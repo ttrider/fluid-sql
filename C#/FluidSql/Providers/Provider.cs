@@ -33,7 +33,6 @@ namespace TTRider.FluidSql.Providers
         protected abstract VisitorState Compile(IStatement statement);
         protected abstract IEnumerable<DbParameter> GetDbParameters(VisitorState state);
 
-#if _ASYNC_
         public abstract Task<IDbCommand> GetCommandAsync(IStatement statement,
             string connectionString, CancellationToken token);
 
@@ -41,17 +40,5 @@ namespace TTRider.FluidSql.Providers
         {
             return this.GetCommandAsync(statement, connectionString, CancellationToken.None);
         }
-
-        public Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement,
-            CancellationToken token)
-        {
-            return this.GetCommandAsync(statement, connectionString, token);
-        }
-
-        public Task<IDbCommand> GetCommandAsync(string connectionString, IStatement statement)
-        {
-            return this.GetCommandAsync(statement, connectionString, CancellationToken.None);
-        }
-#endif
     }
 }

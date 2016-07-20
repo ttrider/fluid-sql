@@ -140,13 +140,12 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return SqlServerVisitor.GetTempTableName(name ?? Sql.Name(Guid.NewGuid().ToString("N")));
         }
 
-#if _ASYNC_
         public override async System.Threading.Tasks.Task<IDbCommand> GetCommandAsync(IStatement statement,
             string connectionString, CancellationToken token)
         {
             var state = this.Compile(statement);
 
-            var csb = new SqlConnectionStringBuilder(connectionString) { AsynchronousProcessing = true };
+            var csb = new SqlConnectionStringBuilder(connectionString);
 
             var connection = new SqlConnection(csb.ConnectionString);
 
@@ -154,7 +153,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             var command = connection.CreateCommand();
 
-            command.Disposed += (s, o) => connection.Close();
+#if !BUILD_CORECLR
+                command.Disposed += (s, o) => connection.Close();
+#endif
 
             command.CommandTimeout = this.CommandTimeout;
             command.CommandType = CommandType.Text;
@@ -166,7 +167,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             return command;
         }
-#endif
+
 
         protected override IEnumerable<DbParameter> GetDbParameters(VisitorState state)
         {
