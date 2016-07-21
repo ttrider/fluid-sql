@@ -53,6 +53,7 @@
     <Compile Include="Statements\AlterProcedureStatement.cs" />
     <Compile Include="Statements\CreateFunctionStatement.cs" />
     <Compile Include="Statements\CreateProcedureStatement.cs" />
+    <Compile Include="Statements\DeallocateStatement .cs" />
     <Compile Include="Statements\DropFunctionStatement.cs" />
     <Compile Include="Statements\DropProcedureStatement.cs" />
     <Compile Include="Enums\CommonDbType.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Statements\WaitforDelayStatement.cs" />
     <Compile Include="Statements\WaitforTimeStatement.cs" />
     <Compile Include="Tokens\CastToken.cs" />
+    <Compile Include="Tokens\ExecParameter.cs" />
     <Compile Include="Tokens\PlaceholderToken.cs" />
     <Compile Include="Tokens\CTEDeclaration.cs" />
     <Compile Include="Tokens\CTEDefinition.cs" />

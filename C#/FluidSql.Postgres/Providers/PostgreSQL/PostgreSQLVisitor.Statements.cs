@@ -229,10 +229,10 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             IList<string> tempUpdateAliases = new List<string>();
 
             string targetTable = statement.Into.GetFullName();
-            string targetAlias = (String.IsNullOrEmpty(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
+            string targetAlias = (String.IsNullOrWhiteSpace(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
 
             string sourceTable = ((Name)statement.Using).GetFullName();
-            string sourceAlias = (String.IsNullOrEmpty(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
+            string sourceAlias = (String.IsNullOrWhiteSpace(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
 
             string targetColumnOn = string.Empty;
             string sourceColumnOn = string.Empty;
@@ -601,7 +601,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitContinueStatement(ContinueStatement statement)
         {
             State.Write(Symbols.CONTINUE);
-            if (!String.IsNullOrEmpty(statement.Label))
+            if (!String.IsNullOrWhiteSpace(statement.Label))
             {
                 State.Write(Symbols.OpenBracket);
                 State.Write(statement.Label);
@@ -617,7 +617,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         protected override void VisitExitStatement(ExitStatement statement)
         {
             State.Write(Symbols.EXIT);
-            if (!String.IsNullOrEmpty(statement.Label))
+            if (!String.IsNullOrWhiteSpace(statement.Label))
             {
                 State.Write(Symbols.OpenBracket);
                 State.Write(statement.Label);
@@ -681,10 +681,11 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.WriteCRLF();
         }
 
+        //TODO: uncomment code
         protected override void VisitWaitforDelayStatement(WaitforDelayStatement statement)
         {
-            string query = String.Format(PostgrSQLSymbols.DELAY_FORMAT, statement.Delay.TotalSeconds);
-            VisitStatement(Sql.Perform(query));
+            //   string query = String.Format(PostgrSQLSymbols.DELAY_FORMAT, statement.Delay.TotalSeconds);
+            //    VisitStatement(Sql.Perform(query));
         }
 
         //PL/PgSQL does not have Wait fo rTimeStatement operator
@@ -744,43 +745,103 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitNameToken(statement.Name);
         }
 
-        //TODO: Add parameters to prepare
         protected override void VisitPrepareStatement(IExecutableStatement statement)
         {
             State.Write(Symbols.PREPARE);
-            if (String.IsNullOrEmpty(statement.Name))
+            if (statement.Name == null)
             {
-                statement.Name = RandomString(5);
+                statement.Name = Sql.Name(TempExecute);
             }
-            State.Write(statement.Name);
+            VisitNameToken(statement.Name);
+            string separator = Symbols.OpenParenthesis;
+
+            foreach (var p in ((PrepareStatement)statement).Parameters)
+            {
+                State.Write(separator);
+                State.Write(String.Empty);
+                separator = Symbols.Comma;
+                VisitType(p);
+            }
+            if (separator == Symbols.Comma)
+            {
+                State.Write(Symbols.CloseParenthesis);
+            }
             State.Write(Symbols.AS);
-            this.Stringify(statement.Target, false);
+            if (statement.Target.Target != null)
+            {
+                this.Stringify(statement.Target.Target, false);
+            }
             State.WriteStatementTerminator();
         }
 
         protected override void VisitExecuteStatement(ExecuteStatement statement)
         {
-            VisitPrepareStatement(statement);
-            State.Write(Symbols.EXECUTE);
-            State.Write(statement.Name);
-            State.WriteStatementTerminator();
+            bool needDeallocate = false;
 
+            if (statement.Name == null)
+            {
+                if (statement.Target.Target != null)
+                {
+                    PrepareStatement prepStatement = Sql.Prepare().Name(Sql.Name(TempExecute)).From(statement.Target.Target);
+                    if(statement.Parameters.Count != 0)
+                    {
+                        foreach(Parameter p in statement.Parameters)
+                        {
+                            prepStatement.Parameters.Add(p);
+                        }
+                    }
+                    VisitStatement(prepStatement);
+                    State.WriteStatementTerminator();
+                    statement.Name = Sql.Name(TempExecute);
+                    needDeallocate = true;
+                }
+            }
+
+            State.Write(Symbols.EXECUTE);
+            VisitToken(statement.Name);
+            if (statement.Parameters.Count != 0)
+            {
+                State.Write(Symbols.OpenParenthesis);
+                VisitTokenSet(statement.Parameters, visitToken: parameter =>
+                {
+                    if (parameter.Value != null)
+                    {
+                        VisitValue(parameter.Value);
+                    }
+                    else
+                    {
+                        State.Write(parameter.Name);
+                    }
+
+                    State.Parameters.Add(parameter);
+                });
+                State.Write(Symbols.CloseParenthesis);
+            }
+
+            if (needDeallocate)
+            {
+                State.WriteStatementTerminator();
+                VisitStatement(Sql.Deallocate(statement.Name));
+            }
+        }
+
+        protected override void VisitDeallocateStatement(DeallocateStatement statement)
+        {
             State.Write(Symbols.DEALLOCATE);
-            State.Write(statement.Name);
-            State.WriteStatementTerminator();
+            VisitToken(statement.Name);
         }
 
         protected override void VisitPerformStatement(PerformStatement statement)
         {
             State.Write(Symbols.PERFORM);
 
-            if (!string.IsNullOrEmpty(statement.Query))
+            if (!string.IsNullOrWhiteSpace(statement.Query))
             {
                 State.Write(statement.Query);
             }
-            else if (statement.Target != null)
+            else if (statement.Target.Target != null)
             {
-                VisitStatement(statement.Target);
+                VisitStatement(statement.Target.Target);
             }
         }
 
@@ -1140,5 +1201,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         private string TempName = "$do$";
         private string EndFunction = "{0} LANGUAGE plpgsql;";
         private string TopAlias = "top_alias";
+        private string TempExecute = "temp_execute";
     }
 }

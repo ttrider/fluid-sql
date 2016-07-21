@@ -651,6 +651,46 @@ namespace TTRider.FluidSql
         #endregion Set
 
         #region Statements
+        public static PrepareStatement Prepare()
+        {
+            return new PrepareStatement();
+        }
+
+        public static PrepareStatement Prepare(Name name)
+        {
+            return new PrepareStatement
+            {
+                Name = name
+            };
+        }
+
+        public static PrepareStatement Prepare(Name name, Name targetName)
+        {
+            PrepareStatement statement = new PrepareStatement();
+            statement.Name = name;
+            statement.Target.Name = targetName;
+            return statement;
+        }
+
+        public static PrepareStatement Prepare(Name name, IStatement targetStatement, IEnumerable<Parameter> parameters)
+        {
+            PrepareStatement statement = new PrepareStatement();
+            statement.Name = name;
+            statement.Target.Target = targetStatement;
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    statement.Parameters.Add(parameter);
+                }
+            }
+            return statement;
+        }
+
+        public static PrepareStatement Prepare(Name name, IStatement targetStatement, params Parameter[] parameters)
+        {
+            return Prepare(name, targetStatement, (IEnumerable<Parameter>)parameters);
+        }
 
         public static ExecuteStatement Execute(string statement, IEnumerable<Parameter> parameters)
         {
@@ -669,10 +709,9 @@ namespace TTRider.FluidSql
 
         public static ExecuteStatement Execute(IStatement statement, IEnumerable<Parameter> parameters)
         {
-            var stat = new ExecuteStatement
-            {
-                Target = statement
-            };
+
+            ExecuteStatement stat = new ExecuteStatement();
+            stat.Target.Target = statement;
 
             if (parameters != null)
             {
@@ -684,6 +723,34 @@ namespace TTRider.FluidSql
             return stat;
         }
 
+        public static ExecuteStatement Execute(Name statName, params Parameter[] parameters)
+        {
+
+            ExecuteStatement stat = new ExecuteStatement();
+            stat.Name = statName;
+
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    stat.Parameters.Add(parameter);
+                }
+            }
+            return stat;
+        }
+
+        public static DeallocateStatement Deallocate()
+        {
+            return new DeallocateStatement();
+        }
+
+        public static DeallocateStatement Deallocate(Name name)
+        {
+            return new DeallocateStatement
+            {
+                Name = name
+            };
+        }
         public static PerformStatement Perform(string query)
         {
             return new PerformStatement
@@ -709,10 +776,8 @@ namespace TTRider.FluidSql
 
         public static PerformStatement Perform(IStatement statement, IEnumerable<Parameter> parameters)
         {
-            var stat = new PerformStatement
-            {
-                Target = statement
-            };
+            PerformStatement stat = new PerformStatement();
+            stat.Target.Target = statement;
 
             if (parameters != null)
             {

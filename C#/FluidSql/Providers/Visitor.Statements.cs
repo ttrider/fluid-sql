@@ -253,6 +253,10 @@ namespace TTRider.FluidSql.Providers
             throw new NotImplementedException();
         }
 
+        protected virtual void VisitDeallocateStatement(DeallocateStatement statement)
+        {
+            throw new NotImplementedException();
+        }
         protected virtual void VisitExecuteStatement(ExecuteStatement statement)
         {
             throw new NotImplementedException();

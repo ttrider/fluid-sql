@@ -3210,5 +3210,28 @@ namespace TTRider.FluidSql
             statement.Name = name;
             return statement;
         }
+
+        public static PrepareStatement Name(this PrepareStatement statement, Name name)
+        {
+            statement.Name = name;
+            return statement;
+        }
+
+        public static PrepareStatement From(this PrepareStatement statement, Name targetFrom)
+        {
+            statement.Target.Name = targetFrom;
+            return statement;
+        }
+        public static PrepareStatement From(this PrepareStatement statement, IStatement targetFrom)
+        {
+            statement.Target.Target = targetFrom;
+            return statement;
+        }
+
+        public static DeallocateStatement Name(this DeallocateStatement statement, Name name)
+        {
+            statement.Name = name;
+            return statement;
+        }
     }
 }
