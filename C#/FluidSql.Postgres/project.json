@@ -1,7 +1,7 @@
 {
   "title": "TTRider.FluidSql.Postgres",
   "name": "TTRider.FluidSql.Postgres",
-  "version": "1.0.0-core-beta-7131124",
+  "version": "1.0.0-core-beta-7200641",
   "authors": [ "TTRider" ],
   "buildOptions": {
     "debugType": "portable"
@@ -19,7 +19,7 @@
     "NETStandard.Library": "1.6.0",
     "Npgsql": "3.1.6",
     "System.Data.SqlClient": "4.1.0",
-    "TTRider.FluidSql.dll": "1.10.0-*"
+    "TTRider.FluidSQL.dll": "1.10.0-*"
   },
   "frameworks": {
     "netstandard1.6": {
