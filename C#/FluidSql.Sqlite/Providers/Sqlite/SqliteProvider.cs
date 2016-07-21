@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,7 +62,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
             {
                 throw new ArgumentNullException(nameof(connectionString));
             }
-            return new SQLiteConnection(connectionString);
+            return new SqliteConnection(connectionString);
         }
 
 
@@ -70,17 +70,17 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             var state = this.Compile(statement);
 
-            SQLiteCommand command;
+            SqliteCommand command;
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                var connection = new SQLiteConnection(connectionString);
+                var connection = new SqliteConnection(connectionString);
                 connection.Open();
                 command = connection.CreateCommand();
-                command.Disposed += (s, o) => connection.Close();
+                //command.Disposed += (s, o) => connection.Close();
             }
             else
             {
-                command = new SQLiteCommand();
+                command = new SqliteCommand();
             }
 
             command.CommandType = CommandType.Text;
@@ -103,15 +103,15 @@ namespace TTRider.FluidSql.Providers.Sqlite
         {
             var state = this.Compile(statement);
 
-            var csb = new SQLiteConnectionStringBuilder(connectionString);
+            var csb = new SqliteConnectionStringBuilder(connectionString);
 
-            var connection = new SQLiteConnection(csb.ConnectionString);
+            var connection = new SqliteConnection(csb.ConnectionString);
 
             await connection.OpenAsync(token);
 
             var command = connection.CreateCommand();
 
-            command.Disposed += (s, o) => connection.Close();
+            //command.Disposed += (s, o) => connection.Close();
 
             command.CommandType = CommandType.Text;
             command.CommandText = state.Value;
@@ -135,7 +135,7 @@ namespace TTRider.FluidSql.Providers.Sqlite
                 .Except(state.Variables, ParameterEqualityComparer.Default)
                 .Select(p =>
                 {
-                    var sp = new SQLiteParameter
+                    var sp = new SqliteParameter
                     {
                         ParameterName = p.Name,
                         Direction = p.Direction

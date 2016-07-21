@@ -44,7 +44,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 var connection = new NpgsqlConnection(connectionString);
                 connection.Open();
                 command = connection.CreateCommand();
-                command.Disposed += (s, o) => connection.Close();
             }
             else
             {
@@ -79,7 +78,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             var command = connection.CreateCommand();
 
-            command.Disposed += (s, o) => connection.Close();
 
             command.CommandType = CommandType.Text;
             command.CommandText = state.Value;

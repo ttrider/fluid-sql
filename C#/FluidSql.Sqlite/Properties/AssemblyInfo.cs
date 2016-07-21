@@ -8,6 +8,4 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("FluidSql.Sqlite")]
-[assembly: AssemblyDescription("")]
-[assembly: InternalsVisibleTo("Tests.Sqlite", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("Tests.Sqlite")]

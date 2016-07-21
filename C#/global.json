@@ -1,3 +1,8 @@
 {
-  "projects": ["FluidSql\\"]
+  "projects": [
+    "FluidSql",
+    "FluidSql.RequestResponse",
+    "FluidSql.Sqlite",
+    "FluidSql.Postgres"
+  ]
 }
