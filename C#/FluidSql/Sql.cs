@@ -1081,12 +1081,13 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static DeclareStatement Declare(Parameter variable, Token initializer = null)
+        public static DeclareStatement Declare(Parameter variable, Token initializer = null, bool needDeclareWord = true)
         {
             return new DeclareStatement
             {
                 Variable = variable,
-                Initializer = initializer
+                Initializer = initializer, 
+                NeedDeclareWord = needDeclareWord
             };
         }
 

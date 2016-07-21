@@ -244,9 +244,5 @@ namespace TTRider.FluidSql.Providers.MySql
             }
             State.Write(Symbols.CloseParenthesis);
         }
-
-        protected override void VisitCoalesceFunctionToken(CoalesceFunctionToken token) { throw new NotImplementedException(); }
-        protected override void VisitNullIfFunctionToken(NullIfFunctionToken token) { throw new NotImplementedException(); }
-
     }
 }

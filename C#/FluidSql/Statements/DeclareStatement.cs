@@ -11,5 +11,6 @@ namespace TTRider.FluidSql
     {
         public Parameter Variable { get; set; }
         public Token Initializer { get; set; }
+        public bool NeedDeclareWord { get; set; }
     }
 }

@@ -319,7 +319,15 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.Write(TempName);
         }
 
-        protected override void VisitSet(SetStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitSet(SetStatement statement)
+        {
+            if (statement.Assign != null)
+            {
+                VisitToken(statement.Assign.First);
+                State.Write(PostgrSQLSymbols.AssignValSign);
+                VisitToken(statement.Assign.Second);
+            }
+        }
 
         protected override void VisitBeginTransaction(BeginTransactionStatement statement)
         {
@@ -401,16 +409,13 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             {
                 State.Variables.Add(statement.Variable);
 
-                State.Write(Symbols.DECLARE);
+                if (statement.NeedDeclareWord)
+                {
+                    State.Write(Symbols.DECLARE);
+                }
                 State.Write(statement.Variable.Name);
 
                 VisitType(statement.Variable);
-
-                if (statement.Initializer != null)
-                {
-                    State.Write(PostgrSQLSymbols.AssignValSign);
-                    VisitToken(statement.Initializer);
-                }
             }
         }
 
@@ -681,14 +686,13 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             State.WriteCRLF();
         }
 
-        //TODO: uncomment code
         protected override void VisitWaitforDelayStatement(WaitforDelayStatement statement)
         {
-            //   string query = String.Format(PostgrSQLSymbols.DELAY_FORMAT, statement.Delay.TotalSeconds);
-            //    VisitStatement(Sql.Perform(query));
+            string query = String.Format(PostgrSQLSymbols.DELAY_FORMAT, statement.Delay.TotalSeconds);
+            VisitStatement(Sql.Perform(query));
         }
 
-        //PL/PgSQL does not have Wait fo rTimeStatement operator
+        //PL/PgSQL does not have Wait for TimeStatement operator
         protected override void VisitWaitforTimeStatement(WaitforTimeStatement statement) { throw new NotImplementedException(); }
 
         protected override void VisitWhileStatement(WhileStatement statement)
@@ -783,9 +787,9 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 if (statement.Target.Target != null)
                 {
                     PrepareStatement prepStatement = Sql.Prepare().Name(Sql.Name(TempExecute)).From(statement.Target.Target);
-                    if(statement.Parameters.Count != 0)
+                    if (statement.Parameters.Count != 0)
                     {
-                        foreach(Parameter p in statement.Parameters)
+                        foreach (Parameter p in statement.Parameters)
                         {
                             prepStatement.Parameters.Add(p);
                         }
@@ -950,7 +954,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         {
             CreateOrReplaceFunction(statement);
         }
-
 
         protected override void VisitDropFunctionStatement(DropFunctionStatement statement)
         {

@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AdditionalTests.cs" />
     <Compile Include="ControlStructures.cs" />
     <Compile Include="Delete.cs" />
     <Compile Include="Functions.cs" />

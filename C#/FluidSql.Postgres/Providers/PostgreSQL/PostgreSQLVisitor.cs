@@ -87,15 +87,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
 
             public const string DELAY_FORMAT = "pg_sleep({0})";
 
-            //public const string DATEADD = "DATEADD";
-            //public const string DATEDIFF = "DATEDIFF";
-
-            //public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
-            //public const string GETDATE = "GETDATE";
-            //public const string GETUTCDATE = "GETUTCDATE";
-            //public const string IDENTITY_INSERT = "IDENTITY_INSERT";
-            //public const string NEWID = "NEWID";
-            //public const string TIMEFROMPARTS = "TIMEFROMPARTS";
             public const string other = "other";
             public const string AssignValSign = ":=";
 
@@ -104,7 +95,6 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             public const string m = "month";
             public const string mi = "minute";
             public const string ms = "microsecond";
-            //public const string s = "s";
             public const string ss = "second";
             public const string ww = "week";
             public const string yy = "year";

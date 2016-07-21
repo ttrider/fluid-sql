@@ -204,14 +204,31 @@ namespace TTRider.FluidSql.Providers.MySql
             State.WriteStatementTerminator();
 
             bool isTop = false;
+            bool isUsingSelect = false;
             string prefixToAlias = "alias_";
             IList<string> tempUpdateAliases = new List<string>();
 
             string targetTable = statement.Into.GetFullName();
             string targetAlias = (String.IsNullOrWhiteSpace(statement.Into.Alias)) ? prefixToAlias + statement.Into.LastPart : statement.Into.Alias;
 
-            string sourceTable = ((Name)statement.Using).GetFullName();
-            string sourceAlias = (String.IsNullOrWhiteSpace(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
+            string sourceTable = string.Empty;
+            string sourceAlias = string.Empty;
+            if (statement.Using is Name)
+            {
+                isUsingSelect = false;
+                sourceTable = ((Name)statement.Using).GetFullName();
+                sourceAlias = (String.IsNullOrWhiteSpace(((Name)statement.Using).Alias)) ? prefixToAlias + ((Name)statement.Using).LastPart : ((Name)statement.Using).Alias;
+            }
+            else if (statement.Using is SelectStatement)
+            {
+                isUsingSelect = true;
+                sourceTable = statement.Into.LastPart + "_source";
+                sourceAlias = (String.IsNullOrWhiteSpace(((SelectStatement)statement.Using).Alias)) ? prefixToAlias + sourceTable : ((SelectStatement)statement.Using).Alias;
+                VisitStatement(Sql.CreateTemporaryTable(Sql.Name(sourceTable), true).As((SelectStatement)statement.Using));
+                State.WriteStatementTerminator();
+            }
+
+            // statement.On = AddAliasToBinaryToken((BinaryToken)statement.On, targetTable, targetAlias, sourceAlias);
 
             string targetColumnOn = string.Empty;
             string sourceColumnOn = string.Empty;
@@ -288,11 +305,14 @@ namespace TTRider.FluidSql.Providers.MySql
             }
             if (isTop)
             {
-                DropTableStatement dropTable = Sql.DropTemporaryTable(TopAlias, true);
-                VisitStatement(dropTable);
+                VisitStatement(Sql.DropTemporaryTable(TopAlias, true));
                 State.WriteStatementTerminator();
             }
-
+            if(isUsingSelect )
+            {
+                VisitStatement(Sql.DropTemporaryTable(sourceTable, true));
+                State.WriteStatementTerminator();
+            }
             VisitStatement(Sql.CommitTransaction());
         }
 
@@ -346,7 +366,24 @@ namespace TTRider.FluidSql.Providers.MySql
             VisitTransactionName(statement);
         }
 
-        protected override void VisitDeclareStatement(DeclareStatement statement) { throw new NotImplementedException(); }
+        protected override void VisitDeclareStatement(DeclareStatement statement)
+        {
+            if (statement.Variable != null)
+            {
+                State.Variables.Add(statement.Variable);
+
+                State.Write(Symbols.DECLARE);
+                State.Write(statement.Variable.Name);
+
+                VisitType(statement.Variable);
+
+                if (statement.Initializer != null)
+                {
+                    State.Write(Symbols.DEFAULT);
+                    VisitToken(statement.Initializer);
+                }
+            }
+        }
 
         //IF control block cannot be OUTSIDE of functions
         protected override void VisitIfStatement(IfStatement statement)
@@ -1202,6 +1239,36 @@ namespace TTRider.FluidSql.Providers.MySql
                 Sql.Select.Output(expressions1).From(table1)
                 .Where(tempExpression);
             VisitStatement(correlationStatement);
+        }
+
+        private BinaryToken AddAliasToBinaryToken(BinaryToken statement, string targetTable, string targetAlias, string sourceAlias)
+        {
+            string targetColumnOn = string.Empty;
+            string sourceColumnOn = string.Empty;
+            
+            if((statement is AndToken)|| (statement is OrToken))
+            {
+                statement.First = AddAliasToBinaryToken((BinaryToken)statement.First, targetTable, targetAlias, sourceAlias);
+                statement.Second = AddAliasToBinaryToken((BinaryToken)statement.Second, targetTable, targetAlias, sourceAlias);
+            }
+
+            string firstOn = ((Name)(statement).First).FirstPart;
+
+            if ((firstOn).Equals(targetTable) || (firstOn).Equals(targetAlias))
+            {
+                targetColumnOn = ((Name)(statement).First).LastPart;
+                sourceColumnOn = ((Name)(statement).Second).LastPart;
+            }
+            else
+            {
+                sourceColumnOn = ((Name)(statement).First).LastPart;
+                targetColumnOn = ((Name)(statement).Second).LastPart;
+            }
+
+            statement.First = Sql.Name(targetAlias, targetColumnOn);
+            statement.Second = Sql.Name(sourceAlias, sourceColumnOn);
+
+            return statement;
         }
 
         private string TopAlias = "top_alias";

@@ -65,6 +65,15 @@ namespace Tests.MySqlTests
         }
 
         [TestMethod]
+        public void CreateTemporaryTableAsSelect()
+        {
+            var statement = Sql.CreateTemporaryTable("TempTable", true).As(Sql.Select.Output(Sql.Name("CustomerID"), Sql.Name("ProductID"), Sql.Name("PurchaseDate")).From("Purchases"));
+
+            var mysql = provider.GenerateStatement(statement);
+
+            Assert.AreEqual("CREATE TEMPORARY TABLE IF NOT EXISTS `TempTable` AS ( SELECT `CustomerID`, `ProductID`, `PurchaseDate` FROM `Purchases` );", mysql);
+        }
+        [TestMethod]
         public void DropTable00()
         {
             var statement = Sql.DropTable("BigTable00", true);

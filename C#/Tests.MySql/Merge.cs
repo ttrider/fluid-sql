@@ -292,12 +292,24 @@ WHEN NOT MATCHED BY TARGET THEN
     VALUES(Source.CustomerID, Source.ProductID, Source.PurchaseDate)
 OUTPUT $action, Inserted.*, Deleted.*; */
 
+        [TestMethod]
+        public void MergeExample0()
+        {
+            var statement = Sql.Merge
+                .Into(Sql.NameAs("FactBuyingHabits", "Target"))
+                .Using(Sql.Select.Output(Sql.Name("CustomerID"), Sql.Name("ProductID"), Sql.Name("PurchaseDate")).From("Purchases").As("Source"))
+                .On((Sql.Name("Target.ProductID").IsEqual(Sql.Name("Source.ProductID"))));                
+
+            var command = Provider.GetCommand(statement);
+            Assert.IsNotNull(command);
+            Assert.AreEqual("START TRANSACTION;\r\nCREATE TEMPORARY TABLE IF NOT EXISTS `FactBuyingHabits_source` AS ( SELECT `CustomerID`, `ProductID`, `PurchaseDate` FROM `Purchases` );\r\nDROP TEMPORARY TABLE IF EXISTS `FactBuyingHabits_source`;\r\nCOMMIT;", command.CommandText);
+        }
         /*[TestMethod]
         public void MergeExample1()
         {
             var statement = Sql.Merge
                 .Into(Sql.NameAs("FactBuyingHabits", "Target"))
-                .Using(Sql.NameAs("Purchases", "Source"))
+                .Using(Sql.Select.Output(Sql.Name("CustomerID"), Sql.Name("ProductID"), Sql.Name("PurchaseDate")).From("Purchases").As("Source"))
                 .On((Sql.Name("Target.ProductID").IsEqual(Sql.Name("Source.ProductID"))).And((Sql.Name("Target.CustomerID").IsEqual(Sql.Name("Source.CustomerID")))))
                 .WhenMatchedThenUpdateSet(Sql.Name("Target.ProductID").SetTo(Sql.Name("Source.ProductID")), Sql.Name("Target.CustomerID").SetTo(Sql.Name("Source.CustomerID")))
                 .WhenNotMatchedThenInsert(new Name[] { "CustomerID", "ProductID", "LastPurchaseDate" }, new Name[] { "Source.CustomerID", "Source.ProductID", "Source.PurchaseDate" });
