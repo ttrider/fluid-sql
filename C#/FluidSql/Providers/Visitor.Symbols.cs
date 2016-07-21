@@ -38,6 +38,7 @@ namespace TTRider.FluidSql.Providers
             public const string BETWEEN = "BETWEEN";
             public const string BREAK = "BREAK";
             public const string BY = "BY";
+            public const string CALL = "CALL";
             public const string CASCADE = "CASCADE";
             public const string CASE = "CASE";
             public const string CAST = "CAST";
@@ -97,6 +98,7 @@ namespace TTRider.FluidSql.Providers
             public const string INTERSECT = "INTERSECT";
             public const string INTERVAL = "INTERVAL";
             public const string INTO = "INTO";
+            public const string INOUT = "INOUT";
             public const string IS = "IS";
             public const string ISOLATION = "ISOLATION";
             public const string KEY = "KEY";
@@ -125,6 +127,7 @@ namespace TTRider.FluidSql.Providers
             public const string ONLY = "ONLY";
             public const string OR = "OR";
             public const string ORDER_BY = "ORDER BY";
+            public const string OUT = "OUT";
             public const string OUTPUT = "OUTPUT";
             public const string OWNER = "OWNER";
             public const string PAD_INDEX = "PAD_INDEX";

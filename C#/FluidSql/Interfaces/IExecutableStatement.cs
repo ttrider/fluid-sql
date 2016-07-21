@@ -9,7 +9,7 @@ namespace TTRider.FluidSql
 {
     public interface IExecutableStatement
     {
-        string Name { get; set; }
-        IStatement Target { get; set; }
+        Name Name { get; set; }
+        ExecParameter Target { get; set; }        
     }
 }

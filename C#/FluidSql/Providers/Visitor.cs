@@ -157,6 +157,7 @@ namespace TTRider.FluidSql.Providers
                 { typeof (ExecuteStatement), (v, stm) => v.VisitExecuteStatement((ExecuteStatement) stm) },
                 { typeof (PrepareStatement), (v, stm) => v.VisitPrepareStatement((IExecutableStatement) stm) },
                 { typeof (PerformStatement), (v, stm)=>v.VisitPerformStatement((PerformStatement)stm)},
+                { typeof (DeallocateStatement), (v, stm)=>v.VisitDeallocateStatement((DeallocateStatement)stm)},
                 { typeof (AlterSchemaStatement), (v, stm) => v.VisitAlterSchemaStatement((AlterSchemaStatement) stm) },
                 { typeof (DropSchemaStatement), (v, stm) => v.VisitDropSchemaStatement((DropSchemaStatement) stm) },
                 {

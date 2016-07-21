@@ -7,9 +7,13 @@
 
 namespace TTRider.FluidSql
 {
-    public class ExecuteStatement : Token, IExecutableStatement, IStatement
+    public class ExecuteStatement : Token, IStatement
     {
-        public string Name { get; set; }
-        public IStatement Target { get; set; }
+        public ExecuteStatement()
+        {
+            Target = new ExecParameter();
+        }
+        public Name Name { get; set; }
+        public ExecParameter Target { get; set; }
     }
 }

@@ -132,5 +132,61 @@ namespace Tests.PostgreSql
              Assert.IsNotNull(command);
              Assert.AreEqual("retVal = func00 ( 123, sd02 );", command.CommandText);
          }
+
+        [TestMethod]
+        public void PrepareStatement1()
+        {
+            AssertSql(Sql.Prepare().Name(Sql.Name("tempStr")).From(Sql.Select.Output(Sql.Now())), "PREPARE \"tempStr\" AS SELECT NOW ( );");
+            AssertSql(Sql.Prepare(Sql.Name("tempStr"), Sql.Select.Output(Sql.Now())), "PREPARE \"tempStr\" AS SELECT NOW ( );");
+        }
+
+        [TestMethod]
+        public void PrepareStatement2()
+        {
+            //PREPARE fooplan (int, text, bool, numeric) AS
+            //INSERT INTO foo VALUES($1, $2, $3, $4);
+            var statement = Sql.Prepare(Sql.Name("target_prepare"),
+                Sql.Insert.Into(Sql.Name("target_tbl")).Values("$1", "$2"), 
+                Parameter.Int("$1"), 
+                Parameter.Text("$2"));
+
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("PREPARE \"target_prepare\" (  INTEGER,  TEXT ) AS INSERT INTO \"target_tbl\" VALUES ( $1, $2 );", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteFromVariable()
+        {
+            var statement = Sql.Execute(Sql.Name("temp_statement"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXECUTE \"temp_statement\";", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteFromVariableWithParam()
+        {
+            var statement = Sql.Execute(Sql.Name("temp_statement"), Parameter.Any("@a1"), Parameter.Any("@a2"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("EXECUTE \"temp_statement\" ( @a1, @a2 );", command.CommandText);
+        }
+
+        [TestMethod]
+        public void ExecuteFromStatement()
+        {
+            var statement = Sql.Execute(
+                Sql.Insert.Into(Sql.Name("target_tbl")).Values("$1", "$2"),
+                Parameter.Int("$1").Value(1000),
+                Parameter.Text("$2").Value("Test1000"));
+            var command = Provider.GetCommand(statement);
+
+            Assert.IsNotNull(command);
+            Assert.AreEqual("PREPARE \"temp_execute\" (  INTEGER,  TEXT ) AS INSERT INTO \"target_tbl\" VALUES ( $1, $2 );\r\nEXECUTE \"temp_execute\" ( 1000, 'Test1000' );\r\nDEALLOCATE \"temp_execute\";", command.CommandText);
+        }
     }
 }

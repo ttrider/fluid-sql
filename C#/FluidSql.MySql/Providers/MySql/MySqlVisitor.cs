@@ -5,6 +5,7 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 using System;
+using System.Globalization;
 // ReSharper disable InconsistentNaming
 
 
@@ -70,6 +71,15 @@ namespace TTRider.FluidSql.Providers.MySql
             {
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
             }
+            if (typedToken.Length.HasValue)
+            {
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(typedToken.Length.Value == -1
+                        ? "65535"                                                           //max lengh for mySql
+                        : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
+                
+                State.Write(Symbols.CloseParenthesis);
+            }
         }
 
 
@@ -100,6 +110,8 @@ namespace TTRider.FluidSql.Providers.MySql
 
             public const string ITERATE = "ITERATE";
             public const string LEAVE = "LEAVE";
+
+            public const string DELIMITER = "DELIMITER";
         }
 
     }
