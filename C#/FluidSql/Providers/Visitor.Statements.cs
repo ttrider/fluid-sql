@@ -83,248 +83,53 @@ namespace TTRider.FluidSql.Providers
         }
 
 
-        protected virtual void VisitDelete(DeleteStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitUpdate(UpdateStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitInsert(InsertStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitSelect(SelectStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitMerge(MergeStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitSet(SetStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitBeginTransaction(BeginTransactionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCommitTransaction(CommitTransactionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitRollbackTransaction(RollbackTransactionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitSaveTransaction(SaveTransactionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDeclareStatement(DeclareStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitIfStatement(IfStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateTableStatement(CreateTableStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropTableStatement(DropTableStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateIndexStatement(CreateIndexStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterIndexStatement(AlterIndexStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropIndexStatement(DropIndexStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitStringifyStatement(StringifyStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitBreakStatement(BreakStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitContinueStatement(ContinueStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitExitStatement(ExitStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitGotoStatement(GotoStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitReturnStatement(ReturnStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitThrowStatement(ThrowStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitTryCatchStatement(TryCatchStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitLabelStatement(LabelStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitWaitforDelayStatement(WaitforDelayStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitWaitforTimeStatement(WaitforTimeStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitWhileStatement(WhileStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateViewStatement(CreateViewStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterViewStatement(AlterViewStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropViewStatement(DropViewStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitPerformStatement(PerformStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDeallocateStatement(DeallocateStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-        protected virtual void VisitExecuteStatement(ExecuteStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitPrepareStatement(IExecutableStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateSchemaStatement(CreateSchemaStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropSchemaStatement(DropSchemaStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterSchemaStatement(AlterSchemaStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateProcedureStatement(CreateProcedureStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterProcedureStatement(CreateProcedureStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropProcedureStatement(DropProcedureStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterProcedureStatement(AlterProcedureStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitCreateFunctionStatement(CreateFunctionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitAlterFunctionStatement(AlterFunctionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitDropFunctionStatement(DropFunctionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected virtual void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract void VisitDelete(DeleteStatement statement);
+        protected abstract void VisitUpdate(UpdateStatement statement);
+        protected abstract void VisitInsert(InsertStatement statement);
+        protected abstract void VisitSelect(SelectStatement statement);
+        protected abstract void VisitMerge(MergeStatement statement);
+        protected abstract void VisitSet(SetStatement statement);
+        protected abstract void VisitBeginTransaction(BeginTransactionStatement statement);
+        protected abstract void VisitCommitTransaction(CommitTransactionStatement statement);
+        protected abstract void VisitRollbackTransaction(RollbackTransactionStatement statement);
+        protected abstract void VisitSaveTransaction(SaveTransactionStatement statement);
+        protected abstract void VisitDeclareStatement(DeclareStatement statement);
+        protected abstract void VisitIfStatement(IfStatement statement);
+        protected abstract void VisitCreateTableStatement(CreateTableStatement statement);
+        protected abstract void VisitDropTableStatement(DropTableStatement statement);
+        protected abstract void VisitCreateIndexStatement(CreateIndexStatement statement);
+        protected abstract void VisitAlterIndexStatement(AlterIndexStatement statement);
+        protected abstract void VisitDropIndexStatement(DropIndexStatement statement);
+        protected abstract void VisitStringifyStatement(StringifyStatement statement);
+        protected abstract void VisitBreakStatement(BreakStatement statement);
+        protected abstract void VisitContinueStatement(ContinueStatement statement);
+        protected abstract void VisitExitStatement(ExitStatement statement);
+        protected abstract void VisitGotoStatement(GotoStatement statement);
+        protected abstract void VisitReturnStatement(ReturnStatement statement);
+        protected abstract void VisitThrowStatement(ThrowStatement statement);
+        protected abstract void VisitTryCatchStatement(TryCatchStatement statement);
+        protected abstract void VisitLabelStatement(LabelStatement statement);
+        protected abstract void VisitWaitforDelayStatement(WaitforDelayStatement statement);
+        protected abstract void VisitWaitforTimeStatement(WaitforTimeStatement statement);
+        protected abstract void VisitWhileStatement(WhileStatement statement);
+        protected abstract void VisitCreateViewStatement(CreateViewStatement statement);
+        protected abstract void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement);
+        protected abstract void VisitAlterViewStatement(AlterViewStatement statement);
+        protected abstract void VisitDropViewStatement(DropViewStatement statement);
+        protected abstract void VisitPerformStatement(PerformStatement statement);
+        protected abstract void VisitDeallocateStatement(DeallocateStatement statement);
+        protected abstract void VisitExecuteStatement(ExecuteStatement statement);
+        protected abstract void VisitPrepareStatement(IExecutableStatement statement);
+        protected abstract void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement);
+        protected abstract void VisitCreateSchemaStatement(CreateSchemaStatement statement);
+        protected abstract void VisitDropSchemaStatement(DropSchemaStatement statement);
+        protected abstract void VisitAlterSchemaStatement(AlterSchemaStatement statement);
+        protected abstract void VisitCreateProcedureStatement(CreateProcedureStatement statement);
+        protected abstract void VisitDropProcedureStatement(DropProcedureStatement statement);
+        protected abstract void VisitAlterProcedureStatement(AlterProcedureStatement statement);
+        protected abstract void VisitCreateFunctionStatement(CreateFunctionStatement statement);
+        protected abstract void VisitAlterFunctionStatement(AlterFunctionStatement statement);
+        protected abstract void VisitDropFunctionStatement(DropFunctionStatement statement);
+        protected abstract void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement);
     }
 }

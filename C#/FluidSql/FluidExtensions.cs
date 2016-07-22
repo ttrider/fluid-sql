@@ -72,7 +72,7 @@ namespace TTRider.FluidSql
 
             if (parameterCollection.Contains(parameterName))
             {
-                ((DbParameter) parameterCollection[parameterName]).Value = value;
+                ((DbParameter)parameterCollection[parameterName]).Value = value;
             }
 
             return parameterCollection;
@@ -463,7 +463,7 @@ namespace TTRider.FluidSql
             statement.From.Add(token.As(alias));
             return statement;
         }
-        
+
         public static SelectStatement From(this SelectStatement statement, List<RecordsetSourceToken> token, string alias = null)
         {
             statement.From.AddRange(token);
@@ -527,7 +527,7 @@ namespace TTRider.FluidSql
 
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, params AssignToken[] set)
         {
-            return WhenMatchedThenUpdateSet(statement, (IEnumerable<AssignToken>) set);
+            return WhenMatchedThenUpdateSet(statement, (IEnumerable<AssignToken>)set);
         }
 
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition,
@@ -552,7 +552,7 @@ namespace TTRider.FluidSql
         public static MergeStatement WhenMatchedThenUpdateSet(this MergeStatement statement, Token andCondition,
             params AssignToken[] set)
         {
-            return WhenMatchedThenUpdateSet(statement, andCondition, (IEnumerable<AssignToken>) set);
+            return WhenMatchedThenUpdateSet(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
 
         public static MergeStatement WhenNotMatchedBySourceThenDelete(this MergeStatement statement,
@@ -586,13 +586,13 @@ namespace TTRider.FluidSql
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement, Token andCondition,
             params AssignToken[] set)
         {
-            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>) set);
+            return WhenNotMatchedBySourceThenUpdate(statement, andCondition, (IEnumerable<AssignToken>)set);
         }
 
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement,
             params AssignToken[] set)
         {
-            return WhenNotMatchedBySourceThenUpdate(statement, null, (IEnumerable<AssignToken>) set);
+            return WhenNotMatchedBySourceThenUpdate(statement, null, (IEnumerable<AssignToken>)set);
         }
 
         public static MergeStatement WhenNotMatchedBySourceThenUpdate(this MergeStatement statement,
@@ -781,7 +781,7 @@ namespace TTRider.FluidSql
                 .Output(statement.Output.Select(
                     column => !string.IsNullOrWhiteSpace(column.Alias)
                         ? column.Alias // we should use alias    
-                        : ((column is Name) ? ((Name) column).LastPart : null)) // or the LAST PART of the name
+                        : ((column is Name) ? ((Name)column).LastPart : null)) // or the LAST PART of the name
                     .Where(name => !string.IsNullOrWhiteSpace(name))
                     .Select(name => Sql.Name(alias, name)));
         }
@@ -1168,7 +1168,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Then(this IfStatement statement, params IStatement[] statements)
         {
-            return Then(statement, (IEnumerable<IStatement>) statements);
+            return Then(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Then(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1183,7 +1183,7 @@ namespace TTRider.FluidSql
 
         public static IfStatement Else(this IfStatement statement, params IStatement[] statements)
         {
-            return Else(statement, (IEnumerable<IStatement>) statements);
+            return Else(statement, (IEnumerable<IStatement>)statements);
         }
 
         public static IfStatement Else(this IfStatement statement, IEnumerable<IStatement> statements)
@@ -1255,7 +1255,7 @@ namespace TTRider.FluidSql
 
         public static InsertStatement Values(this InsertStatement statement, params Token[] values)
         {
-            return Values(statement, (IEnumerable<Token>) values);
+            return Values(statement, (IEnumerable<Token>)values);
         }
 
         public static InsertStatement Values(this InsertStatement statement, params object[] values)
@@ -1875,8 +1875,8 @@ namespace TTRider.FluidSql
         }
 
         //for postgresql
-       public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name,
-            params Name[] columns)
+        public static CreateTableStatement PrimaryKey(this CreateTableStatement statement, Name name,
+             params Name[] columns)
         {
             if (statement.PrimaryKey == null)
             {
@@ -1886,7 +1886,7 @@ namespace TTRider.FluidSql
             statement.PrimaryKey.Name = name;
             foreach (var columnName in columns)
             {
-                statement.PrimaryKey.Columns.Add(new Order {Column = columnName});
+                statement.PrimaryKey.Columns.Add(new Order { Column = columnName });
             }
             return statement;
         }
@@ -2652,7 +2652,7 @@ namespace TTRider.FluidSql
                     .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
                     .Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    snippet.Dialects.Add(d, value);
+                    snippet.Dialects[d] = value;
                 }
             }
 
@@ -2675,7 +2675,7 @@ namespace TTRider.FluidSql
                     .SelectMany(d => d.Split(new[] { ';', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
                     .Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    snippetStatement.Dialects.Add(d, value);
+                    snippetStatement.Dialects[d] = value;
                 }
             }
 

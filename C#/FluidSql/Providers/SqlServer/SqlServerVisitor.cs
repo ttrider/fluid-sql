@@ -285,6 +285,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.WriteStatementTerminator();
         }
 
+        protected override void VisitAlterSchemaStatement(AlterSchemaStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /* FUNCTIONS */
 
@@ -530,6 +535,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 );
         }
 
+
         protected override void VisitDropProcedureStatement(DropProcedureStatement statement)
         {
             VisitConditional(
@@ -564,6 +570,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
                     VisitProcedureParametersAndBody(statement);
                 }
                 );
+        }
+
+        protected override void VisitPrepareStatement(IExecutableStatement statement)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void VisitExecuteProcedureStatement(ExecuteProcedureStatement statement)
@@ -1280,6 +1291,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
             State.Write(Symbols.CONTINUE);
         }
 
+        protected override void VisitExitStatement(ExitStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void VisitGotoStatement(GotoStatement statement)
         {
             State.Write(Symbols.GOTO);
@@ -1573,6 +1589,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
             this.Stringify(statement.Content);
         }
 
+        protected override void VisitDeallocateStatement(DeallocateStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void VisitExecuteStatement(ExecuteStatement statement)
         {
             State.Write(Symbols.EXEC);
@@ -1832,6 +1853,11 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.VIEW);
                 VisitNameToken(statement.Name);
             }
+        }
+
+        protected override void VisitPerformStatement(PerformStatement statement)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void VisitAlterViewStatement(AlterViewStatement statement)

@@ -52,6 +52,8 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             "SERIAL",       //NpgsqlDbType.Serial
         };
 
+
+
         protected override string[] SupportedDialects { get { return supportedDialects; } }
 
         public PostgreSQLVisitor()
@@ -74,6 +76,18 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             if (typedToken.DbType.HasValue)
             {
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
+            }
+        }
+
+        protected override void VisitValue(object value)
+        {
+            if (value is bool)
+            {
+                State.Write((bool)value ? "true" : "false");
+            }
+            else
+            {
+                base.VisitValue(value);
             }
         }
 

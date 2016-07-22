@@ -693,7 +693,7 @@
           "lib/net46/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.0-core-beta-7200618": {
+      "TTRider.FluidSQL.dll/1.10.0-core-beta-7220045": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
@@ -2343,7 +2343,7 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.0-core-beta-7200618": {
+      "TTRider.FluidSQL.dll/1.10.0-core-beta-7220045": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
@@ -6224,12 +6224,12 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "TTRider.FluidSQL.dll/1.10.0-core-beta-7200618": {
-      "sha512": "i0NWBHTZDCvFtYZeopYrcYhbGQ0bYC9/n/3XP1lEpaxfCm79QzqlUS8TftRdtS1EU4kRWf70jpxtaYSvszKlAQ==",
+    "TTRider.FluidSQL.dll/1.10.0-core-beta-7220045": {
+      "sha512": "xACh3dDtz533Xi8Mns4FbQq/+XFUV0NSvUbHCV+tMjhxh364+ntU2Urd7lULQAphATPDJpITP69OzDb0J5K/Hg==",
       "type": "package",
-      "path": "TTRider.FluidSQL.dll/1.10.0-core-beta-7200618",
+      "path": "TTRider.FluidSQL.dll/1.10.0-core-beta-7220045",
       "files": [
-        "TTRider.FluidSQL.dll.1.10.0-core-beta-7200618.nupkg.sha512",
+        "TTRider.FluidSQL.dll.1.10.0-core-beta-7220045.nupkg.sha512",
         "TTRider.FluidSQL.dll.nuspec",
         "lib/net461/TTRider.FluidSQL.dll.dll",
         "lib/netstandard1.6/TTRider.FluidSQL.dll.dll"
@@ -6241,7 +6241,7 @@
       "NETStandard.Library >= 1.6.0",
       "Npgsql >= 3.1.6",
       "System.Data.SqlClient >= 4.1.0",
-      "TTRider.FluidSQL.dll >= 1.10.0-core-beta-7200618"
+      "TTRider.FluidSQL.dll >= 1.10.0-*"
     ],
     ".NETFramework,Version=v4.6.1": [],
     ".NETStandard,Version=v1.6": []

@@ -236,6 +236,7 @@ namespace TTRider.FluidSql.Providers
             public const string BitwiseOrEqVal = "|=";
             public const string BitwiseXorEqVal = "^=";
             public const string BitwiseNotEqVal = "~=";
+            public const string DotVal = ".";
 
             public const string SingleQuote = "'";
             public const string DoubleQuote = "\"";
@@ -244,6 +245,7 @@ namespace TTRider.FluidSql.Providers
             public const string TechId = "ctid";
             public const string CurrentSetting = "current_setting";
             public const string TimeZone = "TimeZone";
+
         }
     }
 }
