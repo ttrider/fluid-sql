@@ -16,6 +16,12 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql.Sqlite", "FluidSql
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql.Postgres", "FluidSql.Postgres\FluidSql.Postgres.xproj", "{166C4FFB-A987-4785-B267-F773CAD4E4EF}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Postgres", "xUnit.Postgres\xUnit.Postgres.xproj", "{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.FluidSql", "xUnit.FluidSql\xUnit.FluidSql.xproj", "{A53A4AB3-D280-4017-BCAB-879986DF263F}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Sqlite", "xUnit.Sqlite\xUnit.Sqlite.xproj", "{331E92FA-B975-4E65-A47E-695563B46B99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +44,18 @@ Global
 		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A53A4AB3-D280-4017-BCAB-879986DF263F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A53A4AB3-D280-4017-BCAB-879986DF263F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A53A4AB3-D280-4017-BCAB-879986DF263F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A53A4AB3-D280-4017-BCAB-879986DF263F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{331E92FA-B975-4E65-A47E-695563B46B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{331E92FA-B975-4E65-A47E-695563B46B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{331E92FA-B975-4E65-A47E-695563B46B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{331E92FA-B975-4E65-A47E-695563B46B99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
