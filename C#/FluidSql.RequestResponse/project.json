@@ -28,6 +28,7 @@
     },
     "net461": {
       "dependencies": {
+        "JetBrains.Annotations": "10.1.5"
       },
       "frameworkAssemblies": {
       }
