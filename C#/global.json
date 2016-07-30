@@ -3,6 +3,9 @@
     "FluidSql",
     "FluidSql.RequestResponse",
     "FluidSql.Sqlite",
-    "FluidSql.Postgres"
+    "FluidSql.Postgres",
+    "xUnit.FluidSQL",
+    "xUnit.Postgres",
+    "xUnit.Sqlite"
   ]
 }

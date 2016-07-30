@@ -1,8 +1,8 @@
 {
   "title": "TTRider.FluidSql.SQLite",
   "name": "TTRider.FluidSql.SQLite",
-  "version": "1.4.0-core-beta-7220045",
-  "authors": [ "TTRider" ],
+  "version": "1.10.1",
+  "authors": [ "TTRider", "AdaptCore Technologies", "iatam" ],
   "buildOptions": {
     "debugType": "portable"
   },
@@ -19,7 +19,7 @@
     "Microsoft.Data.Sqlite": "1.0.0",
     "NETStandard.Library": "1.6.0",
     "System.Data.SqlClient": "4.1.0",
-    "TTRider.FluidSQL.dll": "1.10.0-*"
+    "TTRider.FluidSQL.dll": "1.10.1"
   },
   "frameworks": {
     "netstandard1.6": {
@@ -30,7 +30,7 @@
     },
     "net461": {
       "dependencies": {
-        "JetBrains.Annotations": "10.1.5"
+        "JetBrains.Annotations": "10.1.5-*"
       },
       "frameworkAssemblies": {
       }
