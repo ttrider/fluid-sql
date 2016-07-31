@@ -1,9 +1,9 @@
 {
   "projects": [
-    "FluidSql",
-    "FluidSql.RequestResponse",
-    "FluidSql.Sqlite",
-    "FluidSql.Postgres",
+    "TTrider.FluidSql",
+    "TTrider.FluidSql.RequestResponse",
+    "TTrider.FluidSql.Sqlite",
+    "TTrider.FluidSql.Postgres",
     "xUnit.FluidSQL",
     "xUnit.Postgres",
     "xUnit.Sqlite"

@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>166c4ffb-a987-4785-b267-f773cad4e4ef</ProjectGuid>
-    <RootNamespace>FluidSql.Postgres</RootNamespace>
+    <ProjectGuid>cd0f950d-f43c-4a19-bfc7-42b6b6364bf9</ProjectGuid>
+    <RootNamespace>TTRider.FluidSql.RequestResponse</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>

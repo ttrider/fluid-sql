@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>ef7a843a-bfa4-43e6-b12c-14fba8a4c0e1</ProjectGuid>
-    <RootNamespace>FluidSql.Sqlite</RootNamespace>
+    <ProjectGuid>039c7ac7-6782-4a3e-81b2-5792e6ea1a65</ProjectGuid>
+    <RootNamespace>TTRider.FluidSQL.Sqlite</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>

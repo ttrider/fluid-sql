@@ -6,11 +6,12 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>214b8b43-7055-489b-afc0-34ddd31797a2</ProjectGuid>
-    <RootNamespace>TTRider.FluidSql.RequestResponse</RootNamespace>
+    <ProjectGuid>4fe641cb-9934-4f84-808a-0386702bd326</ProjectGuid>
+    <RootNamespace>TTRider.FluidSQL.Postgres</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>
+
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>

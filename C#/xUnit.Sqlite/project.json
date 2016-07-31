@@ -1,12 +1,12 @@
 ﻿{
     "version": "1.0.0-*",
     "testRunner": "xunit",
-    "dependencies": {
-      "TTRider.FluidSQL.dll": "1.10.1",
-        "TTRider.FluidSql.SQLite": "1.10.1-*",
-        "xunit": "2.2.0-beta2-build3300",
-        "dotnet-test-xunit": "2.2.0-preview2-build1029"
-    },
+  "dependencies": {
+    "TTRider.FluidSQL.dll": "1.10.1-*",
+    "TTRider.FluidSql.SQLite": "1.10.1-*",
+    "xunit": "2.2.0-beta2-build3300",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029"
+  },
     "frameworks": {
         "netcoreapp1.0": {
             "imports": "dnxcore50",

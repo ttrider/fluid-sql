@@ -2533,21 +2533,6 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.1": {
-        "type": "package",
-        "dependencies": {
-          "JetBrains.Annotations": "10.1.5",
-          "NETStandard.Library": "1.6.0",
-          "System.Data.SqlClient": "4.1.0",
-          "System.Xml.XmlDocument": "4.0.1"
-        },
-        "compile": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
-        }
-      },
       "xunit/2.2.0-beta2-build3300": {
         "type": "package",
         "dependencies": {
@@ -2640,6 +2625,22 @@
         },
         "runtime": {
           "lib/netstandard1.1/xunit.runner.utility.dotnet.dll": {}
+        }
+      },
+      "TTRider.FluidSQL.dll/1.10.1": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v1.6",
+        "dependencies": {
+          "JetBrains.Annotations": "10.1.5",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.SqlClient": "4.1.0",
+          "System.Xml.XmlDocument": "4.0.1"
+        },
+        "compile": {
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
+        },
+        "runtime": {
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
         }
       }
     }
@@ -7695,17 +7696,6 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "TTRider.FluidSQL.dll/1.10.1": {
-      "sha512": "iAXo18R/AkhfI9irAeNT5LK8cy7VcolEvizLAKw5pasN7LUUicDVLNsi7Newa+G5m037IslcgLn50Q3+a2+2tA==",
-      "type": "package",
-      "path": "TTRider.FluidSQL.dll/1.10.1",
-      "files": [
-        "TTRider.FluidSQL.dll.1.10.1.nupkg.sha512",
-        "TTRider.FluidSQL.dll.nuspec",
-        "lib/net461/TTRider.FluidSQL.dll.dll",
-        "lib/netstandard1.6/TTRider.FluidSQL.dll.dll"
-      ]
-    },
     "xunit/2.2.0-beta2-build3300": {
       "sha512": "jUMf+Hrw8+XZN56TfO+JjoibR5L806/kgDIkwCg9OXLlfnA4li4JTmH342ifYj1QMR10is8hfYYFTyjHq0+aQg==",
       "type": "package",
@@ -7815,11 +7805,16 @@
         "xunit.runner.utility.2.2.0-beta2-build3300.nupkg.sha512",
         "xunit.runner.utility.nuspec"
       ]
+    },
+    "TTRider.FluidSQL.dll/1.10.1": {
+      "type": "project",
+      "path": "../TTRider.FluidSQL.dll/project.json",
+      "msbuildProject": "../TTRider.FluidSQL.dll/TTRider.FluidSQL.dll.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "TTRider.FluidSQL.dll >= 1.10.1",
+      "TTRider.FluidSQL.dll >= 1.10.1-*",
       "dotnet-test-xunit >= 2.2.0-preview2-build1029",
       "xunit >= 2.2.0-beta2-build3300"
     ],

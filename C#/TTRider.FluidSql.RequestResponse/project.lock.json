@@ -3,15 +3,25 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.6.1": {
-      "Google.ProtocolBuffers/2.4.1.555": {
+      "JetBrains.Annotations/10.1.5": {
         "type": "package",
         "compile": {
-          "lib/net40/Google.ProtocolBuffers.Serialization.dll": {},
-          "lib/net40/Google.ProtocolBuffers.dll": {}
+          "lib/net/JetBrains.Annotations.dll": {}
         },
         "runtime": {
-          "lib/net40/Google.ProtocolBuffers.Serialization.dll": {},
-          "lib/net40/Google.ProtocolBuffers.dll": {}
+          "lib/net/JetBrains.Annotations.dll": {}
+        }
+      },
+      "Microsoft.CSharp/4.0.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp"
+        ],
+        "compile": {
+          "ref/net45/_._": {}
+        },
+        "runtime": {
+          "lib/net45/_._": {}
         }
       },
       "Microsoft.NETCore.Platforms/1.0.1": {
@@ -34,18 +44,6 @@
         },
         "runtime": {
           "lib/net46/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "MySql.Data/7.0.3-DMR": {
-        "type": "package",
-        "dependencies": {
-          "Google.ProtocolBuffers": "2.4.1.555"
-        },
-        "compile": {
-          "lib/net45/MySql.Data.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MySql.Data.dll": {}
         }
       },
       "NETStandard.Library/1.6.0": {
@@ -707,9 +705,39 @@
           "lib/net46/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSql.dll/1.10.0-core-beta-7140112": {
+      "TTRider.IDbConnection-Async/1.1.1": {
         "type": "package",
         "dependencies": {
+          "Microsoft.CSharp": "4.0.0",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.Common": "4.1.0"
+        },
+        "compile": {
+          "lib/net461/TTRider.IDbConnection-Async.dll": {}
+        },
+        "runtime": {
+          "lib/net461/TTRider.IDbConnection-Async.dll": {}
+        }
+      },
+      "TTRider.IDbRequestResponse/1.3.1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "System.Data.Common": "4.1.0",
+          "TTRider.IDbConnection-Async": "1.1.1"
+        },
+        "compile": {
+          "lib/net461/TTRider.IDbRequestResponse.dll": {}
+        },
+        "runtime": {
+          "lib/net461/TTRider.IDbRequestResponse.dll": {}
+        }
+      },
+      "TTRider.FluidSQL.dll/1.10.1": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.6.1",
+        "dependencies": {
+          "JetBrains.Annotations": "10.1.5",
           "NETStandard.Library": "1.6.0",
           "System.Data.SqlClient": "4.1.0",
           "System.Xml.XmlDocument": "4.0.1"
@@ -718,16 +746,52 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "lib/net461/TTRider.FluidSQL.dll.dll": {}
+          "net461/TTRider.FluidSQL.dll.dll": {}
         },
         "runtime": {
-          "lib/net461/TTRider.FluidSQL.dll.dll": {}
+          "net461/TTRider.FluidSQL.dll.dll": {}
         }
       }
     },
     ".NETStandard,Version=v1.6": {
-      "Google.ProtocolBuffers/2.4.1.555": {
-        "type": "package"
+      "JetBrains.Annotations/10.1.5": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "lib/dotnet/JetBrains.Annotations.Dotnet.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/JetBrains.Annotations.Dotnet.dll": {}
+        }
+      },
+      "Microsoft.CSharp/4.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Diagnostics.Debug": "4.0.10",
+          "System.Dynamic.Runtime": "4.0.0",
+          "System.Globalization": "4.0.10",
+          "System.Linq": "4.0.0",
+          "System.Linq.Expressions": "4.0.0",
+          "System.ObjectModel": "4.0.10",
+          "System.Reflection": "4.0.10",
+          "System.Reflection.Extensions": "4.0.0",
+          "System.Reflection.Primitives": "4.0.0",
+          "System.Reflection.TypeExtensions": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Threading": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet/Microsoft.CSharp.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet/Microsoft.CSharp.dll": {}
+        }
       },
       "Microsoft.NETCore.Platforms/1.0.1": {
         "type": "package",
@@ -756,12 +820,6 @@
         },
         "compile": {
           "ref/netstandard1.3/Microsoft.Win32.Primitives.dll": {}
-        }
-      },
-      "MySql.Data/7.0.3-DMR": {
-        "type": "package",
-        "dependencies": {
-          "Google.ProtocolBuffers": "2.4.1.555"
         }
       },
       "NETStandard.Library/1.6.0": {
@@ -1097,6 +1155,18 @@
         },
         "compile": {
           "ref/netstandard1.5/System.Diagnostics.Tracing.dll": {}
+        }
+      },
+      "System.Dynamic.Runtime/4.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Linq.Expressions": "4.0.0",
+          "System.ObjectModel": "4.0.0",
+          "System.Reflection": "4.0.0",
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet/System.Dynamic.Runtime.dll": {}
         }
       },
       "System.Globalization/4.0.11": {
@@ -1571,7 +1641,7 @@
           "System.Runtime": "4.1.0"
         },
         "compile": {
-          "ref/netstandard1.5/_._": {}
+          "ref/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
         },
         "runtime": {
           "lib/netstandard1.5/System.Reflection.TypeExtensions.dll": {}
@@ -2186,81 +2256,107 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSql.dll/1.10.0-core-beta-7140112": {
+      "TTRider.IDbConnection-Async/1.1.1": {
         "type": "package",
         "dependencies": {
+          "Microsoft.CSharp": "4.0.0",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.Common": "4.1.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/TTRider.IDbConnection-Async.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/TTRider.IDbConnection-Async.dll": {}
+        }
+      },
+      "TTRider.IDbRequestResponse/1.3.1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "System.Data.Common": "4.1.0",
+          "TTRider.IDbConnection-Async": "1.1.1"
+        },
+        "compile": {
+          "lib/netstandard1.6/TTRider.IDbRequestResponse.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/TTRider.IDbRequestResponse.dll": {}
+        }
+      },
+      "TTRider.FluidSQL.dll/1.10.1": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v1.6",
+        "dependencies": {
+          "JetBrains.Annotations": "10.1.5",
           "NETStandard.Library": "1.6.0",
           "System.Data.SqlClient": "4.1.0",
           "System.Xml.XmlDocument": "4.0.1"
         },
         "compile": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "Google.ProtocolBuffers/2.4.1.555": {
-      "sha512": "JsaOFX3nr6F0nGkGk7stbD2jTpvy7vgBuY+chB6+qsimMPu7YvQ6BgNOjjHd2xFqmByUCUD8pF9D07kPug8N1g==",
+    "JetBrains.Annotations/10.1.5": {
+      "sha512": "LRyTrsiTWsV4C4cUMfdEkAdd8S0BREvj3hXZ1gGr3GZGFf0q2KW3IFGMPOguAxOrWH44Nw12jqr37B1Jph2E6A==",
       "type": "package",
-      "path": "Google.ProtocolBuffers/2.4.1.555",
+      "path": "JetBrains.Annotations/10.1.5",
       "files": [
-        "Google.ProtocolBuffers.2.4.1.555.nupkg.sha512",
-        "Google.ProtocolBuffers.nuspec",
-        "lib/cf20/Google.ProtocolBuffers.Serialization.dll",
-        "lib/cf20/Google.ProtocolBuffers.Serialization.xml",
-        "lib/cf20/Google.ProtocolBuffers.dll",
-        "lib/cf20/Google.ProtocolBuffers.xml",
-        "lib/cf35/Google.ProtocolBuffers.Serialization.dll",
-        "lib/cf35/Google.ProtocolBuffers.Serialization.xml",
-        "lib/cf35/Google.ProtocolBuffers.dll",
-        "lib/cf35/Google.ProtocolBuffers.xml",
-        "lib/net20/Google.ProtocolBuffers.Serialization.dll",
-        "lib/net20/Google.ProtocolBuffers.Serialization.xml",
-        "lib/net20/Google.ProtocolBuffers.dll",
-        "lib/net20/Google.ProtocolBuffers.xml",
-        "lib/net35/Google.ProtocolBuffers.Serialization.dll",
-        "lib/net35/Google.ProtocolBuffers.Serialization.xml",
-        "lib/net35/Google.ProtocolBuffers.dll",
-        "lib/net35/Google.ProtocolBuffers.xml",
-        "lib/net40/Google.ProtocolBuffers.Serialization.dll",
-        "lib/net40/Google.ProtocolBuffers.Serialization.xml",
-        "lib/net40/Google.ProtocolBuffers.dll",
-        "lib/net40/Google.ProtocolBuffers.xml",
-        "lib/portable-net40+sl4+sl5+wp7+wp8+win8/Google.ProtocolBuffers.Serialization.dll",
-        "lib/portable-net40+sl4+sl5+wp7+wp8+win8/Google.ProtocolBuffers.Serialization.xml",
-        "lib/portable-net40+sl4+sl5+wp7+wp8+win8/Google.ProtocolBuffers.dll",
-        "lib/portable-net40+sl4+sl5+wp7+wp8+win8/Google.ProtocolBuffers.xml",
-        "lib/sl20/Google.ProtocolBuffers.Serialization.dll",
-        "lib/sl20/Google.ProtocolBuffers.Serialization.xml",
-        "lib/sl20/Google.ProtocolBuffers.dll",
-        "lib/sl20/Google.ProtocolBuffers.xml",
-        "lib/sl30/Google.ProtocolBuffers.Serialization.dll",
-        "lib/sl30/Google.ProtocolBuffers.Serialization.xml",
-        "lib/sl30/Google.ProtocolBuffers.dll",
-        "lib/sl30/Google.ProtocolBuffers.xml",
-        "lib/sl40/Google.ProtocolBuffers.Serialization.dll",
-        "lib/sl40/Google.ProtocolBuffers.Serialization.xml",
-        "lib/sl40/Google.ProtocolBuffers.dll",
-        "lib/sl40/Google.ProtocolBuffers.xml",
-        "tools/CHANGES.txt",
-        "tools/Google.ProtocolBuffers.Serialization.dll",
-        "tools/Google.ProtocolBuffers.dll",
-        "tools/ProtoBench.exe",
-        "tools/ProtoDump.exe",
-        "tools/ProtoGen.exe",
-        "tools/ProtoGen.exe.config",
-        "tools/ProtoMunge.exe",
-        "tools/google/protobuf/compiler/plugin.proto",
-        "tools/google/protobuf/csharp_options.proto",
-        "tools/google/protobuf/descriptor.proto",
-        "tools/license.txt",
-        "tools/protoc-license.txt",
-        "tools/protoc.exe",
-        "tools/tutorial/addressbook.proto"
+        "JetBrains.Annotations.10.1.5.nupkg.sha512",
+        "JetBrains.Annotations.nuspec",
+        "lib/dotnet/JetBrains.Annotations.Dotnet.dll",
+        "lib/net/JetBrains.Annotations.dll",
+        "lib/net/JetBrains.Annotations.xml",
+        "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.dll",
+        "lib/portable-net4+sl4+wp7+netcore45/JetBrains.Annotations.PCL1.xml",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/JetBrains.Annotations.PCL328.dll",
+        "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/JetBrains.Annotations.PCL328.xml"
+      ]
+    },
+    "Microsoft.CSharp/4.0.0": {
+      "sha512": "oWqeKUxHXdK6dL2CFjgMcaBISbkk+AqEg+yvJHE4DElNzS4QaTsCflgkkqZwVlWby1Dg9zo9n+iCAMFefFdJ/A==",
+      "type": "package",
+      "path": "Microsoft.CSharp/4.0.0",
+      "files": [
+        "Microsoft.CSharp.4.0.0.nupkg.sha512",
+        "Microsoft.CSharp.nuspec",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/dotnet/Microsoft.CSharp.dll",
+        "lib/net45/_._",
+        "lib/netcore50/Microsoft.CSharp.dll",
+        "lib/win8/_._",
+        "lib/wp80/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/dotnet/Microsoft.CSharp.dll",
+        "ref/dotnet/Microsoft.CSharp.xml",
+        "ref/dotnet/de/Microsoft.CSharp.xml",
+        "ref/dotnet/es/Microsoft.CSharp.xml",
+        "ref/dotnet/fr/Microsoft.CSharp.xml",
+        "ref/dotnet/it/Microsoft.CSharp.xml",
+        "ref/dotnet/ja/Microsoft.CSharp.xml",
+        "ref/dotnet/ko/Microsoft.CSharp.xml",
+        "ref/dotnet/ru/Microsoft.CSharp.xml",
+        "ref/dotnet/zh-hans/Microsoft.CSharp.xml",
+        "ref/dotnet/zh-hant/Microsoft.CSharp.xml",
+        "ref/net45/_._",
+        "ref/netcore50/Microsoft.CSharp.dll",
+        "ref/netcore50/Microsoft.CSharp.xml",
+        "ref/win8/_._",
+        "ref/wp80/_._",
+        "ref/wpa81/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._"
       ]
     },
     "Microsoft.NETCore.Platforms/1.0.1": {
@@ -2323,23 +2419,6 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
-      ]
-    },
-    "MySql.Data/7.0.3-DMR": {
-      "sha512": "nfNOZRZEPLFd0DAGpGm0NJHxmax4ba2J+oXkvlcnHLpVcH0tgEWPd0PlhGXzU8g+NO3O67DTkMOs0y9qGyMA5w==",
-      "type": "package",
-      "path": "MySql.Data/7.0.3-DMR",
-      "files": [
-        "CHANGES",
-        "MySql.Data.7.0.3-DMR.nupkg.sha512",
-        "MySql.Data.nuspec",
-        "Readme.txt",
-        "content/app.config.transform",
-        "content/web.config.transform",
-        "lib/net40/MySql.Data.XML",
-        "lib/net40/MySql.Data.dll",
-        "lib/net45/MySql.Data.XML",
-        "lib/net45/MySql.Data.dll"
       ]
     },
     "NETStandard.Library/1.6.0": {
@@ -3010,6 +3089,54 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
+      ]
+    },
+    "System.Dynamic.Runtime/4.0.0": {
+      "sha512": "33os71rQUCLjM5pbhQqCopq9/YcqBHPBQ8WylrzNk3oJmfAR0SFwzZIKJRN2JcrkBYdzC/NtWrYVU8oroyZieA==",
+      "type": "package",
+      "path": "System.Dynamic.Runtime/4.0.0",
+      "files": [
+        "License.rtf",
+        "System.Dynamic.Runtime.4.0.0.nupkg.sha512",
+        "System.Dynamic.Runtime.nuspec",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/win8/_._",
+        "lib/wp80/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/dotnet/System.Dynamic.Runtime.dll",
+        "ref/dotnet/System.Dynamic.Runtime.xml",
+        "ref/dotnet/de/System.Dynamic.Runtime.xml",
+        "ref/dotnet/es/System.Dynamic.Runtime.xml",
+        "ref/dotnet/fr/System.Dynamic.Runtime.xml",
+        "ref/dotnet/it/System.Dynamic.Runtime.xml",
+        "ref/dotnet/ja/System.Dynamic.Runtime.xml",
+        "ref/dotnet/ko/System.Dynamic.Runtime.xml",
+        "ref/dotnet/ru/System.Dynamic.Runtime.xml",
+        "ref/dotnet/zh-hans/System.Dynamic.Runtime.xml",
+        "ref/dotnet/zh-hant/System.Dynamic.Runtime.xml",
+        "ref/net45/_._",
+        "ref/netcore50/System.Dynamic.Runtime.dll",
+        "ref/netcore50/System.Dynamic.Runtime.xml",
+        "ref/netcore50/de/System.Dynamic.Runtime.xml",
+        "ref/netcore50/es/System.Dynamic.Runtime.xml",
+        "ref/netcore50/fr/System.Dynamic.Runtime.xml",
+        "ref/netcore50/it/System.Dynamic.Runtime.xml",
+        "ref/netcore50/ja/System.Dynamic.Runtime.xml",
+        "ref/netcore50/ko/System.Dynamic.Runtime.xml",
+        "ref/netcore50/ru/System.Dynamic.Runtime.xml",
+        "ref/netcore50/zh-hans/System.Dynamic.Runtime.xml",
+        "ref/netcore50/zh-hant/System.Dynamic.Runtime.xml",
+        "ref/win8/_._",
+        "ref/wp80/_._",
+        "ref/wpa81/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._"
       ]
     },
     "System.Globalization/4.0.11": {
@@ -5779,26 +5906,45 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "TTRider.FluidSql.dll/1.10.0-core-beta-7140112": {
-      "sha512": "BJSavX06mKpXqZAzWC2aSLVr8Ce6XDzFcEGcIlEurP88JCBN8BmaNaAizH4VJ8PEZIyp5Hywn0lzPz2YcbRIZg==",
+    "TTRider.IDbConnection-Async/1.1.1": {
+      "sha512": "u3o6eNUyRwSiQ/VURX1mCSCdzKwy0veRg/ygUl8AYNjKAY1v+REkBUuiKJyJ1fZYpmIL882MTQRd17JYjbvpNg==",
       "type": "package",
-      "path": "TTRider.FluidSql.dll/1.10.0-core-beta-7140112",
+      "path": "TTRider.IDbConnection-Async/1.1.1",
       "files": [
-        "TTRider.FluidSql.dll.1.10.0-core-beta-7140112.nupkg.sha512",
-        "TTRider.FluidSql.dll.nuspec",
-        "lib/net461/TTRider.FluidSQL.dll.dll",
-        "lib/netstandard1.6/TTRider.FluidSQL.dll.dll"
+        "TTRider.IDbConnection-Async.1.1.1.nupkg.sha512",
+        "TTRider.IDbConnection-Async.nuspec",
+        "lib/net461/TTRider.IDbConnection-Async.dll",
+        "lib/netstandard1.6/TTRider.IDbConnection-Async.dll"
       ]
+    },
+    "TTRider.IDbRequestResponse/1.3.1": {
+      "sha512": "EuQOXnmfeZ5mQ74yXMBngMUMwSadnp6wn0T7Sx6uHJ0KdNgw4Fwek23TTP16hA0K/7VT7izbDmxb38MzVThThA==",
+      "type": "package",
+      "path": "TTRider.IDbRequestResponse/1.3.1",
+      "files": [
+        "TTRider.IDbRequestResponse.1.3.1.nupkg.sha512",
+        "TTRider.IDbRequestResponse.nuspec",
+        "lib/net461/TTRider.IDbRequestResponse.dll",
+        "lib/netstandard1.6/TTRider.IDbRequestResponse.dll"
+      ]
+    },
+    "TTRider.FluidSQL.dll/1.10.1": {
+      "type": "project",
+      "path": "../TTRider.FluidSQL.dll/project.json",
+      "msbuildProject": "../TTRider.FluidSQL.dll/TTRider.FluidSQL.dll.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "MySql.Data >= 7.0.3-DMR",
       "NETStandard.Library >= 1.6.0",
       "System.Data.SqlClient >= 4.1.0",
-      "TTRider.FluidSql.dll >= 1.10.0-*"
+      "TTRider.FluidSQL.dll >= 1.10.1-*",
+      "TTRider.IDbConnection-Async >= 1.1.1",
+      "TTRider.IDbRequestResponse >= 1.3.1"
     ],
-    ".NETFramework,Version=v4.6.1": [],
+    ".NETFramework,Version=v4.6.1": [
+      "JetBrains.Annotations >= 10.1.5-*"
+    ],
     ".NETStandard,Version=v1.6": []
   },
   "tools": {},

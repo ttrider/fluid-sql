@@ -1,7 +1,7 @@
 {
-  "title": "TTRider.FluidSql.SQLite",
-  "name": "TTRider.FluidSql.SQLite",
-  "version": "1.10.1",
+  "title": "TTRider.FluidSql.Postgres",
+  "name": "TTRider.FluidSql.Postgres",
+  "version": "1.10.1-*",
   "authors": [ "TTRider", "AdaptCore Technologies", "iatam" ],
   "buildOptions": {
     "debugType": "portable"
@@ -11,15 +11,15 @@
 
     "licenseUrl": "https://github.com/ttrider/fluid-sql/blob/master/LICENSE",
     "projectUrl": "https://github.com/ttrider/fluid-sql",
-    "tags": [ "SQL", "Fluid", "Sqlite" ]
+    "tags": [ "SQL", "Fluid", "postgres" ]
   },
   "description": "Data access wrapper for FluidSQL",
   "copyright": "Copyright (C) 2014-2016 TTRider, L.L.C.",
   "dependencies": {
-    "Microsoft.Data.Sqlite": "1.0.0",
+    "TTRider.FluidSQL.dll": "1.10.1-*",
     "NETStandard.Library": "1.6.0",
-    "System.Data.SqlClient": "4.1.0",
-    "TTRider.FluidSQL.dll": "1.10.1"
+    "Npgsql": "3.1.6",
+    "System.Data.SqlClient": "4.1.0"
   },
   "frameworks": {
     "netstandard1.6": {

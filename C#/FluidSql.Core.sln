@@ -3,18 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql", "FluidSql\FluidSql.xproj", "{AE227F26-45D0-4947-A7C5-65C726CAFADB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6F70341-76AC-4C24-A9E9-35A754F5BAB4}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql.RequestResponse", "FluidSql.RequestResponse\FluidSql.RequestResponse.xproj", "{214B8B43-7055-489B-AFC0-34DDD31797A2}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql.Sqlite", "FluidSql.Sqlite\FluidSql.Sqlite.xproj", "{EF7A843A-BFA4-43E6-B12C-14FBA8A4C0E1}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidSql.Postgres", "FluidSql.Postgres\FluidSql.Postgres.xproj", "{166C4FFB-A987-4785-B267-F773CAD4E4EF}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Postgres", "xUnit.Postgres\xUnit.Postgres.xproj", "{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}"
 EndProject
@@ -22,28 +14,20 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.FluidSql", "xUnit.Flu
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Sqlite", "xUnit.Sqlite\xUnit.Sqlite.xproj", "{331E92FA-B975-4E65-A47E-695563B46B99}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.dll", "TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj", "{050DF94C-3291-4DDE-AA75-77DD6351942E}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.Postgres", "TTRider.FluidSQL.Postgres\TTRider.FluidSQL.Postgres.xproj", "{4FE641CB-9934-4F84-808A-0386702BD326}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSql.RequestResponse", "TTRider.FluidSql.RequestResponse\TTRider.FluidSql.RequestResponse.xproj", "{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.Sqlite", "TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj", "{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AE227F26-45D0-4947-A7C5-65C726CAFADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE227F26-45D0-4947-A7C5-65C726CAFADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE227F26-45D0-4947-A7C5-65C726CAFADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE227F26-45D0-4947-A7C5-65C726CAFADB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{214B8B43-7055-489B-AFC0-34DDD31797A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{214B8B43-7055-489B-AFC0-34DDD31797A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{214B8B43-7055-489B-AFC0-34DDD31797A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{214B8B43-7055-489B-AFC0-34DDD31797A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF7A843A-BFA4-43E6-B12C-14FBA8A4C0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF7A843A-BFA4-43E6-B12C-14FBA8A4C0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF7A843A-BFA4-43E6-B12C-14FBA8A4C0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF7A843A-BFA4-43E6-B12C-14FBA8A4C0E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{166C4FFB-A987-4785-B267-F773CAD4E4EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +40,22 @@ Global
 		{331E92FA-B975-4E65-A47E-695563B46B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{331E92FA-B975-4E65-A47E-695563B46B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{331E92FA-B975-4E65-A47E-695563B46B99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{050DF94C-3291-4DDE-AA75-77DD6351942E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{050DF94C-3291-4DDE-AA75-77DD6351942E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{050DF94C-3291-4DDE-AA75-77DD6351942E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{050DF94C-3291-4DDE-AA75-77DD6351942E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FE641CB-9934-4F84-808A-0386702BD326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FE641CB-9934-4F84-808A-0386702BD326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FE641CB-9934-4F84-808A-0386702BD326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FE641CB-9934-4F84-808A-0386702BD326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

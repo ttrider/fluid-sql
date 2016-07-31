@@ -173,6 +173,27 @@
           "lib/netstandard1.3/Microsoft.CSharp.dll": {}
         }
       },
+      "Microsoft.Data.Sqlite/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "SQLite": "3.12.2",
+          "System.AppContext": "4.1.0",
+          "System.Data.Common": "4.1.0",
+          "System.Diagnostics.Debug": "4.0.11",
+          "System.Linq": "4.1.0",
+          "System.Reflection.Extensions": "4.0.1",
+          "System.Resources.ResourceManager": "4.0.1",
+          "System.Runtime.Extensions": "4.1.0",
+          "System.Runtime.InteropServices": "4.1.0",
+          "System.Text.Encoding": "4.0.11"
+        },
+        "compile": {
+          "lib/netstandard1.3/Microsoft.Data.Sqlite.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.Data.Sqlite.dll": {}
+        }
+      },
       "Microsoft.DiaSymReader/1.0.8": {
         "type": "package",
         "dependencies": {
@@ -720,6 +741,33 @@
         "type": "package",
         "runtimeTargets": {
           "runtimes/win7-x86/native/sni.dll": {
+            "assetType": "native",
+            "rid": "win7-x86"
+          }
+        }
+      },
+      "SQLite/3.12.2": {
+        "type": "package",
+        "dependencies": {
+          "SQLite.Native": "3.12.2"
+        }
+      },
+      "SQLite.Native/3.12.2": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libsqlite3.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libsqlite3.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win7-x64/native/sqlite3.dll": {
+            "assetType": "native",
+            "rid": "win7-x64"
+          },
+          "runtimes/win7-x86/native/sqlite3.dll": {
             "assetType": "native",
             "rid": "win7-x86"
           }
@@ -2533,21 +2581,6 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.1": {
-        "type": "package",
-        "dependencies": {
-          "JetBrains.Annotations": "10.1.5",
-          "NETStandard.Library": "1.6.0",
-          "System.Data.SqlClient": "4.1.0",
-          "System.Xml.XmlDocument": "4.0.1"
-        },
-        "compile": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.6/TTRider.FluidSQL.dll.dll": {}
-        }
-      },
       "xunit/2.2.0-beta2-build3300": {
         "type": "package",
         "dependencies": {
@@ -2640,6 +2673,38 @@
         },
         "runtime": {
           "lib/netstandard1.1/xunit.runner.utility.dotnet.dll": {}
+        }
+      },
+      "TTRider.FluidSQL.dll/1.10.1": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v1.6",
+        "dependencies": {
+          "JetBrains.Annotations": "10.1.5",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.SqlClient": "4.1.0",
+          "System.Xml.XmlDocument": "4.0.1"
+        },
+        "compile": {
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
+        },
+        "runtime": {
+          "netstandard1.6/TTRider.FluidSQL.dll.dll": {}
+        }
+      },
+      "TTRider.FluidSql.SQLite/1.10.1": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v1.6",
+        "dependencies": {
+          "Microsoft.Data.Sqlite": "1.0.0",
+          "NETStandard.Library": "1.6.0",
+          "System.Data.SqlClient": "4.1.0",
+          "TTRider.FluidSQL.dll": "1.10.1"
+        },
+        "compile": {
+          "netstandard1.6/TTRider.FluidSQL.Sqlite.dll": {}
+        },
+        "runtime": {
+          "netstandard1.6/TTRider.FluidSQL.Sqlite.dll": {}
         }
       }
     }
@@ -2813,6 +2878,19 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
+      ]
+    },
+    "Microsoft.Data.Sqlite/1.0.0": {
+      "sha512": "dezlCGK9zVrPNfoX1SL50GmWDdRQNcV1SBy3wuCn/a0g7Gc26PyvlA4BKapjnCK5N8LSQ2+1PdW2imiRr+YvxA==",
+      "type": "package",
+      "path": "Microsoft.Data.Sqlite/1.0.0",
+      "files": [
+        "Microsoft.Data.Sqlite.1.0.0.nupkg.sha512",
+        "Microsoft.Data.Sqlite.nuspec",
+        "lib/net451/Microsoft.Data.Sqlite.dll",
+        "lib/net451/Microsoft.Data.Sqlite.xml",
+        "lib/netstandard1.3/Microsoft.Data.Sqlite.dll",
+        "lib/netstandard1.3/Microsoft.Data.Sqlite.xml"
       ]
     },
     "Microsoft.DiaSymReader/1.0.8": {
@@ -3328,6 +3406,29 @@
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.4.0.1.nupkg.sha512",
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.nuspec",
         "runtimes/win7-x86/native/sni.dll"
+      ]
+    },
+    "SQLite/3.12.2": {
+      "sha512": "XYNQJt2eFqGluWP+fDaiNrV1v3kA+VsU2ygUjLx7zqzhIZKlAjSYMZLldmbGNnlNC5rKR+0LTrN0IA9dZkDyFw==",
+      "type": "package",
+      "path": "SQLite/3.12.2",
+      "files": [
+        "SQLite.3.12.2.nupkg.sha512",
+        "SQLite.nuspec"
+      ]
+    },
+    "SQLite.Native/3.12.2": {
+      "sha512": "/5BdEFTaCziE6K5OG0bjSUhPo+LRmFcmyriFWEZNSuHaiqSp69sVngTb/Yo8mH6JykMA79BFdCBLMW+2E3pnuA==",
+      "type": "package",
+      "path": "SQLite.Native/3.12.2",
+      "files": [
+        "SQLite.Native.3.12.2.nupkg.sha512",
+        "SQLite.Native.nuspec",
+        "build/net45/SQLite.Native.props",
+        "runtimes/linux-x64/native/libsqlite3.so",
+        "runtimes/osx-x64/native/libsqlite3.dylib",
+        "runtimes/win7-x64/native/sqlite3.dll",
+        "runtimes/win7-x86/native/sqlite3.dll"
       ]
     },
     "System.AppContext/4.1.0": {
@@ -7695,17 +7796,6 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "TTRider.FluidSQL.dll/1.10.1": {
-      "sha512": "iAXo18R/AkhfI9irAeNT5LK8cy7VcolEvizLAKw5pasN7LUUicDVLNsi7Newa+G5m037IslcgLn50Q3+a2+2tA==",
-      "type": "package",
-      "path": "TTRider.FluidSQL.dll/1.10.1",
-      "files": [
-        "TTRider.FluidSQL.dll.1.10.1.nupkg.sha512",
-        "TTRider.FluidSQL.dll.nuspec",
-        "lib/net461/TTRider.FluidSQL.dll.dll",
-        "lib/netstandard1.6/TTRider.FluidSQL.dll.dll"
-      ]
-    },
     "xunit/2.2.0-beta2-build3300": {
       "sha512": "jUMf+Hrw8+XZN56TfO+JjoibR5L806/kgDIkwCg9OXLlfnA4li4JTmH342ifYj1QMR10is8hfYYFTyjHq0+aQg==",
       "type": "package",
@@ -7815,11 +7905,21 @@
         "xunit.runner.utility.2.2.0-beta2-build3300.nupkg.sha512",
         "xunit.runner.utility.nuspec"
       ]
+    },
+    "TTRider.FluidSQL.dll/1.10.1": {
+      "type": "project",
+      "path": "../TTRider.FluidSQL.dll/project.json",
+      "msbuildProject": "../TTRider.FluidSQL.dll/TTRider.FluidSQL.dll.xproj"
+    },
+    "TTRider.FluidSql.SQLite/1.10.1": {
+      "type": "project",
+      "path": "../TTRider.FluidSQL.Sqlite/project.json",
+      "msbuildProject": "../TTRider.FluidSQL.Sqlite/TTRider.FluidSQL.Sqlite.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "TTRider.FluidSQL.dll >= 1.10.1",
+      "TTRider.FluidSQL.dll >= 1.10.1-*",
       "TTRider.FluidSql.SQLite >= 1.10.1-*",
       "dotnet-test-xunit >= 2.2.0-preview2-build1029",
       "xunit >= 2.2.0-beta2-build3300"
