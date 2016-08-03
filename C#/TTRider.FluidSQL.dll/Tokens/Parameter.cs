@@ -59,7 +59,7 @@ namespace TTRider.FluidSql
 
         public object Value { get; set; }
 
-        public ParameterDirection Direction { get; set; }
+        public ParameterDirection Direction { get; set; } = ParameterDirection.Input;
 
         /// <summary>
         ///     indicate that procedure's default value needs to be used

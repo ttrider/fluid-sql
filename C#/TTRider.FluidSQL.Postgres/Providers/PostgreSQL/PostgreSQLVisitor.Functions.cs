@@ -15,7 +15,7 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
                 State.Write(Symbols.AT);
                 State.Write(Symbols.TIME);
                 State.Write(Symbols.ZONE);
-                State.Write(Symbols.CurrentSetting);
+                //State.Write(Symbols.CurrentSetting);
                 State.Write(Symbols.OpenParenthesis);
                 VisitToken(Sql.Scalar(Symbols.UTC));
                 State.Write(Symbols.CloseParenthesis);

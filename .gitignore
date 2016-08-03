@@ -174,3 +174,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 /redist/CLR/Lib/net40/TTRider.FluidSql.dll
 /redist/CLR/Lib/net45/TTRider.FluidSql.dll
+*.nupkg

@@ -1,11 +1,15 @@
 {
   "projects": [
-    "TTrider.FluidSql",
-    "TTrider.FluidSql.RequestResponse",
-    "TTrider.FluidSql.Sqlite",
-    "TTrider.FluidSql.Postgres",
-    "xUnit.FluidSQL",
+    "TTRider.FluidSQL.dll",
+    "TTRider.Fluidsql.RequestResponse",
+    "TTRider.FluidSQL.Sqlite",
+    "TTRider.FluidSQL.Postgres",
+    "xUnit.Postgres",
+    "xUnit.Fluidsql",
     "xUnit.Postgres",
     "xUnit.Sqlite"
-  ]
+  ],
+  "sdk": {
+    "version": "1.0.0-preview2-003121"
+  }
 }

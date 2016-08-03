@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6F70341-76AC-4C24-A9E9-35A754F5BAB4}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		publish.cmd = publish.cmd
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Postgres", "xUnit.Postgres\xUnit.Postgres.xproj", "{DFF86123-FE4E-4452-8CF8-11CF9A1F4310}"
@@ -21,6 +22,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSql.RequestResponse", "TTRider.FluidSql.RequestResponse\TTRider.FluidSql.RequestResponse.xproj", "{CD0F950D-F43C-4A19-BFC7-42B6B6364BF9}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.Sqlite", "TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj", "{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Functional", "xUnit.Functional\xUnit.Functional.xproj", "{55A325EB-B5C1-4C52-9A73-91C78DAB5173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +59,10 @@ Global
 		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{039C7AC7-6782-4A3E-81B2-5792E6EA1A65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55A325EB-B5C1-4C52-9A73-91C78DAB5173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A325EB-B5C1-4C52-9A73-91C78DAB5173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A325EB-B5C1-4C52-9A73-91C78DAB5173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A325EB-B5C1-4C52-9A73-91C78DAB5173}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
