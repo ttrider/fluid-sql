@@ -239,6 +239,15 @@ namespace TTRider.FluidSql.Providers.Sqlite
             throw new NotImplementedException();
         }
 
+        protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
+        {
+            throw new NotImplementedException();
+        }
 
         void VisitVacuumStatement(VacuumStatement statement)
         {
@@ -280,7 +289,6 @@ namespace TTRider.FluidSql.Providers.Sqlite
             public const string f = "f";
             public const string W = "W";
 
-            public const string DotVal = ".";
             public const string days = "days";
             public const string years = "years";
             public const string months = "months";

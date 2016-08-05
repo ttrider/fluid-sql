@@ -3233,5 +3233,15 @@ namespace TTRider.FluidSql
             statement.Name = name;
             return statement;
         }
+
+        public static AddForeignKeyStatement AddColumn(this AddForeignKeyStatement table, Name column, Name foreignColumn)
+        {
+            table.Columns.Add(new ForeignKeyColumn
+            {
+                Name = column,
+                ReferencedName = foreignColumn
+            });
+            return table;
+        }
     }
 }

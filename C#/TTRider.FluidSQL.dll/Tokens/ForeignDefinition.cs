@@ -9,27 +9,28 @@ using System.Collections.Generic;
 
 namespace TTRider.FluidSql
 {
-    public class ForeignDefinition : Token
+    public class ForeignDefinitionBase : Token
     {
-        public ForeignDefinition()
-        {
-            this.Columns = new List<Order>();
-            this.ReferencesColumns = new List<Name>();
-        }
-
         public Name Name { get; set; }
         public Name References { get; set; }
+        public ForeignKeyOption? OnDelete { get; set; }
 
-        public List<Order> Columns { get; private set; }
+        public ForeignKeyOption? OnUpdate { get; set; }
 
-        public List<Name> ReferencesColumns { get; private set; }
+
+    }
+
+
+    public class ForeignDefinition : ForeignDefinitionBase
+    {
+        public List<Order> Columns { get; private set; } = new List<Order>();
+
+        public List<Name> ReferencesColumns { get; private set; }=new List<Name>();
 
         public bool Unique { get; set; }
 
         public bool? Clustered { get; set; }
-
-        public ForeignKeyOption? OnDelete { get; set; }
-
-        public ForeignKeyOption? OnUpdate { get; set; }
     }
+
+    
 }

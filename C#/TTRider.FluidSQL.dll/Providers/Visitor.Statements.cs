@@ -131,5 +131,7 @@ namespace TTRider.FluidSql.Providers
         protected abstract void VisitAlterFunctionStatement(AlterFunctionStatement statement);
         protected abstract void VisitDropFunctionStatement(DropFunctionStatement statement);
         protected abstract void VisitExecuteFunctionStatement(ExecuteFunctionStatement statement);
+        protected abstract void VisitAddForeignKeyStatement(AddForeignKeyStatement statement);
+        protected abstract void VisitDropForeignKeyStatement(DropForeignKeyStatement statement);
     }
 }

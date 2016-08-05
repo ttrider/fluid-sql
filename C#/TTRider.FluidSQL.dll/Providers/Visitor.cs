@@ -194,6 +194,14 @@ namespace TTRider.FluidSql.Providers
                 {
                     typeof (ExecuteFunctionStatement),
                     (v, stm) => v.VisitExecuteFunctionStatement((ExecuteFunctionStatement) stm)
+                },
+                {
+                    typeof (DropForeignKeyStatement),
+                    (v, stm) => v.VisitDropForeignKeyStatement((DropForeignKeyStatement) stm)
+                },
+                {
+                    typeof (AddForeignKeyStatement),
+                    (v, stm) => v.VisitAddForeignKeyStatement((AddForeignKeyStatement) stm)
                 }
             };
 

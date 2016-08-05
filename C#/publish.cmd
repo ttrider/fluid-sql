@@ -25,7 +25,7 @@ for %%i in (.\nuget\*.nupkg) do .\nuget\nuget push %%i
  
 
 
-#del *.nupkg
+*.nupkg
 
 
 popd

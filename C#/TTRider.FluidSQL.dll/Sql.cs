@@ -1589,6 +1589,35 @@ namespace TTRider.FluidSql
             };
         }
 
+        public static AddForeignKeyStatement AddForeignKey(Name foreignKeyName, 
+            Name currentTable, 
+            Name foreignTable,
+            ForeignKeyOption? onUpdate = null,
+            ForeignKeyOption? onDelete = null,
+            bool notForReplication = true)
+        {
+            return new AddForeignKeyStatement
+            {
+                Name = foreignKeyName,
+                TableName = currentTable,
+                References = foreignTable,
+                OnDelete = onDelete,
+                OnUpdate = onUpdate,
+                NotSetForReplication = notForReplication
+            };
+        }
+
+        
+
+        public static DropForeignKeyStatement DropForeignKey(Name foreignKeyName, Name table)
+        {
+            return new DropForeignKeyStatement
+            {
+                Name = foreignKeyName,
+                TableName = table
+            };
+        }
+
         #endregion Statements
     }
 }

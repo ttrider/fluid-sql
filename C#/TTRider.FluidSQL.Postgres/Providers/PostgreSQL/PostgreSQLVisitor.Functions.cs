@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Linq;
 
 namespace TTRider.FluidSql.Providers.PostgreSQL
 {
@@ -322,5 +323,32 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
         }
         private string uuidGeneration = "uuid_in(md5(random()::text || now()::text)::cstring)";
 
+        protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
+        {
+            //ALTER TABLE CHILD ADD FOREIGN KEY(T1, T2) REFERENCES PARENT(T1, T2);
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.ADD);
+            State.Write(Symbols.CONSTRAINT);
+            VisitNameToken(statement.Name);
+            State.Write(Symbols.FOREIGN);
+            State.Write(Symbols.KEY);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c=>c.Name));
+            State.Write(Symbols.REFERENCES);
+            VisitNameToken(statement.References);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c => c.ReferencedName));
+        }
+
+        protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
+        {
+            //ALTER TABLE CHILD DROP CONSTRAINT foo
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.CONSTRAINT);
+            VisitNameToken(statement.Name);
+        }
     }
 }

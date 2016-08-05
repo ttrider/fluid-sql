@@ -21,6 +21,7 @@ namespace TTRider.FluidSql.Providers
         protected class Symbols
         {
             public const string ABORT = "ABORT";
+            public const string ADD = "ADD";
             public const string ALL = "ALL";
             public const string ALLOW_PAGE_LOCKS = "ALLOW_PAGE_LOCKS";
             public const string ALLOW_ROW_LOCKS = "ALLOW_ROW_LOCKS";
@@ -79,6 +80,7 @@ namespace TTRider.FluidSql.Providers
             public const string FETCH = "FETCH";
             public const string FILETABLE = "FILETABLE";
             public const string FILLFACTOR = "FILLFACTOR";
+            public const string FOREIGN = "FOREIGN";
             public const string FROM = "FROM";
             public const string FUNCTION = "FUNCTION";
             public const string GO = "GO";
@@ -143,6 +145,7 @@ namespace TTRider.FluidSql.Providers
             public const string RECOMPILE = "RECOMPILE";
             public const string RECURSIVE = "RECURSIVE";
             public const string REINDEX = "REINDEX";
+            public const string REFERENCES = "REFERENCES";
             public const string RELEASE = "RELEASE";
             public const string RENAME = "RENAME";
             public const string REORGANIZE = "REORGANIZE";

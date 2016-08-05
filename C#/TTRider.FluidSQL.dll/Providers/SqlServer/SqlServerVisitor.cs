@@ -885,6 +885,45 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
+        protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
+        {
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.ADD);
+            State.Write(Symbols.CONSTRAINT);
+            VisitNameToken(statement.Name);
+            State.Write(Symbols.FOREIGN);
+            State.Write(Symbols.KEY);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c => c.Name));
+            State.Write(Symbols.REFERENCES);
+            VisitNameToken(statement.References);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c => c.ReferencedName));
+
+            if (statement.OnDelete != null)
+            {
+                State.Write(Symbols.ON);
+                State.Write(Symbols.DELETE);
+                State.Write(statement.OnDelete.ToString().ToUpper());
+            }
+            if (statement.OnUpdate != null)
+            {
+                State.Write(Symbols.ON);
+                State.Write(Symbols.UPDATE);
+                State.Write(statement.OnUpdate.ToString().ToUpper());
+            }
+            
+        }
+        protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
+        {
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.CONSTRAINT);
+            VisitNameToken(statement.Name);
+        }
+
         protected class SqlSymbols : Symbols
         {
             // ReSharper disable InconsistentNaming

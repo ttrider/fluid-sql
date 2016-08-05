@@ -16,7 +16,7 @@
     "NETStandard.Library": "1.6.0",
     "System.Data.SqlClient": "4.1.0",
     "TTRider.FluidSQL.dll": {
-      "version": "1.10.2-*",
+      "version": "1.10.3-*",
       "target": "project"
     },
     "TTRider.IDbConnection-Async": "1.1.1",
