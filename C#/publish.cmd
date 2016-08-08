@@ -1,6 +1,8 @@
 @echo off
 @SET mypath=%~dp0
 pushd %mypath%
+del .\nuget\*.nupkg
+
 dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.dll
 dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.Postgres
 dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.RequestResponse
@@ -25,7 +27,7 @@ for %%i in (.\nuget\*.nupkg) do .\nuget\nuget push %%i
  
 
 
-*.nupkg
+del .\nuget\*.nupkg
 
 
 popd

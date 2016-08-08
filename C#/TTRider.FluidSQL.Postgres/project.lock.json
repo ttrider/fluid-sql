@@ -702,7 +702,7 @@
           "lib/net46/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.2": {
+      "TTRider.FluidSQL.dll/1.10.3-beta-2": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6.1",
         "dependencies": {
@@ -2366,7 +2366,7 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "TTRider.FluidSQL.dll/1.10.2": {
+      "TTRider.FluidSQL.dll/1.10.3-beta-2": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.6",
         "dependencies": {
@@ -6265,7 +6265,7 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "TTRider.FluidSQL.dll/1.10.2": {
+    "TTRider.FluidSQL.dll/1.10.3-beta-2": {
       "type": "project",
       "path": "../TTRider.FluidSQL.dll/project.json",
       "msbuildProject": "../TTRider.FluidSQL.dll/TTRider.FluidSQL.dll.xproj"
@@ -6276,7 +6276,7 @@
       "NETStandard.Library >= 1.6.0",
       "Npgsql >= 3.1.6",
       "System.Data.SqlClient >= 4.1.0",
-      "TTRider.FluidSQL.dll >= 1.10.2-*"
+      "TTRider.FluidSQL.dll >= 1.10.3-beta-2"
     ],
     ".NETFramework,Version=v4.6.1": [
       "JetBrains.Annotations >= 10.1.5-*"

@@ -1594,7 +1594,9 @@ namespace TTRider.FluidSql
             Name foreignTable,
             ForeignKeyOption? onUpdate = null,
             ForeignKeyOption? onDelete = null,
-            bool notForReplication = true)
+            bool notForReplication = true,
+            bool checkIfNotExists = false
+            )
         {
             return new AddForeignKeyStatement
             {
@@ -1603,18 +1605,20 @@ namespace TTRider.FluidSql
                 References = foreignTable,
                 OnDelete = onDelete,
                 OnUpdate = onUpdate,
-                NotSetForReplication = notForReplication
+                NotSetForReplication = notForReplication,
+                CheckIfNotExists = checkIfNotExists
             };
         }
 
         
 
-        public static DropForeignKeyStatement DropForeignKey(Name foreignKeyName, Name table)
+        public static DropForeignKeyStatement DropForeignKey(Name foreignKeyName, Name table, bool checkIfExists = false)
         {
             return new DropForeignKeyStatement
             {
                 Name = foreignKeyName,
-                TableName = table
+                TableName = table,
+                CheckIfExists = checkIfExists
             };
         }
 

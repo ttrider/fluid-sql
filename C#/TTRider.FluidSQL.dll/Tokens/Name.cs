@@ -64,6 +64,12 @@ namespace TTRider.FluidSql
 
         public string FirstPart => this.parts.FirstOrDefault();
 
+        public string CatalogName => this.parts.Count < 3 ? null : this.parts[this.parts.Count - 3];
+
+        public string SchemaName => this.parts.Count < 2 ? null : this.parts[this.parts.Count - 2];
+
+        public string ObjectName => LastPart;
+
 
         static IEnumerable<string> GetParts(string name)
         {

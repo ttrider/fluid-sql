@@ -331,6 +331,9 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitNameToken(statement.TableName);
             State.Write(Symbols.ADD);
             State.Write(Symbols.CONSTRAINT);
+
+            //if ()
+
             VisitNameToken(statement.Name);
             State.Write(Symbols.FOREIGN);
             State.Write(Symbols.KEY);
@@ -348,6 +351,13 @@ namespace TTRider.FluidSql.Providers.PostgreSQL
             VisitNameToken(statement.TableName);
             State.Write(Symbols.DROP);
             State.Write(Symbols.CONSTRAINT);
+
+            if (statement.CheckIfExists)
+            {
+                State.Write(Symbols.IF);
+                State.Write(Symbols.EXISTS);
+            }
+
             VisitNameToken(statement.Name);
         }
     }

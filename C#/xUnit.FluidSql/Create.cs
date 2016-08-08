@@ -31,6 +31,33 @@ namespace xUnit.FluidSql
         }
 
         [Fact]
+        public void Create_ForeignKey()
+        {
+            var statement = Sql.AddForeignKey("FK_State_City", "ach.State", "ach.City", checkIfNotExists: true)
+                .AddColumn("CapitalCityId", "CityId");
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.NotNull(command);
+
+            Assert.Equal("IF OBJECT_ID ( N'[ach].[FK_State_City]', N'F' ) IS NULL\r\nBEGIN;\r\nALTER TABLE [ach].[State] ADD CONSTRAINT [FK_State_City] FOREIGN KEY ( [CapitalCityId] ) REFERENCES [ach].[City] ( [CityId] )\r\nEND;",
+                command.CommandText);
+        }
+
+        [Fact]
+        public void Drop_ForeignKey()
+        {
+            var statement = Sql.DropForeignKey("FK_State_City", "ach.State",true);
+
+            var command = Utilities.GetCommand(statement);
+
+            Assert.NotNull(command);
+
+            Assert.Equal("IF OBJECT_ID ( N'[ach].[FK_State_City]', N'F' ) IS NOT NULL\r\nBEGIN;\r\nALTER TABLE [ach].[State] DROP CONSTRAINT [FK_State_City]\r\nEND;",
+                command.CommandText);
+        }
+
+        [Fact]
         public void CreateTableWithConstrains()
         {
             var statement = Sql.CreateTable(Sql.Name("tbl"), false)

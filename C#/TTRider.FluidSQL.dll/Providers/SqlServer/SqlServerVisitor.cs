@@ -887,6 +887,25 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
         protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
         {
+            if (statement.CheckIfNotExists)
+            {
+                var schemaName = statement.TableName.SchemaName ?? "dbo";
+
+                State.Write(Symbols.IF);
+                State.Write(Symbols.OBJECT_ID);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(LiteralOpenQuote, ResolveName(new Name(schemaName, statement.Name)), LiteralCloseQuote);
+                State.Write(Symbols.Comma);
+                State.Write(LiteralOpenQuote, "F", LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.IS);
+                State.Write(Symbols.NULL);
+
+                State.WriteCRLF();
+                State.Write(Symbols.BEGIN);
+                State.WriteStatementTerminator();
+            }
+
             State.Write(Symbols.ALTER);
             State.Write(Symbols.TABLE);
             VisitNameToken(statement.TableName);
@@ -912,16 +931,51 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.UPDATE);
                 State.Write(statement.OnUpdate.ToString().ToUpper());
             }
-            
+
+            if (statement.CheckIfNotExists)
+            {
+                State.WriteCRLF();
+                State.Write(Symbols.END);
+                State.WriteStatementTerminator();
+            }
         }
+
         protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
         {
+            if (statement.CheckIfExists)
+            {
+                var schemaName = statement.TableName.SchemaName ?? "dbo";
+
+                State.Write(Symbols.IF);
+                State.Write(Symbols.OBJECT_ID);
+                State.Write(Symbols.OpenParenthesis);
+                State.Write(LiteralOpenQuote, ResolveName(new Name(schemaName, statement.Name)), LiteralCloseQuote);
+                State.Write(Symbols.Comma);
+                State.Write(LiteralOpenQuote, "F", LiteralCloseQuote);
+                State.Write(Symbols.CloseParenthesis);
+                State.Write(Symbols.IS);
+                State.Write(Symbols.NOT);
+                State.Write(Symbols.NULL);
+
+                State.WriteCRLF();
+                State.Write(Symbols.BEGIN);
+                State.WriteStatementTerminator();
+            }
+
             State.Write(Symbols.ALTER);
             State.Write(Symbols.TABLE);
             VisitNameToken(statement.TableName);
             State.Write(Symbols.DROP);
             State.Write(Symbols.CONSTRAINT);
             VisitNameToken(statement.Name);
+
+            if (statement.CheckIfExists)
+            {
+                State.WriteCRLF();
+                State.Write(Symbols.END);
+                State.WriteStatementTerminator();
+            }
+            
         }
 
         protected class SqlSymbols : Symbols
