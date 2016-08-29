@@ -47,6 +47,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             { SqlDbType.Xml, CommonDbType.Xml },
             { SqlDbType.Date, CommonDbType.Date },
             { SqlDbType.Time, CommonDbType.Time },
+            { SqlDbType.DateTime2, CommonDbType.DateTime2 },
             { SqlDbType.DateTimeOffset, CommonDbType.DateTimeOffset }
         };
 
@@ -80,7 +81,9 @@ namespace TTRider.FluidSql.Providers.SqlServer
             { CommonDbType.Xml, SqlDbType.Xml },
             { CommonDbType.Date, SqlDbType.Date },
             { CommonDbType.Time, SqlDbType.Time },
-            { CommonDbType.DateTimeOffset, SqlDbType.DateTimeOffset }
+            { CommonDbType.DateTime2, SqlDbType.DateTime2 },
+            { CommonDbType.DateTimeOffset, SqlDbType.DateTimeOffset },
+            { CommonDbType.Serial, SqlDbType.Binary }
         };
 
         public int CommandTimeout { get; set; }

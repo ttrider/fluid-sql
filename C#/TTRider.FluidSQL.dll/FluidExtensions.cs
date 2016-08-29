@@ -3044,7 +3044,7 @@ namespace TTRider.FluidSql
             statement.Parameters.Add(parameter);
             foreach (var p in parameters)
             {
-                parameter.Direction = direction;
+                p.Direction = direction;
                 statement.Parameters.Add(p);
             }
             return statement;

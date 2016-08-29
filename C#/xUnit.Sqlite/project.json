@@ -3,11 +3,11 @@
     "testRunner": "xunit",
   "dependencies": {
     "TTRider.FluidSQL.dll": {
-      "version": "1.10.2-*",
+      "version": "1.10.2-beta-5",
       "target": "project"
     },
     "TTRider.FluidSql.SQLite": {
-      "version": "1.10.2-*",
+      "version": "1.10.2-beta-5",
       "target": "project"
     },
 

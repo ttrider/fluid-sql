@@ -31,7 +31,7 @@ namespace xUnit.Postgres
             var command = Provider.GetCommand(statement);
 
             Assert.NotNull(command);
-            Assert.Equal("SELECT NOW ( ) AT TIME ZONE current_setting ( 'UTC' ), NOW ( ) AT TIME ZONE current_setting ( 'UTC' );", command.CommandText);
+            Assert.Equal("SELECT NOW ( ) AT TIME ZONE ( 'UTC' ), NOW ( ) AT TIME ZONE ( 'UTC' );", command.CommandText);
         }
 
         [Fact]
