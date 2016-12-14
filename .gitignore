@@ -6,8 +6,11 @@
 *.user
 *.sln.docstates
 
+.DS_Store
+/C#/packages
+
+/C#/nuget
 obj
 bin
 *.ncrunchproject
-
-
+/C#/_NCrunch_FluidSql/FluidSql.crunchsolution.cache
