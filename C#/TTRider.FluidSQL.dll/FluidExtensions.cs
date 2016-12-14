@@ -358,7 +358,27 @@ namespace TTRider.FluidSql
             return statement;
         }
 
+        public static T OutputInto<T>(this T statement, Name target, params ExpressionToken[] columns)
+            where T : RecordsetStatement
+        {
+            statement.Output.AddRange(columns);
+            statement.OutputInto = target;
+            return statement;
+        }
+
         public static T OutputInto<T>(this T statement, Name target, IEnumerable<Name> columns)
+            where T : RecordsetStatement
+        {
+            if (columns != null)
+            {
+                statement.Output.AddRange(columns);
+            }
+            statement.OutputInto = target;
+            return statement;
+        }
+
+
+        public static T OutputInto<T>(this T statement, Name target, IEnumerable<ExpressionToken> columns)
             where T : RecordsetStatement
         {
             if (columns != null)

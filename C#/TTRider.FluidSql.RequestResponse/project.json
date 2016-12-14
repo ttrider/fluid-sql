@@ -1,7 +1,7 @@
 {
   "title": "TTRider.FluidSql.RequestResponse",
   "name": "TTRider.FluidSql.RequestResponse",
-  "version": "1.4.3-beta-5",
+  "version": "1.4.5",
   "authors": [ "TTRider" ],
   "packOptions": {
     "owners": [ "TTRider" ],
@@ -16,7 +16,7 @@
     "NETStandard.Library": "1.6.0",
     "System.Data.SqlClient": "4.1.0",
     "TTRider.FluidSQL.dll": {
-      "version": "1.10.3-beta-5",
+      "version": "1.10.5",
       "target": "project"
     },
     "TTRider.IDbConnection-Async": "1.1.1",

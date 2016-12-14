@@ -1,7 +1,7 @@
 {
   "title": "TTRider.FluidSql.Postgres",
   "name": "TTRider.FluidSql.Postgres",
-  "version": "1.10.4-beta-5",
+  "version": "1.10.5",
   "authors": [ "TTRider", "AdaptCore Technologies", "iatam" ],
   "buildOptions": {
     "debugType": "portable"
@@ -17,7 +17,7 @@
   "copyright": "Copyright (C) 2014-2016 TTRider, L.L.C.",
   "dependencies": {
     "TTRider.FluidSQL.dll": {
-      "version": "1.10.3-beta-5",
+      "version": "1.10.5",
       "target": "project"
     },
     "NETStandard.Library": "1.6.0",
