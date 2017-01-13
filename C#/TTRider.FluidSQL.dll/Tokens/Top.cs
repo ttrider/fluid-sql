@@ -11,7 +11,8 @@ namespace TTRider.FluidSql
 {
     public class Top : Token
     {
-        public Top(int value, bool percent, bool withTies)
+
+        public Top(long value, bool percent, bool withTies)
         {
             if (value < 1) throw new ArgumentException("value");
             this.IntValue = value;
@@ -29,8 +30,8 @@ namespace TTRider.FluidSql
             this.WithTies = withTies;
         }
 
-        public Token Value { get; set; }
-        public int IntValue { get; set; }
+        public Token Value { get;  }
+        public long IntValue { get; set; }
         public bool Percent { get; set; }
         public bool WithTies { get; set; }
     }

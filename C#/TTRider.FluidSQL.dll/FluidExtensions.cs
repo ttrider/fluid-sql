@@ -2453,7 +2453,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T Top<T>(this T statement, int value, bool percent = false)
+        public static T Top<T>(this T statement, long value, bool percent = false)
             where T : ITopStatement
         {
             statement.Top = new Top(value, percent, false);
@@ -2469,7 +2469,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T Limit<T>(this T statement, int value)
+        public static T Limit<T>(this T statement, long value)
             where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
@@ -2477,7 +2477,7 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T Limit<T>(this T statement, int value, bool percent)
+        public static T Limit<T>(this T statement, long value, bool percent)
             where T : ITopStatement
         {
             statement.Top = new Top(value, percent, false);
@@ -2485,14 +2485,14 @@ namespace TTRider.FluidSql
             return statement;
         }
 
-        public static T Offset<T>(this T statement, int value)
+        public static T Offset<T>(this T statement, long value)
             where T : IOffsetStatement
         {
             statement.Offset = new Scalar { Value = value };
             return statement;
         }
 
-        public static T FetchNext<T>(this T statement, int value)
+        public static T FetchNext<T>(this T statement, long value)
             where T : ITopStatement
         {
             statement.Top = new Top(value, false, false);
