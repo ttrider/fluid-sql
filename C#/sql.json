@@ -1,0 +1,304 @@
+{
+    "dealects": {
+        "MSSQL": { "name": "SQL Server" },
+        "SQLAZR": { "name": "Azure SQL Database" },
+        "SQLDW": { "name": "SQL Data Werehouse" },
+        "PDW": { "name": "Parallel Data Werehouse" },
+        "RST": { "name": "Amazon Redshift" },
+        "MYSQL": { "name": "MySQL" },
+        "MDB": { "name": "MariaDB" },
+        "SQL99": { "name": "SQL-99 Standard" },
+        "MEMSQL": { "name": "MemSQL" },
+        "SPKSQL": { "name": "Spark SQL" },
+        "PGS": { "name": "PostgreSQL" },
+        "SLT": { "name": "SQLite" }
+    },
+    "statements": {
+
+        "Select": {
+            "sequence": [{
+                    "$ref": "#/tokens/With",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "PDW", "MEMSQL", "PGR", "SLT"],
+                    "optional": true
+                },
+                {
+                    "text": "SELECT"
+                },
+                {
+                    "$ref": "#/tokens/Top",
+                    "supported": ["RST"],
+                    "optional": true
+                },
+                {
+                    "choice": [{
+                            "text": "ALL",
+                            "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "PGS", "SLT"],
+                            "optional": true
+                        },
+                        {
+                            "text": "DISTINCT",
+                            "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                            "optional": true
+                        },
+                        {
+                            "text": "DISTINCTROW",
+                            "supported": ["MYSQL", "MDB", "MEMSQL"],
+                            "optional": true
+                        }
+                    ],
+                    "optional": true
+                },
+
+                {
+                    "text": "HIGH_PRIORITY",
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "sequence": [{
+                            "text": "MAX_STATEMENT_TIME"
+                        },
+                        {
+                            "text": "="
+                        },
+                        {
+                            "argument": {
+                                "time": { "type": "number" }
+                            }
+                        }
+                    ],
+                    "supported": ["MYSQL"],
+                    "optional": true
+                },
+                {
+                    "text": "STRAIGHT_JOIN",
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "text": "SQL_SMALL_RESULT",
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "text": "SQL_BIG_RESULT",
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "text": "SQL_BUFFER_RESULT",
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "choice": [{
+                        "text": "SQL_CACHE"
+                    }, {
+                        "text": "SQL_NO_CACHE"
+                    }, {
+                        "text": "SQL_CALC_FOUND_ROWS"
+                    }],
+                    "supported": ["MYSQL", "MDB"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/Top",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "PDW", "RST"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/SelectExpression",
+                    "repeat": true
+                },
+                {
+                    "$ref": "#/tokens/Into",
+                    "supported": ["MSSQL", "SQLAZR"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/From",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": false
+                },
+                {
+                    "$ref": "#/tokens/Join",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": false
+                },
+                {
+                    "$ref": "#/tokens/Where",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/GroupBy",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "SQL99", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/Having",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/OrderBy",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "MEMSQL", "SPKSQL", "PGS", "SLT"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/LimitOffset",
+                    "supported": ["MSSQL", "SQLAZR", "SQLDW", "RST", "MYSQL", "MDB", "MEMSQL", "PGS", "SLT"],
+                    "optional": true
+                },
+                {
+                    "$ref": "#/tokens/SelectOption",
+                    "supported": ["SQLDW", "RST"],
+                    "optional": true
+                },
+                {
+
+                    "$ref": "#/tokens/SelectProcedure",
+                    "supported": ["MYSQL", "MDB", "SQL99"],
+                    "optional": true
+                },
+                {
+                    "sequence": [
+                        { "text": "INTO" },
+                        {
+                            "choice": [{
+                                    "sequence": [
+                                        { "text": "OUTFILE" },
+                                        { "$ref": "#/tokens/FileName" },
+                                        { "$ref": "#/tokens/ExportOptions" }
+                                    ],
+                                    "supported": ["MySQL", "MDB", "SQL99", "MEMSQL"]
+                                },
+                                {
+                                    "sequence": [
+                                        { "text": "DUMPFILE" },
+                                        { "$ref": "#/tokens/FileName" }
+                                    ],
+                                    "supported": ["MySQL", "MDB", "SQL99"]
+                                },
+                                {
+                                    "$ref": "#/tokens/VariableName",
+                                    "repeat": true,
+                                    "supported": ["MySQL", "MDB", "SQL99"]
+                                }
+                            ]
+                        }
+                    ],
+                    "supported": ["MySQL", "MDB", "SQL99"],
+                    "optional": true
+                },
+                {
+                    "choice": [{
+                            "sequence": [
+                                { "text": "FOR" },
+                                { "text": "UPDATE" }
+                            ]
+                        },
+                        {
+                            "sequence": [
+                                { "text": "LOCK" },
+                                { "text": "IN" },
+                                { "text": "SHARE" },
+                                { "text": "MODE" }
+                            ]
+                        }
+                    ],
+                    "supported": ["MySQL", "MDB", "SQL99"],
+                    "optional": true
+                },
+                {
+                    "sequence": [
+                        { "text": "FOR" },
+                        { "choice": [{ "text": "UPDATE" }, { "text": "SHARE" }] },
+                        {
+                            "sequence": [
+                                { "text": "OF" },
+                                {
+                                    "$ref": "#/tokens/TableName",
+                                    "repeat": true
+                                }
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "choice": [{
+                                    "text": "NOWAIT"
+                                },
+                                {
+                                    "sequence": [{
+                                        "text": "SKIP"
+                                    }, {
+                                        "text": "LOCKED"
+                                    }]
+                                }
+                            ],
+                            "optional": true
+                        }
+                    ],
+                    "supported": ["MySQL", "PGR"],
+                    "optional": true
+                }
+            ]
+        }
+    },
+
+
+    "tokens": {
+        "With": {},
+        "SelectExpression": {},
+        "Into": {
+            "$ref": "#/tokens/Name"
+        },
+        "From": {},
+        "Join": {},
+        "Where": {},
+        "GroupBy": {},
+        "Having": {},
+        "OrderBy": {
+            "sequence": [{
+                    "text": "ORDER"
+                },
+                {
+                    "text": "BY"
+                },
+                {
+                    "sequence": [{
+                            "$ref": "#/tokens/Name"
+                        },
+                        {
+                            "choice": [
+                                { "text": "ASC" },
+                                { "text": "DESC" }
+                            ],
+                            "optional": true
+                        },
+                        {
+                            "choice": [
+                                { "sequence": [{ "text": "NULLS" }, { "text": "FIRST" }] },
+                                { "sequence": [{ "text": "NULLS" }, { "text": "LAST" }] }
+                            ],
+                            "optional": true,
+                            "supported": ["RST", "PGR"]
+                        }
+                    ],
+                    "repeat": true
+                }
+            ]
+        },
+        "LimitOffset": {},
+        "SelectOption": {},
+        "SelectProcedure": {},
+        "FileName": {},
+        "ExportOptions": {},
+        "Name": {}
+
+    }
+
+
+
+
+}
