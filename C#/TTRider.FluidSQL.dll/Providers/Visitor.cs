@@ -136,7 +136,7 @@ namespace TTRider.FluidSql.Providers
                 { typeof (SnippetStatement), (v, stm) => v.VisitSnippetStatement((SnippetStatement) stm) },
                 { typeof (BreakStatement), (v, stm) => v.VisitBreakStatement((BreakStatement) stm) },
                 { typeof (ContinueStatement), (v, stm) => v.VisitContinueStatement((ContinueStatement) stm) },
-                {typeof (ExitStatement), (v, stm)=>v.VisitExitStatement((ExitStatement)stm)},
+                { typeof (ExitStatement), (v, stm)=>v.VisitExitStatement((ExitStatement)stm)},
                 { typeof (GotoStatement), (v, stm) => v.VisitGotoStatement((GotoStatement) stm) },
                 { typeof (ReturnStatement), (v, stm) => v.VisitReturnStatement((ReturnStatement) stm) },
                 { typeof (ThrowStatement), (v, stm) => v.VisitThrowStatement((ThrowStatement) stm) },
@@ -204,6 +204,7 @@ namespace TTRider.FluidSql.Providers
                     (v, stm) => v.VisitAddForeignKeyStatement((AddForeignKeyStatement) stm)
                 }
             };
+
 
         protected string CommentCloseQuote = "*/";
         protected string CommentOpenQuote = "/*";

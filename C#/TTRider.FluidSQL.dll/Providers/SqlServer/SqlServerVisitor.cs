@@ -975,7 +975,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.END);
                 State.WriteStatementTerminator();
             }
-            
+
         }
 
         protected class SqlSymbols : Symbols
@@ -1963,5 +1963,18 @@ namespace TTRider.FluidSql.Providers.SqlServer
         }
 
         #endregion Statements
+
+        #region Scalars
+
+        #region Overrides of Visitor
+
+        protected override void FormatScalarValue(bool value)
+        {
+            State.Write(value ? "1" : "0");
+        }
+
+        #endregion
+
+        #endregion Scalars
     }
 }

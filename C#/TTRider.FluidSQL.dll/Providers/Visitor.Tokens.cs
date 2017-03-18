@@ -41,55 +41,32 @@ namespace TTRider.FluidSql.Providers
             var value = token.Value;
             if (value == null) return;
 
-            if (value is DBNull)
-            {
-                State.Write(Symbols.NULL);
-            }
-            else if ((value is Boolean)
-                     || (value is SByte)
-                     || (value is Byte)
-                     || (value is Int16)
-                     || (value is UInt16)
-                     || (value is Int32)
-                     || (value is UInt32)
-                     || (value is Int64)
-                     || (value is UInt64)
-                     || (value is Single)
-                     || (value is Double)
-                     || (value is Decimal))
-            {
-                State.Write(value.ToString());
-            }
-            else if (value is TimeSpan)
-            {
-                State.Write(this.LiteralOpenQuote, ((TimeSpan) value).ToString("HH:mm:ss"), this.LiteralCloseQuote);
-            }
-            else if (value is DateTime)
-            {
-                State.Write(this.LiteralOpenQuote, ((DateTime) value).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    this.LiteralCloseQuote);
-            }
-            else if (value is DateTimeOffset)
-            {
-                State.Write(this.LiteralOpenQuote, ((DateTimeOffset) value).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    this.LiteralCloseQuote);
-            }
-            else
-            {
-                var stringValue = value.ToString();
-                stringValue = stringValue.Replace(this.LiteralCloseQuote,
-                    this.LiteralCloseQuote + this.LiteralCloseQuote);
 
-                if (!stringValue.StartsWith("$") && !stringValue.StartsWith("?"))
-                {
-                    State.Write(this.LiteralOpenQuote, stringValue, this.LiteralCloseQuote);
-                }
-                else
-                {
-                    State.Write(stringValue);
-                }
-            }
+            if (value is DBNull) { FormatScalarValue((DBNull)value); return; }
+            if (value is Boolean) { FormatScalarValue((bool)value); return; }
+            if (value is SByte) { FormatScalarValue((SByte)value); return; }
+            if (value is Byte) { FormatScalarValue((Byte)value); return; }
+            if (value is Int16) { FormatScalarValue((Int16)value); return; }
+            if (value is UInt16) { FormatScalarValue((UInt16)value); return; }
+            if (value is Int32) { FormatScalarValue((Int32)value); return; }
+            if (value is UInt32) { FormatScalarValue((UInt32)value); return; }
+            if (value is Int64) { FormatScalarValue((Int64)value); return; }
+            if (value is UInt64) { FormatScalarValue((UInt64)value); return; }
+            if (value is Single) { FormatScalarValue((Single)value); return; }
+            if (value is Double) { FormatScalarValue((Double)value); return; }
+            if (value is Decimal) { FormatScalarValue((Decimal)value); return; }
+
+            if (value is TimeSpan) { FormatScalarValue((TimeSpan)value); return; }
+            if (value is DateTime) { FormatScalarValue((DateTime)value); return; }
+            if (value is DateTimeOffset) { FormatScalarValue((DateTimeOffset)value); return; }
+
+            FormatScalarValue(value.ToString());
+
+
+
         }
+
+
 
         protected virtual void VisitStatementToken(IStatement token)
         {

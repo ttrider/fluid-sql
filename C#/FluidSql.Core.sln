@@ -15,7 +15,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.FluidSql", "xUnit.Flu
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "xUnit.Sqlite", "xUnit.Sqlite\xUnit.Sqlite.xproj", "{331E92FA-B975-4E65-A47E-695563B46B99}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.dll", "TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj", "{050DF94C-3291-4DDE-AA75-77DD6351942E}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL", "TTRider.FluidSQL.dll\TTRider.FluidSQL.xproj", "{050DF94C-3291-4DDE-AA75-77DD6351942E}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TTRider.FluidSQL.Postgres", "TTRider.FluidSQL.Postgres\TTRider.FluidSQL.Postgres.xproj", "{4FE641CB-9934-4F84-808A-0386702BD326}"
 EndProject

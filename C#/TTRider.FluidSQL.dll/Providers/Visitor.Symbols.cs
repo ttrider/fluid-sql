@@ -80,6 +80,7 @@ namespace TTRider.FluidSql.Providers
             public const string FETCH = "FETCH";
             public const string FILETABLE = "FILETABLE";
             public const string FILLFACTOR = "FILLFACTOR";
+            public const string FALSE = "FALSE";
             public const string FOREIGN = "FOREIGN";
             public const string FROM = "FROM";
             public const string FUNCTION = "FUNCTION";
@@ -179,6 +180,7 @@ namespace TTRider.FluidSql.Providers
             public const string TO = "TO";
             public const string TOP = "TOP";
             public const string TRANSACTION = "TRANSACTION";
+            public const string TRUE = "TRUE";
             public const string TRUNC = "TRUNC";
             public const string TRY = "TRY";
             public const string UNCOMMITED = "UNCOMMITED";
