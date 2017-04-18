@@ -16,9 +16,9 @@ using Npgsql;
 using NpgsqlTypes;
 using TTRider.FluidSql.Providers.PostgreBased;
 
-namespace TTRider.FluidSql.Providers.PostgreSQL
+namespace TTRider.FluidSql.Providers.Redshift
 {
-    public class PostgreSQLProvider : PostgreBasedSQLProvider
+    public class RedshiftSQLProvider : PostgreBasedSQLProvider
     {
     }
 }

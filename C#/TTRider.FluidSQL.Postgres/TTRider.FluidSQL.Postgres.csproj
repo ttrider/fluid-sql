@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Data access wrapper for FluidSQL</Description>
+    <Copyright>Copyright (C) 2014-2017 TTRider Technologies, Inc.</Copyright>
+    <AssemblyTitle>TTRider.FluidSql.Postgres</AssemblyTitle>
+    <VersionPrefix>1.10.5</VersionPrefix>
+    <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>TTRider.FluidSql.Postgres</AssemblyName>
+    <PackageId>TTRider.FluidSQL.Postgres</PackageId>
+    <PackageTags>SQL;Fluid;postgres</PackageTags>
+    <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.csproj" />
+    <ProjectReference Include="..\TTRider.FluidSQL.PostgreBased\TTRider.FluidSQL.PostgreBased.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+    <PackageReference Include="Npgsql" Version="3.2.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Data access wrapper for FluidSQL</Description>
+    <Copyright>Copyright (C) 2014-2016 TTRider, L.L.C.</Copyright>
+    <AssemblyTitle>TTRider.FluidSql.Redshift</AssemblyTitle>
+    <VersionPrefix>1.10.5</VersionPrefix>
+    <Authors>TTRider;AdaptCore Technologies;iatam;o.shpak</Authors>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>TTRider.FluidSql.Redshift</AssemblyName>
+    <PackageId>TTRider.FluidSQL.Redshift</PackageId>
+    <PackageTags>SQL;Fluid;RedShift</PackageTags>
+    <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.10.5-beta1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.csproj" />
+    <ProjectReference Include="..\TTRider.FluidSQL.PostgreBased\TTRider.FluidSQL.PostgreBased.csproj">
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>TTRider.FluidSQL.PostgreBased.dll</IncludeAssets>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TTRider.FluidSQL.PostgreBased">
+      <HintPath>..\TTRider.FluidSQL.PostgreBased\bin\Debug\netstandard1.6\TTRider.FluidSql.PostgreBased.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="3.2.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
+  </ItemGroup>
+
+
+</Project>
