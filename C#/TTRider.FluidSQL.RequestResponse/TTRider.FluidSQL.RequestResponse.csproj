@@ -22,10 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
     <PackageReference Include="TTRider.IDbConnection-Async" Version="1.1.2" />
@@ -34,6 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">

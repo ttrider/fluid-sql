@@ -24,13 +24,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
     <PackageReference Include="Npgsql" Version="3.2.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.csproj" />
   </ItemGroup>
 
 
