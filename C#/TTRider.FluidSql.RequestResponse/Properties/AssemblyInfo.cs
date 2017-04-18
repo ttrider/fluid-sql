@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TTRider, L.L.C.")]
 [assembly: AssemblyProduct("fluid-sql")]
-[assembly: AssemblyCopyright("Copyright © 2014-2017 TTRider, L.L.C.")]
+[assembly: AssemblyCopyright("Copyright © 2014-2016 TTRider, L.L.C.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("Tests.RequestResponse")]

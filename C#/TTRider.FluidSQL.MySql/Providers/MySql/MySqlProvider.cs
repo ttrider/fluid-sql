@@ -9,8 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace TTRider.FluidSql.Providers.MySql
 {
@@ -161,5 +163,4 @@ namespace TTRider.FluidSql.Providers.MySql
             {CommonDbType.DateTimeOffset, DbType.DateTimeOffset}
         };
     }
-
 }

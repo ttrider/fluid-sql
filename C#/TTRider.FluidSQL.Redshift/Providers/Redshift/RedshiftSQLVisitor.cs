@@ -4,9 +4,7 @@
 // <copyright company="TTRider, L.L.C.">
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
-using System;
-using System.Collections.Generic;
-using NpgsqlTypes;
+
 using TTRider.FluidSql.Providers.PostgreBased;
 
 // ReSharper disable InconsistentNaming
@@ -14,7 +12,7 @@ using TTRider.FluidSql.Providers.PostgreBased;
 
 namespace TTRider.FluidSql.Providers.Redshift
 {
-    internal partial class RedshiftSQLVisitor : PostgreBasedSQLVisitor
+    public partial class RedshiftSQLVisitor : PostgreBasedSQLVisitor
     {
     }
 }

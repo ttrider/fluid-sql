@@ -27,7 +27,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
         //protected override void VisitCommonTableExpression(CTEDefinition token) { throw new NotImplementedException(); }
         //protected override void VisitCaseToken(CaseToken token) { throw new NotImplementedException(); }
 
-        protected virtual void VisitWhereCurrentOfToken(Name cursorName)
+        protected void VisitWhereCurrentOfToken(Name cursorName)
         {
             if (cursorName != null)
             {
@@ -39,7 +39,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitUsingToken(List<Name> usingList)
+        protected void VisitUsingToken(List<Name> usingList)
         {
             if (usingList != null)
             {
@@ -53,7 +53,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitCRUDJoinOnToken(List<Join> joins, bool ifWhereExist = false)
+        protected void VisitCRUDJoinOnToken(List<Join> joins, bool ifWhereExist = false)
         {
             string separator = string.Empty;
 
@@ -77,7 +77,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitCRUDJoinToken(List<Join> joins, bool isUpdate = false)
+        protected void VisitCRUDJoinToken(List<Join> joins, bool isUpdate = false)
         {
             if (joins.Count > 0)
             {
@@ -91,7 +91,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitReturningToken(List<ExpressionToken> returningList, Name outputInto = null)
+        protected void VisitReturningToken(List<ExpressionToken> returningList, Name outputInto = null)
         {
             if (returningList != null)
             {
@@ -125,7 +125,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitTopToken(RecordsetSourceToken recordsetSource, Top top, bool ifWhereExist = false)
+        protected void VisitTopToken(RecordsetSourceToken recordsetSource, Top top, bool ifWhereExist = false)
         {
             Name techId = new Name();
             if (!ifWhereExist)
@@ -158,7 +158,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         }
 
-        protected virtual void VisitIntoToken(Name intoToken)
+        protected void VisitIntoToken(Name intoToken)
         {
             if (intoToken != null)
             {
@@ -167,7 +167,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitFetchNextToken(Top fetchToken)
+        protected void VisitFetchNextToken(Top fetchToken)
         {
             if (fetchToken != null)
             {
@@ -179,7 +179,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitTopToken(SelectStatement statement)
+        protected void VisitTopToken(SelectStatement statement)
         {
             if (statement.Top != null)
             {
@@ -208,7 +208,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitWhenMatchedUpdateToken(MergeStatement statement
+        protected void VisitWhenMatchedUpdateToken(MergeStatement statement
             , IList<string> tempUpdateAliases
             , string targetAlias
             , string targetTable
@@ -290,7 +290,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitWhenMatchedDeleteToken(MergeStatement statement
+        protected void VisitWhenMatchedDeleteToken(MergeStatement statement
             , string targetAlias
             , string targetTable
             , string targetColumnOn
@@ -365,7 +365,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitWhenNotMatchedBySourceToken(MergeStatement statement
+        protected void VisitWhenNotMatchedBySourceToken(MergeStatement statement
             , string targetAlias
             , string targetTable
             , string targetColumnOn
@@ -413,7 +413,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
         }
 
-        protected virtual void VisitWhenNotMatchedThenInsertToken(MergeStatement statement
+        protected void VisitWhenNotMatchedThenInsertToken(MergeStatement statement
             , IList<string> tempUpdateAliases
             , string targetAlias
             , string targetColumnOn

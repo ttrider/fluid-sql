@@ -6,36 +6,37 @@
     <AssemblyTitle>TTRider.FluidSQL</AssemblyTitle>
     <VersionPrefix>1.10.8</VersionPrefix>
     <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
     <AssemblyName>TTRider.FluidSQL.dll</AssemblyName>
     <PackageId>TTRider.FluidSQL.dll</PackageId>
     <PackageTags>SQL</PackageTags>
     <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
-
-    <TargetFramework>netstandard1.6</TargetFramework>
-
-    <RootNamespace>TTRider.FluidSQL</RootNamespace>
-
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-
-    <AssemblyVersion>1.10.9.0</AssemblyVersion>
-
-    <FileVersion>1.10.9.0</FileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
-    <DefineConstants>TRACE;NETSTANDARD1_6;DEBUG</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.6|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD1_6</DefineConstants>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="10.1.5" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);BUILD_CORECLR</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
 
 </Project>

@@ -54,7 +54,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
 
 
-        protected override string[] SupportedDialects { get { return supportedDialects; } }
+        protected  override string[] SupportedDialects { get { return supportedDialects; } }
 
         public PostgreBasedSQLVisitor()
         {
