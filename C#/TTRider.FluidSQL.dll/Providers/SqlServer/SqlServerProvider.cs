@@ -118,7 +118,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 var connection = new SqlConnection(csb.ConnectionString);
                 connection.Open();
                 command = connection.CreateCommand();
-#if !BUILD_CORECLR
+#if !NETSTANDARD1_6
                 command.Disposed += (s, o) => connection.Close();
 #endif
             }
@@ -156,8 +156,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
 
             var command = connection.CreateCommand();
 
-#if !BUILD_CORECLR
-                command.Disposed += (s, o) => connection.Close();
+#if !NETSTANDARD1_6
+            command.Disposed += (s, o) => connection.Close();
 #endif
 
             command.CommandTimeout = this.CommandTimeout;

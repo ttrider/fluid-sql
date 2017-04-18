@@ -3,16 +3,17 @@
   <PropertyGroup>
     <Description>Fluid-style SQL statement generator</Description>
     <Copyright>Copyright (C) 2014 - 2017 TTRider, L.L.C.</Copyright>
-    <AssemblyTitle>TTRider.FluidSQL</AssemblyTitle>
     <VersionPrefix>1.11.0</VersionPrefix>
+    <AssemblyTitle>TTRider.FluidSQL</AssemblyTitle>
     <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <AssemblyName>TTRider.FluidSQL.dll</AssemblyName>
+    <AssemblyName>TTRider.FluidSQL</AssemblyName>
     <PackageId>TTRider.FluidSQL.dll</PackageId>
     <PackageTags>SQL</PackageTags>
     <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>TTRider.FluidSql</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,4 @@
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);BUILD_CORECLR</DefineConstants>
-  </PropertyGroup>
 </Project>

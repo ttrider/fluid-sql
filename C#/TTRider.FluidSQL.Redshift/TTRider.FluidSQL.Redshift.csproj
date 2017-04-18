@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>Data access wrapper for FluidSQL</Description>
-    <Copyright>Copyright (C) 2014-2017 TTRider, L.L.C.</Copyright>
+    <Copyright>Copyright (C) 2014 - 2017 TTRider, L.L.C.</Copyright>
+    <VersionPrefix>1.11.0</VersionPrefix>
     <AssemblyTitle>TTRider.FluidSql.Redshift</AssemblyTitle>
-    <VersionPrefix>1.10.5</VersionPrefix>
     <Authors>TTRider;AdaptCore Technologies;iatam;o.shpak</Authors>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
     <DebugType>portable</DebugType>

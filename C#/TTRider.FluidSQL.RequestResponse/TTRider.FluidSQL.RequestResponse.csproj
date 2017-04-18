@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>Data access wrapper for FluidSQL</Description>
-    <Copyright>Copyright (C) 2014-2017 TTRider, L.L.C.</Copyright>
+    <Copyright>Copyright (C) 2014 - 2017 TTRider, L.L.C.</Copyright>
+    <VersionPrefix>1.11.0</VersionPrefix>
     <AssemblyTitle>TTRider.FluidSql.RequestResponse</AssemblyTitle>
-    <VersionPrefix>1.4.5</VersionPrefix>
     <Authors>TTRider</Authors>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
     <AssemblyName>TTRider.FluidSql.RequestResponse</AssemblyName>
