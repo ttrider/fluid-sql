@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Data access wrapper for FluidSQL</Description>
-    <Copyright>Copyright (C) 2014-2016 TTRider, L.L.C.</Copyright>
+    <Copyright>Copyright (C) 2014-2017 TTRider, L.L.C.</Copyright>
     <AssemblyTitle>TTRider.FluidSql.Redshift</AssemblyTitle>
     <VersionPrefix>1.10.5</VersionPrefix>
     <Authors>TTRider;AdaptCore Technologies;iatam;o.shpak</Authors>
@@ -13,11 +13,10 @@
     <PackageTags>SQL;Fluid;postgres</PackageTags>
     <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
-    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,18 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="3.1.6" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.1.0" />
+    <PackageReference Include="Npgsql" Version="3.2.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <DefineConstants>$(DefineConstants);BUILD_CORECLR</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="JetBrains.Annotations" Version="10.1.5-*" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
+
+
 
 </Project>
