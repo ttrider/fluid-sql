@@ -7,7 +7,7 @@
     <AssemblyTitle>TTRider.FluidSQL</AssemblyTitle>
     <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <AssemblyName>TTRider.FluidSQL</AssemblyName>
+    <AssemblyName>TTRider.FluidSQL.dll</AssemblyName>
     <PackageId>TTRider.FluidSQL.dll</PackageId>
     <PackageTags>SQL</PackageTags>
     <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>

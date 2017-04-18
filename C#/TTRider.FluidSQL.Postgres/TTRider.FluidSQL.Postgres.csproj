@@ -25,7 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.csproj" />
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
     <ProjectReference Include="..\TTRider.FluidSQL.Postgres.Core\TTRider.FluidSQL.Postgres.Core.csproj" />
   </ItemGroup>
 

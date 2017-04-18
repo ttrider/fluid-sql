@@ -24,16 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.csproj" />
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
-    <DefineConstants>TRACE;NETSTANDARD1_6;DEBUG</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.6|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;NETSTANDARD1_6</DefineConstants>
-  </PropertyGroup>
-
 
 </Project>

@@ -30,14 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TTRider.FluidSQL.dll\TTRider.FluidSQL.csproj" />
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
   </ItemGroup>
-
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);BUILD_CORECLR</DefineConstants>
-  </PropertyGroup>
-
-  
 
 </Project>
