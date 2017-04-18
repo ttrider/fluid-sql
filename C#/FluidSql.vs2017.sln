@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.Postgres",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.Redshift", "TTRider.FluidSQL.Redshift\TTRider.FluidSQL.Redshift.csproj", "{DE159226-80F0-4A2C-8E52-51959C06ED76}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.PostgreBased", "TTRider.FluidSQL.PostgreBased\TTRider.FluidSQL.PostgreBased.csproj", "{3B84BC23-56D6-4CCE-81E9-643BAC79C80B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.Postgres.Core", "TTRider.FluidSQL.PostgreBased\TTRider.FluidSQL.Postgres.Core.csproj", "{3B84BC23-56D6-4CCE-81E9-643BAC79C80B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.Sqlite", "TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.csproj", "{88908046-D81E-43FF-A9A2-833553447242}"
 EndProject
