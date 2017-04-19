@@ -14,11 +14,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Npgsql;
 using NpgsqlTypes;
-using TTRider.FluidSql.Providers.PostgreBased;
 
 namespace TTRider.FluidSql.Providers.Redshift
 {
-    public class RedshiftSQLProvider : PostgreBasedSQLProvider
+    public class RedshiftProvider : Postgres.Core.ProviderCore
     {
         internal static readonly Dictionary<CommonDbType, NpgsqlDbType> CommonDbTypeToDbType = new Dictionary
             <CommonDbType, NpgsqlDbType>
@@ -47,7 +46,7 @@ namespace TTRider.FluidSql.Providers.Redshift
             {CommonDbType.VarBinary,NpgsqlDbType.Text},
             {CommonDbType.VarChar,NpgsqlDbType.Varchar},
             {CommonDbType.Variant,NpgsqlDbType.Unknown},
-            {CommonDbType.Xml,NpgsqlDbType.Xml},
+            {CommonDbType.Xml,NpgsqlDbType.Text},
             {CommonDbType.Date,NpgsqlDbType.Text},
             {CommonDbType.Time,NpgsqlDbType.Text},
             {CommonDbType.DateTimeOffset,NpgsqlDbType.Text},
@@ -55,7 +54,7 @@ namespace TTRider.FluidSql.Providers.Redshift
 
         protected override VisitorState Compile(IStatement statement)
         {
-            return new RedshiftSQLVisitor().Compile(statement);
+            return new RedshiftVisitor().Compile(statement);
         }
     }
 }

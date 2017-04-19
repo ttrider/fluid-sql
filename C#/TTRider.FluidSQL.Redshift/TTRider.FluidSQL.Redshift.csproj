@@ -17,6 +17,7 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>TTRider.FluidSql</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

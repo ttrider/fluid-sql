@@ -15,24 +15,18 @@ using System.Threading.Tasks;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace TTRider.FluidSql.Providers.PostgreBased
+namespace TTRider.FluidSql.Providers.Postgres.Core
 {
-    public class PostgreBasedSQLProvider : Provider
+    public abstract class ProviderCore : FluidSql.Providers.Provider
     {
-        protected override VisitorState Compile(IStatement statement)
-        {
-            return new PostgreBasedSQLVisitor().Compile(statement);
-        }
-
         public override IDbConnection GetConnection(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new ArgumentNullException("connectionString");
+                throw new ArgumentNullException(nameof(connectionString));
             }
             return new NpgsqlConnection(connectionString);
         }
-
 
         public override IDbCommand GetCommand(IStatement statement, string connectionString = null)
         {
@@ -52,7 +46,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
             command.CommandType = CommandType.Text;
             command.CommandText = state.Value;
-            foreach (var parameter in GetDbParameters(state))
+            foreach (var parameter in this.GetDbParameters(state))
             {
                 command.Parameters.Add(parameter);
             }
@@ -81,7 +75,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
             command.CommandType = CommandType.Text;
             command.CommandText = state.Value;
-            foreach (var parameter in GetDbParameters(state))
+            foreach (var parameter in this.GetDbParameters(state))
             {
                 command.Parameters.Add(parameter);
             }

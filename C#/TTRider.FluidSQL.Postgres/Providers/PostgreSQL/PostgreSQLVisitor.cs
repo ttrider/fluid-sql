@@ -7,14 +7,13 @@
 using System;
 using System.Collections.Generic;
 using NpgsqlTypes;
-using TTRider.FluidSql.Providers.PostgreBased;
 
 // ReSharper disable InconsistentNaming
 
 
-namespace TTRider.FluidSql.Providers.PostgreSQL
+namespace TTRider.FluidSql.Providers.PostgreSql
 {
-    internal partial class PostgreSQLVisitor : PostgreBasedSQLVisitor
+    internal partial class PostgreSqlVisitor : Postgres.Core.VisitorCore
     {
     }
 }

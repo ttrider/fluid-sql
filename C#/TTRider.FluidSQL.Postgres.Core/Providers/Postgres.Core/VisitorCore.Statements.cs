@@ -6,14 +6,14 @@
 // </copyright>
 
 using System;
-using System.Data;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace TTRider.FluidSql.Providers.PostgreBased
+namespace TTRider.FluidSql.Providers.Postgres.Core
 {
-    public partial class PostgreBasedSQLVisitor
+    public partial class VisitorCore
     {
         protected override void VisitDelete(DeleteStatement statement)
         {
@@ -219,7 +219,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
         {
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempName);
+            State.Write(this.TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
             State.WriteCRLF();
@@ -255,7 +255,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
             if (statement.Top != null)
             {
-                CreateTableStatement createTable = Sql.CreateTemporaryTable(Sql.Name(TopAlias), true).As(Sql.Select.Output(Sql.Name(targetColumnOn)).From(Sql.Name(targetTable)).Top(((int)((Scalar)statement.Top.Value).Value), statement.Top.Percent));
+                CreateTableStatement createTable = Sql.CreateTemporaryTable(Sql.Name(this.TopAlias), true).As(Sql.Select.Output(Sql.Name(targetColumnOn)).From(Sql.Name(targetTable)).Top(((int)((Scalar)statement.Top.Value).Value), statement.Top.Percent));
                 isTop = true;
                 VisitStatement(createTable);
                 State.WriteStatementTerminator();
@@ -309,14 +309,14 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             }
             if (isTop)
             {
-                DropTableStatement dropTable = Sql.DropTemporaryTable(TopAlias, true);
+                DropTableStatement dropTable = Sql.DropTemporaryTable(this.TopAlias, true);
                 VisitStatement(dropTable);
                 State.WriteStatementTerminator();
             }
 
             State.Write(Symbols.END);
             State.WriteStatementTerminator();
-            State.Write(TempName);
+            State.Write(this.TempName);
         }
 
         protected override void VisitSet(SetStatement statement) { throw new NotImplementedException(); }
@@ -419,17 +419,17 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             //DO $do$ BEGIN
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempName);
+            State.Write(this.TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
 
-            OnlyIfStatement(statement);
+            this.OnlyIfStatement(statement);
 
             State.WriteStatementTerminator();
 
             State.Write(Symbols.END);
             State.WriteCRLF();
-            State.Write(TempName);
+            State.Write(this.TempName);
         }
 
         protected override void VisitCreateTableStatement(CreateTableStatement statement)
@@ -525,7 +525,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                 foreach (var createIndexStatement in statement.Indicies)
                 {
                     State.WriteStatementTerminator();
-                    VisitCreateIndexStatement(createIndexStatement);
+                    this.VisitCreateIndexStatement(createIndexStatement);
                 }
             }
         }
@@ -556,14 +556,14 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected override void VisitCreateIndexStatement(CreateIndexStatement statement)
         {
-            CreateIndex(statement);
+            this.CreateIndex(statement);
         }
 
         protected override void VisitAlterIndexStatement(AlterIndexStatement statement)
         {
             VisitStatement(Sql.DropIndex(statement.Name, true));
             State.WriteStatementTerminator();
-            CreateIndex(statement);
+            this.CreateIndex(statement);
         }
 
         protected override void VisitDropIndexStatement(DropIndexStatement statement)
@@ -698,7 +698,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             if ((statement.Condition != null) && (statement.Do != null))
             {
                 IfStatement condition = Sql.If(statement.Condition).Then(statement.Do).Else(Sql.Exit);
-                OnlyIfStatement(condition);
+                this.OnlyIfStatement(condition);
             }
             State.Write(Symbols.END);
             State.Write(Symbols.LOOP);
@@ -724,12 +724,12 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected override void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement)
         {
-            AlterView(statement.Name, statement.DefinitionStatement);
+            this.AlterView(statement.Name, statement.DefinitionStatement);
         }
 
         protected override void VisitAlterViewStatement(AlterViewStatement statement)
         {
-            AlterView(statement.Name, statement.DefinitionStatement);
+            this.AlterView(statement.Name, statement.DefinitionStatement);
         }
 
         protected override void VisitDropViewStatement(DropViewStatement statement)
@@ -750,7 +750,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             State.Write(Symbols.PREPARE);
             if (statement.Name == null)
             {
-                statement.Name = Sql.Name(TempExecute);
+                statement.Name = Sql.Name(this.TempExecute);
             }
             VisitNameToken(statement.Name);
             string separator = Symbols.OpenParenthesis;
@@ -782,7 +782,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             {
                 if (statement.Target.Target != null)
                 {
-                    PrepareStatement prepStatement = Sql.Prepare().Name(Sql.Name(TempExecute)).From(statement.Target.Target);
+                    PrepareStatement prepStatement = Sql.Prepare().Name(Sql.Name(this.TempExecute)).From(statement.Target.Target);
                     if(statement.Parameters.Count != 0)
                     {
                         foreach(Parameter p in statement.Parameters)
@@ -792,7 +792,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     }
                     VisitStatement(prepStatement);
                     State.WriteStatementTerminator();
-                    statement.Name = Sql.Name(TempExecute);
+                    statement.Name = Sql.Name(this.TempExecute);
                     needDeallocate = true;
                 }
             }
@@ -942,13 +942,13 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected override void VisitCreateFunctionStatement(CreateFunctionStatement statement)
         {
-            CreateOrReplaceFunction(statement);
+            this.CreateOrReplaceFunction(statement);
         }
 
         //not like in postgresql
         protected override void VisitAlterFunctionStatement(AlterFunctionStatement statement)
         {
-            CreateOrReplaceFunction(statement);
+            this.CreateOrReplaceFunction(statement);
         }
 
 
@@ -1018,7 +1018,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
         {
             State.Write(Symbols.DO);
             State.WriteCRLF();
-            State.Write(TempName);
+            State.Write(this.TempName);
             State.WriteCRLF();
             State.Write(Symbols.BEGIN);
 
@@ -1032,7 +1032,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
             State.Write(Symbols.END);
             State.WriteCRLF();
-            State.Write(TempName);
+            State.Write(this.TempName);
         }
 
         private void OnlyIfStatement(IfStatement statement)
@@ -1058,11 +1058,11 @@ namespace TTRider.FluidSql.Providers.PostgreBased
         {
             if (needQuote)
             {
-                Stringify(() => VisitStatement(statement));
+                this.Stringify(() => VisitStatement(statement));
             }
             else
             {
-                StringifyWithoutQuotes(() => VisitStatement(statement));
+                this.StringifyWithoutQuotes(() => VisitStatement(statement));
             }
         }
 
@@ -1087,7 +1087,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
             VisitNameToken(statement.Name);
             var separator = String.Empty;
-            string returnValueName = TempName;
+            string returnValueName = this.TempName;
 
             var retVal = statement.Parameters.FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
 
@@ -1152,7 +1152,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             State.WriteStatementTerminator();
             State.Write(Symbols.END);
             State.WriteStatementTerminator();
-            State.Write(String.Format(EndFunction, returnValueName));
+            State.Write(String.Format(this.EndFunction, returnValueName));
         }
 
         private void CreateIndex(IIndex statement)

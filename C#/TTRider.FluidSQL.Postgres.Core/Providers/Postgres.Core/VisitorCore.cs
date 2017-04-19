@@ -4,16 +4,15 @@
 // <copyright company="TTRider, L.L.C.">
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
-using System;
-using System.Collections.Generic;
-using NpgsqlTypes;
+
+
 
 // ReSharper disable InconsistentNaming
 
 
-namespace TTRider.FluidSql.Providers.PostgreBased
+namespace TTRider.FluidSql.Providers.Postgres.Core
 {
-    public partial class PostgreBasedSQLVisitor : Visitor
+    public abstract partial class VisitorCore : Visitor
     {
         private static readonly string[] supportedDialects = new[] { "npgsql", "postgresql", "postgres", "ansi" };
 
@@ -56,7 +55,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected  override string[] SupportedDialects { get { return supportedDialects; } }
 
-        public PostgreBasedSQLVisitor()
+        public VisitorCore()
         {
             this.IdentifierOpenQuote = "\"";
             this.IdentifierCloseQuote = "\"";
@@ -68,14 +67,14 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected override void VisitJoinType(Joins join)
         {
-            State.Write(JoinStrings[(int)join]);
+            this.State.Write(this.JoinStrings[(int)join]);
         }
 
         protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
-                State.Write(DbTypeStrings[(int)typedToken.DbType]);
+                this.State.Write(this.DbTypeStrings[(int)typedToken.DbType]);
             }
         }
 
@@ -83,7 +82,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
         {
             if (value is bool)
             {
-                State.Write((bool)value ? "true" : "false");
+                this.State.Write((bool)value ? "true" : "false");
             }
             else
             {

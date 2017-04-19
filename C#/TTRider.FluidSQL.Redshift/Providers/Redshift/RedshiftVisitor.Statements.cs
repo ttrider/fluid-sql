@@ -13,7 +13,7 @@ using System.Text;
 
 namespace TTRider.FluidSql.Providers.Redshift
 {
-    public partial class RedshiftSQLVisitor
+    public partial class RedshiftVisitor
     {
         protected override void VisitCreateIndexStatement(CreateIndexStatement statement)
         {            

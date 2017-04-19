@@ -7,7 +7,7 @@
 
 namespace TTRider.FluidSql
 {
-    public class MySql : Sql
+    public class Redshift : Sql
     {
         
     }

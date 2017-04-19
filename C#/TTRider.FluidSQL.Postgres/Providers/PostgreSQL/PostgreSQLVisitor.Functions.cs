@@ -1,9 +1,6 @@
-﻿using System.Text;
-using System.Linq;
-
-namespace TTRider.FluidSql.Providers.PostgreBased
+﻿namespace TTRider.FluidSql.Providers.PostgreSql
 {
-    public partial class PostgreSQLVisitor
+    internal partial class PostgreSqlVisitor
     {        
     }
 }

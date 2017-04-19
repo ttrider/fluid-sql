@@ -1,9 +1,9 @@
-﻿using System.Text;
-using System.Linq;
+﻿using System.Linq;
+using System.Text;
 
-namespace TTRider.FluidSql.Providers.PostgreBased
+namespace TTRider.FluidSql.Providers.Postgres.Core
 {
-    public partial class PostgreBasedSQLVisitor
+    public partial class VisitorCore
     {
         protected override void VisitNowFunctionToken(NowFunctionToken token)
         {
@@ -25,7 +25,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
         protected override void VisitUuidFunctionToken(UuidFunctionToken token)
         {
-            State.Write(uuidGeneration);
+            State.Write(this.uuidGeneration);
         }
 
         protected override void VisitIIFFunctionToken(IifFunctionToken token)
@@ -42,13 +42,13 @@ namespace TTRider.FluidSql.Providers.PostgreBased
 
                 switch (token.DatePart)
                 {
-                    case DatePart.Day: State.Write(AddSingleQuotes(PostgrSQLSymbols.d)); break;
-                    case DatePart.Year: State.Write(AddSingleQuotes(PostgrSQLSymbols.yy)); break;
-                    case DatePart.Month: State.Write(AddSingleQuotes(PostgrSQLSymbols.m)); break;
-                    case DatePart.Week: State.Write(AddSingleQuotes(PostgrSQLSymbols.ww)); break;
-                    case DatePart.Hour: State.Write(AddSingleQuotes(PostgrSQLSymbols.hh)); break;
-                    case DatePart.Minute: State.Write(AddSingleQuotes(PostgrSQLSymbols.mi)); break;
-                    case DatePart.Second: State.Write(AddSingleQuotes(PostgrSQLSymbols.ss)); break;
+                    case DatePart.Day: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.d)); break;
+                    case DatePart.Year: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.yy)); break;
+                    case DatePart.Month: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.m)); break;
+                    case DatePart.Week: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ww)); break;
+                    case DatePart.Hour: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.hh)); break;
+                    case DatePart.Minute: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.mi)); break;
+                    case DatePart.Second: State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ss)); break;
                 }
                 State.Write(Symbols.Comma);
                 VisitToken(token.Token);
@@ -61,7 +61,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                 State.Write(Symbols.OpenParenthesis);
                 State.Write(PostgrSQLSymbols.DATEPART);
                 State.Write(Symbols.OpenParenthesis);
-                State.Write(AddSingleQuotes(PostgrSQLSymbols.ms)); 
+                State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ms)); 
                 State.Write(Symbols.Comma);
                 VisitToken(token.Token);
                 State.Write(Symbols.CloseParenthesis);
@@ -112,7 +112,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                 case DatePart.Day:
                     //DATE_PART('day', end - start) 
                     State.Write(Symbols.OpenParenthesis);
-                    VisitDurationTokenWithDiff(DatePart.Day, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Day, token);
                     State.Write(Symbols.CloseParenthesis);
                     break;
                 case DatePart.Year:
@@ -144,7 +144,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     State.Write(Symbols.OpenParenthesis);
                     State.Write(Symbols.TRUNC);
                     State.Write(Symbols.OpenParenthesis);
-                    VisitDurationTokenWithDiff(DatePart.Day, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Day, token);
                     State.Write(Symbols.DivideVal);
                     State.Write(PostgrSQLSymbols.daysInWeek);
                     State.Write(Symbols.CloseParenthesis);
@@ -158,7 +158,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     State.Write(Symbols.MultiplyVal);
                     State.Write(PostgrSQLSymbols.hoursInDay);
                     State.Write(Symbols.PlusVal);
-                    VisitDurationTokenWithDiff(DatePart.Hour, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Hour, token);
                     State.Write(Symbols.CloseParenthesis);
                     break;
 
@@ -169,7 +169,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     State.Write(Symbols.MultiplyVal);
                     State.Write(PostgrSQLSymbols.minutesInHour);
                     State.Write(Symbols.PlusVal);
-                    VisitDurationTokenWithDiff(DatePart.Minute, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Minute, token);
                     State.Write(Symbols.CloseParenthesis);
                     break;
 
@@ -180,7 +180,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     State.Write(Symbols.MultiplyVal);
                     State.Write(PostgrSQLSymbols.secondInMinute);
                     State.Write(Symbols.PlusVal);
-                    VisitDurationTokenWithDiff(DatePart.Second, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Second, token);
                     State.Write(Symbols.CloseParenthesis);
 
                     break;
@@ -194,7 +194,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                     State.Write(Symbols.OpenParenthesis);
                     State.Write(Symbols.TRUNC);
                     State.Write(Symbols.OpenParenthesis);
-                    VisitDurationTokenWithDiff(DatePart.Millisecond, token);
+                    this.VisitDurationTokenWithDiff(DatePart.Millisecond, token);
                     State.Write(Symbols.DivideVal);
                     State.Write(PostgrSQLSymbols.milisecondInSecond);
                     State.Write(Symbols.CloseParenthesis);
@@ -281,28 +281,28 @@ namespace TTRider.FluidSql.Providers.PostgreBased
             switch (datePart)
             {
                 case DatePart.Day:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.d));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.d));
                     break;
                 case DatePart.Year:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.yy));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.yy));
                     break;
                 case DatePart.Month:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.m));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.m));
                     break;
                 case DatePart.Week:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ww));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ww));
                     break;
                 case DatePart.Hour:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.hh));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.hh));
                     break;
                 case DatePart.Minute:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.mi));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.mi));
                     break;
                 case DatePart.Second:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ss));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ss));
                     break;
                 case DatePart.Millisecond:
-                    State.Write(AddSingleQuotes(PostgrSQLSymbols.ms));
+                    State.Write(this.AddSingleQuotes(PostgrSQLSymbols.ms));
                     break;
             }
             State.Write(Symbols.Comma);

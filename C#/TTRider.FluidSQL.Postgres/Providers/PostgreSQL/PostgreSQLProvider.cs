@@ -5,20 +5,13 @@
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Npgsql;
-using NpgsqlTypes;
-using TTRider.FluidSql.Providers.PostgreBased;
-
-namespace TTRider.FluidSql.Providers.PostgreSQL
+namespace TTRider.FluidSql.Providers.PostgreSql
 {
-    public class PostgreSQLProvider : PostgreBasedSQLProvider
+    public class PostgreSqlProvider : Postgres.Core.ProviderCore
     {
+        protected override VisitorState Compile(IStatement statement)
+        {
+            return new PostgreSqlVisitor().Compile(statement);
+        }
     }
 }

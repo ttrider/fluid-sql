@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TTRider.FluidSql.Providers.PostgreBased
+namespace TTRider.FluidSql.Providers.Postgres.Core
 {
-    public partial class PostgreBasedSQLVisitor
+    public partial class VisitorCore
     {
         //protected override void VisitSnippetToken(Snippet token) { throw new NotImplementedException(); }
         //protected override void VisitBitwiseNotToken(BitwiseNotToken token) { throw new NotImplementedException(); }
@@ -100,7 +98,7 @@ namespace TTRider.FluidSql.Providers.PostgreBased
                 {
                     State.Write(separator);
 
-                    if (PredefinedTemporaryTables.Contains(returningItem.FirstPart.ToUpper()))
+                    if (this.PredefinedTemporaryTables.Contains(returningItem.FirstPart.ToUpper()))
                     {
                         if (String.IsNullOrWhiteSpace(returningItem.Alias))
                         {

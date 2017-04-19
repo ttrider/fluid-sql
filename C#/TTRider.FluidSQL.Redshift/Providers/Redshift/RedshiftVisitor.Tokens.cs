@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TTRider.FluidSql.Providers.Redshift
 {
-    public partial class RedshiftSQLVisitor
+    public partial class RedshiftVisitor
     {
         
     }
