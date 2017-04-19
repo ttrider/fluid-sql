@@ -497,6 +497,10 @@ namespace TTRider.FluidSql.Providers
             {
                 State.Write(this.LiteralOpenQuote, value.ToString(), this.LiteralCloseQuote);
             }
+            else if (value is Guid)
+            {
+                State.Write(this.LiteralOpenQuote, ((Guid)value).ToString("D"), this.LiteralCloseQuote);
+            }
             else if (value is DateTime)
             {
                 State.Write(this.LiteralOpenQuote, ((DateTime)value).ToString("s"), this.LiteralCloseQuote);

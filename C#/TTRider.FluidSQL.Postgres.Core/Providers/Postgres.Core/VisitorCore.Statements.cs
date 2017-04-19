@@ -1014,7 +1014,7 @@ namespace TTRider.FluidSql.Providers.Postgres.Core
             State.Write(Symbols.CloseParenthesis);
         }
 
-        private void AlterView(Name tokenName, IStatement definitionStatement)
+        void AlterView(Name tokenName, IStatement definitionStatement)
         {
             State.Write(Symbols.DO);
             State.WriteCRLF();

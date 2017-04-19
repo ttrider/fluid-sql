@@ -981,11 +981,8 @@ namespace TTRider.FluidSql.Providers.SqlServer
         protected class SqlSymbols : Symbols
         {
             // ReSharper disable InconsistentNaming
-            public const string DATEADD = "DATEADD";
-            public const string DATEDIFF = "DATEDIFF";
             public const string DATEPART = "DATEPART";
             public const string DATETIMEFROMPARTS = "DATETIMEFROMPARTS";
-            public const string GETDATE = "GETDATE";
             public const string GETUTCDATE = "GETUTCDATE";
             public const string IDENTITY_INSERT = "IDENTITY_INSERT";
             public const string NEWID = "NEWID";

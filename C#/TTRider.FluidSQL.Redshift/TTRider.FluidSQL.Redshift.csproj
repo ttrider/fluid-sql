@@ -18,6 +18,9 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RootNamespace>TTRider.FluidSql</RootNamespace>
+    <AssemblyVersion>1.11.6.0</AssemblyVersion>
+    <FileVersion>1.11.6.0</FileVersion>
+    <Version>1.11.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

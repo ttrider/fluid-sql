@@ -1,33 +1,41 @@
-@echo off
+rem @echo off
 @SET mypath=%~dp0
 pushd %mypath%
-del .\nuget\*.nupkg
 
-dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.dll
-dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.Postgres
-dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.RequestResponse
-dotnet build -c Release -o .\nuget .\TTRider.FluidSQL.Sqlite
-dotnet build -c Release -o .\nuget .\xUnit.FluidSql
-dotnet build -c Release -o .\nuget .\xUnit.Functional
-dotnet build -c Release -o .\nuget .\xUnit.Postgres
-dotnet build -c Release -o .\nuget .\xUnit.Sqlite
+mkdir nuget
 
-dotnet build -c Release -o .\nuget .\xUnit.FluidSql
-dotnet build -c Release -o .\nuget .\xUnit.Functional
-dotnet build -c Release -o .\nuget .\xUnit.Postgres
-dotnet build -c Release -o .\nuget .\xUnit.Sqlite
-
-dotnet pack -c Release -o .\nuget .\TTRider.FluidSQL.dll
-dotnet pack -c Release -o .\nuget .\TTRider.FluidSQL.Postgres
-dotnet pack -c Release -o .\nuget .\TTRider.FluidSQL.RequestResponse
-dotnet pack -c Release -o .\nuget .\TTRider.FluidSQL.Sqlite
-
-for %%i in (.\nuget\*.nupkg) do .\nuget\nuget push %%i
-
- 
-
+rd /s /q TTRider.FluidSQL\bin
+rd /s /q TTRider.FluidSQL.MySql\bin
+rd /s /q TTRider.FluidSQL.Postgres\bin
+rd /s /q TTRider.FluidSQL.Postgres.Core\bin
+rd /s /q TTRider.FluidSQL.Redshift\bin
+rd /s /q TTRider.FluidSQL.RequestResponse\bin
+rd /s /q TTRider.FluidSQL.Sqlite\bin
+rd /s /q TTRider.FluidSQL\obj
+rd /s /q TTRider.FluidSQL.MySql\obj
+rd /s /q TTRider.FluidSQL.Postgres\obj
+rd /s /q TTRider.FluidSQL.Postgres.Core\obj
+rd /s /q TTRider.FluidSQL.Redshift\obj
+rd /s /q TTRider.FluidSQL.RequestResponse\obj
+rd /s /q TTRider.FluidSQL.Sqlite\obj
 
 del .\nuget\*.nupkg
 
+dotnet restore
 
-popd
+dotnet build -c Release
+
+copy .\TTRider.FluidSQL\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.MySql\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.Postgres\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.Postgres.Core\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.Redshift\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.RequestResponse\bin\Release\*.nupkg .\nuget\
+copy .\TTRider.FluidSQL.Sqlite\bin\Release\*.nupkg .\nuget\
+
+for %%i in (.\nuget\*.nupkg) do dotnet nuget push -s nuget.org %%i
+
+
+
+
+

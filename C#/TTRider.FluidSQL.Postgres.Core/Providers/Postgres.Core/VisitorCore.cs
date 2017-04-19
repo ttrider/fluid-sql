@@ -20,35 +20,35 @@ namespace TTRider.FluidSql.Providers.Postgres.Core
         private readonly string[] DbTypeStrings =
         {
             "BIGINT",       //NpgsqlDbType.Bigint,
-            "BYTEA",        //NpgsqlDbType.Bytea,
+            "TEXT",        //NpgsqlDbType.Bytea,
             "BOOLEAN",      //NpgsqlDbType.Boolean,
             "CHAR",         //NpgsqlDbType.Char,
             "TIMESTAMP",    //NpgsqlDbType.Timestamp,
             "NUMERIC",      //NpgsqlDbType.Numeric,
             "REAL",         //NpgsqlDbType.Real,
-            "BYTEA",        //NpgsqlDbType.Bytea,
+            "TEXT",        //NpgsqlDbType.Bytea,
             "INTEGER",      //NpgsqlDbType.Integer,
             "MONEY",        //NpgsqlDbType.Money,
             "CHAR",         //NpgsqlDbType.Char,
             "TEXT",         //NpgsqlDbType.Text,
             "TEXT",      //NpgsqlDbType.Varchar,
             "DOUBLE PRECISION",//NpgsqlDbType.Double,
-            "UUID",         //NpgsqlDbType.Uuid,
+            "CHAR(32)",         //NpgsqlDbType.Uuid,
             "TIMESTAMP",    //NpgsqlDbType.Timestamp,
             "SMALLINT",     //NpgsqlDbType.Smallint,
             "REAL",         //NpgsqlDbType.Real,
             "TEXT",         //NpgsqlDbType.Text,
             "TIMESTAMP",    //NpgsqlDbType.Timestamp,
             "SMALLINT",     //NpgsqlDbType.Smallint,
-            "BYTEA",        //NpgsqlDbType.Bytea,
+            "TEXT",        //NpgsqlDbType.Bytea,
             "VARCHAR",      //NpgsqlDbType.Varchar,
             "Unknown",      //NpgsqlDbType.Unknown,
-            "XM,",          //NpgsqlDbType.Xml,
+            "TEXT",          //NpgsqlDbType.Xml,
             "DATE",         //NpgsqlDbType.Date,
             "TIME",         //NpgsqlDbType.Time,
             "TIMESTAMPTZ",  //NpgsqlDbType.TimestampTZ
-            "DATETIMEOFFSET", 
-            "SERIAL",       //NpgsqlDbType.Serial
+            "DATETIMEOFFSET",
+            "TEXT",       //NpgsqlDbType.Serial
         };
 
 

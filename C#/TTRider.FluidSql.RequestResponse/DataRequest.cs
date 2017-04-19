@@ -10,15 +10,18 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using TTRider.Data.RequestResponse;
 using TTRider.FluidSql.Providers;
 
 namespace TTRider.FluidSql.RequestResponse
 {
-    public class DataRequest : IDbRequest
+    public class DataRequest : IDbRequest, ILoggerFactory
     {
         static readonly ConcurrentDictionary<Type, IProvider> Providers = new ConcurrentDictionary<Type, IProvider>();
         private IDbCommand command;
+        private ILoggerFactory loggerFactory;
         private IEnumerable<IDbCommand> prerequisiteCommands;
 
         private DataRequestProperties properties;
@@ -61,7 +64,7 @@ namespace TTRider.FluidSql.RequestResponse
         }
 
 
-        public static IDbRequest Create(DataRequestProperties properties)
+        public static IDbRequest Create(DataRequestProperties properties, ILoggerFactory loggerFactory = null)
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
             if (properties.QueryProvider == null) throw new ArgumentException("properties.QueryProvider");
@@ -69,11 +72,12 @@ namespace TTRider.FluidSql.RequestResponse
 
             return new DataRequest
             {
-                properties = properties.Clone()
+                properties = properties.Clone(),
+                loggerFactory = loggerFactory
             };
         }
 
-        public static IDbRequest Create<T>(DataRequestProperties properties)
+        public static IDbRequest Create<T>(DataRequestProperties properties, ILoggerFactory loggerFactory = null)
             where T : IProvider
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
@@ -83,40 +87,41 @@ namespace TTRider.FluidSql.RequestResponse
             prop.QueryProvider = Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>());
             return new DataRequest
             {
-                properties = prop
+                properties = prop,
+                loggerFactory = loggerFactory
             };
         }
 
 
         public static IDbRequest Create<T>(IStatement statement, DbRequestMode mode, string connectionString = null,
-            IEnumerable<IStatement> prerequisiteStatements = null)
+            IEnumerable<IStatement> prerequisiteStatements = null, ILoggerFactory loggerFactory = null)
             where T : IProvider
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement, mode,
-                connectionString, prerequisiteStatements);
+                connectionString, prerequisiteStatements, loggerFactory);
         }
 
         public static IDbRequest Create<T>(IStatement statement, string connectionString = null,
-            IEnumerable<IStatement> prerequisiteStatements = null)
+            IEnumerable<IStatement> prerequisiteStatements = null, ILoggerFactory loggerFactory = null)
             where T : IProvider
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(Providers.GetOrAdd(typeof (T), t => Activator.CreateInstance<T>()), statement,
-                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements, loggerFactory);
         }
 
         public static IDbRequest Create(IProvider queryProvider, IStatement statement, string connectionString = null,
-            IEnumerable<IStatement> prerequisiteStatements = null)
+            IEnumerable<IStatement> prerequisiteStatements = null, ILoggerFactory loggerFactory = null)
         {
             if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
             if (statement == null) throw new ArgumentNullException(nameof(statement));
             return Create(queryProvider, statement,
-                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements);
+                DbRequestMode.NoBufferReuseMemory, connectionString, prerequisiteStatements, loggerFactory);
         }
 
         public static IDbRequest Create(IProvider queryProvider, IStatement statement, DbRequestMode mode,
-            string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null)
+            string connectionString = null, IEnumerable<IStatement> prerequisiteStatements = null, ILoggerFactory loggerFactory = null)
         {
             if (queryProvider == null) throw new ArgumentNullException(nameof(queryProvider));
             if (statement == null) throw new ArgumentNullException(nameof(statement));
@@ -136,16 +141,18 @@ namespace TTRider.FluidSql.RequestResponse
             }
             return new DataRequest
             {
-                properties = properties
+                properties = properties,
+                loggerFactory = loggerFactory
             };
         }
 
 
-        public IDbRequest CreateNew(string connectionString = null, DbRequestMode? mode = null)
+        public IDbRequest CreateNew(string connectionString = null, DbRequestMode? mode = null, ILoggerFactory loggerFactory = null)
         {
             var dr = new DataRequest
             {
-                properties = this.properties.Clone()
+                properties = this.properties.Clone(),
+                loggerFactory = loggerFactory
             };
             if (!string.IsNullOrWhiteSpace(connectionString))
             {
@@ -157,5 +164,28 @@ namespace TTRider.FluidSql.RequestResponse
             }
             return dr;
         }
+
+        #region Implementation of IDisposable
+
+        void IDisposable.Dispose()
+        {
+        }
+
+        #endregion
+
+        #region Implementation of ILoggerFactory
+
+        ILogger ILoggerFactory.CreateLogger(string categoryName)
+        {
+            if (this.loggerFactory==null) return NullLogger.Instance;
+            return this.loggerFactory.CreateLogger(categoryName);
+        }
+
+        void ILoggerFactory.AddProvider(ILoggerProvider provider)
+        {
+            this.loggerFactory?.AddProvider(provider);
+        }
+
+        #endregion
     }
 }

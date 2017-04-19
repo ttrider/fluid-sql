@@ -20,6 +20,7 @@ namespace TTRider.FluidSql.Providers
 
         protected class Symbols
         {
+
             public const string ABORT = "ABORT";
             public const string ADD = "ADD";
             public const string ALL = "ALL";
@@ -53,6 +54,8 @@ namespace TTRider.FluidSql.Providers
             public const string CONTINUE = "CONTINUE";
             public const string CREATE = "CREATE";
             public const string CURRENT = "CURRENT";
+            public const string DATEADD = "DATEADD";
+            public const string DATEDIFF = "DATEDIFF";
             public const string DATETIME = "DATETIME";
             public const string DEALLOCATE = "DEALLOCATE";
             public const string DECLARE = "DECLARE";
@@ -84,6 +87,7 @@ namespace TTRider.FluidSql.Providers
             public const string FOREIGN = "FOREIGN";
             public const string FROM = "FROM";
             public const string FUNCTION = "FUNCTION";
+            public const string GETDATE = "GETDATE";
             public const string GO = "GO";
             public const string GOTO = "GOTO";
             public const string GROUP_BY = "GROUP BY";

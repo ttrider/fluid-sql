@@ -48,7 +48,7 @@ namespace TTRider.FluidSql.Providers.Redshift
                 VisitAliasedTokenSet(statement.Output, (string)null, Symbols.Comma, null);
             }
 
-            VisitIntoToken(statement.Into);
+            //VisitIntoToken(statement.Into);
 
             if (statement.From.Count > 0)
             {
@@ -60,6 +60,12 @@ namespace TTRider.FluidSql.Providers.Redshift
 
             VisitWhereToken(statement.Where);
 
+            VisitGroupByToken(statement.GroupBy);
+
+            VisitHavingToken(statement.Having);
+
+            VisitOrderByToken(statement.OrderBy);
+
             VisitTopToken(statement);
 
             if (statement.Offset != null)
@@ -67,6 +73,27 @@ namespace TTRider.FluidSql.Providers.Redshift
                 State.Write(Symbols.OFFSET);
                 VisitToken(statement.Offset);
             }
+        }
+
+        protected override void VisitCreateOrAlterViewStatement(CreateOrAlterViewStatement statement)
+        {
+            this.AlterView(statement.Name, statement.DefinitionStatement);
+        }
+
+        protected override void VisitAlterViewStatement(AlterViewStatement statement)
+        {
+            this.AlterView(statement.Name, statement.DefinitionStatement);
+        }
+
+        void AlterView(Name tokenName, IStatement definitionStatement)
+        {
+            DropViewStatement dropViewStatement = Sql.DropView(tokenName, true);
+            VisitStatement(dropViewStatement);
+            State.WriteStatementTerminator();
+
+            CreateViewStatement createViewStatement = Sql.CreateView(tokenName, definitionStatement);
+            VisitStatement(createViewStatement);
+            State.WriteStatementTerminator();
         }
     }
 }
