@@ -3,7 +3,7 @@ extensions: .cs .cpp .h
 // <license>
 // The MIT License (MIT)
 // </license>
-// <copyright company="TTRider, L.L.C.">
+// <copyright company="TTRider Technologies, Inc.">
 // Copyright (c) 2014-2015 All Rights Reserved
 // </copyright>
 extensions: .aspx .ascx
@@ -11,7 +11,7 @@ extensions: .aspx .ascx
  <license>
  The MIT License (MIT)
  </license>
- <copyright company="TTRider, L.L.C.">
+ <copyright company="TTRider Technologies, Inc.">
  Copyright (c) 2014-2015 All Rights Reserved
  </copyright>
 --%>
@@ -22,7 +22,7 @@ extensions:  .xml .config .xsd
  <license>
  The MIT License (MIT)
  </license>
- <copyright company="TTRider, L.L.C.">
+ <copyright company="TTRider Technologies, Inc.">
  Copyright (c) 2014-2015 All Rights Reserved
  </copyright>
 -->
