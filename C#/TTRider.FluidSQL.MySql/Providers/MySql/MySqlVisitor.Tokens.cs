@@ -33,6 +33,32 @@ namespace TTRider.FluidSql.Providers.MySql
         //protected override void VisitInToken(InToken token) { throw new NotImplementedException(); }
         //protected override void VisitNotInToken(NotInToken token) { throw new NotImplementedException(); }
         protected override void VisitCommentToken(CommentToken token) { throw new NotImplementedException(); }
+
+        protected override void VisitExitStatement(ExitStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitPerformStatement(PerformStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitAlterSchemaStatement(AlterSchemaStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void VisitStringifyToken(StringifyToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token) { throw new NotImplementedException(); }
