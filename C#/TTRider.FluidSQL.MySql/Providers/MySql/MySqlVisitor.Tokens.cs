@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TTRider.FluidSql.Providers.MySql
 {
     internal partial class MySqlVisitor
     {
-        //protected override void VisitScalarToken(Scalar token) { throw new NotImplementedException(); }
-        //protected override void VisitNameToken(Name token) { throw new NotImplementedException(); }
         protected override void VisitParameterToken(Parameter token)
         {
             if (token.Value != null)
@@ -18,21 +17,6 @@ namespace TTRider.FluidSql.Providers.MySql
                 State.Write(token.Name);
             }
         }
-        protected override void VisitSnippetToken(Snippet token) { throw new NotImplementedException(); }
-        //protected override void VisitFunctionToken(Function token) { throw new NotImplementedException(); }
-        protected override void VisitBitwiseNotToken(BitwiseNotToken token) { throw new NotImplementedException(); }
-        //protected override void VisitGroupToken(GroupToken token) { throw new NotImplementedException(); }
-        protected override void VisitUnaryMinusToken(UnaryMinusToken token) { throw new NotImplementedException(); }
-        protected override void VisitNotToken(NotToken token) { throw new NotImplementedException(); }
-        //protected override void VisitIsNullToken(IsNullToken token) { throw new NotImplementedException(); }
-        //protected override void VisitIsNotNullToken(IsNotNullToken token) { throw new NotImplementedException(); }
-        protected override void VisitExistsToken(ExistsToken token) { throw new NotImplementedException(); }
-        protected override void VisitAllToken(AllToken token) { throw new NotImplementedException(); }
-        protected override void VisitAnyToken(AnyToken token) { throw new NotImplementedException(); }
-        protected override void VisitBetweenToken(BetweenToken token) { throw new NotImplementedException(); }
-        //protected override void VisitInToken(InToken token) { throw new NotImplementedException(); }
-        //protected override void VisitNotInToken(NotInToken token) { throw new NotImplementedException(); }
-        protected override void VisitCommentToken(CommentToken token) { throw new NotImplementedException(); }
 
         protected override void VisitExitStatement(ExitStatement statement)
         {
@@ -51,20 +35,47 @@ namespace TTRider.FluidSql.Providers.MySql
 
         protected override void VisitAddForeignKeyStatement(AddForeignKeyStatement statement)
         {
-            throw new NotImplementedException();
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.ADD);
+            State.Write(Symbols.CONSTRAINT);
+            VisitNameToken(statement.Name);
+            State.Write(Symbols.FOREIGN);
+            State.Write(Symbols.KEY);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c => c.Name));
+            State.Write(Symbols.REFERENCES);
+            VisitNameToken(statement.References);
+            VisitTokenSetInParenthesis(statement.Columns.Select(c => c.ReferencedName));
+
+            if (statement.OnDelete != null)
+            {
+                State.Write(Symbols.ON);
+                State.Write(Symbols.DELETE);
+                State.Write(statement.OnDelete.ToString().ToUpper());
+            }
+            if (statement.OnUpdate != null)
+            {
+                State.Write(Symbols.ON);
+                State.Write(Symbols.UPDATE);
+                State.Write(statement.OnUpdate.ToString().ToUpper());
+            }
         }
 
         protected override void VisitDropForeignKeyStatement(DropForeignKeyStatement statement)
         {
-            throw new NotImplementedException();
+            State.Write(Symbols.ALTER);
+            State.Write(Symbols.TABLE);
+            VisitNameToken(statement.TableName);
+            State.Write(Symbols.DROP);
+            State.Write(Symbols.FOREIGN);
+            State.Write(Symbols.KEY);
+            VisitNameToken(statement.Name);
         }
 
-        protected override void VisitStringifyToken(StringifyToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenMatchedThenUpdateSet(WhenMatchedTokenThenUpdateSetToken token) { throw new NotImplementedException(); }
         protected override void VisitWhenNotMatchedThenInsert(WhenNotMatchedTokenThenInsertToken token) { throw new NotImplementedException(); }
-        //protected override void VisitOrderToken(Order token) { throw new NotImplementedException(); }
-        //protected override void VisitCommonTableExpression(CTEDefinition token) { throw new NotImplementedException(); }
 
         protected void VisitIntoToken(Name intoToken)
         {
@@ -138,7 +149,7 @@ namespace TTRider.FluidSql.Providers.MySql
             if (usingList != null)
             {
                 var separator = Symbols.USING;
-                foreach (Name usingItem in usingList)
+                foreach (var usingItem in usingList)
                 {
                     State.Write(separator);
                     VisitToken(usingItem, true);
@@ -157,24 +168,23 @@ namespace TTRider.FluidSql.Providers.MySql
             , string sourceColumnOn
             , bool isTop)
         {
-            int counter = 0;
-            ExpressionToken tempExpression = null;
+            var counter = 0;
 
             if (statement.WhenMatched != null)
             {
-                foreach (WhenMatchedToken item in statement.WhenMatched)
+                foreach (var item in statement.WhenMatched)
                 {
                     if (!(item is WhenMatchedTokenThenDeleteToken))
                     {
 
-                        SelectStatement tempTableSelectStatement = Sql.Select.Output(Sql.Name(targetAlias, targetColumnOn))
+                        var tempTableSelectStatement = Sql.Select.Output(Sql.Name(targetAlias, targetColumnOn))
                                             .From(targetTable, targetAlias)
                                             .InnerJoin(Sql.Name(sourceTable).As(sourceAlias), Sql.Name(targetAlias, targetColumnOn).IsEqual(Sql.Name(sourceAlias, sourceColumnOn)));
 
 
-                        string tempAlias = "tmp_" + counter;
+                        var tempAlias = "tmp_" + counter;
 
-                        tempExpression = (IsEqualsToken)(statement.On);
+                        ExpressionToken tempExpression = (IsEqualsToken)(statement.On);
 
                         if (item.AndCondition != null)
                         {
@@ -188,7 +198,7 @@ namespace TTRider.FluidSql.Providers.MySql
                         }
                         tempTableSelectStatement = tempTableSelectStatement.Where(tempExpression);
 
-                        CreateTableStatement createTempTable =
+                        var createTempTable =
                             Sql.CreateTemporaryTable(tempAlias)
                             .As(tempTableSelectStatement);
 
@@ -199,7 +209,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                         if (((WhenMatchedTokenThenUpdateSetToken)item).Set.Count != 0)
                         {
-                            foreach (BinaryEqualToken setItem in ((WhenMatchedTokenThenUpdateSetToken)item).Set)
+                            foreach (var setItem in ((WhenMatchedTokenThenUpdateSetToken)item).Set)
                             {
                                 if (setItem.First is Name)
                                 {
@@ -214,7 +224,7 @@ namespace TTRider.FluidSql.Providers.MySql
                             }
                         }
 
-                        UpdateStatement updateTable =
+                        var updateTable =
                             Sql.Update(Sql.NameAs(targetTable, targetAlias))
                             .Set(((WhenMatchedTokenThenUpdateSetToken)item).Set)
                             .From(Sql.NameAs(sourceTable, sourceAlias))
@@ -237,13 +247,12 @@ namespace TTRider.FluidSql.Providers.MySql
             , string sourceColumnOn
             , bool isTop)
         {
-            ExpressionToken tempExpression = new ExpressionToken();
             if (statement.WhenMatched != null)
             {
-                foreach (WhenMatchedToken item in statement.WhenMatched)
+                foreach (var item in statement.WhenMatched)
                 {
-                    bool isTargetCondition = true;
-                    SelectStatement sourceSelect = Sql.Select.Output(sourceColumnOn).From(sourceTable);
+                    var isTargetCondition = true;
+                    var sourceSelect = Sql.Select.Output(sourceColumnOn).From(sourceTable);
 
                     if (item.AndCondition != null)
                     {
@@ -270,8 +279,8 @@ namespace TTRider.FluidSql.Providers.MySql
                             isTargetCondition = false;
                         }
                     }
-                    tempExpression = Sql.Name(targetAlias, targetColumnOn)
-                            .In(sourceSelect);
+                    var tempExpression = Sql.Name(targetAlias, targetColumnOn)
+                        .In(sourceSelect);
 
                     if ((item.AndCondition != null) && isTargetCondition)
                     {
@@ -286,7 +295,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                     if ((item is WhenMatchedTokenThenDeleteToken))
                     {
-                        DeleteStatement deleteStatement = Sql.Delete.From(Sql.NameAs(targetTable, targetAlias))
+                        var deleteStatement = Sql.Delete.From(Sql.NameAs(targetTable, targetAlias))
                                         .Where(tempExpression);
                         VisitStatement(deleteStatement);
                         State.WriteStatementTerminator();
@@ -305,14 +314,12 @@ namespace TTRider.FluidSql.Providers.MySql
             , bool isTop
             )
         {
-            ExpressionToken tempExpression = new ExpressionToken();
-
             if (statement.WhenNotMatchedBySource.Count != 0)
             {
-                foreach (WhenMatchedToken item in statement.WhenNotMatchedBySource)
+                foreach (var item in statement.WhenNotMatchedBySource)
                 {
-                    tempExpression = Sql.Name(targetAlias, targetColumnOn)
-                            .NotIn(Sql.Select.Output(sourceColumnOn).From(sourceTable));
+                    var tempExpression = Sql.Name(targetAlias, targetColumnOn)
+                        .NotIn(Sql.Select.Output(sourceColumnOn).From(sourceTable));
 
                     if (item.AndCondition != null)
                     {
@@ -325,7 +332,7 @@ namespace TTRider.FluidSql.Providers.MySql
                             .In(Sql.Select.Output(sourceColumnOn).From(TopAlias)));
                     }
 
-                    DeleteStatement whenNotMatchedBySourceDelete =
+                    var whenNotMatchedBySourceDelete =
                     Sql.Delete.From(Sql.NameAs(targetTable, targetAlias))
                     .Where(tempExpression);
 
@@ -344,30 +351,29 @@ namespace TTRider.FluidSql.Providers.MySql
             , string sourceTable
             , string sourceColumnOn)
         {
-            string tempSourceAlias = "tmp_" + sourceAlias;
-            ExpressionToken tempExpression = new ExpressionToken();
+            var tempSourceAlias = "tmp_" + sourceAlias;
             if (statement.WhenNotMatched.Count != 0)
             {
-                int counter = 0;
+               
 
-                foreach (WhenMatchedToken item in statement.WhenNotMatched)
+                foreach (var item in statement.WhenNotMatched)
                 {
-                    tempExpression = Sql.Name(sourceAlias, sourceColumnOn)
-                    .NotIn(Sql.Select.Output(targetColumnOn).From(targetTable));
+                    var tempExpression = Sql.Name(sourceAlias, sourceColumnOn)
+                        .NotIn(Sql.Select.Output(targetColumnOn).From(targetTable));
 
                     if (item.AndCondition != null)
                     {
                         tempExpression = tempExpression.And(AddPrefixToExpressionToken((ExpressionToken)item.AndCondition, sourceAlias));
                     }
 
-                    CreateTableStatement createTempTable =
+                    var createTempTable =
                            Sql.CreateTemporaryTable(tempSourceAlias)
                            .As(Sql.Select.From(Sql.NameAs(sourceTable, sourceAlias)).Where(tempExpression));
 
                     VisitStatement(createTempTable);
                     State.WriteStatementTerminator();
 
-                    InsertStatement insertStatement = Sql.Insert.Into(targetTable);
+                    var insertStatement = Sql.Insert.Into(targetTable);
 
                     if ((((WhenNotMatchedTokenThenInsertToken)item).Values.Count == 0)
                         || (((WhenNotMatchedTokenThenInsertToken)item).Columns.Count == 0)
@@ -378,12 +384,12 @@ namespace TTRider.FluidSql.Providers.MySql
                     }
                     else
                     {
-                        foreach (Name columnName in ((WhenNotMatchedTokenThenInsertToken)item).Columns)
+                        foreach (var columnName in ((WhenNotMatchedTokenThenInsertToken)item).Columns)
                         {
                             insertStatement.Columns.Add(Sql.Name(columnName.LastPart));
                         }
-                        SelectStatement fromSelect = Sql.Select.From(tempSourceAlias);
-                        foreach (Token outputColumn in ((WhenNotMatchedTokenThenInsertToken)item).Values)
+                        var fromSelect = Sql.Select.From(tempSourceAlias);
+                        foreach (var outputColumn in ((WhenNotMatchedTokenThenInsertToken)item).Values)
                         {
                             fromSelect.Output.Add(Sql.Name(((Name)outputColumn).LastPart));
                         }
@@ -392,7 +398,7 @@ namespace TTRider.FluidSql.Providers.MySql
 
                     VisitStatement(insertStatement);
                     State.WriteStatementTerminator();
-                    counter++;
+                    
                     VisitStatement(Sql.DropTable(tempSourceAlias, true));
                     State.WriteStatementTerminator();
                 }
@@ -401,18 +407,9 @@ namespace TTRider.FluidSql.Providers.MySql
 
         protected void VisitCRUDJoinOnToken(List<Join> joins, bool ifWhereExist = false)
         {
-            string separator = string.Empty;
+           var separator = !ifWhereExist ? Symbols.WHERE : Symbols.AND;
 
-            if (!ifWhereExist)
-            {
-                separator = Symbols.WHERE;
-            }
-            else
-            {
-                separator = Symbols.AND;
-            }
-
-            foreach (Join join in joins)
+            foreach (var join in joins)
             {
                 if (join.On != null)
                 {
@@ -428,7 +425,7 @@ namespace TTRider.FluidSql.Providers.MySql
             if (joins.Count > 0)
             {
                 var separator = (isUpdate) ? Symbols.FROM : Symbols.USING;
-                foreach (Join join in joins)
+                foreach (var join in joins)
                 {
                     State.Write(separator);
                     VisitToken(join.Source);

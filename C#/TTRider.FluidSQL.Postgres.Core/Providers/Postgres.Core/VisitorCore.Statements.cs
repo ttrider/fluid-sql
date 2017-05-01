@@ -769,7 +769,7 @@ namespace TTRider.FluidSql.Providers.Postgres.Core
             State.Write(Symbols.AS);
             if (statement.Target.Target != null)
             {
-                this.Stringify(statement.Target.Target, false);
+                VisitStatement(statement.Target.Target);
             }
             State.WriteStatementTerminator();
         }
@@ -1054,29 +1054,6 @@ namespace TTRider.FluidSql.Providers.Postgres.Core
             State.Write(Symbols.IF);
         }
 
-        private void Stringify(IStatement statement, bool needQuote = true)
-        {
-            if (needQuote)
-            {
-                this.Stringify(() => VisitStatement(statement));
-            }
-            else
-            {
-                this.StringifyWithoutQuotes(() => VisitStatement(statement));
-            }
-        }
-
-        private void Stringify(Action fragment)
-        {
-            State.WriteBeginStringify(Symbols.SingleQuote, Symbols.SingleQuote);
-            fragment();
-            State.WriteEndStringify();
-        }
-
-        private void StringifyWithoutQuotes(Action fragment)
-        {
-            fragment();
-        }
 
         private void CreateOrReplaceFunction(IProcedureStatement statement)
         {

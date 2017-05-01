@@ -82,6 +82,11 @@ namespace TTRider.FluidSql.Providers
             VisitStatement(statement.Second);
         }
 
+        protected virtual void VisitStringifyStatement(StringifyStatement statement)
+        {
+            this.Stringify(statement.Content);
+        }
+
 
         protected abstract void VisitDelete(DeleteStatement statement);
         protected abstract void VisitUpdate(UpdateStatement statement);
@@ -100,7 +105,6 @@ namespace TTRider.FluidSql.Providers
         protected abstract void VisitCreateIndexStatement(CreateIndexStatement statement);
         protected abstract void VisitAlterIndexStatement(AlterIndexStatement statement);
         protected abstract void VisitDropIndexStatement(DropIndexStatement statement);
-        protected abstract void VisitStringifyStatement(StringifyStatement statement);
         protected abstract void VisitBreakStatement(BreakStatement statement);
         protected abstract void VisitContinueStatement(ContinueStatement statement);
         protected abstract void VisitExitStatement(ExitStatement statement);

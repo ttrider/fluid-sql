@@ -97,51 +97,37 @@ namespace TTRider.FluidSql.Providers.SqlServer
             return namePart;
         }
 
-        private void Stringify(IStatement statement)
-        {
-            Stringify(() => VisitStatement(statement));
-        }
-
-        private void Stringify(RecordsetSourceToken statement)
-        {
-            Stringify(() => VisitToken(statement));
-        }
-        private void Stringify(Action fragment)
-        {
-            State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
-            fragment();
-            State.WriteEndStringify();
-        }
+        
 
 
         protected override void VisitType(ITyped typedToken)
         {
             if (typedToken.DbType.HasValue)
             {
-                State.Write(dbTypeStrings[(int)typedToken.DbType]);
-            }
+                State.Write(dbTypeStrings[(int) typedToken.DbType]);
 
-            if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
-            {
-                State.Write(Symbols.OpenParenthesis);
-                if (typedToken.Length.HasValue)
+                if (typedToken.Length.HasValue || typedToken.Precision.HasValue || typedToken.Scale.HasValue)
                 {
-                    State.Write(typedToken.Length.Value == -1
-                        ? Symbols.MAX
-                        : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                else if (typedToken.Precision.HasValue)
-                {
-                    State.Write(typedToken.Precision.Value.ToString(CultureInfo.InvariantCulture));
-
-                    if (typedToken.Scale.HasValue)
+                    State.Write(Symbols.OpenParenthesis);
+                    if (typedToken.Length.HasValue)
                     {
-                        State.Write(Symbols.Comma);
-                        State.Write(typedToken.Scale.Value.ToString(CultureInfo.InvariantCulture));
+                        State.Write(typedToken.Length.Value == -1
+                            ? Symbols.MAX
+                            : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
                     }
-                }
+                    else if (typedToken.Precision.HasValue)
+                    {
+                        State.Write(typedToken.Precision.Value.ToString(CultureInfo.InvariantCulture));
 
-                State.Write(Symbols.CloseParenthesis);
+                        if (typedToken.Scale.HasValue)
+                        {
+                            State.Write(Symbols.Comma);
+                            State.Write(typedToken.Scale.Value.ToString(CultureInfo.InvariantCulture));
+                        }
+                    }
+
+                    State.Write(Symbols.CloseParenthesis);
+                }
             }
         }
 
@@ -198,11 +184,6 @@ namespace TTRider.FluidSql.Providers.SqlServer
                 State.Write(Symbols.AssignVal);
                 State.Write(value.Value.ToString(CultureInfo.InvariantCulture));
             }
-        }
-
-        protected override void VisitStringifyToken(StringifyToken token)
-        {
-            Stringify(() => VisitToken(token.Content));
         }
 
 
@@ -1674,10 +1655,7 @@ namespace TTRider.FluidSql.Providers.SqlServer
             }
         }
 
-        protected override void VisitStringifyStatement(StringifyStatement statement)
-        {
-            this.Stringify(statement.Content);
-        }
+        
 
         protected override void VisitDeallocateStatement(DeallocateStatement statement)
         {

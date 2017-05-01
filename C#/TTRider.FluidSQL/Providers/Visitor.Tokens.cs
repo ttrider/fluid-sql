@@ -17,7 +17,22 @@ namespace TTRider.FluidSql.Providers
 
         protected virtual void VisitStringifyToken(StringifyToken token)
         {
-            throw new NotImplementedException();
+            Stringify(() => VisitToken(token.Content));
+        }
+        protected void Stringify(IStatement statement)
+        {
+            Stringify(() => VisitStatement(statement));
+        }
+
+        protected void Stringify(RecordsetSourceToken statement)
+        {
+            Stringify(() => VisitToken(statement));
+        }
+        protected void Stringify(Action fragment)
+        {
+            State.WriteBeginStringify(LiteralOpenQuote, LiteralCloseQuote);
+            fragment();
+            State.WriteEndStringify();
         }
 
         protected virtual void VisitWhenMatchedThenDelete(WhenMatchedTokenThenDeleteToken token)

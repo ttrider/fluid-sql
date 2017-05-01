@@ -27,9 +27,9 @@ namespace TTRider.FluidSql.Providers.MySql
             "LONGBLOB", // Image = 7,
             "INTEGER", // Int = 8,
             "DECIMAL", // Money = 9,
-            "CHAR", // NChar = 10,
+            "NCHAR", // NChar = 10,
             "TEXT", // NText = 11,
-            "VARCHAR", // NVarChar = 12,
+            "NVARCHAR", // NVarChar = 12,
             "REAL", // Real = 13,
             "CHAR ( 38 )", // UniqueIdentifier = 14,
             "DATETIME", // SmallDateTime = 15,
@@ -69,18 +69,52 @@ namespace TTRider.FluidSql.Providers.MySql
         {
             if (typedToken.DbType.HasValue)
             {
+                if (
+                    typedToken.DbType == CommonDbType.DateTime2
+                    || typedToken.DbType == CommonDbType.DateTimeOffset
+                    || typedToken.DbType == CommonDbType.DateTime
+                    || typedToken.DbType == CommonDbType.Date
+                    || typedToken.DbType == CommonDbType.Time
+                )
+                {
+                    State.Write(DbTypeStrings[(int)CommonDbType.DateTime]);
+                    return;
+                }
+
+
+                if (
+                    (typedToken.DbType == CommonDbType.VarChar
+                     || typedToken.DbType == CommonDbType.NVarChar
+                     || typedToken.DbType == CommonDbType.Char
+                     || typedToken.DbType == CommonDbType.NChar)
+                    && typedToken.Length.HasValue
+                    && typedToken.Length.Value == -1
+                )
+                {
+                    // MySQL doesn't support VARCHAR(MAX)
+                    State.Write(DbTypeStrings[(int)CommonDbType.Text]);
+                    return;
+                }
+
                 State.Write(DbTypeStrings[(int)typedToken.DbType]);
-            }
-            if (typedToken.Length.HasValue)
-            {
-                State.Write(Symbols.OpenParenthesis);
-                State.Write(typedToken.Length.Value == -1
-                        ? "65535"                                                           //max lengh for mySql
-                        : typedToken.Length.Value.ToString(CultureInfo.InvariantCulture));
-                
-                State.Write(Symbols.CloseParenthesis);
+
+                if (typedToken.Length.HasValue)
+                {
+                    State.Write(Symbols.OpenParenthesis);
+
+                    var length = typedToken.Length.Value;
+
+                    
+
+                    State.Write(length == -1
+                        ? "65535" //max lengh for mySql
+                        : length.ToString(CultureInfo.InvariantCulture));
+
+                    State.Write(Symbols.CloseParenthesis);
+                }
             }
         }
+
 
 
         protected class MySqlSymbols : Symbols
