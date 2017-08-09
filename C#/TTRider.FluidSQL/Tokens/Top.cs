@@ -11,6 +11,10 @@ namespace TTRider.FluidSql
 {
     public class Top : Token
     {
+        public Top()
+        {
+            
+        }
 
         public Top(long value, bool percent, bool withTies)
         {

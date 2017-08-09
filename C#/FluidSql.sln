@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTRider.FluidSQL", "TTRider.FluidSQL\TTRider.FluidSQL.csproj", "{16D1F52E-ECD2-4096-BCFD-BA0B349DB645}"
 EndProject
@@ -18,6 +18,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xUnit.FluidSql", "xUnit.FluidSql\xUnit.FluidSql.csproj", "{D7AFFB8E-1D1B-45B4-8285-CABFB524F562}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSQL.MySql", "TTRider.FluidSQL.MySql\TTRider.FluidSQL.MySql.csproj", "{A1EF9745-A698-4D24-A91D-9EB00E87B449}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSql.Cache", "TTRider.FluidSql.Cache\TTRider.FluidSql.Cache.csproj", "{1751E4C3-CF02-4F1A-807C-10529CE2FCD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSql.Cache.Memory", "TTRider.FluidSql.Cache.Memory\TTRider.FluidSql.Cache.Memory.csproj", "{B8EAADEB-D7BA-4B96-BED2-1BAEBF0164E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTRider.FluidSql.Cache.Redis", "TTRider.FluidSql.Cache.Redis\TTRider.FluidSql.Cache.Redis.csproj", "{2FA99FF6-D653-4CAE-8BB6-6DD3FE2A16F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", "{A50223E5-E71A-4DE5-B1D1-576856CF4BA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +65,22 @@ Global
 		{A1EF9745-A698-4D24-A91D-9EB00E87B449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1EF9745-A698-4D24-A91D-9EB00E87B449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1EF9745-A698-4D24-A91D-9EB00E87B449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1751E4C3-CF02-4F1A-807C-10529CE2FCD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1751E4C3-CF02-4F1A-807C-10529CE2FCD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1751E4C3-CF02-4F1A-807C-10529CE2FCD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1751E4C3-CF02-4F1A-807C-10529CE2FCD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8EAADEB-D7BA-4B96-BED2-1BAEBF0164E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8EAADEB-D7BA-4B96-BED2-1BAEBF0164E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8EAADEB-D7BA-4B96-BED2-1BAEBF0164E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8EAADEB-D7BA-4B96-BED2-1BAEBF0164E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA99FF6-D653-4CAE-8BB6-6DD3FE2A16F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA99FF6-D653-4CAE-8BB6-6DD3FE2A16F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA99FF6-D653-4CAE-8BB6-6DD3FE2A16F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA99FF6-D653-4CAE-8BB6-6DD3FE2A16F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A50223E5-E71A-4DE5-B1D1-576856CF4BA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A50223E5-E71A-4DE5-B1D1-576856CF4BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A50223E5-E71A-4DE5-B1D1-576856CF4BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A50223E5-E71A-4DE5-B1D1-576856CF4BA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
