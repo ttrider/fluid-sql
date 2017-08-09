@@ -16,8 +16,8 @@
     <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RootNamespace>TTRider.FluidSQL</RootNamespace>
-    <AssemblyVersion>1.11.11.0</AssemblyVersion>
-    <Version>1.11.11</Version>
+    <AssemblyVersion>1.11.12.0</AssemblyVersion>
+    <Version>1.11.12</Version>
     <FileVersion>1.11.11.0</FileVersion>
 
   </PropertyGroup>

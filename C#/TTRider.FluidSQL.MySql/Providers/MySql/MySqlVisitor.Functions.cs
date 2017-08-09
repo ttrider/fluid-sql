@@ -310,5 +310,46 @@ namespace TTRider.FluidSql.Providers.MySql
             }
             State.Write(Symbols.CloseParenthesis);
         }
+
+        
+
+        protected override void VisitContainsToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            State.Write(Symbols.CONCAT);
+            State.Write(Symbols.OpenParenthesis);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Second);
+            State.Write(Symbols.Comma);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.CloseParenthesis);
+
+        }
+
+        protected override void VisitStartsWithToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            State.Write(Symbols.CONCAT);
+            State.Write(Symbols.OpenParenthesis);
+            VisitToken(token.Second);
+            State.Write(Symbols.Comma);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.CloseParenthesis);
+        }
+
+        protected override void VisitEndsWithToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            State.Write(Symbols.CONCAT);
+            State.Write(Symbols.OpenParenthesis);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.Comma);
+            VisitToken(token.Second);
+            State.Write(Symbols.CloseParenthesis);
+        }
     }
 }

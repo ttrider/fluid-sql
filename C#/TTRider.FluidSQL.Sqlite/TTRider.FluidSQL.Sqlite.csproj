@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.11.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

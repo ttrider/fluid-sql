@@ -49,6 +49,7 @@ namespace TTRider.FluidSql.Providers
             public const string COALESCE = "COALESCE";
             public const string COMMIT = "COMMIT";
             public const string COMMITED = "COMMITED";
+            public const string CONCAT = "CONCAT";
             public const string CONFLICT = "CONFLICT";
             public const string CONSTRAINT = "CONSTRAINT";
             public const string CONTINUE = "CONTINUE";
@@ -249,6 +250,8 @@ namespace TTRider.FluidSql.Providers
 
             public const string SingleQuote = "'";
             public const string DoubleQuote = "\"";
+
+            public const string DoublePipe = "||";
 
             //for postgresql
             public const string TechId = "ctid";

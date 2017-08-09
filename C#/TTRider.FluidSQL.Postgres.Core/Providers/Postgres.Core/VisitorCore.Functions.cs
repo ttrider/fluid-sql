@@ -360,5 +360,38 @@ namespace TTRider.FluidSql.Providers.Postgres.Core
 
             VisitNameToken(statement.Name);
         }
+
+        protected override void VisitContainsToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.DoublePipe);
+            VisitToken(token.Second);
+            State.Write(Symbols.DoublePipe);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+
+        }
+
+        protected override void VisitStartsWithToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            VisitToken(token.Second);
+            State.Write(Symbols.DoublePipe);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+        }
+
+        protected override void VisitEndsWithToken(BinaryToken token)
+        {
+            VisitToken(token.First);
+            State.Write(Symbols.LIKE);
+            State.Write(this.LiteralOpenQuote, Symbols.ModuloVal, this.LiteralCloseQuote);
+            State.Write(Symbols.DoublePipe);
+            VisitToken(token.Second);
+            
+        }
+
+
     }
 }

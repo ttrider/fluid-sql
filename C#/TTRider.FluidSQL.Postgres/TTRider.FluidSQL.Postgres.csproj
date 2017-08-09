@@ -23,6 +23,7 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RootNamespace>TTRider.FluidSql</RootNamespace>
+    <Version>1.11.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
