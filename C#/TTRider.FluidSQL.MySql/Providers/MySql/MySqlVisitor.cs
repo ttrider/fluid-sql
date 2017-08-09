@@ -54,7 +54,7 @@ namespace TTRider.FluidSql.Providers.MySql
         {
             this.IdentifierOpenQuote = "`";
             this.IdentifierCloseQuote = "`";
-            this.LiteralOpenQuote = "N'";
+            this.LiteralOpenQuote = "'";
             this.LiteralCloseQuote = "'";
             this.CommentOpenQuote = "/*";
             this.CommentCloseQuote = "*/";
