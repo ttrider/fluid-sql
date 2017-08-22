@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Data access wrapper for FluidSQL</Description>
+    <Copyright>Copyright (C) 2014 - 2017 TTRider, L.L.C.</Copyright>
+    <VersionPrefix>1.11.0</VersionPrefix>
+    <AssemblyTitle>TTRider.FluidSql.Cache</AssemblyTitle>
+    <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>TTRider.FluidSql.Cache</AssemblyName>
+    <PackageId>TTRider.FluidSQL.Cache</PackageId>
+    <PackageTags>SQL;Fluid;</PackageTags>
+    <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -456,12 +456,18 @@ namespace TTRider.FluidSql.Providers.MySql
                     VisitTokenSetInParenthesis(statement.PrimaryKey.Columns);
                 }
 
-                if (statement.Indicies.Count > 0 && !statement.IsTableVariable)
+                if (statement.Indicies.Count > 0)
                 {
                     foreach (var createIndexStatement in statement.Indicies)
                     {
-                        VisitCreateIndexStatement(createIndexStatement);
-                        State.WriteStatementTerminator();
+                        State.Write(Symbols.Comma);
+
+                        State.Write(Symbols.INDEX);
+
+                        VisitToken(createIndexStatement.Name);
+
+                        // columns
+                        VisitTokenSetInParenthesis(createIndexStatement.Columns);
                     }
                 }
             }
