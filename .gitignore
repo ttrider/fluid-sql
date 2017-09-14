@@ -14,3 +14,4 @@ obj
 bin
 *.ncrunchproject
 /C#/_NCrunch_FluidSql/FluidSql.crunchsolution.cache
+node_modules

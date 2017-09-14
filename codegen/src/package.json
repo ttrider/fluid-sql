@@ -1,0 +1,32 @@
+{
+    "name": "fluidgen",
+    "version": "0.0.0",
+    "description": "FluidGen",
+    "main": "app.js",
+    "author": {
+        "name": "vladimiryangurskiy",
+        "email": ""
+    },
+    "dependencies": {
+        "async": "^1.5.2",
+        "glob": "^7.0.3",
+        "guid": "0.0.12",
+        "minimist": "^1.2.0",
+        "mkdirp": "^0.5.1",
+        "node-uuid": "^1.4.7",
+        "string": "^3.3.1",
+        "walk": "^2.3.9",
+        "node-code-writer": "^0.0.4",
+        "js-yaml": "~3.8.2",
+        "antlr4": "~4.6.0"
+    },
+    "devDependencies": {
+        "gulp-util": "^3.0.7",
+        "gulp": "^3.9.1",
+        "gulp-less": "^3.0.5",
+        "gulp-typescript": "^2.12.1",
+        "gulp-concat": "2.5.2",
+        "gulp-clean": "^0.3.2",
+        "minimist": "^1.2.0"
+    }
+}
