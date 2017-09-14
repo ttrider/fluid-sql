@@ -43,7 +43,6 @@ namespace TTRider.FluidSql.Providers.MySql
                 var connection = new MySqlConnection(connectionString);
                 connection.Open();
                 command = connection.CreateCommand();
-                command.Disposed += (s, o) => connection.Close();
             }
             else
             {
@@ -78,7 +77,6 @@ namespace TTRider.FluidSql.Providers.MySql
 
             var command = connection.CreateCommand();
 
-            command.Disposed += (s, o) => connection.Close();
 
             command.CommandType = CommandType.Text;
             command.CommandText = state.Value;

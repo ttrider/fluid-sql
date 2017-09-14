@@ -1,10 +1,2 @@
-#:Y:\src\fluid-sql\C#\xUnit.Sqlite\xUnit.Sqlite.xproj
-Y:\src\fluid-sql\C#\xUnit.Sqlite\xUnit.Sqlite.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj
-Y:\src\fluid-sql\C#\xUnit.Sqlite\xUnit.Sqlite.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj
-Y:\src\fluid-sql\C#\TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj
-#:Y:\src\fluid-sql\C#\xUnit.FluidSql\xUnit.FluidSql.xproj
-Y:\src\fluid-sql\C#\xUnit.FluidSql\xUnit.FluidSql.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj
-#:Y:\src\fluid-sql\C#\TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj
-Y:\src\fluid-sql\C#\TTRider.FluidSQL.Sqlite\TTRider.FluidSQL.Sqlite.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj
-#:Y:\src\fluid-sql\C#\TTRider.FluidSql.RequestResponse\TTRider.FluidSql.RequestResponse.xproj
-Y:\src\fluid-sql\C#\TTRider.FluidSql.RequestResponse\TTRider.FluidSql.RequestResponse.xproj|Y:\src\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj
+#:C:\src\TT\fluid-sql\fluid-sql\C#\TTRider.FluidSQL.Postgres\TTRider.FluidSQL.Postgres.xproj
+C:\src\TT\fluid-sql\fluid-sql\C#\TTRider.FluidSQL.Postgres\TTRider.FluidSQL.Postgres.xproj|C:\src\TT\fluid-sql\fluid-sql\C#\TTRider.FluidSQL.dll\TTRider.FluidSQL.dll.xproj

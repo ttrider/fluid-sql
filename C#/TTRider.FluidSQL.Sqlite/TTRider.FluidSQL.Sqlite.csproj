@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Data access wrapper for FluidSQL</Description>
+    <Copyright>Copyright (C) 2014 - 2017 TTRider, L.L.C.</Copyright>
+    <VersionPrefix>1.11.0</VersionPrefix>
+    <AssemblyTitle>TTRider.FluidSql.SQLite</AssemblyTitle>
+    <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>TTRider.FluidSql.SQLite</AssemblyName>
+    <PackageId>TTRider.FluidSQL.Sqlite</PackageId>
+    <PackageTags>SQL;Fluid;Sqlite</PackageTags>
+    <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.11.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.1.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
+  </ItemGroup>
+
+</Project>

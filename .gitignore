@@ -15,3 +15,8 @@ bin
 *.ncrunchproject
 /C#/_NCrunch_FluidSql/FluidSql.crunchsolution.cache
 node_modules
+/C#/xUnit.FluidSql/nuget
+/C#/TTRider.FluidSQL.Sqlite/nuget
+/C#/TTRider.FluidSQL.RequestResponse/nuget
+/C#/TTRider.FluidSQL.Postgres.Core/nuget
+/C#/TTRider.FluidSQL/nuget

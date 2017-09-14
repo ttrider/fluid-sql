@@ -1,0 +1,18 @@
+﻿// <license>
+//     The MIT License (MIT)
+// </license>
+// <copyright company="TTRider Technologies, Inc.">
+//     Copyright (c) 2014-2017 All Rights Reserved
+// </copyright>
+
+namespace TTRider.FluidSql
+{
+    public class CreateSchemaStatement : IStatement
+    {
+        public Name Name { get; set; }
+
+        public bool CheckIfNotExists { get; set; }
+
+        public string Owner { get; set; }
+    }
+}

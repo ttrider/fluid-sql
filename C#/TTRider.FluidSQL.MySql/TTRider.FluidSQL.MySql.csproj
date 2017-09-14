@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+
+    <Description>Data access wrapper for FluidSQL</Description>
+    <Copyright>Copyright (C) 2014-2017 TTRider Technologies, Inc.</Copyright>
+    <AssemblyTitle>TTRider.FluidSql.MySql</AssemblyTitle>
+    <VersionPrefix>1.10.5</VersionPrefix>
+    <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <AssemblyName>TTRider.FluidSql.MySql</AssemblyName>
+    <PackageId>TTRider.FluidSQL.MySql</PackageId>
+    <PackageTags>SQL;Fluid;MySql</PackageTags>
+    <PackageProjectUrl>https://github.com/ttrider/fluid-sql</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ttrider/fluid-sql/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>TTRider.FluidSQL</RootNamespace>
+    <AssemblyVersion>1.11.14.0</AssemblyVersion>
+    <Version>1.11.14</Version>
+    <FileVersion>1.11.14.0</FileVersion>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="10.4.0" />
+    <PackageReference Include="MySql.Data" Version="7.0.7-m61" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
