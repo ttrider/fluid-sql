@@ -66,6 +66,8 @@ namespace xUnit.Postgres
             Assert.Equal("DO\r\n$do$\r\nBEGIN\r\nDELETE FROM \"target_tbl\" AS \"alias_target_tbl\" WHERE \"alias_target_tbl\".\"id\" IN ( ( SELECT \"id\" FROM \"source_tbl\" ) );\r\nEND;\r\n$do$;", command.CommandText);
         }
 
+        //TODO: MERGE Statement
+        /*
         [Fact]
         public void MergeTopWhenMatchDelete()
         {
@@ -271,5 +273,6 @@ namespace xUnit.Postgres
             Assert.Equal("DO\r\n$do$\r\nBEGIN\r\nCREATE TEMPORARY TABLE IF NOT EXISTS \"top_alias\" AS ( SELECT \"id\" FROM \"target_tbl\" LIMIT 10 );\r\nCREATE TEMPORARY TABLE \"tmp_0\" AS ( WITH \"updated\" AS ( UPDATE \"target_tbl\" AS \"target\" SET \"id\" = \"source\".\"id\", \"column_value\" = \"source\".\"column_value\" FROM \"source_tbl\" AS \"source\" WHERE \"target\".\"id\" = \"source\".\"id\" AND \"target\".\"column_value\" IS NULL AND \"target\".\"id\" IN ( ( SELECT \"id\" FROM \"top_alias\" ) ) RETURNING \"target\".\"id\" ) SELECT \"id\" FROM \"updated\" );\r\nDELETE FROM \"target_tbl\" AS \"target\" WHERE \"target\".\"id\" IN ( ( SELECT \"id\" FROM \"source_tbl\" WHERE \"source_tbl\".\"column_value\" = 'somename' ) ) AND \"target\".\"id\" IN ( ( SELECT \"id\" FROM \"top_alias\" ) );\r\nWITH \"source\" AS ( SELECT * FROM \"source_tbl\" AS \"source\" WHERE \"source\".\"id\" NOT IN ( ( SELECT \"id\" FROM \"target_tbl\" ) ) AND \"source\".\"column_value\" = 'somename' ) INSERT INTO \"target_tbl\" ( \"id\" ) SELECT \"id\" FROM \"source\";\r\nDROP TABLE IF EXISTS \"tmp_0\";\r\nDROP TABLE IF EXISTS \"top_alias\";\r\nEND;\r\n$do$;", command.CommandText);
         }
         #endregion
+        */
     }
 }

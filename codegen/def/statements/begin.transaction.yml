@@ -1,0 +1,78 @@
+
+#--Applies to SQL Server and Azure SQL Database
+statements.begintransaction.sqlserver.statement: BEGIN { TRAN | TRANSACTION } [ { transaction_name | @tran_name_variable } [ WITH MARK [ 'description' ] ] ]
+statements.begintransaction.sqlazure.statement: =statements.begintransaction.sqlserver.statement
+
+
+
+
+#--Applies to Azure SQL Data Warehouse and Parallel Data Warehouse
+statements.begintransaction.sqldatawarehouse.statement: BEGIN { TRAN | TRANSACTION } 
+statements.begintransaction.paralleldatawarehouse.statement: =statements.begintransaction.sqldatawarehouse.statement
+
+
+
+
+ 
+
+ 
+
+
+ 
+  
+ 
+
+-- redshift
+
+BEGIN [ WORK | TRANSACTION ] [ ISOLATION LEVEL option ] [ READ WRITE | READ ONLY ]
+
+START TRANSACTION [ ISOLATION LEVEL option ] [ READ WRITE | READ ONLY ]
+
+Where option is
+
+SERIALIZABLE
+| READ UNCOMMITTED
+| READ COMMITTED
+| REPEATABLE READ
+
+-- MySQL
+START TRANSACTION
+    [transaction_characteristic [, transaction_characteristic] ...]
+
+transaction_characteristic:
+    WITH CONSISTENT SNAPSHOT
+  | READ WRITE
+  | READ ONLY
+
+BEGIN [WORK]
+
+--MariaDB
+
+START TRANSACTION [transaction_property [, transaction_property] ...] | BEGIN [WORK]
+
+transaction_property:
+    WITH CONSISTENT SNAPSHOT
+  | READ WRITE
+  | READ ONLY
+
+-- MemSQL
+START TRANSACTION | BEGIN [WORK]
+
+-- PostGres
+START TRANSACTION [ transaction_mode [, ...] ]
+
+where transaction_mode is one of:
+
+    ISOLATION LEVEL { SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED }
+    READ WRITE | READ ONLY
+    [ NOT ] DEFERRABLE
+BEGIN [ WORK | TRANSACTION ] [ transaction_mode [, ...] ]
+
+where transaction_mode is one of:
+
+    ISOLATION LEVEL { SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED }
+    READ WRITE | READ ONLY
+    [ NOT ] DEFERRABLE
+
+-- SQLIte
+BEGIN [ DEFERRED | IMMIDIATE | EXCLUSIVE] [TRANSACTION]

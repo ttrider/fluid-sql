@@ -455,6 +455,21 @@ namespace TTRider.FluidSql.Providers.MySql
                     State.Write(Symbols.KEY);
                     VisitTokenSetInParenthesis(statement.PrimaryKey.Columns);
                 }
+
+                if (statement.Indicies.Count > 0)
+                {
+                    foreach (var createIndexStatement in statement.Indicies)
+                    {
+                        State.Write(Symbols.Comma);
+
+                        State.Write(Symbols.INDEX);
+
+                        VisitToken(createIndexStatement.Name);
+
+                        // columns
+                        VisitTokenSetInParenthesis(createIndexStatement.Columns);
+                    }
+                }
             }
             State.Write(Symbols.CloseParenthesis);
         }

@@ -6,11 +6,12 @@
 // </copyright>
 
 using TTRider.FluidSql;
+using xUnit.Redshift;
 using Xunit;
 
 namespace xUnit.Postgres
 {
-    public class Indexes : PostgreSqlProviderTests
+    public class Indexes : RedshiftSqlProviderTests
     {
         [Fact]
         public void CreateIndex()
@@ -22,8 +23,9 @@ namespace xUnit.Postgres
 
             var text = Provider.GenerateStatement((CreateIndexStatement)statement);
 
-            Assert.NotNull(text);
-            Assert.Equal("CREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
+            Assert.Equal("", text);
+            //Assert.NotNull(text);
+            //Assert.Equal("CREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
 
         }
 
@@ -37,8 +39,9 @@ namespace xUnit.Postgres
 
             var text = Provider.GenerateStatement(statement);
 
-            Assert.NotNull(text);
-            Assert.Equal("DROP INDEX IF EXISTS \"if\";\r\nCREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
+            Assert.Equal("", text);
+            //Assert.NotNull(text);
+            //Assert.Equal("DROP INDEX IF EXISTS \"if\";\r\nCREATE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
 
         }
 
@@ -54,8 +57,10 @@ namespace xUnit.Postgres
 
             var text = Provider.GenerateStatement((CreateIndexStatement)statement);
 
-            Assert.NotNull(text);
-            Assert.Equal("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
+            Assert.Equal("", text);
+
+            //Assert.NotNull(text);
+            //Assert.Equal("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC );", text);
 
         }
 
@@ -70,8 +75,11 @@ namespace xUnit.Postgres
                 .Where(Sql.Name("col1").GreaterOrEqual(Sql.Scalar(123)));
 
             var text = Provider.GenerateStatement(statement);
-            Assert.NotNull(text);
-            Assert.Equal("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC ) WHERE \"col1\" >= 123;", text);
+
+            Assert.Equal("", text);
+
+            //Assert.NotNull(text);
+            //Assert.Equal("CREATE UNIQUE INDEX \"if\" ON \"foo\".\"bar\" ( \"col1\" ASC, \"col2\" DESC ) WHERE \"col1\" >= 123;", text);
 
         }
 
@@ -81,9 +89,11 @@ namespace xUnit.Postgres
             var statement = Sql.DropIndex("index1", "tbl1");
 
             var text = Provider.GenerateStatement(statement);
-            Assert.NotNull(text);
-            Assert.Equal("DROP INDEX \"tbl1\".\"index1\";", text);
 
+            Assert.Equal("", text);
+
+            //Assert.NotNull(text);
+            //Assert.Equal("DROP INDEX \"tbl1\".\"index1\";", text);
         }
 
         [Fact]
@@ -92,9 +102,11 @@ namespace xUnit.Postgres
             var statement = Sql.DropIndex("if", "foo.bar", true);
 
             var text = Provider.GenerateStatement(statement);
-            Assert.NotNull(text);
-            Assert.Equal("DROP INDEX IF EXISTS \"foo\".\"if\";", text);
 
+            Assert.Equal("", text);
+
+            //Assert.NotNull(text);
+            //Assert.Equal("DROP INDEX IF EXISTS \"foo\".\"if\";", text);
         }
 
     }

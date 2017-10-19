@@ -1,0 +1,163 @@
+
+#--Applies to SQL Server and Azure SQL Database
+
+statements:
+
+  beginTransaction:
+    name: BeginTransaction
+    dialects:
+      - supported:
+          - MSSQL
+          - SQLAZURE
+        statement: 
+          BEGIN { TRAN | TRANSACTION } 
+          [ { transaction_name | @tran_name_variable } [ WITH MARK [ 'description' ] ] ]
+        sequence:
+          - token: keyword
+          - token: keyword
+          - token: group
+            sequence:
+              - token: group
+                name: transaction_name
+                sequence:
+                - token: argument
+                  type: string
+                - token: argument
+                  type: <name>
+              - token: method
+                name: WithMark
+                sequence:
+                  - token: argument
+                    name: description
+                    type: string
+
+      - supported:
+          - SQLDW
+          - PDW
+        statement: 
+          BEGIN { TRAN | TRANSACTION } 
+
+      - supported:
+          - REDSHIFT
+        statement:
+            BEGIN [ WORK | TRANSACTION ] [ ISOLATION LEVEL option ] [ READ WRITE | READ ONLY ]
+        sequence:
+          - token: keyword #BEGIN
+          - token: keyword #[W|T]
+          - token: group
+            sequence:
+              - token: keyword
+              - token: keyword
+              - token: argument
+                name: isolationLevel
+                type: enum    
+                values:
+                  - SERIALIZABLE
+                  - READ UNCOMMITTED
+                  - READ COMMITTED
+                  - REPEATABLE READ
+          - token: argument
+            name: transactionMode
+            type: enum
+
+      - supported:
+          - REDSHIFT
+        statement:
+          START TRANSACTION [ ISOLATION LEVEL option ] [ READ WRITE | READ ONLY ]
+        sequence:
+        - token: keyword 
+        - token: keyword 
+        - token: group
+          sequence:
+            - token: keyword
+            - token: keyword
+            - token: argument
+              name: isolationLevel
+              type: enum    
+              values:
+                - SERIALIZABLE
+                - READ UNCOMMITTED
+                - READ COMMITTED
+                - REPEATABLE READ
+        - token: argument
+          name: transactionMode
+          type: enum
+
+      - supported:
+          - POSTGRES
+        statement:
+          START TRANSACTION [ ISOLATION LEVEL option ] [ READ WRITE | READ ONLY ] [ [ NOT ] DEFERRABLE ]
+        sequence:
+        - token: keyword 
+        - token: keyword 
+        - token: group
+          sequence:
+            - token: keyword
+            - token: keyword
+            - token: argument
+              name: isolationLevel
+              type: enum    
+              values:
+                - SERIALIZABLE
+                - READ UNCOMMITTED
+                - READ COMMITTED
+                - REPEATABLE READ
+        - token: argument
+          name: transactionMode
+          type: enum
+        - token: argument
+          name: deferrable
+          type: switch
+
+      - supported:
+          - MYSQL
+          - MARIADB
+        statement: >
+          { START TRANSACTION [transaction_characteristic [, transaction_characteristic] ...] } | 
+          { BEGIN [WORK] }
+        sequence:
+          - token: group
+            sequence:
+              - token: keyword 
+              - token: keyword
+              - token: group
+                sequence:
+                  - token: argument
+                    name: transactionCharacteristic
+                    type: enum
+                    values:
+                    - WITH CONSISTENT SNAPSHOT
+                    - READ WRITE
+                    - READ ONLY
+                  - token: argument
+                    name: transactionCharacteristics
+                    type: enum
+                    values:
+                    - WITH CONSISTENT SNAPSHOT
+                    - READ WRITE
+                    - READ ONLY
+          - token: keyword #means the whole group { BEGIN [WORK] } should be threated as a keyword
+
+      - supported:
+          - MEMSQL
+        statement: >
+          { START TRANSACTION } | 
+          { BEGIN [WORK] }
+        sequence:
+          - token: keyword
+          - token: keyword
+
+      - supported:
+          - SQLITE
+        statement: 
+          BEGIN [ DEFERRED | IMMIDIATE | EXCLUSIVE] [TRANSACTION]
+        sequence:
+          - token: keyword
+          - token: argument
+            name: transactionType
+            type: enum    
+            values:
+              DEFERRED
+              IMMIDIATE
+              EXCLUSIVE
+          - token: keyword

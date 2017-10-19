@@ -63,7 +63,7 @@ namespace xUnit.Postgres
             var statement = Sql.Select.Output(Sql.Scalar(true).Not());
             var text = Provider.GenerateStatement(statement);
             Assert.NotNull(text);
-            Assert.Equal("SELECT NOT ( True );", text);
+            Assert.Equal("SELECT NOT ( TRUE );", text);
         }
 
         [Fact]
