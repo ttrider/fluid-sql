@@ -1,0 +1,3259 @@
+{
+  "definitions": {
+    "AddForeignKeyStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ForeignDefinitionBase"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "CheckIfNotExists": {
+              "type": "boolean"
+            },
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "NotSetForReplication": {
+              "type": "boolean"
+            },
+            "OnDelete": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "OnUpdate": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "References": {
+              "$ref": "#/definitions/Name"
+            },
+            "TableName": {
+              "$ref": "#/definitions/Name"
+            }
+          }
+        }
+      ]
+    },
+    "AllToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "AlterIndexStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IIndex"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "CheckIfNotExists": {
+              "type": "boolean"
+            },
+            "Columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            },
+            "Disable": {
+              "type": "boolean"
+            },
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "On": {
+              "$ref": "#/definitions/Name"
+            },
+            "Rebuild": {
+              "type": "boolean"
+            },
+            "RebuildWith": {
+              "$ref": "#/definitions/ICreateOrAlterIndexOptions"
+            },
+            "Reorganize": {
+              "type": "boolean"
+            },
+            "Set": {
+              "$ref": "#/definitions/ISetIndexOptions"
+            },
+            "Unique": {
+              "type": "boolean"
+            },
+            "Where": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "AndToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "AnyToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "AssignToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BetweenToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Token": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BinaryEqualToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BinaryToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BitwiseAndToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BitwiseNotToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "BitwiseOrToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BitwiseXorToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "BreakStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CaseToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "CaseValueToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "ElseToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "CaseWhenToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ThenToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "WhenToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "CastToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/ITyped"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DbType": {
+              "nullable": "true",
+              "$ref": "#/definitions/CommonDbType"
+            },
+            "Length": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "Precision": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "Scale": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "Token": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "CoalesceFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Arguments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Token"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CommentToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Content": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "ConstrainDefinition": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Clustered": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "Columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            },
+            "Conflict": {
+              "nullable": "true",
+              "$ref": "#/definitions/OnConflict"
+            },
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "Unique": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "ContainsToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "ContinueStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Label": {
+              "type": "string"
+            },
+            "When": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "CorrelationStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/RecordsetStatement"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Second": {
+              "$ref": "#/definitions/RecordsetStatement"
+            }
+          }
+        }
+      ]
+    },
+    "CTEDefinition": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Declaration": {
+              "$ref": "#/definitions/CTEDeclaration"
+            },
+            "Definition": {
+              "$ref": "#/definitions/ISelectStatement"
+            }
+          }
+        }
+      ]
+    },
+    "DateAddFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DateFunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DatePart": {
+              "$ref": "#/definitions/DatePart"
+            },
+            "Number": {
+              "$ref": "#/definitions/Token"
+            },
+            "Subtract": {
+              "type": "boolean"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "DateFunctionExpressionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DatePartFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DatePart": {
+              "$ref": "#/definitions/DatePart"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "DeleteStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/IJoinStatement"
+        },
+        {
+          "$ref": "#/definitions/ITopStatement"
+        },
+        {
+          "$ref": "#/definitions/IFromStatement"
+        },
+        {
+          "$ref": "#/definitions/IWhereStatement"
+        },
+        {
+          "$ref": "#/definitions/IOffsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IOrderByStatement"
+        },
+        {
+          "$ref": "#/definitions/ICTEStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "CommonTableExpressions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CTEDefinition"
+              }
+            },
+            "CursorName": {
+              "$ref": "#/definitions/Name"
+            },
+            "Offset": {
+              "$ref": "#/definitions/Token"
+            },
+            "Only": {
+              "type": "boolean"
+            },
+            "OrderBy": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "RecordsetSource": {
+              "$ref": "#/definitions/RecordsetSourceToken"
+            },
+            "Returning": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ExpressionToken"
+              }
+            },
+            "Top": {
+              "$ref": "#/definitions/Top"
+            },
+            "UsingList": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Name"
+              }
+            },
+            "Where": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "DivideToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "DurationFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DatePart": {
+              "$ref": "#/definitions/DatePart"
+            },
+            "End": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Start": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "EndsWithToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "ExceptStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CorrelationStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "All": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/RecordsetStatement"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Second": {
+              "$ref": "#/definitions/RecordsetStatement"
+            }
+          }
+        }
+      ]
+    },
+    "ExecuteStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "Target": {
+              "$ref": "#/definitions/ExecParameter"
+            }
+          }
+        }
+      ]
+    },
+    "ExistsToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "ExitStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Label": {
+              "type": "string"
+            },
+            "When": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "ExpressionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "ForeignDefinition": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ForeignDefinitionBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Clustered": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "Columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            },
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "OnDelete": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "OnUpdate": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "References": {
+              "$ref": "#/definitions/Name"
+            },
+            "ReferencesColumns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Name"
+              }
+            },
+            "Unique": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "ForeignDefinitionBase": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "OnDelete": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "OnUpdate": {
+              "nullable": "true",
+              "$ref": "#/definitions/ForeignKeyOption"
+            },
+            "References": {
+              "$ref": "#/definitions/Name"
+            }
+          }
+        }
+      ]
+    },
+    "Function": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Arguments": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Token"
+              }
+            },
+            "Name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "FunctionExpressionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "GotoStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "GreaterOrEqualToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "GreaterToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "GroupToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "IdentityOptions": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Increment": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "NotForReplication": {
+              "type": "boolean"
+            },
+            "On": {
+              "type": "boolean"
+            },
+            "Seed": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "IifFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "ConditionToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "ElseToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "ThenToken": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "IndexOptions": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/ICreateOrAlterIndexOptions"
+        },
+        {
+          "$ref": "#/definitions/IDropIndexOptions"
+        },
+        {
+          "$ref": "#/definitions/ISetIndexOptions"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AllowPageLocks": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "AllowRowLocks": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "DropExisting": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "Fillfactor": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "IgnoreDupKey": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "MaxDegreeOfParallelism": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "Online": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "PadIndex": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "SortInTempdb": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "StatisticsNorecompute": {
+              "nullable": "true",
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "InsertStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ITopStatement"
+        },
+        {
+          "$ref": "#/definitions/IIntoStatement"
+        },
+        {
+          "$ref": "#/definitions/ICTEStatement"
+        },
+        {
+          "$ref": "#/definitions/IOnConflict"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Name"
+              }
+            },
+            "CommonTableExpressions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CTEDefinition"
+              }
+            },
+            "Conflict": {
+              "nullable": "true",
+              "$ref": "#/definitions/OnConflict"
+            },
+            "DefaultValues": {
+              "type": "boolean"
+            },
+            "From": {
+              "$ref": "#/definitions/RecordsetStatement"
+            },
+            "IdentityInsert": {
+              "type": "boolean"
+            },
+            "Into": {
+              "$ref": "#/definitions/Name"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Top": {
+              "$ref": "#/definitions/Top"
+            },
+            "Values": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Token[]"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "IntersectStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CorrelationStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "All": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/RecordsetStatement"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Second": {
+              "$ref": "#/definitions/RecordsetStatement"
+            }
+          }
+        }
+      ]
+    },
+    "InToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SequenceToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "IsEqualsToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "IsNotNullToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "IsNullToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "Join": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "On": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Source": {
+              "$ref": "#/definitions/RecordsetSourceToken"
+            },
+            "Type": {
+              "$ref": "#/definitions/Joins"
+            }
+          }
+        }
+      ]
+    },
+    "LabelStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Label": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "LessOrEqualToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "LessToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "LikeToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "MakeDateFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DateFunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Day": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Hour": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Millisecond": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Minute": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Month": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Year": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "MakeTimeFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DateFunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Hour": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Minute": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "MergeStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ITopStatement"
+        },
+        {
+          "$ref": "#/definitions/IIntoStatement"
+        },
+        {
+          "$ref": "#/definitions/ICTEStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "CommonTableExpressions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CTEDefinition"
+              }
+            },
+            "Into": {
+              "$ref": "#/definitions/Name"
+            },
+            "On": {
+              "$ref": "#/definitions/Token"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Top": {
+              "$ref": "#/definitions/Top"
+            },
+            "Using": {
+              "$ref": "#/definitions/Token"
+            },
+            "WhenMatched": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WhenMatchedToken"
+              }
+            },
+            "WhenNotMatched": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WhenMatchedToken"
+              }
+            },
+            "WhenNotMatchedBySource": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WhenMatchedToken"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "MinusToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "ModuloToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "MultiplyToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "Name": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Item": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "NotEqualToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "NotGreaterToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "NotInToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SequenceToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "NotLessToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "NotToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "NowFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DateFunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Utc": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "NullIfFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/Token"
+            },
+            "Second": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "Order": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Column": {
+              "$ref": "#/definitions/Name"
+            },
+            "Direction": {
+              "$ref": "#/definitions/Direction"
+            }
+          }
+        }
+      ]
+    },
+    "OrToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "Parameter": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TypedToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/ITyped"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DbType": {
+              "nullable": "true",
+              "$ref": "#/definitions/CommonDbType"
+            },
+            "DefaultValue": {
+              "type": "object"
+            },
+            "Direction": {
+              "$ref": "#/definitions/ParameterDirection"
+            },
+            "Length": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "Name": {
+              "type": "string"
+            },
+            "Precision": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "ReadOnly": {
+              "type": "boolean"
+            },
+            "Scale": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "UseDefault": {
+              "type": "boolean"
+            },
+            "Value": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "ParameterValue": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "type": "string"
+            },
+            "Value": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "PerformStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IExecutableStatement"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "Query": {
+              "type": "string"
+            },
+            "Target": {
+              "$ref": "#/definitions/ExecParameter"
+            }
+          }
+        }
+      ]
+    },
+    "PlaceholderExpressionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Content": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "PlusToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryEqualToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Equal": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "PrepareStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IExecutableStatement"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "$ref": "#/definitions/Name"
+            },
+            "Target": {
+              "$ref": "#/definitions/ExecParameter"
+            }
+          }
+        }
+      ]
+    },
+    "RecordsetSourceToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Source": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "RecordsetStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Output": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ExpressionToken"
+              }
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            }
+          }
+        }
+      ]
+    },
+    "ReturnStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ReturnExpression": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "Scalar": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Value": {
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "SelectStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/IJoinStatement"
+        },
+        {
+          "$ref": "#/definitions/ITopStatement"
+        },
+        {
+          "$ref": "#/definitions/ISetStatement"
+        },
+        {
+          "$ref": "#/definitions/IWhereStatement"
+        },
+        {
+          "$ref": "#/definitions/IIntoStatement"
+        },
+        {
+          "$ref": "#/definitions/IOrderByStatement"
+        },
+        {
+          "$ref": "#/definitions/ICTEStatement"
+        },
+        {
+          "$ref": "#/definitions/IOffsetStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "CommonTableExpressions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CTEDefinition"
+              }
+            },
+            "Distinct": {
+              "type": "boolean"
+            },
+            "From": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RecordsetSourceToken"
+              }
+            },
+            "GroupBy": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Name"
+              }
+            },
+            "Having": {
+              "$ref": "#/definitions/Token"
+            },
+            "Into": {
+              "$ref": "#/definitions/Name"
+            },
+            "Offset": {
+              "$ref": "#/definitions/Token"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Top": {
+              "$ref": "#/definitions/Top"
+            },
+            "Where": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "SequenceToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Set": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Token"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SetStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Assign": {
+              "$ref": "#/definitions/BinaryEqualToken"
+            }
+          }
+        }
+      ]
+    },
+    "Snippet": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Arguments": {
+              "$ref": "#/definitions/IList`1"
+            },
+            "Value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "SnippetStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Arguments": {
+              "$ref": "#/definitions/IList`1"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "StartsWithToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BinaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "First": {
+              "$ref": "#/definitions/ExpressionToken"
+            },
+            "Second": {
+              "$ref": "#/definitions/ExpressionToken"
+            }
+          }
+        }
+      ]
+    },
+    "StringifyStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Content": {
+              "$ref": "#/definitions/IStatement"
+            }
+          }
+        }
+      ]
+    },
+    "StringifyToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Content": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "TableColumn": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TypedToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/ITyped"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DbType": {
+              "nullable": "true",
+              "$ref": "#/definitions/CommonDbType"
+            },
+            "DefaultValue": {
+              "$ref": "#/definitions/Token"
+            },
+            "Identity": {
+              "$ref": "#/definitions/IdentityOptions"
+            },
+            "Length": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "Name": {
+              "type": "string"
+            },
+            "Null": {
+              "nullable": "true",
+              "type": "boolean"
+            },
+            "NullConflict": {
+              "nullable": "true",
+              "$ref": "#/definitions/OnConflict"
+            },
+            "Precision": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "PrimaryKeyConflict": {
+              "nullable": "true",
+              "$ref": "#/definitions/OnConflict"
+            },
+            "PrimaryKeyDirection": {
+              "nullable": "true",
+              "$ref": "#/definitions/Direction"
+            },
+            "RowGuid": {
+              "type": "boolean"
+            },
+            "Scale": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "Sparse": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "ThrowStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ErrorNumber": {
+              "$ref": "#/definitions/Token"
+            },
+            "Message": {
+              "$ref": "#/definitions/Token"
+            },
+            "State": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "Top": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "IntValue": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "Percent": {
+              "type": "boolean"
+            },
+            "WithTies": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "TryCatchStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "CatchStatement": {
+              "$ref": "#/definitions/IStatement"
+            },
+            "TryStatement": {
+              "$ref": "#/definitions/IStatement"
+            }
+          }
+        }
+      ]
+    },
+    "TypedToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/ITyped"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "DbType": {
+              "nullable": "true",
+              "$ref": "#/definitions/CommonDbType"
+            },
+            "Length": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int32"
+            },
+            "Name": {
+              "type": "string"
+            },
+            "Precision": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            },
+            "Scale": {
+              "nullable": "true",
+              "type": "integer",
+              "format": "int8"
+            }
+          }
+        }
+      ]
+    },
+    "UnaryMinusToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UnaryToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "UnaryToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "Token": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "UnionStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CorrelationStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "All": {
+              "type": "boolean"
+            },
+            "First": {
+              "$ref": "#/definitions/RecordsetStatement"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "Second": {
+              "$ref": "#/definitions/RecordsetStatement"
+            }
+          }
+        }
+      ]
+    },
+    "UpdateStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RecordsetStatement"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "$ref": "#/definitions/ITopStatement"
+        },
+        {
+          "$ref": "#/definitions/IFromStatement"
+        },
+        {
+          "$ref": "#/definitions/ISetStatement"
+        },
+        {
+          "$ref": "#/definitions/IJoinStatement"
+        },
+        {
+          "$ref": "#/definitions/IWhereStatement"
+        },
+        {
+          "$ref": "#/definitions/ICTEStatement"
+        },
+        {
+          "$ref": "#/definitions/IOnConflict"
+        },
+        {
+          "$ref": "#/definitions/ISelectStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            },
+            "CommonTableExpressions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CTEDefinition"
+              }
+            },
+            "Conflict": {
+              "nullable": "true",
+              "$ref": "#/definitions/OnConflict"
+            },
+            "CursorName": {
+              "$ref": "#/definitions/Name"
+            },
+            "Only": {
+              "type": "boolean"
+            },
+            "OutputInto": {
+              "$ref": "#/definitions/Name"
+            },
+            "RecordsetSource": {
+              "$ref": "#/definitions/RecordsetSourceToken"
+            },
+            "Target": {
+              "$ref": "#/definitions/Name"
+            },
+            "Top": {
+              "$ref": "#/definitions/Top"
+            },
+            "Where": {
+              "$ref": "#/definitions/Token"
+            }
+          }
+        }
+      ]
+    },
+    "UuidFunctionToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/FunctionExpressionToken"
+        },
+        {
+          "$ref": "#/definitions/IAliasToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Alias": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "WaitforDelayStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WaitforStatement"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Delay": {
+              "type": "string",
+              "format": "time-span"
+            }
+          }
+        }
+      ]
+    },
+    "WaitforStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {}
+        }
+      ]
+    },
+    "WaitforTimeStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WaitforStatement"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Time": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      ]
+    },
+    "WhenMatchedToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AndCondition": {
+              "$ref": "#/definitions/Token"
+            },
+            "IsDeleteMatched": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "WhenMatchedTokenThenDeleteToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WhenMatchedToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AndCondition": {
+              "$ref": "#/definitions/Token"
+            },
+            "IsDeleteMatched": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "WhenMatchedTokenThenUpdateSetToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WhenMatchedToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AndCondition": {
+              "$ref": "#/definitions/Token"
+            },
+            "IsDeleteMatched": {
+              "type": "boolean"
+            },
+            "Set": {
+              "$ref": "#/definitions/IList`1"
+            }
+          }
+        }
+      ]
+    },
+    "WhenNotMatchedTokenThenInsertToken": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/WhenMatchedToken"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "AndCondition": {
+              "$ref": "#/definitions/Token"
+            },
+            "Columns": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Name"
+              }
+            },
+            "IsDeleteMatched": {
+              "type": "boolean"
+            },
+            "Values": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Token"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "WhileStatement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Token"
+        },
+        {
+          "$ref": "#/definitions/IStatement"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "Condition": {
+              "$ref": "#/definitions/Token"
+            },
+            "Do": {
+              "$ref": "#/definitions/StatementsStatement"
+            }
+          }
+        }
+      ]
+    },
+    "ParameterDirection": {
+      "type": "integer",
+      "enum": [
+        "Input:1",
+        "Output:2",
+        "InputOutput:3",
+        "ReturnValue:6"
+      ]
+    },
+    "CommonDbType": {
+      "type": "integer",
+      "enum": [
+        "BigInt:0",
+        "Binary:1",
+        "Bit:2",
+        "Char:3",
+        "DateTime:4",
+        "Decimal:5",
+        "Float:6",
+        "Image:7",
+        "Int:8",
+        "Money:9",
+        "NChar:10",
+        "NText:11",
+        "NVarChar:12",
+        "Real:13",
+        "UniqueIdentifier:14",
+        "Guid:14",
+        "UUID:14",
+        "SmallDateTime:15",
+        "SmallInt:16",
+        "SmallMoney:17",
+        "Text:18",
+        "Timestamp:19",
+        "TinyInt:20",
+        "VarBinary:21",
+        "VarChar:22",
+        "Variant:23",
+        "Xml:24",
+        "Date:25",
+        "Time:26",
+        "DateTime2:27",
+        "DateTimeOffset:28",
+        "Serial:29"
+      ]
+    },
+    "DatePart": {
+      "type": "integer",
+      "enum": [
+        "Year:0",
+        "Month:1",
+        "Week:2",
+        "Day:3",
+        "Hour:4",
+        "Minute:5",
+        "Second:6",
+        "Millisecond:7"
+      ]
+    },
+    "Direction": {
+      "type": "integer",
+      "enum": [
+        "Asc:0",
+        "Desc:1"
+      ]
+    },
+    "ForeignKeyOption": {
+      "type": "integer",
+      "enum": [
+        "NoAction:0",
+        "Cascade:1",
+        "SetNull:2",
+        "SetDefault:3"
+      ]
+    },
+    "Joins": {
+      "type": "integer",
+      "enum": [
+        "Inner:0",
+        "LeftOuter:1",
+        "RightOuter:2",
+        "FullOuter:3",
+        "Cross:4"
+      ]
+    },
+    "OnConflict": {
+      "type": "integer",
+      "enum": [
+        "Rollback:0",
+        "Abort:1",
+        "Fail:2",
+        "Ignore:3",
+        "Replace:4"
+      ]
+    },
+    "IAliasToken": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ICreateOrAlterIndexOptions": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ICTEStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IDropIndexOptions": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IExecutableStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IFromStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IIndex": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IIntoStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IJoinStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IOffsetStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IOnConflict": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IOrderByStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ISelectStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ISetIndexOptions": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ISetStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ITopStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "ITyped": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "IWhereStatement": {
+      "type": "object",
+      "decoration": "interface"
+    },
+    "Token": {
+      "type": "object",
+      "decoration": "interface"
+    }
+  }
+}
