@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using TTRider.FluidSql;
+using TTRider.FluidSql.Providers.MySql;
 using Xunit;
 
 namespace xUnit.FluidSql
@@ -673,6 +674,47 @@ namespace xUnit.FluidSql
             Assert.Equal(
                 "SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second];",
                 command.CommandText);
+        }
+
+
+        [Fact]
+        public void SelectIntersectSelectMysql()
+        {
+            var inAlias = "v0";
+            var personAlias = "v1";
+            var parameter = Sql.Parameter.UniqueIdentifier("@p2");
+            parameter.DefaultValue = "af8cb312-3fa8-f9ca-aa8d-4e0e67ef27e1";
+            var tableName = Sql.Name("system", "second");
+
+            var leftStatement = Sql.Select
+                .From(Sql.Name("schema", "first").As(personAlias))
+                .Output(Sql.Name(personAlias, "first_id").As("first_id_alias"));
+
+            var rightStatement = Sql.Select
+                .From(tableName)
+                .Where(Sql.Name("nodeHash").IsEqual(parameter))
+                .Output(Sql.NameAs("first_id", "first_id_alias"));
+
+
+          var statement = leftStatement.Intersect(rightStatement);
+
+            var insertStatemt = Sql.Insert
+                    .Into(tableName)
+                    .From(Sql.Select
+                        .Distinct()
+                        .From(statement, inAlias)
+                        .Output(parameter)
+                        .Output(Sql.NameAs(inAlias, "first_id_alias", "first_id_alias")));
+
+            var command =new MySqlProvider().GetCommand(statement, string.Empty);
+            var insertCommand = new MySqlProvider().GetCommand(insertStatemt, string.Empty);
+
+            Assert.NotNull(command);
+            Assert.NotNull(insertCommand);
+            Assert.Equal("SELECT `v1`.`first_id` AS `first_id_alias` FROM `schema`.`first` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`second` WHERE `v1`.`first_id` = `system`.`second`.`first_id` AND `second`.`nodeHash` = @p2 ) );",
+                command.CommandText);
+            Assert.Equal("INSERT INTO `system`.`second` SELECT DISTINCT @p2, `v0`.`first_id_alias` AS `first_id_alias` FROM ( SELECT `v1`.`first_id` AS `first_id_alias` FROM `schema`.`first` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`second` WHERE `v1`.`first_id` = `system`.`second`.`first_id` AND `second`.`nodeHash` = @p2 ) ) ) AS `v0`;",
+                insertCommand.CommandText);
         }
 
         [Fact]

@@ -1180,6 +1180,8 @@ namespace TTRider.FluidSql.Providers.MySql
 
             string table1 = ((Name)(statement1.From[0].Source)).LastPart;
             string table2 = ((Name)(statement2.From[0].Source)).LastPart;
+            var table1Name = ((Name)(statement1.From[0].Source));
+            var table2Name = ((Name)(statement2.From[0].Source));
 
             ExpressionToken whereExpression = null;
             List<ExpressionToken> expressions1 = new List<ExpressionToken>();
@@ -1191,8 +1193,25 @@ namespace TTRider.FluidSql.Providers.MySql
                 {
                     throw new NotImplementedException();
                 }
-                expressions1.Add(Sql.Name(table1, ((Name)(statement1.Output[i])).LastPart));
-                expressions2.Add(Sql.Name(table2, ((Name)(statement2.Output[i])).LastPart));
+
+                //expressions should use aliases
+                if (!string.IsNullOrWhiteSpace(table1Name.Alias))
+                {
+                    expressions1.Add(Sql.Name(table1Name.Alias, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias));
+                }
+                else
+                {
+                    expressions1.Add(Sql.Name(table1Name.FirstPart, table1Name.LastPart, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias));
+                }
+                if (!string.IsNullOrWhiteSpace(table2Name.Alias))
+                { 
+                    expressions2.Add(Sql.Name(table2Name.Alias, ((Name)(statement2.Output[i])).LastPart).As(((Name)(statement2.Output[i])).Alias));
+                }
+                else
+                {
+                    expressions2.Add(Sql.Name(table2Name.FirstPart, table2Name.LastPart, ((Name)(statement2.Output[i])).LastPart).As(((Name)(statement2.Output[i])).Alias));
+                }
+
                 if (whereExpression == null)
                 {
                     whereExpression = expressions1[i].IsEqual(expressions2[i]);
@@ -1204,17 +1223,17 @@ namespace TTRider.FluidSql.Providers.MySql
             }
             if (statement2.Where != null)
             {
-                whereExpression = whereExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement2.Where), table2));
+                whereExpression = whereExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement2.Where), table2Name.LastPart));
             }
 
-            ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2).Where(whereExpression));
+            ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2Name).Where(whereExpression));
             if (statement1.Where != null)
             {
-                tempExpression = tempExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement1.Where), table1));
+                tempExpression = tempExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement1.Where), table1Name.LastPart));
             }            
 
             SelectStatement correlationStatement =
-                Sql.Select.Output(expressions1).From(table1)
+                Sql.Select.Output(expressions1).From(table1Name)
                 .Where(tempExpression);
             VisitStatement(correlationStatement);
         }
