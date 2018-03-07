@@ -669,7 +669,7 @@ namespace xUnit.FluidSql
                     .Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"));
 
             var command = Utilities.GetCommand(statement);
-            command.ExecuteNonQuery();
+
             Assert.NotNull(command);
             Assert.Equal(
                 "SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second];",
