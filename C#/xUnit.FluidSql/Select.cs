@@ -696,7 +696,7 @@ namespace xUnit.FluidSql
                 .Output(Sql.NameAs("person_id", "PHS_PHPerson_person_id"));
 
 
-            var statement = leftStatement.Intersect(rightStatement);
+          var statement = leftStatement.Intersect(rightStatement);
 
             var insertStatemt = Sql.Insert
                     .Into(tableName)
@@ -711,10 +711,10 @@ namespace xUnit.FluidSql
 
             Assert.NotNull(command);
             Assert.NotNull(insertCommand);
-            Assert.Equal("SELECT `person`.`person_id` AS `PHS_PHPerson_person_id` FROM `person` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `person`.`person_id` = `PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
+            Assert.Equal("SELECT `v1`.`person_id` AS `PHS_PHPerson_person_id` FROM `PHS`.`person` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `v1`.`person_id` = `system`.`PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
                 command.CommandText);
-            Assert.Equal("SELECT `person`.`person_id` AS `PHS_PHPerson_person_id` FROM `person` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `person`.`person_id` = `PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
-                command.CommandText);
+            Assert.Equal("INSERT INTO `system`.`PHPerson_NodeMagic` SELECT DISTINCT @p2, `v0`.`PHS_PHPerson_person_id` AS `PHS_PHPerson_person_id` FROM ( SELECT `v1`.`person_id` AS `PHS_PHPerson_person_id` FROM `PHS`.`person` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `v1`.`person_id` = `system`.`PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) ) ) AS `v0`;",
+                insertCommand.CommandText);
         }
 
         [Fact]
