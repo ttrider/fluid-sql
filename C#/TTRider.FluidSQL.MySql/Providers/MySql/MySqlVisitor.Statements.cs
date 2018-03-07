@@ -1180,6 +1180,8 @@ namespace TTRider.FluidSql.Providers.MySql
 
             string table1 = ((Name)(statement1.From[0].Source)).LastPart;
             string table2 = ((Name)(statement2.From[0].Source)).LastPart;
+            var table1Name = ((Name)(statement1.From[0].Source));
+            var table2Name = ((Name)(statement2.From[0].Source));
 
             ExpressionToken whereExpression = null;
             List<ExpressionToken> expressions1 = new List<ExpressionToken>();
@@ -1191,7 +1193,7 @@ namespace TTRider.FluidSql.Providers.MySql
                 {
                     throw new NotImplementedException();
                 }
-                expressions1.Add(Sql.Name(table1, ((Name)(statement1.Output[i])).LastPart));
+                expressions1.Add(Sql.Name(table1, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias));
                 expressions2.Add(Sql.Name(table2, ((Name)(statement2.Output[i])).LastPart));
                 if (whereExpression == null)
                 {
@@ -1207,7 +1209,7 @@ namespace TTRider.FluidSql.Providers.MySql
                 whereExpression = whereExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement2.Where), table2));
             }
 
-            ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2).Where(whereExpression));
+            ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2Name).Where(whereExpression));
             if (statement1.Where != null)
             {
                 tempExpression = tempExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement1.Where), table1));

@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using TTRider.FluidSql;
+using TTRider.FluidSql.Providers.MySql;
 using Xunit;
 
 namespace xUnit.FluidSql
@@ -668,10 +669,51 @@ namespace xUnit.FluidSql
                     .Intersect(Sql.Select.Output(Sql.Star("Second")).From("sys.objects", "Second"));
 
             var command = Utilities.GetCommand(statement);
-
+            command.ExecuteNonQuery();
             Assert.NotNull(command);
             Assert.Equal(
                 "SELECT [First].* FROM [sys].[objects] AS [First] INTERSECT SELECT [Second].* FROM [sys].[objects] AS [Second];",
+                command.CommandText);
+        }
+
+
+        [Fact]
+        public void SelectIntersectSelectMysql()
+        {
+            var inAlias = "v0";
+            var personAlias = "v1";
+            var nodeHashParameter = Sql.Parameter.UniqueIdentifier("@p2");
+            nodeHashParameter.DefaultValue = "af8cb312-3fa8-f9ca-aa8d-4e0e67ef27e1";
+            var tableName = Sql.Name("system", "PHPerson_NodeMagic");
+
+            var leftStatement = Sql.Select
+                .From(Sql.Name("PHS", "person").As(personAlias))
+                .Output(Sql.Name(personAlias, "person_id").As("PHS_PHPerson_person_id"));
+
+            var rightStatement = Sql.Select
+                .From(tableName)
+                .Where(Sql.Name("nodeHash").IsEqual(nodeHashParameter))
+                .Output(Sql.NameAs("person_id", "PHS_PHPerson_person_id"));
+
+
+            var statement = leftStatement.Intersect(rightStatement);
+
+            var insertStatemt = Sql.Insert
+                    .Into(tableName)
+                    .From(Sql.Select
+                        .Distinct()
+                        .From(statement, inAlias)
+                        .Output(nodeHashParameter)
+                        .Output(Sql.NameAs(inAlias, "PHS_PHPerson_person_id", "PHS_PHPerson_person_id")));
+
+            var command =new MySqlProvider().GetCommand(statement, string.Empty);
+            var insertCommand = new MySqlProvider().GetCommand(insertStatemt, string.Empty);
+
+            Assert.NotNull(command);
+            Assert.NotNull(insertCommand);
+            Assert.Equal("SELECT `person`.`person_id` AS `PHS_PHPerson_person_id` FROM `person` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `person`.`person_id` = `PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
+                command.CommandText);
+            Assert.Equal("SELECT `person`.`person_id` AS `PHS_PHPerson_person_id` FROM `person` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `person`.`person_id` = `PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
                 command.CommandText);
         }
 
