@@ -682,18 +682,18 @@ namespace xUnit.FluidSql
         {
             var inAlias = "v0";
             var personAlias = "v1";
-            var nodeHashParameter = Sql.Parameter.UniqueIdentifier("@p2");
-            nodeHashParameter.DefaultValue = "af8cb312-3fa8-f9ca-aa8d-4e0e67ef27e1";
-            var tableName = Sql.Name("system", "PHPerson_NodeMagic");
+            var parameter = Sql.Parameter.UniqueIdentifier("@p2");
+            parameter.DefaultValue = "af8cb312-3fa8-f9ca-aa8d-4e0e67ef27e1";
+            var tableName = Sql.Name("system", "second");
 
             var leftStatement = Sql.Select
-                .From(Sql.Name("PHS", "person").As(personAlias))
-                .Output(Sql.Name(personAlias, "person_id").As("PHS_PHPerson_person_id"));
+                .From(Sql.Name("schema", "first").As(personAlias))
+                .Output(Sql.Name(personAlias, "first_id").As("first_id_alias"));
 
             var rightStatement = Sql.Select
                 .From(tableName)
-                .Where(Sql.Name("nodeHash").IsEqual(nodeHashParameter))
-                .Output(Sql.NameAs("person_id", "PHS_PHPerson_person_id"));
+                .Where(Sql.Name("nodeHash").IsEqual(parameter))
+                .Output(Sql.NameAs("first_id", "first_id_alias"));
 
 
           var statement = leftStatement.Intersect(rightStatement);
@@ -703,17 +703,17 @@ namespace xUnit.FluidSql
                     .From(Sql.Select
                         .Distinct()
                         .From(statement, inAlias)
-                        .Output(nodeHashParameter)
-                        .Output(Sql.NameAs(inAlias, "PHS_PHPerson_person_id", "PHS_PHPerson_person_id")));
+                        .Output(parameter)
+                        .Output(Sql.NameAs(inAlias, "first_id_alias", "first_id_alias")));
 
             var command =new MySqlProvider().GetCommand(statement, string.Empty);
             var insertCommand = new MySqlProvider().GetCommand(insertStatemt, string.Empty);
 
             Assert.NotNull(command);
             Assert.NotNull(insertCommand);
-            Assert.Equal("SELECT `v1`.`person_id` AS `PHS_PHPerson_person_id` FROM `PHS`.`person` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `v1`.`person_id` = `system`.`PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) );",
+            Assert.Equal("SELECT `v1`.`first_id` AS `first_id_alias` FROM `schema`.`first` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`second` WHERE `v1`.`first_id` = `system`.`second`.`first_id` AND `second`.`nodeHash` = @p2 ) );",
                 command.CommandText);
-            Assert.Equal("INSERT INTO `system`.`PHPerson_NodeMagic` SELECT DISTINCT @p2, `v0`.`PHS_PHPerson_person_id` AS `PHS_PHPerson_person_id` FROM ( SELECT `v1`.`person_id` AS `PHS_PHPerson_person_id` FROM `PHS`.`person` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`PHPerson_NodeMagic` WHERE `v1`.`person_id` = `system`.`PHPerson_NodeMagic`.`person_id` AND `PHPerson_NodeMagic`.`nodeHash` = @p2 ) ) ) AS `v0`;",
+            Assert.Equal("INSERT INTO `system`.`second` SELECT DISTINCT @p2, `v0`.`first_id_alias` AS `first_id_alias` FROM ( SELECT `v1`.`first_id` AS `first_id_alias` FROM `schema`.`first` AS `v1` WHERE EXISTS( ( SELECT * FROM `system`.`second` WHERE `v1`.`first_id` = `system`.`second`.`first_id` AND `second`.`nodeHash` = @p2 ) ) ) AS `v0`;",
                 insertCommand.CommandText);
         }
 

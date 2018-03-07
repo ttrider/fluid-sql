@@ -22,3 +22,4 @@ node_modules
 /C#/TTRider.FluidSQL/nuget
 /.vs/slnx.sqlite
 /C#/.vs/FluidSql/v15/Server/sqlite3
+/C#/.vs/FluidSql/v15/sqlite3/storage.ide
