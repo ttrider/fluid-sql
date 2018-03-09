@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TTRider.FluidSQL.MySql\TTRider.FluidSQL.MySql.csproj" />
     <ProjectReference Include="..\TTRider.FluidSQL\TTRider.FluidSQL.csproj" />
   </ItemGroup>
 
