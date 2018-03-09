@@ -6,7 +6,7 @@
     <VersionPrefix>1.11.0</VersionPrefix>
     <AssemblyTitle>TTRider.FluidSql.SQLite</AssemblyTitle>
     <Authors>TTRider;AdaptCore Technologies;iatam</Authors>
-    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>TTRider.FluidSql.SQLite</AssemblyName>
     <PackageId>TTRider.FluidSQL.Sqlite</PackageId>
