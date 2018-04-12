@@ -21,3 +21,4 @@ node_modules
 /C#/TTRider.FluidSQL.Postgres.Core/nuget
 /C#/TTRider.FluidSQL/nuget
 /C#/.vs/FluidSql/v15/sqlite3/storage.ide
+/C#/.vs/FluidSql/v15/Server/sqlite3
