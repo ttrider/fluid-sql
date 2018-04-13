@@ -1182,6 +1182,17 @@ namespace TTRider.FluidSql.Providers.MySql
             string table2 = ((Name)(statement2.From[0].Source)).LastPart;
             var table1Name = ((Name)(statement1.From[0].Source));
             var table2Name = ((Name)(statement2.From[0].Source));
+            var statement1Alias = statement1.Alias;
+
+            //here we have 2 possible cases
+            //case 1) table1Name equals table2Name
+            // In this case "EXIST" statement will not work properly.To fix that,  first statement, including it's own "WHERE" expression
+            //should be placed inside subquery with alias
+            //case 2) table1Name not equal table2Name
+            // in this case it is not nessesary to use subquery for first statement. Just place  WHERE clause to EXIST part
+            var isSameTableMode = string.Equals($"{table1Name.FirstPart}.{table1Name.LastPart}"
+                , $"{table2Name.FirstPart}.{table2Name.LastPart}"
+                , StringComparison.OrdinalIgnoreCase);
 
             ExpressionToken whereExpression = null;
             List<ExpressionToken> expressions1 = new List<ExpressionToken>();
@@ -1194,15 +1205,28 @@ namespace TTRider.FluidSql.Providers.MySql
                     throw new NotImplementedException();
                 }
 
-                //expressions should use aliases
-                if (!string.IsNullOrWhiteSpace(table1Name.Alias))
+                Name name1 = null;
+
+                if (isSameTableMode)
                 {
-                    expressions1.Add(Sql.Name(table1Name.Alias, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias));
+                    // use alias of first statements since we will use subquery for it
+                    name1 = Sql.Name(statement1Alias, ((Name)(statement1.Output[i])).Alias).As(((Name)(statement1.Output[i])).Alias);
                 }
                 else
                 {
-                    expressions1.Add(Sql.Name(table1Name.FirstPart, table1Name.LastPart, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias));
+                    //use table name or alias directly
+                    if (!string.IsNullOrWhiteSpace(table1Name.Alias))
+                    {
+                        name1 = Sql.Name(table1Name.Alias, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias);
+                    }
+                    else
+                    {
+                        name1 = Sql.Name(table1Name.FirstPart, table1Name.LastPart, ((Name)(statement1.Output[i])).LastPart).As(((Name)(statement1.Output[i])).Alias);
+                    }
                 }
+
+                expressions1.Add(name1);
+
                 if (!string.IsNullOrWhiteSpace(table2Name.Alias))
                 { 
                     expressions2.Add(Sql.Name(table2Name.Alias, ((Name)(statement2.Output[i])).LastPart).As(((Name)(statement2.Output[i])).Alias));
@@ -1221,20 +1245,30 @@ namespace TTRider.FluidSql.Providers.MySql
                     whereExpression = whereExpression.And(expressions1[i].IsEqual(expressions2[i]));
                 }
             }
+
             if (statement2.Where != null)
             {
                 whereExpression = whereExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement2.Where), table2Name.LastPart));
             }
 
             ExpressionToken tempExpression = Sql.Function(functionName, Sql.Select.From(table2Name).Where(whereExpression));
-            if (statement1.Where != null)
+
+            if (statement1.Where != null && !isSameTableMode)
             {
                 tempExpression = tempExpression.And(AddPrefixToExpressionToken(((ExpressionToken)statement1.Where), table1Name.LastPart));
-            }            
+            }
 
-            SelectStatement correlationStatement =
-                Sql.Select.Output(expressions1).From(table1Name)
-                .Where(tempExpression);
+            SelectStatement correlationStatement = null;
+
+            correlationStatement = isSameTableMode
+                ? Sql.Select.Output(expressions1) //case 1
+                    .From(statement1)
+                    .Where(tempExpression)
+                : Sql.Select.Output(expressions1) //case 2
+                    .From(table1Name)
+                    .Where(tempExpression);
+            
+
             VisitStatement(correlationStatement);
         }
 
